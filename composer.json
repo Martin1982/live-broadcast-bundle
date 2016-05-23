@@ -1,0 +1,12 @@
+{
+    "name": "martin1982/live-broadcast-bundle",
+    "description": "Bundle for live-streaming to various network API's",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Martin de Keijzer",
+            "email": "martin.dekeijzer+composer@gmail.com"
+        }
+    ],
+    "require": {}
+}
