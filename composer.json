@@ -17,6 +17,6 @@
         "sonata-project/admin-bundle": "Sonata admin for easy broadcast planning"
     },
     "autoload": {
-        "psr-4": { "Martin1982\\LiveBroadcastBundle": "" }
+        "psr-4": { "Martin1982\\LiveBroadcastBundle\\": "" }
     }
 }
