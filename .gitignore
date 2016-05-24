@@ -1,2 +1,5 @@
-
+.idea
+.DS_Store
+composer.lock
 /vendor/
+testvideo.mp4
