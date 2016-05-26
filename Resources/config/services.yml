@@ -1,3 +1,4 @@
 services:
   live.broadcast.scheduler:
     class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler
+    arguments: ["@doctrine.orm.entity_manager"]
