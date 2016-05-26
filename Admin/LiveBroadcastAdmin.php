@@ -14,7 +14,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 class LiveBroadcastAdmin extends Admin
 {
     /**
-     * @param FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -33,7 +33,7 @@ class LiveBroadcastAdmin extends Admin
     }
 
     /**
-     * @param DatagridMapper $datagridMapper
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -44,7 +44,7 @@ class LiveBroadcastAdmin extends Admin
     }
 
     /**
-     * @param ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
