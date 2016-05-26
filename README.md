@@ -11,7 +11,7 @@ The basic "Input" will be a file that can be read. Other inputs will be created 
 
 ## Installation
 
-### Step 1: Download SolrBundle
+### Step 1: Download Bundle
 
 This bundle will be made available on Packagist. You can then install it using Composer:
 
