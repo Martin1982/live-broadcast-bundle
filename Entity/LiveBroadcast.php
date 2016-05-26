@@ -194,6 +194,30 @@ class LiveBroadcast
     }
 
     /**
+     * Check if the stream is running on Twitch
+     *
+     * @return bool
+     */
+    public function isLiveOnTwitch()
+    {
+        exec('ps aux | grep ffmpeg', $cmdOutput);
+        if (!count($cmdOutput)) {
+            return false;
+        }
+
+        foreach ($cmdOutput as $broadcasting) {
+            if (
+                false !== strpos($broadcasting, $this->getVideoInputFile()) &&
+                false !== strpos($broadcasting, 'twitch.tv/app')
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @return bool
      */
     public function getLiveOnFacebook()
