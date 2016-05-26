@@ -17,6 +17,6 @@ class BroadcasterCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $scheduler = $this->getContainer()->get('live.broadcast.scheduler');
-        $scheduler->checkRunningBroadcasts();
+        $scheduler->applySchedule();
     }
 }

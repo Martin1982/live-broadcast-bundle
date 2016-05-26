@@ -2,36 +2,43 @@
 
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
+use Doctrine\ORM\EntityManager;
+use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+
+/**
+ * Class Scheduler
+ * @package Martin1982\LiveBroadcastBundle\Broadcaster
+ */
 class Scheduler
 {
-    public function testPrerequisites()
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
     {
-        var_dump($this->hasFFMpeg());
+        $this->entityManager = $entityManager;
     }
 
-    public function checkRunningBroadcasts()
+    /**
+     * Run streams that need to be running
+     */
+    public function applySchedule()
     {
-        $this->testPrerequisites();
+        
     }
 
-    public function startBroadcast()
+    public function startBroadcast(LiveBroadcast $broadcast)
     {
 
     }
 
-    public function stopBroadcast()
+    public function stopBroadcast(LiveBroadcast $broadcast)
     {
 
-    }
-
-    protected function hasFFMpeg()
-    {
-        $cmdOutput = array();
-        exec('ffmpeg -version', $cmdOutput);
-        if (false !== strpos($cmdOutput[0], 'ffmpeg version')) {
-            return true;
-        }
-
-        return false;
     }
 }
