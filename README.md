@@ -36,6 +36,14 @@ public function registerBundles()
 }
 ```
 
+### Step 3: Update your database schema
+
+Use doctrine to update your database schema with the broadcasting entities
+
+### Step 4 (Optional): Activate the Sonata Admin module
+
+To make planning available through an admin interface it is recommended to use the Sonata Admin bundle.
+
 ## Prerequisites
 
 The Broadcaster currently only supports Linux based OS's and needs a few commands;
@@ -46,4 +54,3 @@ The Broadcaster currently only supports Linux based OS's and needs a few command
 * `kill`
 
 To test these prerequisites the Symfony command `livebroadcaster:test:shell` can be used.
-
