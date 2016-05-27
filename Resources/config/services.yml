@@ -1,4 +1,7 @@
 services:
   live.broadcast.scheduler:
     class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler
-    arguments: ["@doctrine.orm.entity_manager"]
+    arguments:
+      - "@doctrine.orm.entity_manager"
+      - "%live_broadcast.twitch.stream_server_fqdn%"
+      - "%live_broadcast.twitch.stream_key%"

@@ -11,11 +11,17 @@ class Twitch
 {
     const CHANNEL_NAME = 'twitch';
 
+    protected $server;
+
+    protected $streamKey;
+
     /**
      * Twitch constructor
      */
-    public function __construct()
+    public function __construct($server, $streamKey)
     {
+        $this->server = $server;
+        $this->streamKey = $streamKey;
     }
 
     public function generateOutputCmd()
@@ -23,6 +29,6 @@ class Twitch
         // @Todo read from config parameters
         $server = '';
         $streamKey = '';
-        return sprintf('-f flv rtmp://%s/app/%s', $server, $streamKey);
+        return sprintf('-f flv rtmp://%s/app/%s', $this->server, $this->streamKey);
     }
 }

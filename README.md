@@ -36,11 +36,22 @@ public function registerBundles()
 }
 ```
 
-### Step 3: Update your database schema
+### Step 3: Update configuration
+
+Add the following configurations and adjust accordingly:
+
+``` yaml
+live_broadcast:
+  twitch:
+    stream_server_fqdn: 'live.twitch.tv';
+    stream_key: '%twitch_stream_key%'
+```
+
+### Step 4: Update your database schema
 
 Use doctrine to update your database schema with the broadcasting entities
 
-### Step 4 (Optional): Activate the Sonata Admin module
+### Step 5 (Optional): Activate the Sonata Admin module
 
 To make planning available through an admin interface it is recommended to use the Sonata Admin bundle.
 

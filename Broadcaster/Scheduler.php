@@ -19,12 +19,18 @@ class Scheduler
      */
     protected $entityManager;
 
+    protected $twitchServer;
+
+    protected $twitchKey;
+
     /**
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, $twitchServer, $twitchKey)
     {
         $this->entityManager = $entityManager;
+        $this->twitchServer = $twitchServer;
+        $this->twitchKey = $twitchKey;
     }
 
     /**
@@ -46,7 +52,6 @@ class Scheduler
         /** @var LiveBroadcast[] $nowLive */
         $planned = $broadcastRepository->createQueryBuilder('lb')->addCriteria($criterea)->getQuery()->getResult();
 
-echo count($planned) . "\n";
         foreach($planned as $broadcast) {
             // @Todo Test if broadcast is already streaming
             $this->startBroadcast($broadcast);
@@ -68,7 +73,7 @@ echo count($planned) . "\n";
     {
         // @Todo use a broadcast_id metatag to match the schedule
         $inputProcessor = new File($broadcast);
-        $outputProcessor = new Twitch();
+        $outputProcessor = new Twitch($this->twitchServer, $this->twitchKey);
 
         $streamInput = $inputProcessor->generateInputCmd();
         $streamOutput = $outputProcessor->generateOutputCmd();
