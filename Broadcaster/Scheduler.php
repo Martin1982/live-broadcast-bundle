@@ -71,15 +71,14 @@ class Scheduler
 
     public function startBroadcast(LiveBroadcast $broadcast)
     {
-        // @Todo use a broadcast_id metatag to match the schedule
         $inputProcessor = new File($broadcast);
         $outputProcessor = new Twitch($this->twitchServer, $this->twitchKey);
 
         $streamInput = $inputProcessor->generateInputCmd();
         $streamOutput = $outputProcessor->generateOutputCmd();
 
-        $streamCommand = sprintf('ffmpeg %s %s -metadata broadcast_id=%d', $streamInput, $streamOutput, $broadcast->getBroadcastId());
-        echo $streamCommand;
+        $streamCommand = sprintf('ffmpeg %s %s -metadata broadcast_id=%d < /dev/null >/dev/null 2>/dev/null &', $streamInput, $streamOutput, $broadcast->getBroadcastId());
+        exec($streamCommand);
     }
 
     public function stopBroadcast(LiveBroadcast $broadcast)
