@@ -31,6 +31,11 @@ class File
         $this->broadcast = $broadcast;
     }
 
+    /**
+     * Get the input command part
+     *
+     * @return string
+     */
     public function generateInputCmd()
     {
         $inputFilename = $this->broadcast->getVideoInputFile();

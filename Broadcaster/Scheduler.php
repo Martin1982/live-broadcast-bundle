@@ -19,8 +19,14 @@ class Scheduler
      */
     protected $entityManager;
 
+    /**
+     * @var string
+     */
     protected $twitchServer;
 
+    /**
+     * @var string
+     */
     protected $twitchKey;
 
     /**
@@ -58,6 +64,11 @@ class Scheduler
         }
     }
 
+    /**
+     * Retrieve what is broadcasting
+     *
+     * @return array
+     */
     public function getCurrentBroadcasts()
     {
         exec('ps -C ffmpeg | grep broadcast_id', $output);
@@ -69,6 +80,11 @@ class Scheduler
         return array();
     }
 
+    /**
+     * Initiate a new broadcast
+     *
+     * @param LiveBroadcast $broadcast
+     */
     public function startBroadcast(LiveBroadcast $broadcast)
     {
         $inputProcessor = new File($broadcast);
@@ -81,6 +97,11 @@ class Scheduler
         exec($streamCommand);
     }
 
+    /**
+     * Kill a broadcast
+     *
+     * @param LiveBroadcast $broadcast
+     */
     public function stopBroadcast(LiveBroadcast $broadcast)
     {
         // @Todo find broadcast PID by broadcast_id metatag

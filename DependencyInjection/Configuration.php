@@ -20,10 +20,15 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('live_broadcast');
 
         $this->addTwitchConfig($rootNode);
-        
+
         return $treeBuilder;
     }
 
+    /**
+     * Set Twitch configuration nodes
+     *
+     * @param ArrayNodeDefinition $rootNode
+     */
     protected function addTwitchConfig(ArrayNodeDefinition $rootNode)
     {
         $rootNode

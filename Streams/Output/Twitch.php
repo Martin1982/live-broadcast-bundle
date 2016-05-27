@@ -11,8 +11,14 @@ class Twitch
 {
     const CHANNEL_NAME = 'twitch';
 
+    /**
+     * @var string
+     */
     protected $server;
 
+    /**
+     * @var string
+     */
     protected $streamKey;
 
     /**
@@ -24,6 +30,11 @@ class Twitch
         $this->streamKey = $streamKey;
     }
 
+    /**
+     * Get the output parameters for streaming
+     *
+     * @return string
+     */
     public function generateOutputCmd()
     {
         return sprintf('-f flv rtmp://%s/app/%s', $this->server, $this->streamKey);
