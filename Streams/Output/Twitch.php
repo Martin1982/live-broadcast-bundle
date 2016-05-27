@@ -26,9 +26,6 @@ class Twitch
 
     public function generateOutputCmd()
     {
-        // @Todo read from config parameters
-        $server = '';
-        $streamKey = '';
         return sprintf('-f flv rtmp://%s/app/%s', $this->server, $this->streamKey);
     }
 }
