@@ -7,7 +7,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
  * Class File
  * @package Martin1982\LiveBroadcastBundle\Streams\Input
  */
-class File
+class File implements InputInterface
 {
     const INPUT_TYPE = 'file';
 

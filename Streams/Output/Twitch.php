@@ -7,7 +7,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
  * Class Twitch
  * @package Martin1982\LiveBroadcastBundle\Streams\Output
  */
-class Twitch
+class Twitch implements OutputInterface
 {
     const CHANNEL_NAME = 'twitch';
 
