@@ -71,13 +71,21 @@ class Scheduler
      */
     public function getCurrentBroadcasts()
     {
-        exec('ps -C ffmpeg | grep broadcast_id', $output);
+        $running = array();
+        exec('ps -C ffmpeg -o pid=,args=', $output);
+
         foreach($output as $runningBroadcast) {
-            echo $runningBroadcast . "\n";
+            $runningItem = array(
+                'pid'         => $this->getPid($runningBroadcast),
+                'broadcastId' => $this->getBroadcastId($runningBroadcast),
+            );
+
+            if (!empty($runningItem['pid']) && !empty($runningItem['broadcastId'])) {
+                array_push($running, $runningItem);
+            }
         }
 
-        // @Todo fill a broadcasts collection
-        return array();
+        return $running;
     }
 
     /**
@@ -87,7 +95,9 @@ class Scheduler
      */
     public function startBroadcast(LiveBroadcast $broadcast)
     {
+        // @TODO Add factory when supporting other inputs
         $inputProcessor = new File($broadcast);
+        // @TODO Add factory when supporting other outputs
         $outputProcessor = new Twitch($this->twitchServer, $this->twitchKey);
 
         $streamInput = $inputProcessor->generateInputCmd();
@@ -105,5 +115,38 @@ class Scheduler
     public function stopBroadcast(LiveBroadcast $broadcast)
     {
         // @Todo find broadcast PID by broadcast_id metatag
+    }
+
+    /**
+     * Get the PID for the broadcast
+     *
+     * @param $processString
+     * @return int|null
+     */
+    protected function getPid($processString)
+    {
+        preg_match('/^[\d]+/', $processString, $pid);
+        if (count($pid) && is_numeric($pid[0])) {
+            return (int)$pid[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the currently playing broadcast
+     *
+     * @param $processString
+     * @return string|null
+     */
+    protected function getBroadcastId($processString)
+    {
+        preg_match('/broadcast_id=[\d]+/', $processString, $broadcast);
+        if (is_array($broadcast) && is_string($broadcast[0])) {
+            $broadcastId = end(explode('=', $broadcast[0]));
+            return $broadcastId;
+        }
+
+        return null;
     }
 }
