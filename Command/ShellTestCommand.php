@@ -32,9 +32,6 @@ class ShellTestCommand extends ContainerAwareCommand
         $output->writeln('Checking \'ps\' command availability...');
         $this->testPs($output);
 
-        $output->writeln('Checking \'grep\' command availability...');
-        $this->testGrep($output);
-
         $output->writeln('Checking \'kill\' command availability...');
         $this->testKill($output);
     }

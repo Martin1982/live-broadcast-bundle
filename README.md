@@ -61,7 +61,6 @@ The Broadcaster currently only supports Linux based OS's and needs a few command
 
 * `ffmpeg`
 * `ps`
-* `grep`
 * `kill`
 
 To test these prerequisites the Symfony command `livebroadcaster:test:shell` can be used.
