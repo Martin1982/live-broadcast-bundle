@@ -53,7 +53,7 @@ class Scheduler
         foreach ($broadcasting as $running) {
             $broadcast = $broadcastRepository->find($running['broadcastId']);
 
-            if ($broadcast->getEndTimestamp() > new \DateTime()) {
+            if ($broadcast->getEndTimestamp() < new \DateTime()) {
                 $this->stopBroadcast($broadcast, $running['pid']);
             }
 

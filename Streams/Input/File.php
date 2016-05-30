@@ -24,6 +24,7 @@ class File implements InputInterface
     {
         $inputFilename = $broadcast->getVideoInputFile();
 
+        // @Todo allow URL streams?
         if (!file_exists($inputFilename)) {
             throw new \Exception(sprintf('Could not find input file %s', $inputFilename));
         }
