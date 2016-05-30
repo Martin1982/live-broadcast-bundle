@@ -110,7 +110,7 @@ class Scheduler
         $streamInput = $inputProcessor->generateInputCmd();
         $streamOutput = $outputProcessor->generateOutputCmd();
 
-        $streamCommand = sprintf('ffmpeg %s %s -metadata broadcast_id=%d < /dev/null >/dev/null 2>/dev/null &', $streamInput, $streamOutput, $broadcast->getBroadcastId());
+        $streamCommand = sprintf('ffmpeg %s %s -metadata broadcast_id=%d >/dev/null 2>&1 &', $streamInput, $streamOutput, $broadcast->getBroadcastId());
         exec($streamCommand);
     }
 
@@ -151,7 +151,8 @@ class Scheduler
     {
         preg_match('/broadcast_id=[\d]+/', $processString, $broadcast);
         if (is_array($broadcast) && is_string($broadcast[0])) {
-            return end(explode('=', $broadcast[0]));
+            $broadcastDetails = explode('=', $broadcast[0]);
+            return end($broadcastDetails);
         }
 
         return null;
