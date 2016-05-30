@@ -44,23 +44,30 @@ class Scheduler
      */
     public function applySchedule()
     {
-        $broadcasting = $this->getCurrentBroadcasts();
-
         $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
-        $expr = Criteria::expr();
-        $criterea = Criteria::create();
+        $broadcasting = $this->getCurrentBroadcasts();
+        $plannedBroadcasts = $this->getPlannedBroadcasts();
+        $runningIds = array();
 
-        $criterea->where($expr->andX(
-            $expr->lte('startTimestamp', new \DateTime()),
-            $expr->gte('endTimestamp', new \DateTime())
-        ));
+        // Stop running broadcasts that have expired
+        foreach ($broadcasting as $running) {
+            $broadcast = $broadcastRepository->find($running['broadcastId']);
 
-        /** @var LiveBroadcast[] $nowLive */
-        $planned = $broadcastRepository->createQueryBuilder('lb')->addCriteria($criterea)->getQuery()->getResult();
+            if ($broadcast->getEndTimestamp() > new \DateTime()) {
+                $this->stopBroadcast($broadcast, $running['pid']);
+            }
 
-        foreach($planned as $broadcast) {
-            // @Todo Test if broadcast is already streaming
-            $this->startBroadcast($broadcast);
+            array_push($runningIds, $running['broadcastId']);
+        }
+
+        // Start planned broadcasts if not already running
+        foreach($plannedBroadcasts as $planned) {
+            $plannedId = $planned->getBroadcastId();
+
+            if (!in_array($plannedId, $runningIds)) {
+                $broadcast = $broadcastRepository->find($plannedId);
+                $this->startBroadcast($broadcast);
+            }
         }
     }
 
@@ -111,10 +118,11 @@ class Scheduler
      * Kill a broadcast
      *
      * @param LiveBroadcast $broadcast
+     * @param int           $pid
      */
-    public function stopBroadcast(LiveBroadcast $broadcast)
+    public function stopBroadcast(LiveBroadcast $broadcast, $pid)
     {
-        // @Todo find broadcast PID by broadcast_id metatag
+        exec(sprintf("kill %d", $pid));
     }
 
     /**
@@ -143,10 +151,30 @@ class Scheduler
     {
         preg_match('/broadcast_id=[\d]+/', $processString, $broadcast);
         if (is_array($broadcast) && is_string($broadcast[0])) {
-            $broadcastId = end(explode('=', $broadcast[0]));
-            return $broadcastId;
+            return end(explode('=', $broadcast[0]));
         }
 
         return null;
+    }
+
+    /**
+     * Get the planned broadcast items
+     *
+     * @return LiveBroadcast[]
+     * @throws \Doctrine\ORM\Query\QueryException
+     */
+    protected function getPlannedBroadcasts()
+    {
+        $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
+        $expr = Criteria::expr();
+        $criterea = Criteria::create();
+
+        $criterea->where($expr->andX(
+            $expr->lte('startTimestamp', new \DateTime()),
+            $expr->gte('endTimestamp', new \DateTime())
+        ));
+
+        /** @var LiveBroadcast[] $nowLive */
+        return $broadcastRepository->createQueryBuilder('lb')->addCriteria($criterea)->getQuery()->getResult();
     }
 }
