@@ -1,7 +1,6 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Streams\Output;
-use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
  * Class Twitch
