@@ -30,13 +30,23 @@ class Scheduler
     protected $twitchKey;
 
     /**
-     * @param EntityManager $entityManager
+     * @var string
      */
-    public function __construct(EntityManager $entityManager, $twitchServer, $twitchKey)
+    protected $environment;
+
+    /**
+     * Scheduler constructor.
+     * @param EntityManager $entityManager
+     * @param string        $twitchServer
+     * @param string        $twitchKey
+     * @param string        $environment
+     */
+    public function __construct(EntityManager $entityManager, $twitchServer, $twitchKey, $environment)
     {
         $this->entityManager = $entityManager;
         $this->twitchServer = $twitchServer;
         $this->twitchKey = $twitchKey;
+        $this->environment = $environment;
     }
 
     /**
@@ -79,7 +89,7 @@ class Scheduler
     public function getCurrentBroadcasts()
     {
         $running = array();
-        exec('ps -C ffmpeg -o pid=,args=', $output);
+        exec('/bin/ps -C ffmpeg -o pid=,args=', $output);
 
         foreach($output as $runningBroadcast) {
             $runningItem = array(
@@ -110,7 +120,7 @@ class Scheduler
         $streamInput = $inputProcessor->generateInputCmd();
         $streamOutput = $outputProcessor->generateOutputCmd();
 
-        $streamCommand = sprintf('ffmpeg %s %s -metadata broadcast_id=%d >/dev/null 2>&1 &', $streamInput, $streamOutput, $broadcast->getBroadcastId());
+        $streamCommand = sprintf('ffmpeg %s %s -metadata env=%s -metadata broadcast_id=%d >/dev/null 2>&1 &', $streamInput, $streamOutput, $this->environment, $broadcast->getBroadcastId());
         exec($streamCommand);
     }
 
@@ -149,7 +159,7 @@ class Scheduler
      */
     protected function getBroadcastId($processString)
     {
-        preg_match('/broadcast_id=[\d]+/', $processString, $broadcast);
+        preg_match('/env='.$this->environment.' -metadata broadcast_id=[\d]+/', $processString, $broadcast);
         if (is_array($broadcast) && is_string($broadcast[0])) {
             $broadcastDetails = explode('=', $broadcast[0]);
             return end($broadcastDetails);
