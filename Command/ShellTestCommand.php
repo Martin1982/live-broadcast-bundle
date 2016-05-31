@@ -26,13 +26,13 @@ class ShellTestCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Checking \'ffmpeg\' command availability...');
+        $output->write('Checking \'ffmpeg\' command availability... ');
         $this->testFfmpeg($output);
 
-        $output->writeln('Checking \'ps\' command availability...');
+        $output->write('Checking \'ps\' command availability... ');
         $this->testPs($output);
 
-        $output->writeln('Checking \'kill\' command availability...');
+        $output->write('Checking \'kill\' command availability... ');
         $this->testKill($output);
     }
 
@@ -68,7 +68,7 @@ class ShellTestCommand extends ContainerAwareCommand
     {
         exec('grep --help', $cmdResult);
 
-        return $this->analyseResult($cmdResult, 'Usage:', $output);        
+        return $this->analyseResult($cmdResult, 'Usage:', $output);
     }
 
     /**
@@ -93,10 +93,10 @@ class ShellTestCommand extends ContainerAwareCommand
     protected function analyseResult($cmdResult, $testable, OutputInterface $output)
     {
         if (count($cmdResult) && false !== strpos(implode($cmdResult), $testable)) {
-            $output->writeln('[OK]');
+            $output->writeln('<info>[OK]</info>');
             return;
         }
 
-        $output->writeln('[FAIL]');
+        $output->writeln('<error>[FAIL]</error>');
     }
 }
