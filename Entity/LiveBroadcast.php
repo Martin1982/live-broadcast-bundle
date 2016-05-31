@@ -72,6 +72,25 @@ class LiveBroadcast
     private $liveOnFacebook = false;
 
     /**
+     * LiveBroadcast constructor.
+     */
+    public function __construct()
+    {
+        $this->setStartTimestamp(new \DateTime());
+        $this->setEndTimestamp(new \DateTime('+1 hour'));
+    }
+
+    /**
+     * Return the string representation of this object.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getBroadcastId() === null ? '-' : $this->getName();
+    }
+
+    /**
      * @return int
      */
     public function getBroadcastId()
