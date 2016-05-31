@@ -55,6 +55,14 @@ Use doctrine to update your database schema with the broadcasting entities
 
 To make planning available through an admin interface it is recommended to use the Sonata Admin bundle.
 
+### Step 6 (Optional): Start the broadcast!
+
+To start a broadcast you can use a console command, you can add this to a cronjob to automate your broadcast schedule.
+
+```bash
+$ app/console livebroadcaster:broadcast
+```
+
 ## Prerequisites
 
 The Broadcaster currently only supports Linux based OS's and needs a few commands;
