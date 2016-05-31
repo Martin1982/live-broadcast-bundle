@@ -4,6 +4,8 @@ Live Broadcast Bundle
 *This project is still in experimental phase and in no way production ready.
 Usage should be limited to development work.*
 
+[![Build Status](https://travis-ci.org/Martin1982/live-broadcast-bundle.svg?branch=master)](https://travis-ci.org/Martin1982/live-broadcast-bundle)
+
 The Live Broadcast Bundle will make it possible to plan live streams to
 various channels like Twitch, Youtube and Facebook (referred to as Output or Channels).
 
