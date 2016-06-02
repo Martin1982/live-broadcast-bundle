@@ -7,8 +7,13 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class AbstractChannel
  * @package Martin1982\LiveBroadcastBundle\Entity\Channel
+ * @ORM\Entity()
+ * @ORM\Table(name="channel", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"twitch" = "ChannelTwitch", "facebook" = "ChannelFacebook"})
  */
-abstract class AbstractChannel
+abstract class BaseChannel
 {
     /**
      * @var integer
@@ -44,7 +49,7 @@ abstract class AbstractChannel
 
     /**
      * @param string $channelName
-     * @return AbstractChannel
+     * @return BaseChannel
      */
     public function setChannelName($channelName)
     {

@@ -6,10 +6,23 @@ services:
               manager_type: orm
               group: "Live"
               label: "Live Broadcasts"
-
         arguments:
             - ~
             - Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast
             - ~
         calls:
             - [ setTranslationDomain, [LiveBroadcastBundle]]
+
+    sonata.admin.channel:
+        class: Martin1982\LiveBroadcastBundle\Admin\ChannelAdmin
+        tags:
+            - name: sonata.admin
+              manager_type: orm
+              group: "Live"
+              label: "Channels"
+        arguments:
+            - ~
+            - Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel
+            - ~
+        calls:
+            - [setSubClasses, [ { ChannelTwitch: Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch, ChannelFacebook: Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook } ] ]

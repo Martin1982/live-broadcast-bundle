@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="channel_twitch", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class ChannelTwitch extends AbstractChannel
+class ChannelTwitch extends BaseChannel
 {
     /**
      * @var string
