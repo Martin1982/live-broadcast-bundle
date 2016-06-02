@@ -26,4 +26,42 @@ class ChannelFacebook extends BaseChannel
      * @ORM\Column(name="fb_entity_id", type="string", length=128, nullable=false)
      */
     protected $fbEntityId;
+
+    /**
+     * @return string
+     */
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * @param string $accessToken
+     * @return ChannelFacebook
+     */
+    public function setAccessToken($accessToken)
+    {
+        $this->accessToken = $accessToken;
+        
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFbEntityId()
+    {
+        return $this->fbEntityId;
+    }
+
+    /**
+     * @param string $fbEntityId
+     * @return ChannelFacebook
+     */
+    public function setFbEntityId($fbEntityId)
+    {
+        $this->fbEntityId = $fbEntityId;
+
+        return $this;
+    }
 }

@@ -19,4 +19,23 @@ class ChannelTwitch extends BaseChannel
      * @ORM\Column(name="stream_key", type="string", length=128, nullable=false)
      */
     protected $streamKey;
+
+    /**
+     * @return string
+     */
+    public function getStreamKey()
+    {
+        return $this->streamKey;
+    }
+
+    /**
+     * @param string $streamKey
+     * @return ChannelTwitch
+     */
+    public function setStreamKey($streamKey)
+    {
+        $this->streamKey = $streamKey;
+
+        return $this;
+    }
 }

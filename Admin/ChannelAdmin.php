@@ -20,13 +20,23 @@ class ChannelAdmin extends Admin
     {
         $subject = $this->getSubject();
 
-        if ($subject instanceof ChannelTwitch) {
 
+        $formMapper
+            ->tab('General')
+            ->with('General')
+                ->add('channelName', 'text', array('label' => 'Channel name'));
+
+        if ($subject instanceof ChannelTwitch) {
+            $formMapper->add('streamKey', 'text', array('label' => 'Twitch stream key'));
         }
 
         if ($subject instanceof ChannelFacebook) {
-
+            $formMapper->add('accessToken', 'text', array('label' => 'Facebook access token'));
+            $formMapper->add('fbEntityId', 'text', array('label' => 'Facebook entity ID'));
         }
+
+        $formMapper->end()
+            ->end();
     }
 
     /**
