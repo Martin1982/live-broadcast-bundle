@@ -1,6 +1,7 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Streams\Input;
+
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
@@ -15,7 +16,8 @@ class File implements InputInterface
     protected $broadcast;
 
     /**
-     * File constructor
+     * File constructor.
+     *
      * @param LiveBroadcast $broadcast
      *
      * @throws \Exception
@@ -33,13 +35,14 @@ class File implements InputInterface
     }
 
     /**
-     * Get the input command part
+     * Get the input command part.
      *
      * @return string
      */
     public function generateInputCmd()
     {
         $inputFilename = $this->broadcast->getVideoInputFile();
+
         return sprintf('-re -i %s -vcodec copy -acodec copy', $inputFilename);
     }
 }

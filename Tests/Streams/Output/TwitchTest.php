@@ -11,7 +11,7 @@ use Martin1982\LiveBroadcastBundle\Streams\Output\Twitch;
 class TwitchTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test if the Twitch output class implements the correct interface
+     * Test if the Twitch output class implements the correct interface.
      */
     public function testTwitchContstructor()
     {
@@ -20,7 +20,7 @@ class TwitchTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if the Twitch output class generates the correct output command
+     * Test if the Twitch output class generates the correct output command.
      */
     public function testGenerateOutputCmd()
     {

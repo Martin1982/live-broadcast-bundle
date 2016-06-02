@@ -11,7 +11,7 @@ class Facebook implements OutputInterface
     const CHANNEL_NAME = 'facebook';
 
     /**
-     * Facebook constructor
+     * Facebook constructor.
      */
     public function __construct()
     {
@@ -19,7 +19,7 @@ class Facebook implements OutputInterface
     }
 
     /**
-     * Give the cmd string to start the stream
+     * Give the cmd string to start the stream.
      *
      * @return string
      */

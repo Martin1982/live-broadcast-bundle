@@ -21,7 +21,7 @@ class Twitch implements OutputInterface
     protected $streamKey;
 
     /**
-     * Twitch constructor
+     * Twitch constructor.
      */
     public function __construct($server, $streamKey)
     {
@@ -30,7 +30,7 @@ class Twitch implements OutputInterface
     }
 
     /**
-     * Get the output parameters for streaming
+     * Get the output parameters for streaming.
      *
      * @return string
      */
