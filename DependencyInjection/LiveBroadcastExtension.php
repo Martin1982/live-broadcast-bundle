@@ -24,7 +24,5 @@ class LiveBroadcastExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-
-        $container->setParameter('live_broadcast.symfony_environment', $container->getParameter('kernel.environment'));
     }
 }
