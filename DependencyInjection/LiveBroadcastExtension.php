@@ -31,6 +31,6 @@ class LiveBroadcastExtension extends Extension
 
         $container->setParameter('live_broadcast.twitch.stream_server_fqdn', $config['twitch']['stream_server_fqdn']);
         $container->setParameter('live_broadcast.twitch.stream_key', $config['twitch']['stream_key']);
-        $container->setParameter('live_broadcast.symfony_environment', $container->getParameter("kernel.environment"));
+        $container->setParameter('live_broadcast.symfony_environment', $container->getParameter('kernel.environment'));
     }
 }

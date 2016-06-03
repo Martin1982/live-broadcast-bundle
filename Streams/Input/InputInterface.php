@@ -8,6 +8,7 @@ interface InputInterface
 {
     /**
      * InputInterface constructor.
+     *
      * @param LiveBroadcast $broadcast
      */
     public function __construct(LiveBroadcast $broadcast);

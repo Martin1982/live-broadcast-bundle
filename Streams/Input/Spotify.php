@@ -1,6 +1,7 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Streams\Input;
+
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
@@ -12,7 +13,7 @@ class Spotify implements InputInterface
     const INPUT_TYPE = 'spotify';
 
     /**
-     * Spotify constructor
+     * Spotify constructor.
      */
     public function __construct(LiveBroadcast $broadcast)
     {
