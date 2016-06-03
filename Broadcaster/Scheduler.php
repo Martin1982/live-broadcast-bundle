@@ -73,7 +73,7 @@ class Scheduler
     /**
      * @param LiveBroadcast $plannedBroadcast
      */
-    public function startBroadcastOnChannels($plannedBroadcast)
+    public function startBroadcastOnChannels(LiveBroadcast $plannedBroadcast)
     {
         $channels = $plannedBroadcast->getOutputChannels();
         
