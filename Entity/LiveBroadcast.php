@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class LiveBroadcast
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -108,6 +108,7 @@ class LiveBroadcast
 
     /**
      * @param string $name
+     *
      * @return LiveBroadcast
      */
     public function setName($name)
@@ -127,6 +128,7 @@ class LiveBroadcast
 
     /**
      * @param string $videoInputFile
+     *
      * @return LiveBroadcast
      */
     public function setVideoInputFile($videoInputFile)
@@ -146,6 +148,7 @@ class LiveBroadcast
 
     /**
      * @param \DateTime $startTimestamp
+     *
      * @return LiveBroadcast
      */
     public function setStartTimestamp($startTimestamp)
@@ -165,6 +168,7 @@ class LiveBroadcast
 
     /**
      * @param \DateTime $endTimestamp
+     *
      * @return LiveBroadcast
      */
     public function setEndTimestamp($endTimestamp)
@@ -184,6 +188,7 @@ class LiveBroadcast
 
     /**
      * @param bool $liveOnYoutube
+     *
      * @return LiveBroadcast
      */
     public function setLiveOnYoutube($liveOnYoutube)
@@ -203,6 +208,7 @@ class LiveBroadcast
 
     /**
      * @param bool $liveOnTwitch
+     *
      * @return LiveBroadcast
      */
     public function setLiveOnTwitch($liveOnTwitch)
@@ -222,6 +228,7 @@ class LiveBroadcast
 
     /**
      * @param bool $liveOnFacebook
+     *
      * @return LiveBroadcast
      */
     public function setLiveOnFacebook($liveOnFacebook)

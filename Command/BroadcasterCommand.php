@@ -12,7 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class BroadcasterCommand extends ContainerAwareCommand
 {
-
     /**
      * {@inheritdoc}
      */
