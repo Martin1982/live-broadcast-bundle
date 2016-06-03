@@ -34,7 +34,7 @@ class SchedulerCommands implements SchedulerCommandsInterface
             $meta .= ' -metadata '.$key.'='.$value;
         }
 
-        return exec(sprintf('ffmpeg %s %s %s >/dev/null 2>&1 &', $input, $output, $meta));
+        return exec(sprintf('ffmpeg %s %s%s >/dev/null 2>&1 &', $input, $output, $meta));
     }
 
     /**
@@ -74,7 +74,7 @@ class SchedulerCommands implements SchedulerCommandsInterface
     public function getBroadcastId($processString)
     {
         preg_match('/env='.$this->environment.' -metadata broadcast_id=[\d]+/', $processString, $broadcast);
-        if (is_array($broadcast) && is_string($broadcast[0])) {
+        if (is_array($broadcast) && !empty($broadcast) && is_string($broadcast[0])) {
             $broadcastDetails = explode('=', $broadcast[0]);
             return end($broadcastDetails);
         }
