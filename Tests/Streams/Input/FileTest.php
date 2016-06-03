@@ -12,7 +12,7 @@ use Martin1982\LiveBroadcastBundle\Streams\Input\File;
 class FileTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test if the File input class implements the correct interface
+     * Test if the File input class implements the correct interface.
      */
     public function testFileInterface()
     {
@@ -44,7 +44,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if the File input class generates the correct input command
+     * Test if the File input class generates the correct input command.
      */
     public function testGenerateInputCmd()
     {
