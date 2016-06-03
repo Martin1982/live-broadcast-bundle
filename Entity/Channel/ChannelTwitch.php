@@ -38,4 +38,9 @@ class ChannelTwitch extends BaseChannel
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return 'Twitch: ' . $this->getChannelName();
+    }
 }

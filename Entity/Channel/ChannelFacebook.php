@@ -64,4 +64,9 @@ class ChannelFacebook extends BaseChannel
 
         return $this;
     }
+    
+    public function __toString()
+    {
+        return 'Facebook: ' . $this->getChannelName();
+    }
 }

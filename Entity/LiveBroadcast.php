@@ -55,7 +55,7 @@ class LiveBroadcast
     /**
      * @var BaseChannel
      *
-     * @ORM\ManyToMany(targetEntity="BaseChannel")
+     * @ORM\ManyToMany(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel")
      * @ORM\JoinTable(name="broadcasts_channels",
      *      joinColumns={@ORM\JoinColumn(name="broadcast_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="channel_id", referencedColumnName="id", unique=true)}

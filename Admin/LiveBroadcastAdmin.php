@@ -13,6 +13,8 @@ use Sonata\AdminBundle\Form\FormMapper;
  */
 class LiveBroadcastAdmin extends Admin
 {
+    protected $baseRoutePattern = 'broadcast';
+
     /**
      * {@inheritdoc}
      */
@@ -33,10 +35,15 @@ class LiveBroadcastAdmin extends Admin
             ->end()
             ->tab('Channels')
                 ->with('Channels')
-                    ->add('outputChannels', 'sonata_type_collection', array(), array(
-                        'edit' => 'inline',
-                        'inline' => 'table',
-                        'sortable' => 'channelName',
+                    ->add('outputChannels', 'sonata_type_collection', array(
+                        'cascade_validation' => false,
+                        'type_options'       => array( 'delete' => false ),
+                    ), array(
+                        'edit'            => 'inline',
+                        'inline'          => 'table',
+                        'sortable'        => 'channelName',
+//                        'link_parameters' => array( 'context' => 'define context from which you want to select media or else just add default' ),
+                        'admin_code'      => 'sonata.admin.channel'
                     ))
                 ->end();
     }
