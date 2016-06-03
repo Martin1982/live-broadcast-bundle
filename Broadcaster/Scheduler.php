@@ -64,7 +64,7 @@ class Scheduler
             $broadcast = $broadcastRepository->find($running['broadcastId']);
 
             if ($broadcast->getEndTimestamp() < new \DateTime()) {
-                $this->stopBroadcast($broadcast, $running['pid']);
+                $this->stopBroadcast($running['pid']);
             }
 
             array_push($runningIds, $running['broadcastId']);
@@ -127,10 +127,9 @@ class Scheduler
     /**
      * Kill a broadcast
      *
-     * @param LiveBroadcast $broadcast
      * @param int           $pid
      */
-    public function stopBroadcast(LiveBroadcast $broadcast, $pid)
+    public function stopBroadcast($pid)
     {
         exec(sprintf("kill %d", $pid));
     }
