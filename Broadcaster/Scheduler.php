@@ -40,12 +40,45 @@ class Scheduler
      */
     public function applySchedule()
     {
-        $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
         $broadcasting = $this->getCurrentBroadcasts();
         $plannedBroadcasts = $this->getPlannedBroadcasts();
+
+        $runningIds = $this->stopExpiredBroadcasts($broadcasting);
+        $this->startPlannedBroadcasts($plannedBroadcasts, $runningIds);
+    }
+
+    /**
+     * Start planned broadcasts if not already running
+     *
+     * @param LiveBroadcast[] $plannedBroadcasts
+     * @param array           $runningIds
+     */
+    public function startPlannedBroadcasts($plannedBroadcasts = array(), $runningIds = array())
+    {
+        $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
+
+        foreach ($plannedBroadcasts as $planned) {
+            $plannedId = $planned->getBroadcastId();
+
+            if (!in_array($plannedId, $runningIds)) {
+                $broadcast = $broadcastRepository->find($plannedId);
+                $this->startBroadcast($broadcast);
+            }
+        }
+
+    }
+
+    /**
+     * Stop running broadcasts that have expired
+     *
+     * @param RunningBroadcast[] $broadcasting
+     * @return array
+     */
+    public function stopExpiredBroadcasts($broadcasting = array())
+    {
+        $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
         $runningIds = array();
 
-        // Stop running broadcasts that have expired
         foreach ($broadcasting as $running) {
             $broadcast = $broadcastRepository->find($running->getBroadcastId());
 
@@ -56,15 +89,7 @@ class Scheduler
             array_push($runningIds, $running->getBroadcastId());
         }
 
-        // Start planned broadcasts if not already running
-        foreach ($plannedBroadcasts as $planned) {
-            $plannedId = $planned->getBroadcastId();
-
-            if (!in_array($plannedId, $runningIds)) {
-                $broadcast = $broadcastRepository->find($plannedId);
-                $this->startBroadcast($broadcast);
-            }
-        }
+        return $runningIds;
     }
 
     /**
