@@ -32,16 +32,13 @@ class LiveBroadcastAdmin extends Admin
                 ->end()
             ->end()
             ->tab('Channels')
-                ->with('Youtube')
-                    ->add('live_on_youtube', 'choice', array('choices' => array(0 => 'No', 1 => 'Yes'), 'label' => 'Youtube'))
-                ->end()
-                ->with('Twitch')
-                    ->add('live_on_twitch', 'choice', array('choices' => array(0 => 'No', 1 => 'Yes'), 'label' => 'Twitch'))
-            ->end()
-            ->with('Facebook')
-                    ->add('live_on_facebook', 'choice', array('choices' => array(0 => 'No', 1 => 'Yes'), 'label' => 'Facebook'))
-                ->end()
-            ->end();
+                ->with('Channels')
+                    ->add('outputChannels', 'sonata_type_collection', array(), array(
+                        'edit' => 'inline',
+                        'inline' => 'table',
+                        'sortable' => 'channelName',
+                    ))
+                ->end();
     }
 
     /**

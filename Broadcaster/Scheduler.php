@@ -22,31 +22,17 @@ class Scheduler
     /**
      * @var string
      */
-    protected $twitchServer;
-
-    /**
-     * @var string
-     */
-    protected $twitchKey;
-
-    /**
-     * @var string
-     */
     protected $environment;
 
     /**
      * Scheduler constructor.
      *
      * @param EntityManager $entityManager
-     * @param string        $twitchServer
-     * @param string        $twitchKey
      * @param string        $environment
      */
-    public function __construct(EntityManager $entityManager, $twitchServer, $twitchKey, $environment)
+    public function __construct(EntityManager $entityManager, $environment)
     {
         $this->entityManager = $entityManager;
-        $this->twitchServer = $twitchServer;
-        $this->twitchKey = $twitchKey;
         $this->environment = $environment;
     }
 

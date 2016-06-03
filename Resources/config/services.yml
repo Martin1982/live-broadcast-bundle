@@ -3,6 +3,4 @@ services:
     class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler
     arguments:
       - "@doctrine.orm.entity_manager"
-      - "%live_broadcast.twitch.stream_server_fqdn%"
-      - "%live_broadcast.twitch.stream_key%"
       - "%live_broadcast.symfony_environment%"

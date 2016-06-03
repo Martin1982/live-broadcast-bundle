@@ -25,12 +25,6 @@ class LiveBroadcastExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $processor = new Processor();
-        $configuration = $this->getConfiguration($configs, $container);
-        $config = $processor->processConfiguration($configuration, $configs);
-
-        $container->setParameter('live_broadcast.twitch.stream_server_fqdn', $config['twitch']['stream_server_fqdn']);
-        $container->setParameter('live_broadcast.twitch.stream_key', $config['twitch']['stream_key']);
         $container->setParameter('live_broadcast.symfony_environment', $container->getParameter('kernel.environment'));
     }
 }
