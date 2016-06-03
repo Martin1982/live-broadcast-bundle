@@ -5,6 +5,7 @@ Live Broadcast Bundle
 Usage should be limited to development work.*
 
 [![Build Status](https://travis-ci.org/Martin1982/live-broadcast-bundle.svg?branch=master)](https://travis-ci.org/Martin1982/live-broadcast-bundle)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/6027a50f-06cf-4989-8267-9f481e838b2a/mini.png)](https://insight.sensiolabs.com/projects/6027a50f-06cf-4989-8267-9f481e838b2a)
 
 The Live Broadcast Bundle will make it possible to plan live streams to
 various channels like Twitch, Youtube and Facebook (referred to as Output or Channels).
