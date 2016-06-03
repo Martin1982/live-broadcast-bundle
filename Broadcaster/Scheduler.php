@@ -50,7 +50,7 @@ class Scheduler
     }
 
     /**
-     * Run streams that need to be running
+     * Run streams that need to be running.
      */
     public function applySchedule()
     {
@@ -71,7 +71,7 @@ class Scheduler
         }
 
         // Start planned broadcasts if not already running
-        foreach($plannedBroadcasts as $planned) {
+        foreach ($plannedBroadcasts as $planned) {
             $plannedId = $planned->getBroadcastId();
 
             if (!in_array($plannedId, $runningIds)) {
@@ -82,7 +82,7 @@ class Scheduler
     }
 
     /**
-     * Retrieve what is broadcasting
+     * Retrieve what is broadcasting.
      *
      * @return RunningBroadcast[]
      */
@@ -91,7 +91,7 @@ class Scheduler
         $running = array();
         $output = $this->schedulerCommands->getRunningProcesses();
 
-        foreach($output as $runningBroadcast) {
+        foreach ($output as $runningBroadcast) {
             $runningItem = new RunningBroadcast($this->schedulerCommands->getProcessId($runningBroadcast), $this->schedulerCommands->getBroadcastId($runningBroadcast));
 
             if ($runningItem->isValid()) {
@@ -103,7 +103,7 @@ class Scheduler
     }
 
     /**
-     * Initiate a new broadcast
+     * Initiate a new broadcast.
      *
      * @param LiveBroadcast $broadcast
      */
@@ -121,9 +121,10 @@ class Scheduler
     }
 
     /**
-     * Get the planned broadcast items
+     * Get the planned broadcast items.
      *
      * @return LiveBroadcast[]
+     *
      * @throws \Doctrine\ORM\Query\QueryException
      */
     protected function getPlannedBroadcasts()
@@ -137,7 +138,7 @@ class Scheduler
             $expr->gte('endTimestamp', new \DateTime())
         ));
 
-        /** @var LiveBroadcast[] $nowLive */
+        /* @var LiveBroadcast[] $nowLive */
         return $broadcastRepository->createQueryBuilder('lb')->addCriteria($criterea)->getQuery()->getResult();
     }
 }

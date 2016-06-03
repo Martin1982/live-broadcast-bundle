@@ -37,7 +37,7 @@ class ShellTestCommand extends ContainerAwareCommand
     }
 
     /**
-     * Test FFMpeg availability
+     * Test FFMpeg availability.
      *
      * @param OutputInterface $output
      */
@@ -48,7 +48,7 @@ class ShellTestCommand extends ContainerAwareCommand
     }
 
     /**
-     * Test ps availability
+     * Test ps availability.
      *
      * @param OutputInterface $output
      */
@@ -60,7 +60,7 @@ class ShellTestCommand extends ContainerAwareCommand
     }
 
     /**
-     * Test grep availability
+     * Test grep availability.
      *
      * @param OutputInterface $output
      */
@@ -72,7 +72,7 @@ class ShellTestCommand extends ContainerAwareCommand
     }
 
     /**
-     * Test kill availability
+     * Test kill availability.
      *
      * @param OutputInterface $output
      */
@@ -84,7 +84,7 @@ class ShellTestCommand extends ContainerAwareCommand
     }
 
     /**
-     * Test ps availability
+     * Test ps availability.
      *
      * @param array           $cmdResult
      * @param string          $testable
@@ -94,6 +94,7 @@ class ShellTestCommand extends ContainerAwareCommand
     {
         if (count($cmdResult) && false !== strpos(implode($cmdResult), $testable)) {
             $output->writeln('<info>[OK]</info>');
+
             return;
         }
 

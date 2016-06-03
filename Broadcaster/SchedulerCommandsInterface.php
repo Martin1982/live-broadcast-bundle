@@ -35,7 +35,7 @@ interface SchedulerCommandsInterface
 
     /**
      * @param string $processString
-     * @return mixed|null
+     * @return int|null
      */
     public function getBroadcastId($processString);
 }

@@ -65,7 +65,7 @@ class SchedulerCommands implements SchedulerCommandsInterface
             return (int)$pid[0];
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -79,7 +79,7 @@ class SchedulerCommands implements SchedulerCommandsInterface
             return end($broadcastDetails);
         }
 
-        return null;
+        return;
     }
 
     /**

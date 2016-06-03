@@ -14,7 +14,7 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
     use PHPMock;
 
     /**
-     * Test the start process command
+     * Test the start process command.
      */
     public function testStartProcess()
     {
@@ -31,7 +31,7 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the stop process command
+     * Test the stop process command.
      */
     public function testStopProcess()
     {
@@ -47,7 +47,9 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
         $command->stopProcess(1337);
     }
 
-    /** Test the running processes command */
+    /**
+     * Test the running processes command.
+     */
     public function testGetRunningProcesses()
     {
         $command = new SchedulerCommands('unittest');
@@ -65,7 +67,7 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test retrieval of the broadcast id
+     * Test retrieval of the broadcast id.
      */
     public function testGetBroadcastId()
     {
@@ -84,7 +86,7 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test retrieval of the process id
+     * Test retrieval of the process id.
      */
     public function testGetProcessId()
     {

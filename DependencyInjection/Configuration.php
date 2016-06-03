@@ -1,4 +1,5 @@
 <?php
+
 namespace Martin1982\LiveBroadcastBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -25,7 +26,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Set Twitch configuration nodes
+     * Set Twitch configuration nodes.
      *
      * @param ArrayNodeDefinition $rootNode
      */
