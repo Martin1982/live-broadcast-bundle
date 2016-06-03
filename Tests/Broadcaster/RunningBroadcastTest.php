@@ -15,9 +15,9 @@ class RunningBroadcastTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetMethods()
     {
-        $running = new RunningBroadcast(1, 2);
-        $this->assertEquals($running->getBroadcastId(), 1);
-        $this->assertEquals($running->getProcessId(), 2);
+        $running = new RunningBroadcast(1, 2, 44);
+        self::assertEquals($running->getBroadcastId(), 1);
+        self::assertEquals($running->getProcessId(), 2);
     }
 
     /**
@@ -25,16 +25,22 @@ class RunningBroadcastTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsValid()
     {
-        $running = new RunningBroadcast(null, null);
-        $this->assertEquals($running->isValid(), false);
+        $running = new RunningBroadcast(null, null, null);
+        self::assertEquals($running->isValid(), false);
 
-        $running = new RunningBroadcast(1, null);
-        $this->assertEquals($running->isValid(), false);
+        $running = new RunningBroadcast(1, null, null);
+        self::assertEquals($running->isValid(), false);
 
-        $running = new RunningBroadcast(null, 2);
-        $this->assertEquals($running->isValid(), false);
+        $running = new RunningBroadcast(null, 2, null);
+        self::assertEquals($running->isValid(), false);
 
-        $running = new RunningBroadcast(1, 2);
-        $this->assertEquals($running->isValid(), true);
+        $running = new RunningBroadcast(null, 2, 3);
+        self::assertEquals($running->isValid(), false);
+
+        $running = new RunningBroadcast(1, 2, null);
+        self::assertEquals($running->isValid(), false);
+
+        $running = new RunningBroadcast(1, 2, 3);
+        self::assertEquals($running->isValid(), true);
     }
 }
