@@ -20,6 +20,7 @@
         "psr-4": { "Martin1982\\LiveBroadcastBundle\\": "" }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.11"
+        "friendsofphp/php-cs-fixer": "^1.11",
+        "php-mock/php-mock-phpunit": ">=1.1.1 ^1.1"
     }
 }

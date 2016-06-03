@@ -30,24 +30,23 @@ class Scheduler
     protected $twitchKey;
 
     /**
-     * @var string
+     * @var SchedulerCommandsInterface
      */
-    protected $environment;
+    protected $schedulerCommands;
 
     /**
      * Scheduler constructor.
-     *
-     * @param EntityManager $entityManager
-     * @param string        $twitchServer
-     * @param string        $twitchKey
-     * @param string        $environment
+     * @param EntityManager              $entityManager
+     * @param SchedulerCommandsInterface $schedulerCommands
+     * @param string                     $twitchServer
+     * @param string                     $twitchKey
      */
-    public function __construct(EntityManager $entityManager, $twitchServer, $twitchKey, $environment)
+    public function __construct(EntityManager $entityManager, SchedulerCommandsInterface $schedulerCommands, $twitchServer, $twitchKey)
     {
         $this->entityManager = $entityManager;
+        $this->schedulerCommands = $schedulerCommands;
         $this->twitchServer = $twitchServer;
         $this->twitchKey = $twitchKey;
-        $this->environment = $environment;
     }
 
     /**
@@ -62,13 +61,13 @@ class Scheduler
 
         // Stop running broadcasts that have expired
         foreach ($broadcasting as $running) {
-            $broadcast = $broadcastRepository->find($running['broadcastId']);
+            $broadcast = $broadcastRepository->find($running->getBroadcastId());
 
             if ($broadcast->getEndTimestamp() < new \DateTime()) {
-                $this->stopBroadcast($running['pid']);
+                $this->schedulerCommands->stopProcess($running->getProcessId());
             }
 
-            array_push($runningIds, $running['broadcastId']);
+            array_push($runningIds, $running->getBroadcastId());
         }
 
         // Start planned broadcasts if not already running
@@ -85,20 +84,17 @@ class Scheduler
     /**
      * Retrieve what is broadcasting.
      *
-     * @return array
+     * @return RunningBroadcast[]
      */
     public function getCurrentBroadcasts()
     {
         $running = array();
-        exec('/bin/ps -C ffmpeg -o pid=,args=', $output);
+        $output = $this->schedulerCommands->getRunningProcesses();
 
         foreach ($output as $runningBroadcast) {
-            $runningItem = array(
-                'pid' => $this->getPid($runningBroadcast),
-                'broadcastId' => $this->getBroadcastId($runningBroadcast),
-            );
+            $runningItem = new RunningBroadcast($this->schedulerCommands->getProcessId($runningBroadcast), $this->schedulerCommands->getBroadcastId($runningBroadcast));
 
-            if (!empty($runningItem['pid']) && !empty($runningItem['broadcastId'])) {
+            if ($runningItem->isValid()) {
                 array_push($running, $runningItem);
             }
         }
@@ -121,54 +117,7 @@ class Scheduler
         $streamInput = $inputProcessor->generateInputCmd();
         $streamOutput = $outputProcessor->generateOutputCmd();
 
-        $streamCommand = sprintf('ffmpeg %s %s -metadata env=%s -metadata broadcast_id=%d >/dev/null 2>&1 &', $streamInput, $streamOutput, $this->environment, $broadcast->getBroadcastId());
-        exec($streamCommand);
-    }
-
-    /**
-     * Kill a broadcast.
-     *
-     * @param int $pid
-     */
-    public function stopBroadcast($pid)
-    {
-        exec(sprintf('kill %d', $pid));
-    }
-
-    /**
-     * Get the PID for the broadcast.
-     *
-     * @param $processString
-     *
-     * @return int|null
-     */
-    protected function getPid($processString)
-    {
-        preg_match('/^[\d]+/', $processString, $pid);
-        if (count($pid) && is_numeric($pid[0])) {
-            return (int) $pid[0];
-        }
-
-        return;
-    }
-
-    /**
-     * Get the currently playing broadcast.
-     *
-     * @param $processString
-     *
-     * @return string|null
-     */
-    protected function getBroadcastId($processString)
-    {
-        preg_match('/env='.$this->environment.' -metadata broadcast_id=[\d]+/', $processString, $broadcast);
-        if (is_array($broadcast) && is_string($broadcast[0])) {
-            $broadcastDetails = explode('=', $broadcast[0]);
-
-            return end($broadcastDetails);
-        }
-
-        return;
+        $this->schedulerCommands->startProcess($streamInput, $streamOutput, array('broadcast_id' => $broadcast->getBroadcastId()));
     }
 
     /**
