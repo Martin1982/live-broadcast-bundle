@@ -4,9 +4,10 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Streams\ChannelFactory;
 use Martin1982\LiveBroadcastBundle\Streams\Input\File;
-use Martin1982\LiveBroadcastBundle\Streams\Output\Twitch;
 
 /**
  * Class Scheduler
@@ -25,6 +26,16 @@ class Scheduler
     protected $schedulerCommands;
 
     /**
+     * @var RunningBroadcast[]
+     */
+    protected $runningBroadcasts = array();
+
+    /**
+     * @var LiveBroadcast[]
+     */
+    protected $plannedBroadcasts = array();
+
+    /**
      * Scheduler constructor.
      * @param EntityManager              $entityManager
      * @param SchedulerCommandsInterface $schedulerCommands
@@ -40,56 +51,63 @@ class Scheduler
      */
     public function applySchedule()
     {
-        $broadcasting = $this->getCurrentBroadcasts();
-        $plannedBroadcasts = $this->getPlannedBroadcasts();
+        $this->getRunningBroadcasts();
+        $this->stopExpiredBroadcasts();
 
-        $runningIds = $this->stopExpiredBroadcasts($broadcasting);
-        $this->startPlannedBroadcasts($plannedBroadcasts, $runningIds);
+        $this->getPlannedBroadcasts();
+        $this->startPlannedBroadcasts();
     }
 
     /**
      * Start planned broadcasts if not already running
-     *
-     * @param LiveBroadcast[] $plannedBroadcasts
-     * @param array           $runningIds
      */
-    public function startPlannedBroadcasts($plannedBroadcasts = array(), $runningIds = array())
+    public function startPlannedBroadcasts()
     {
-        $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
-
-        foreach ($plannedBroadcasts as $planned) {
-            $plannedId = $planned->getBroadcastId();
-
-            if (!in_array($plannedId, $runningIds)) {
-                $broadcast = $broadcastRepository->find($plannedId);
-                $this->startBroadcast($broadcast);
-            }
+        foreach ($this->plannedBroadcasts as $plannedBroadcast) {
+            $this->startBroadcastOnChannels($plannedBroadcast);
         }
 
+        $this->getRunningBroadcasts();
     }
 
     /**
-     * Stop running broadcasts that have expired
-     *
-     * @param RunningBroadcast[] $broadcasting
-     * @return array
+     * @param LiveBroadcast $plannedBroadcast
      */
-    public function stopExpiredBroadcasts($broadcasting = array())
+    public function startBroadcastOnChannels($plannedBroadcast)
+    {
+        $channels = $plannedBroadcast->getOutputChannels();
+        
+        foreach ($channels as $channel) {
+            foreach ($this->runningBroadcasts as $runningBroadcast) {
+                if (
+                    $runningBroadcast->getBroadcastId() === $plannedBroadcast->getBroadcastId() &&
+                    $runningBroadcast->getChannelId() === $channel->getChannelId()
+                ) {
+                    continue;
+                }
+
+                $this->startBroadcast($plannedBroadcast, $channel);
+            }
+        }
+    }
+    
+    
+    /**
+     * Stop running broadcasts that have expired
+     */
+    public function stopExpiredBroadcasts()
     {
         $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
-        $runningIds = array();
 
-        foreach ($broadcasting as $running) {
-            $broadcast = $broadcastRepository->find($running->getBroadcastId());
+        foreach ($this->runningBroadcasts as $runningBroadcast) {
+            $broadcast = $broadcastRepository->find($runningBroadcast->getBroadcastId());
 
             if ($broadcast->getEndTimestamp() < new \DateTime()) {
-                $this->schedulerCommands->stopProcess($running->getProcessId());
+                $this->schedulerCommands->stopProcess($runningBroadcast->getProcessId());
             }
-
-            array_push($runningIds, $running->getBroadcastId());
         }
 
-        return $runningIds;
+        $this->getRunningBroadcasts();
     }
 
     /**
@@ -97,33 +115,37 @@ class Scheduler
      *
      * @return RunningBroadcast[]
      */
-    public function getCurrentBroadcasts()
+    public function getRunningBroadcasts()
     {
-        $running = array();
+        $this->runningBroadcasts = array();
         $output = $this->schedulerCommands->getRunningProcesses();
 
         foreach ($output as $runningBroadcast) {
-            $runningItem = new RunningBroadcast($this->schedulerCommands->getProcessId($runningBroadcast), $this->schedulerCommands->getBroadcastId($runningBroadcast));
+            $runningItem = new RunningBroadcast(
+                $this->schedulerCommands->getProcessId($runningBroadcast),
+                $this->schedulerCommands->getBroadcastId($runningBroadcast),
+                $this->schedulerCommands->getChannelId($runningBroadcast)
+            );
 
             if ($runningItem->isValid()) {
-                array_push($running, $runningItem);
+                $this->runningBroadcasts[] = $runningItem;
             }
         }
 
-        return $running;
+        return $this->runningBroadcasts;
     }
 
     /**
      * Initiate a new broadcast.
      *
      * @param LiveBroadcast $broadcast
+     * @param BaseChannel   $channel
      */
-    public function startBroadcast(LiveBroadcast $broadcast)
+    public function startBroadcast(LiveBroadcast $broadcast, BaseChannel $channel)
     {
         // @TODO Add factory when supporting other inputs
         $inputProcessor = new File($broadcast);
-        // @TODO Add factory when supporting other outputs
-        $outputProcessor = new Twitch($this->twitchServer, $this->twitchKey);
+        $outputProcessor = ChannelFactory::loadOutput($channel);
 
         $streamInput = $inputProcessor->generateInputCmd();
         $streamOutput = $outputProcessor->generateOutputCmd();
@@ -150,6 +172,11 @@ class Scheduler
         ));
 
         /* @var LiveBroadcast[] $nowLive */
-        return $broadcastRepository->createQueryBuilder('lb')->addCriteria($criterea)->getQuery()->getResult();
+        $this->plannedBroadcasts = $broadcastRepository->createQueryBuilder('lb')
+            ->addCriteria($criterea)
+            ->getQuery()
+            ->getResult();
+
+        return $this->plannedBroadcasts;
     }
 }

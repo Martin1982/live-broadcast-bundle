@@ -21,6 +21,13 @@ class ChannelTwitch extends BaseChannel
     protected $streamKey;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="stream_server", type="string", length=128, nullable=false)
+     */
+    protected $streamServer = 'live.twitch.tv';
+
+    /**
      * @return string
      */
     public function getStreamKey()
@@ -36,6 +43,25 @@ class ChannelTwitch extends BaseChannel
     {
         $this->streamKey = $streamKey;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreamServer()
+    {
+        return $this->streamServer;
+    }
+
+    /**
+     * @param string $streamServer
+     * @return ChannelTwitch
+     */
+    public function setStreamServer($streamServer)
+    {
+        $this->streamServer = $streamServer;
+        
         return $this;
     }
 

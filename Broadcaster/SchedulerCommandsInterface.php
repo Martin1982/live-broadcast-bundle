@@ -38,4 +38,10 @@ interface SchedulerCommandsInterface
      * @return int|null
      */
     public function getBroadcastId($processString);
+
+    /**
+     * @param string $processString
+     * @return int|null
+     */
+    public function getChannelId($processString);
 }

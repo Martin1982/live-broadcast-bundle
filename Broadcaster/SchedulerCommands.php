@@ -83,6 +83,19 @@ class SchedulerCommands implements SchedulerCommandsInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getChannelId($processString)
+    {
+        preg_match('/env='.$this->environment.' -metadata broadcast_id=([\d]+) channel_id=[\d]+/', $processString, $ids);
+        if (is_array($ids) && !empty($ids) && is_string($ids[1])) {
+            return $ids[1];
+        }
+
+        return;
+    }
+
+    /**
      * @return string
      */
     private function getEnvironment()

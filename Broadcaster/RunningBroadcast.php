@@ -19,14 +19,20 @@ class RunningBroadcast
     private $processId;
 
     /**
+     * @var int
+     */
+    private $channelId;
+
+    /**
      * RunningBroadcast constructor.
      * @param int $broadcastId
      * @param int $processId
      */
-    public function __construct($broadcastId, $processId)
+    public function __construct($broadcastId, $processId, $channelId)
     {
         $this->broadcastId = $broadcastId;
         $this->processId = $processId;
+        $this->channelId = $channelId;
     }
 
     /**
@@ -43,6 +49,14 @@ class RunningBroadcast
     public function getProcessId()
     {
         return $this->processId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getChannelId()
+    {
+        return $this->channelId;
     }
 
     /**

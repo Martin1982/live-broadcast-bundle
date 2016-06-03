@@ -1,6 +1,7 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Streams\Output;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 
 /**
  * Class Twitch
@@ -22,11 +23,13 @@ class Twitch implements OutputInterface
 
     /**
      * Twitch constructor.
+     *
+     * @param ChannelTwitch $channel
      */
-    public function __construct($server, $streamKey)
+    public function __construct(ChannelTwitch $channel)
     {
-        $this->server = $server;
-        $this->streamKey = $streamKey;
+        $this->server = $channel->getStreamServer();
+        $this->streamKey = $channel->getStreamKey();
     }
 
     /**

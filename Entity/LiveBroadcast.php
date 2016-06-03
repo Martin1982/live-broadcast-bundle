@@ -208,7 +208,7 @@ class LiveBroadcast
     }
 
     /**
-     * @return ArrayCollection|BaseChannel
+     * @return BaseChannel[]
      */
     public function getOutputChannels()
     {
