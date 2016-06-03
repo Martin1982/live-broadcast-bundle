@@ -64,6 +64,8 @@ class RunningBroadcast
      */
     public function isValid()
     {
-        return ($this->getProcessId() !== null) && ($this->getBroadcastId() !== null);
+        return ($this->getProcessId() !== null) &&
+            ($this->getBroadcastId() !== null) &&
+            ($this->getChannelId() !== null);
     }
 }
