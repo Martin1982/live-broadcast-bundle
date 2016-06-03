@@ -1,6 +1,7 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Streams\Input;
+
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
@@ -12,7 +13,7 @@ class Rtmp implements InputInterface
     const INPUT_TYPE = 'rtmp';
 
     /**
-     * Rtmp constructor
+     * Rtmp constructor.
      */
     public function __construct(LiveBroadcast $broadcast)
     {

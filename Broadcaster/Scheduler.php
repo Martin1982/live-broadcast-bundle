@@ -36,6 +36,7 @@ class Scheduler
 
     /**
      * Scheduler constructor.
+     *
      * @param EntityManager $entityManager
      * @param string        $twitchServer
      * @param string        $twitchKey
@@ -50,7 +51,7 @@ class Scheduler
     }
 
     /**
-     * Run streams that need to be running
+     * Run streams that need to be running.
      */
     public function applySchedule()
     {
@@ -71,7 +72,7 @@ class Scheduler
         }
 
         // Start planned broadcasts if not already running
-        foreach($plannedBroadcasts as $planned) {
+        foreach ($plannedBroadcasts as $planned) {
             $plannedId = $planned->getBroadcastId();
 
             if (!in_array($plannedId, $runningIds)) {
@@ -82,7 +83,7 @@ class Scheduler
     }
 
     /**
-     * Retrieve what is broadcasting
+     * Retrieve what is broadcasting.
      *
      * @return array
      */
@@ -91,9 +92,9 @@ class Scheduler
         $running = array();
         exec('/bin/ps -C ffmpeg -o pid=,args=', $output);
 
-        foreach($output as $runningBroadcast) {
+        foreach ($output as $runningBroadcast) {
             $runningItem = array(
-                'pid'         => $this->getPid($runningBroadcast),
+                'pid' => $this->getPid($runningBroadcast),
                 'broadcastId' => $this->getBroadcastId($runningBroadcast),
             );
 
@@ -106,7 +107,7 @@ class Scheduler
     }
 
     /**
-     * Initiate a new broadcast
+     * Initiate a new broadcast.
      *
      * @param LiveBroadcast $broadcast
      */
@@ -125,35 +126,37 @@ class Scheduler
     }
 
     /**
-     * Kill a broadcast
+     * Kill a broadcast.
      *
-     * @param int           $pid
+     * @param int $pid
      */
     public function stopBroadcast($pid)
     {
-        exec(sprintf("kill %d", $pid));
+        exec(sprintf('kill %d', $pid));
     }
 
     /**
-     * Get the PID for the broadcast
+     * Get the PID for the broadcast.
      *
      * @param $processString
+     *
      * @return int|null
      */
     protected function getPid($processString)
     {
         preg_match('/^[\d]+/', $processString, $pid);
         if (count($pid) && is_numeric($pid[0])) {
-            return (int)$pid[0];
+            return (int) $pid[0];
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Get the currently playing broadcast
+     * Get the currently playing broadcast.
      *
      * @param $processString
+     *
      * @return string|null
      */
     protected function getBroadcastId($processString)
@@ -161,16 +164,18 @@ class Scheduler
         preg_match('/env='.$this->environment.' -metadata broadcast_id=[\d]+/', $processString, $broadcast);
         if (is_array($broadcast) && is_string($broadcast[0])) {
             $broadcastDetails = explode('=', $broadcast[0]);
+
             return end($broadcastDetails);
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Get the planned broadcast items
+     * Get the planned broadcast items.
      *
      * @return LiveBroadcast[]
+     *
      * @throws \Doctrine\ORM\Query\QueryException
      */
     protected function getPlannedBroadcasts()
@@ -184,7 +189,7 @@ class Scheduler
             $expr->gte('endTimestamp', new \DateTime())
         ));
 
-        /** @var LiveBroadcast[] $nowLive */
+        /* @var LiveBroadcast[] $nowLive */
         return $broadcastRepository->createQueryBuilder('lb')->addCriteria($criterea)->getQuery()->getResult();
     }
 }
