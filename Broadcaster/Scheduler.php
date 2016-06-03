@@ -61,13 +61,13 @@ class Scheduler
 
         // Stop running broadcasts that have expired
         foreach ($broadcasting as $running) {
-            $broadcast = $broadcastRepository->find($running['broadcastId']);
+            $broadcast = $broadcastRepository->find($running->getBroadcastId());
 
             if ($broadcast->getEndTimestamp() < new \DateTime()) {
-                $this->schedulerCommands->stopProcess($running['pid']);
+                $this->schedulerCommands->stopProcess($running->getProcessId());
             }
 
-            array_push($runningIds, $running['broadcastId']);
+            array_push($runningIds, $running->getBroadcastId());
         }
 
         // Start planned broadcasts if not already running
@@ -84,7 +84,7 @@ class Scheduler
     /**
      * Retrieve what is broadcasting
      *
-     * @return array
+     * @return RunningBroadcast[]
      */
     public function getCurrentBroadcasts()
     {
@@ -92,12 +92,9 @@ class Scheduler
         $output = $this->schedulerCommands->getRunningProcesses();
 
         foreach($output as $runningBroadcast) {
-            $runningItem = array(
-                'pid'         => $this->schedulerCommands->getProcessId($runningBroadcast),
-                'broadcastId' => $this->schedulerCommands->getBroadcastId($runningBroadcast),
-            );
+            $runningItem = new RunningBroadcast($this->schedulerCommands->getProcessId($runningBroadcast), $this->schedulerCommands->getBroadcastId($runningBroadcast));
 
-            if (!empty($runningItem['pid']) && !empty($runningItem['broadcastId'])) {
+            if ($runningItem->isValid()) {
                 array_push($running, $runningItem);
             }
         }
