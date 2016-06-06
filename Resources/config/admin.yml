@@ -25,4 +25,4 @@ services:
             - Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel
             - ~
         calls:
-            - [setSubClasses, [ { ChannelTwitch: Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch, ChannelFacebook: Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook } ] ]
+            - [setSubClasses, [ { ChannelTwitch: Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch } ] ]

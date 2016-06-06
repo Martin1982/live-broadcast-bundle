@@ -15,16 +15,16 @@ use Martin1982\LiveBroadcastBundle\Streams\Output\OutputInterface;
  *
  * @package Martin1982\LiveBroadcastBundle\Streams
  */
-class ChannelFactory
+class OutputFactory
 {
 
-    const CHANNEL_FACEBOOK  = 'ChannelFacebook';
-    const CHANNEL_TWITCH    = 'ChannelTwitch';
-    const CHANNEL_YOUTUBE   = 'ChannelYoutube';
+    const CHANNEL_FACEBOOK  = 'Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook';
+    const CHANNEL_TWITCH    = 'Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch';
+    const CHANNEL_YOUTUBE   = 'Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube';
 
-    const OUTPUT_FACEBOOK = 'Martin1982\Streams\Output\Facebook';
-    const OUTPUT_TWITCH = 'Martin1982\Streams\Output\Twitch';
-    const OUTPUT_YOUTUBE  = 'Martin1982\Streams\Output\Youtube';
+    const OUTPUT_FACEBOOK   = 'Martin1982\LiveBroadcastBundle\Streams\Output\Facebook';
+    const OUTPUT_TWITCH     = 'Martin1982\LiveBroadcastBundle\Streams\Output\Twitch';
+    const OUTPUT_YOUTUBE    = 'Martin1982\LiveBroadcastBundle\Streams\Output\Youtube';
 
     /**
      * @var array
@@ -44,7 +44,7 @@ class ChannelFactory
     public static function loadOutput($channel)
     {
         $reflection = new \ReflectionClass($channel);
-        $channelClassName = $reflection->getShortName();
+        $channelClassName = $reflection->getName();
 
         if (array_key_exists($channelClassName, self::$mapping)) {
             return new self::$mapping[$channelClassName]($channel);

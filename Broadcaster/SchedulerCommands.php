@@ -14,6 +14,11 @@ class SchedulerCommands implements SchedulerCommandsInterface
     protected $environment;
 
     /**
+     * @var array
+     */
+    protected $metadata = array();
+
+    /**
      * SchedulerCommands constructor.
      * @param string $environment
      */
@@ -73,10 +78,14 @@ class SchedulerCommands implements SchedulerCommandsInterface
      */
     public function getBroadcastId($processString)
     {
-        preg_match('/env='.$this->environment.' -metadata broadcast_id=[\d]+/', $processString, $broadcast);
-        if (is_array($broadcast) && !empty($broadcast) && is_string($broadcast[0])) {
-            $broadcastDetails = explode('=', $broadcast[0]);
-            return end($broadcastDetails);
+        $metadataKey = 'broadcast_id';
+
+        if (!count($this->metadata)) {
+            $this->readMetadata($processString);
+        }
+        
+        if (array_key_exists($metadataKey, $this->metadata)) {
+            return $this->metadata[$metadataKey];
         }
 
         return;
@@ -87,12 +96,34 @@ class SchedulerCommands implements SchedulerCommandsInterface
      */
     public function getChannelId($processString)
     {
-        preg_match('/env='.$this->environment.' -metadata broadcast_id=([\d]+) channel_id=[\d]+/', $processString, $ids);
-        if (is_array($ids) && !empty($ids) && is_string($ids[1])) {
-            return $ids[1];
+        $metadataKey = 'channel_id';
+
+        if (!count($this->metadata)) {
+            $this->readMetadata($processString);
+        }
+
+        if (array_key_exists($metadataKey, $this->metadata)) {
+            return $this->metadata[$metadataKey];
         }
 
         return;
+    }
+
+    /**
+     * Read metadata from a process string
+     *
+     * @param $processString
+     */
+    protected function readMetadata($processString)
+    {
+        $metadataRegex = '/-metadata ([a-z_]+)=([\d]+)/';
+        preg_match_all($metadataRegex, $processString, $metadata);
+
+        if (count($metadata) === 3 && is_array($metadata[1]) && is_array($metadata[2])) {
+            foreach ($metadata[1] as $metadataIndex => $metadataKey) {
+                $this->metadata[$metadataKey] = $metadata[2][$metadataIndex];
+            }
+        }
     }
 
     /**

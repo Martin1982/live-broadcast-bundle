@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Streams\ChannelFactory;
+use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
 use Martin1982\LiveBroadcastBundle\Streams\Input\File;
 
 /**
@@ -76,16 +76,20 @@ class Scheduler
     public function startBroadcastOnChannels(LiveBroadcast $plannedBroadcast)
     {
         $channels = $plannedBroadcast->getOutputChannels();
-        
+
         foreach ($channels as $channel) {
+            $isChannelBroadcasting = false;
+
             foreach ($this->runningBroadcasts as $runningBroadcast) {
                 if (
-                    $runningBroadcast->getBroadcastId() === $plannedBroadcast->getBroadcastId() &&
-                    $runningBroadcast->getChannelId() === $channel->getChannelId()
+                    (int) $runningBroadcast->getBroadcastId() === (int) $plannedBroadcast->getBroadcastId() &&
+                    (int) $runningBroadcast->getChannelId() === (int) $channel->getChannelId()
                 ) {
-                    continue;
+                    $isChannelBroadcasting = true;
                 }
+            }
 
+            if (!$isChannelBroadcasting) {
                 $this->startBroadcast($plannedBroadcast, $channel);
             }
         }
@@ -122,8 +126,8 @@ class Scheduler
 
         foreach ($output as $runningBroadcast) {
             $runningItem = new RunningBroadcast(
-                $this->schedulerCommands->getProcessId($runningBroadcast),
                 $this->schedulerCommands->getBroadcastId($runningBroadcast),
+                $this->schedulerCommands->getProcessId($runningBroadcast),
                 $this->schedulerCommands->getChannelId($runningBroadcast)
             );
 
@@ -145,12 +149,15 @@ class Scheduler
     {
         // @TODO Add factory when supporting other inputs
         $inputProcessor = new File($broadcast);
-        $outputProcessor = ChannelFactory::loadOutput($channel);
+        $outputProcessor = OutputFactory::loadOutput($channel);
 
         $streamInput = $inputProcessor->generateInputCmd();
         $streamOutput = $outputProcessor->generateOutputCmd();
 
-        $this->schedulerCommands->startProcess($streamInput, $streamOutput, array('broadcast_id' => $broadcast->getBroadcastId()));
+        $this->schedulerCommands->startProcess($streamInput, $streamOutput, array(
+            'broadcast_id' => $broadcast->getBroadcastId(),
+            'channel_id'   => $channel->getChannelId(),
+        ));
     }
 
     /**
