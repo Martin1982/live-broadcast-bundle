@@ -4,7 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Streams;
 use Martin1982\LiveBroadcastBundle\Streams\Output\OutputInterface;
 
 /**
- * Class OutputFactory
+ * Class ChannelFactory
  *
  * This class maps the Channel classes to their
  * respective Output classes.
