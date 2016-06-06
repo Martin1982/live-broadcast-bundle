@@ -75,12 +75,15 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
         $id = $command->getBroadcastId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337');
         $this->assertEquals($id, 1337);
 
+        $command = new SchedulerCommands('unittest');
         $id = $command->getBroadcastId('');
         $this->assertEquals($id, null);
 
+        $command = new SchedulerCommands('unittest');
         $id = $command->getBroadcastId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata');
         $this->assertEquals($id, null);
 
+        $command = new SchedulerCommands('unittest');
         $id = $command->getBroadcastId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=');
         $this->assertEquals($id, null);
     }
