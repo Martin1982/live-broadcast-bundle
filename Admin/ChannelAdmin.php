@@ -9,6 +9,10 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 
+/**
+ * Class ChannelAdmin
+ * @package Martin1982\LiveBroadcastBundle\Admin
+ */
 class ChannelAdmin extends Admin
 {
     protected $baseRoutePattern = 'channel';

@@ -1,53 +1,57 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Streams;
-use Martin1982\LiveBroadcastBundle\Streams\Output\OutputInterface;
+
+use Martin1982\LiveBroadcastBundle\Streams\Input\InputInterface;
 
 /**
- * Class ChannelFactory
+ * Class InputFactory
  *
- * This class maps the Channel classes to their
- * respective Output classes.
+ * This class maps the Input entity classes to their
+ * respective Input stream classes.
  *
- * To add custom channels and outputs extend this
+ * To add custom entities and input streams extend this
  * class and add it to the $mappings property, or
  * overwrite the mapping completely.
  *
  * @package Martin1982\LiveBroadcastBundle\Streams
  */
-class OutputFactory
+class InputFactory
 {
 
-    const CHANNEL_FACEBOOK  = 'Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook';
-    const CHANNEL_TWITCH    = 'Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch';
-    const CHANNEL_YOUTUBE   = 'Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube';
+    const INPUT_FILE        = 'Martin1982\LiveBroadcastBundle\Entity\Input\File';
+    const INPUT_URL         = 'Martin1982\LiveBroadcastBundle\Entity\Input\Url';
+    const INPUT_RTMP        = 'Martin1982\LiveBroadcastBundle\Entity\Input\Rtmp';
+    const INPUT_SPOTIFY     = 'Martin1982\LiveBroadcastBundle\Entity\Input\Spotify';
 
-    const OUTPUT_FACEBOOK   = 'Martin1982\LiveBroadcastBundle\Streams\Output\Facebook';
-    const OUTPUT_TWITCH     = 'Martin1982\LiveBroadcastBundle\Streams\Output\Twitch';
-    const OUTPUT_YOUTUBE    = 'Martin1982\LiveBroadcastBundle\Streams\Output\Youtube';
+    const INPUT_STREAM_FILE     = 'Martin1982\LiveBroadcastBundle\Streams\Input\File';
+    const INPUT_STREAM_URL      = 'Martin1982\LiveBroadcastBundle\Streams\Input\Url';
+    const INPUT_STREAM_RTMP     = 'Martin1982\LiveBroadcastBundle\Streams\Input\Rtmp';
+    const INPUT_STREAM_SPOTIFY  = 'Martin1982\LiveBroadcastBundle\Streams\Input\Spotify';
 
     /**
      * @var array
      */
     public static $mapping = array(
-        self::CHANNEL_FACEBOOK  => self::OUTPUT_FACEBOOK,
-        self::CHANNEL_TWITCH    => self::OUTPUT_TWITCH,
-        self::CHANNEL_YOUTUBE   => self::OUTPUT_YOUTUBE,
+        self::INPUT_FILE    => self::INPUT_STREAM_FILE,
+        self::INPUT_URL     => self::INPUT_STREAM_URL,
+        self::INPUT_RTMP    => self::INPUT_STREAM_RTMP,
+        self::INPUT_SPOTIFY => self::INPUT_STREAM_SPOTIFY,
     );
 
     /**
-     * Get the output class for the given channel
+     * Get the input stream class for the given entity
      *
-     * @param $channel
-     * @return OutputInterface
+     * @param $input
+     * @return InputInterface
      */
-    public static function loadOutput($channel)
+    public static function loadInputStream($input)
     {
-        $reflection = new \ReflectionClass($channel);
-        $channelClassName = $reflection->getName();
+        $reflection = new \ReflectionClass($input);
+        $inputClassName = $reflection->getName();
 
-        if (array_key_exists($channelClassName, self::$mapping)) {
-            return new self::$mapping[$channelClassName]($channel);
+        if (array_key_exists($inputClassName, self::$mapping)) {
+            return new self::$mapping[$inputClassName]($input);
         }
     }
 
