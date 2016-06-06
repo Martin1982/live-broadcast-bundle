@@ -10,16 +10,17 @@
     ],
     "require": {
         "symfony/framework-bundle": "^2.8||^3.0",
-        "symfony/console": "^2.8||^3.0"
+        "symfony/console": "^2.8||^3.0",
+        "doctrine/orm": "^2.3"
     },
     "suggest": {
-        "doctrine/orm": "Required if you want to use the Doctrine ORM",
-        "sonata-project/admin-bundle": "Sonata admin for easy broadcast planning"
+        "sonata-project/doctrine-orm-admin-bundle": "Sonata admin for easy broadcast planning"
     },
     "autoload": {
         "psr-4": { "Martin1982\\LiveBroadcastBundle\\": "" }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.11"
+        "friendsofphp/php-cs-fixer": "^1.11",
+        "php-mock/php-mock-phpunit": ">=1.1.1 ^1.1"
     }
 }

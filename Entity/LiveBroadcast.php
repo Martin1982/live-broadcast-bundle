@@ -2,7 +2,9 @@
 
 namespace Martin1982\LiveBroadcastBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 
 /**
  * Class LiveBroadcast
@@ -51,31 +53,21 @@ class LiveBroadcast
     private $endTimestamp;
 
     /**
-     * @var bool
+     * @var BaseChannel
      *
-     * @ORM\Column(name="live_on_youtube", type="boolean", nullable=false)
+     * @ORM\ManyToMany(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel")
+     * @ORM\JoinTable(name="broadcasts_channels",
+     *      joinColumns={@ORM\JoinColumn(name="broadcast_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="channel_id", referencedColumnName="id", unique=true)}
+     * )
      */
-    private $liveOnYoutube = false;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="live_on_twitch", type="boolean", nullable=false)
-     */
-    private $liveOnTwitch = false;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="live_on_facebook", type="boolean", nullable=false)
-     */
-    private $liveOnFacebook = false;
+    private $outputChannels;
 
     /**
      * LiveBroadcast constructor.
      */
-    public function __construct()
-    {
+    public function __construct() {
+        $this->outputChannels = new ArrayCollection();
         $this->setStartTimestamp(new \DateTime());
         $this->setEndTimestamp(new \DateTime('+1 hour'));
     }
@@ -179,62 +171,47 @@ class LiveBroadcast
     }
 
     /**
-     * @return bool
+     * @param $channels
+     * @return $this
      */
-    public function getLiveOnYoutube()
+    public function setOutputChannels($channels)
     {
-        return $this->liveOnYoutube;
-    }
-
-    /**
-     * @param bool $liveOnYoutube
-     *
-     * @return LiveBroadcast
-     */
-    public function setLiveOnYoutube($liveOnYoutube)
-    {
-        $this->liveOnYoutube = $liveOnYoutube;
+        if (count($channels) > 0) {
+            foreach ($channels as $channel) {
+                $this->addOutputChannel($channel);
+            }
+        }
 
         return $this;
     }
 
     /**
-     * @return bool
+     * @param BaseChannel $channel
+     * @return $this
      */
-    public function getLiveOnTwitch()
+    public function addOutputChannel(BaseChannel $channel)
     {
-        return $this->liveOnTwitch;
-    }
-
-    /**
-     * @param bool $liveOnTwitch
-     *
-     * @return LiveBroadcast
-     */
-    public function setLiveOnTwitch($liveOnTwitch)
-    {
-        $this->liveOnTwitch = $liveOnTwitch;
+        $this->outputChannels->add($channel);
 
         return $this;
     }
 
     /**
-     * @return bool
+     * @param BaseChannel $channel
+     * @return $this
      */
-    public function getLiveOnFacebook()
+    public function removeOutputChannel(BaseChannel $channel)
     {
-        return $this->liveOnFacebook;
+        $this->outputChannels->remove($channel);
+
+        return $this;
     }
 
     /**
-     * @param bool $liveOnFacebook
-     *
-     * @return LiveBroadcast
+     * @return BaseChannel[]
      */
-    public function setLiveOnFacebook($liveOnFacebook)
+    public function getOutputChannels()
     {
-        $this->liveOnFacebook = $liveOnFacebook;
-
-        return $this;
+        return $this->outputChannels;
     }
 }

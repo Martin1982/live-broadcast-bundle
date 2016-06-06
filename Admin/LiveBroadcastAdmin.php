@@ -13,6 +13,8 @@ use Sonata\AdminBundle\Form\FormMapper;
  */
 class LiveBroadcastAdmin extends Admin
 {
+    protected $baseRoutePattern = 'broadcast';
+
     /**
      * {@inheritdoc}
      */
@@ -33,11 +35,11 @@ class LiveBroadcastAdmin extends Admin
             ->end()
             ->tab('Channels')
                 ->with('Channels')
-                    ->add('live_on_youtube', 'choice', array('choices' => array(0 => 'No', 1 => 'Yes'), 'label' => 'Youtube'))
-                    ->add('live_on_twitch', 'choice', array('choices' => array(0 => 'No', 1 => 'Yes'), 'label' => 'Twitch'))
-                    ->add('live_on_facebook', 'choice', array('choices' => array(0 => 'No', 1 => 'Yes'), 'label' => 'Facebook'))
-                ->end()
-            ->end();
+                    ->add('outputChannels', 'sonata_type_model', array(
+                        'multiple' => true,
+                        'btn_add' => false,
+                    ))
+                ->end();
     }
 
     /**
@@ -60,9 +62,6 @@ class LiveBroadcastAdmin extends Admin
             ->add('name')
             ->add('startTimestamp')
             ->add('endTimestamp')
-            ->add('live_on_youtube', 'choice', array('choices' => array(0 => 'No', 1 => 'Yes')))
-            ->add('live_on_twitch', 'choice', array('choices' => array(0 => 'No', 1 => 'Yes')))
-            ->add('live_on_facebook', 'choice', array('choices' => array(0 => 'No', 1 => 'Yes')))
             ->add('_action', 'actions', array(
                 'actions' => array(
                     'edit' => array(),
