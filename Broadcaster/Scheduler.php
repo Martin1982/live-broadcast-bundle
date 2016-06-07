@@ -8,6 +8,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
 use Martin1982\LiveBroadcastBundle\Streams\Input\File;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Scheduler
@@ -26,6 +27,11 @@ class Scheduler
     protected $schedulerCommands;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @var RunningBroadcast[]
      */
     protected $runningBroadcasts = array();
@@ -39,11 +45,13 @@ class Scheduler
      * Scheduler constructor.
      * @param EntityManager              $entityManager
      * @param SchedulerCommandsInterface $schedulerCommands
+     * @param LoggerInterface            $logger
      */
-    public function __construct(EntityManager $entityManager, SchedulerCommandsInterface $schedulerCommands)
+    public function __construct(EntityManager $entityManager, SchedulerCommandsInterface $schedulerCommands, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->schedulerCommands = $schedulerCommands;
+        $this->logger = $logger;
     }
 
     /**
@@ -107,6 +115,7 @@ class Scheduler
             $broadcast = $broadcastRepository->find($runningBroadcast->getBroadcastId());
 
             if ($broadcast->getEndTimestamp() < new \DateTime()) {
+                $this->logger->info(sprintf('Stop broadcast %d (%s), PID: %d.', $broadcast->getBroadcastId(), $broadcast->getName(), $runningBroadcast->getBroadcastId()));
                 $this->schedulerCommands->stopProcess($runningBroadcast->getProcessId());
             }
         }
@@ -122,6 +131,7 @@ class Scheduler
     public function getRunningBroadcasts()
     {
         $this->runningBroadcasts = array();
+        $this->logger->debug('Get running broadcasts');
         $output = $this->schedulerCommands->getRunningProcesses();
 
         foreach ($output as $runningBroadcast) {
@@ -154,6 +164,7 @@ class Scheduler
         $streamInput = $inputProcessor->generateInputCmd();
         $streamOutput = $outputProcessor->generateOutputCmd();
 
+        $this->logger->info(sprintf('Start broadcast %d (%s) on %d (%s).', $broadcast->getBroadcastId(), $broadcast->getName(), $channel->getChannelId(), $channel->getChannelName()));
         $this->schedulerCommands->startProcess($streamInput, $streamOutput, array(
             'broadcast_id' => $broadcast->getBroadcastId(),
             'channel_id'   => $channel->getChannelId(),
@@ -177,6 +188,8 @@ class Scheduler
             $expr->lte('startTimestamp', new \DateTime()),
             $expr->gte('endTimestamp', new \DateTime())
         ));
+
+        $this->logger->debug('Get planned broadcasts');
 
         /* @var LiveBroadcast[] $nowLive */
         $this->plannedBroadcasts = $broadcastRepository->createQueryBuilder('lb')
