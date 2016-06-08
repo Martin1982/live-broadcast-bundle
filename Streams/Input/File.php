@@ -2,6 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Streams\Input;
 
+use Martin1982\LiveBroadcastBundle\Entity\Input\InputFile;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
@@ -24,7 +25,9 @@ class File implements InputInterface
      */
     public function __construct(LiveBroadcast $broadcast)
     {
-        $inputFilename = $broadcast->getVideoInputFile();
+        /** @var InputFile $inputEntity */
+        $inputEntity = $broadcast->getInput();
+        $inputFilename = $inputEntity->getFileLocation();
 
         // @Todo allow URL streams via a seperate input?
         if (!file_exists($inputFilename) && filter_var($inputFilename, FILTER_VALIDATE_URL) === false) {
@@ -41,7 +44,9 @@ class File implements InputInterface
      */
     public function generateInputCmd()
     {
-        $inputFilename = $this->broadcast->getVideoInputFile();
+        /** @var InputFile $inputEntity */
+        $inputEntity = $this->broadcast->getInput();
+        $inputFilename = $inputEntity->getFileLocation();
 
         return sprintf('-re -i %s -vcodec copy -acodec copy', $inputFilename);
     }
