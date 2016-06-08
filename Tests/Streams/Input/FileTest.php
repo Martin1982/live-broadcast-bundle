@@ -41,8 +41,11 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidUrl()
     {
+        $input = new InputFile();
+        $input->setFileLocation('http://w&w&w.invalid.url');
+
         $broadcast = new LiveBroadcast();
-        $broadcast->setVideoInputFile('http://w&w&w.invalid.url');
+        $broadcast->setInput($input);
 
         new File($broadcast);
     }
@@ -54,7 +57,6 @@ class FileTest extends \PHPUnit_Framework_TestCase
     {
         $fileName = '/tmp/videoFile.txt';
         fopen($fileName, 'w');
-
 
         $input = new InputFile();
         $input->setFileLocation($fileName);
