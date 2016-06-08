@@ -2,6 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Tests\Streams\Input;
 
+use Martin1982\LiveBroadcastBundle\Entity\Input\InputFile;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Streams\Input\File;
 
@@ -17,23 +18,26 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testFileInterface()
     {
         $implements = class_implements('Martin1982\LiveBroadcastBundle\Streams\Input\File');
-        $this->assertEquals(count($implements),  1);
-        $this->assertTrue(in_array('Martin1982\LiveBroadcastBundle\Streams\Input\InputInterface', $implements));
+        self::assertEquals(count($implements),  1);
+        self::assertTrue(in_array('Martin1982\LiveBroadcastBundle\Streams\Input\InputInterface', $implements));
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testFileNotExists()
     {
+        $input = new InputFile();
+        $input->setFileLocation('/not-really-there');
+
         $broadcast = new LiveBroadcast();
-        $broadcast->setVideoInputFile('/file/that/does/not/exist');
+        $broadcast->setInput($input);
 
         new File($broadcast);
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testInvalidUrl()
     {
@@ -48,15 +52,19 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     public function testGenerateInputCmd()
     {
-        $fileName = 'videoFile.txt';
+        $fileName = '/tmp/videoFile.txt';
         fopen($fileName, 'w');
 
+
+        $input = new InputFile();
+        $input->setFileLocation($fileName);
+
         $broadcast = new LiveBroadcast();
-        $broadcast->setVideoInputFile('videoFile.txt');
+        $broadcast->setInput($input);
 
         $inputFile = new File($broadcast);
 
-        $this->assertEquals($inputFile->generateInputCmd(), '-re -i videoFile.txt -vcodec copy -acodec copy');
+        self::assertEquals($inputFile->generateInputCmd(), '-re -i ' . $fileName . ' -vcodec copy -acodec copy');
 
         unlink($fileName);
     }
