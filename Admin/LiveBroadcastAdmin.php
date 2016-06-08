@@ -2,7 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
-use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -11,7 +11,7 @@ use Sonata\AdminBundle\Form\FormMapper;
  * Class LiveBroadcastAdmin
  * @package Martin1982\LiveBroadcastBundle\Admin
  */
-class LiveBroadcastAdmin extends Admin
+class LiveBroadcastAdmin extends AbstractAdmin
 {
     protected $baseRoutePattern = 'broadcast';
 
@@ -24,8 +24,8 @@ class LiveBroadcastAdmin extends Admin
             ->tab('General')
                 ->with('General')
                     ->add('name', 'text', array('label' => 'Name'))
-                    ->add('start_timestamp', 'datetime', array('label' => 'Broadcast start'))
-                    ->add('end_timestamp', 'datetime', array('label' => 'Broadcast end'))
+                    ->add('start_timestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast start', 'dp_side_by_side' => true))
+                    ->add('end_timestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast end', 'dp_side_by_side' => true))
                 ->end()
             ->end()
             ->tab('Video Input')
