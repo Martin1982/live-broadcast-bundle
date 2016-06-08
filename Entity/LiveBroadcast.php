@@ -209,7 +209,7 @@ class LiveBroadcast
      * @param BaseInput $input
      * @return LiveBroadcast
      */
-    public function setInput($input)
+    public function setInput(BaseInput $input)
     {
         $this->input = $input;
 
