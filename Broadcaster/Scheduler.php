@@ -8,7 +8,6 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Streams\InputFactory;
 use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
-use Martin1982\LiveBroadcastBundle\Streams\Input\File;
 use Psr\Log\LoggerInterface;
 
 /**
