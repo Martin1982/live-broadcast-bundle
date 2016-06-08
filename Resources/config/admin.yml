@@ -25,7 +25,7 @@ services:
             - Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel
             - ~
         calls:
-            - [setSubClasses, [ { ChannelTwitch: Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch } ] ]
+            - [setSubClasses, [ { "Twitch Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch } ] ]
 
     sonata.admin.streaminput:
             class: Martin1982\LiveBroadcastBundle\Admin\InputAdmin
@@ -39,4 +39,4 @@ services:
                 - Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput
                 - ~
             calls:
-                - [setSubClasses, [ { InputFile: Martin1982\LiveBroadcastBundle\Entity\Input\InputFile }, { InputUrl: Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl } ] ]
+                - [setSubClasses, [ { "File Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputFile }, { "URL Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl } ] ]

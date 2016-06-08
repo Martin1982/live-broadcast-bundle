@@ -8,3 +8,5 @@ services:
     arguments:
       - "@doctrine.orm.entity_manager"
       - "@live.broadcast.scheduler.commands"
+      - "@logger"
+    tags: [{ name: monolog.logger, channel: livebroadcaster }]

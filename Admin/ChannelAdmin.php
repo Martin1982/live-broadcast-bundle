@@ -4,7 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
-use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -13,7 +13,7 @@ use Sonata\AdminBundle\Form\FormMapper;
  * Class ChannelAdmin
  * @package Martin1982\LiveBroadcastBundle\Admin
  */
-class ChannelAdmin extends Admin
+class ChannelAdmin extends AbstractAdmin
 {
     protected $baseRoutePattern = 'channel';
 
@@ -23,7 +23,6 @@ class ChannelAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $subject = $this->getSubject();
-
 
         $formMapper
             ->with('Channel')
