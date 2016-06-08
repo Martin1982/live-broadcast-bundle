@@ -2,6 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Streams;
 
+use Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput;
 use Martin1982\LiveBroadcastBundle\Streams\Input\InputInterface;
 
 /**
@@ -42,10 +43,10 @@ class InputFactory
     /**
      * Get the input stream class for the given entity
      *
-     * @param $input
+     * @param BaseInput $input
      * @return InputInterface
      */
-    public static function loadInputStream($input)
+    public static function loadInputStream(BaseInput $input)
     {
         $reflection = new \ReflectionClass($input);
         $inputClassName = $reflection->getName();
@@ -53,6 +54,8 @@ class InputFactory
         if (array_key_exists($inputClassName, self::$mapping)) {
             return new self::$mapping[$inputClassName]($input);
         }
+
+        return;
     }
 
 }
