@@ -22,7 +22,6 @@ class InputAdmin extends Admin
     {
         $subject = $this->getSubject();
 
-
         $formMapper
             ->tab('General')
             ->with('General');

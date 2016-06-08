@@ -26,8 +26,7 @@ class ChannelAdmin extends Admin
 
 
         $formMapper
-            ->tab('General')
-            ->with('General')
+            ->with('Channel')
                 ->add('channelName', 'text', array('label' => 'Channel name'));
 
         if ($subject instanceof ChannelTwitch) {
@@ -39,8 +38,7 @@ class ChannelAdmin extends Admin
             $formMapper->add('fbEntityId', 'text', array('label' => 'Facebook entity ID'));
         }
 
-        $formMapper->end()
-            ->end();
+        $formMapper->end();
     }
 
     /**
