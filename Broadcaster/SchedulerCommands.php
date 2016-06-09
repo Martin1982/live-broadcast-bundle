@@ -65,7 +65,7 @@ class SchedulerCommands implements SchedulerCommandsInterface
      */
     public function getProcessId($processString)
     {
-        preg_match('/^[\d]+/', $processString, $pid);
+        preg_match('/^\s*([\d]+)/', $processString, $pid);
         if (count($pid) && is_numeric($pid[0])) {
             return (int)$pid[0];
         }
