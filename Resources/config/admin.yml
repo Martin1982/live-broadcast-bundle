@@ -39,4 +39,4 @@ services:
                 - Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput
                 - ~
             calls:
-                - [setSubClasses, [ { "File Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputFile } ] ] # @TODO Add later; , "URL Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl
+                - [setSubClasses, [ { "File Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputFile, "URL Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl } ] ]
