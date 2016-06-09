@@ -30,6 +30,7 @@ class ChannelAdmin extends AbstractAdmin
 
         if ($subject instanceof ChannelTwitch) {
             $formMapper->add('streamKey', 'text', array('label' => 'Twitch stream key'));
+            $formMapper->add('streamServer', 'text', array('label' => 'Twitch stream server'));
         }
 
         if ($subject instanceof ChannelFacebook) {
