@@ -2,7 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Streams;
 
-use Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput;
+use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Streams\Input\InputInterface;
 
 /**
@@ -20,10 +20,10 @@ use Martin1982\LiveBroadcastBundle\Streams\Input\InputInterface;
 class InputFactory
 {
 
-    const INPUT_FILE        = 'Martin1982\LiveBroadcastBundle\Entity\Input\File';
-    const INPUT_URL         = 'Martin1982\LiveBroadcastBundle\Entity\Input\Url';
-    const INPUT_RTMP        = 'Martin1982\LiveBroadcastBundle\Entity\Input\Rtmp';
-    const INPUT_SPOTIFY     = 'Martin1982\LiveBroadcastBundle\Entity\Input\Spotify';
+    const INPUT_FILE        = 'Martin1982\LiveBroadcastBundle\Entity\Input\InputFile';
+    const INPUT_URL         = 'Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl';
+    const INPUT_RTMP        = 'Martin1982\LiveBroadcastBundle\Entity\Input\InputRtmp';
+    const INPUT_SPOTIFY     = 'Martin1982\LiveBroadcastBundle\Entity\Input\InputSpotify';
 
     const INPUT_STREAM_FILE     = 'Martin1982\LiveBroadcastBundle\Streams\Input\File';
     const INPUT_STREAM_URL      = 'Martin1982\LiveBroadcastBundle\Streams\Input\Url';
@@ -43,16 +43,18 @@ class InputFactory
     /**
      * Get the input stream class for the given entity
      *
-     * @param BaseInput $input
+     * @param LiveBroadcast $broadcast
      * @return InputInterface
      */
-    public static function loadInputStream(BaseInput $input)
+    public static function loadInputStream(LiveBroadcast $broadcast)
     {
+        $input = $broadcast->getInput();
+
         $reflection = new \ReflectionClass($input);
         $inputClassName = $reflection->getName();
 
         if (array_key_exists($inputClassName, self::$mapping)) {
-            return new self::$mapping[$inputClassName]($input);
+            return new self::$mapping[$inputClassName]($broadcast);
         }
 
         return;

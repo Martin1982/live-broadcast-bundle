@@ -158,7 +158,7 @@ class Scheduler
     public function startBroadcast(LiveBroadcast $broadcast, BaseChannel $channel)
     {
         // @TODO Add factory when supporting other inputs
-        $inputProcessor = InputFactory::loadInputStream($broadcast->getInput());
+        $inputProcessor = InputFactory::loadInputStream($broadcast);
         $outputProcessor = OutputFactory::loadOutput($channel);
 
         $streamInput = $inputProcessor->generateInputCmd();
