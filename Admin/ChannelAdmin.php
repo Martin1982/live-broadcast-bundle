@@ -4,12 +4,16 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
-use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 
-class ChannelAdmin extends Admin
+/**
+ * Class ChannelAdmin
+ * @package Martin1982\LiveBroadcastBundle\Admin
+ */
+class ChannelAdmin extends AbstractAdmin
 {
     protected $baseRoutePattern = 'channel';
 
@@ -20,14 +24,13 @@ class ChannelAdmin extends Admin
     {
         $subject = $this->getSubject();
 
-
         $formMapper
-            ->tab('General')
-            ->with('General')
+            ->with('Channel')
                 ->add('channelName', 'text', array('label' => 'Channel name'));
 
         if ($subject instanceof ChannelTwitch) {
             $formMapper->add('streamKey', 'text', array('label' => 'Twitch stream key'));
+            $formMapper->add('streamServer', 'text', array('label' => 'Twitch stream server'));
         }
 
         if ($subject instanceof ChannelFacebook) {
@@ -35,8 +38,7 @@ class ChannelAdmin extends Admin
             $formMapper->add('fbEntityId', 'text', array('label' => 'Facebook entity ID'));
         }
 
-        $formMapper->end()
-            ->end();
+        $formMapper->end();
     }
 
     /**

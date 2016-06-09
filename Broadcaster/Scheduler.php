@@ -6,8 +6,8 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Streams\InputFactory;
 use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
-use Martin1982\LiveBroadcastBundle\Streams\Input\File;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -157,8 +157,7 @@ class Scheduler
      */
     public function startBroadcast(LiveBroadcast $broadcast, BaseChannel $channel)
     {
-        // @TODO Add factory when supporting other inputs
-        $inputProcessor = new File($broadcast);
+        $inputProcessor = InputFactory::loadInputStream($broadcast);
         $outputProcessor = OutputFactory::loadOutput($channel);
 
         $streamInput = $inputProcessor->generateInputCmd();

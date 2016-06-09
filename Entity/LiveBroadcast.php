@@ -5,6 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput;
 
 /**
  * Class LiveBroadcast
@@ -32,11 +33,12 @@ class LiveBroadcast
     private $name;
 
     /**
-     * @var string
+     * @var BaseInput
      *
-     * @ORM\Column(name="video_input_file", type="string", length=128)
+     * @ORM\OneToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput")
+     * @ORM\JoinColumn(name="input_id", referencedColumnName="id")
      */
-    private $videoInputFile;
+    private $input;
 
     /**
      * @var \DateTime
@@ -58,7 +60,7 @@ class LiveBroadcast
      * @ORM\ManyToMany(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel")
      * @ORM\JoinTable(name="broadcasts_channels",
      *      joinColumns={@ORM\JoinColumn(name="broadcast_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="channel_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="channel_id", referencedColumnName="id")}
      * )
      */
     private $outputChannels;
@@ -106,26 +108,6 @@ class LiveBroadcast
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVideoInputFile()
-    {
-        return $this->videoInputFile;
-    }
-
-    /**
-     * @param string $videoInputFile
-     *
-     * @return LiveBroadcast
-     */
-    public function setVideoInputFile($videoInputFile)
-    {
-        $this->videoInputFile = $videoInputFile;
 
         return $this;
     }
@@ -213,5 +195,24 @@ class LiveBroadcast
     public function getOutputChannels()
     {
         return $this->outputChannels;
+    }
+
+    /**
+     * @return BaseInput
+     */
+    public function getInput()
+    {
+        return $this->input;
+    }
+
+    /**
+     * @param BaseInput $input
+     * @return LiveBroadcast
+     */
+    public function setInput(BaseInput $input)
+    {
+        $this->input = $input;
+
+        return $this;
     }
 }

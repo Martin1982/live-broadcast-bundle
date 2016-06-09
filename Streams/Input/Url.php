@@ -2,22 +2,22 @@
 
 namespace Martin1982\LiveBroadcastBundle\Streams\Input;
 
-use Martin1982\LiveBroadcastBundle\Entity\Input\InputFile;
+use Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
- * Class File
+ * Class Url
  * @package Martin1982\LiveBroadcastBundle\Streams\Input
  */
-class File implements InputInterface
+class Url implements InputInterface
 {
-    const INPUT_TYPE = 'file';
+    const INPUT_TYPE = 'url';
 
     /** @var  LiveBroadcast */
     protected $broadcast;
 
     /**
-     * File constructor.
+     * Url constructor.
      *
      * @param LiveBroadcast $broadcast
      *
@@ -25,12 +25,12 @@ class File implements InputInterface
      */
     public function __construct(LiveBroadcast $broadcast)
     {
-        /** @var InputFile $inputEntity */
+        /** @var InputUrl $inputEntity */
         $inputEntity = $broadcast->getInput();
-        $inputFilename = $inputEntity->getFileLocation();
+        $inputUrl = $inputEntity->getUrl();
 
-        if (!file_exists($inputFilename)) {
-            throw new \Exception(sprintf('Could not find input file %s', $inputFilename));
+        if (filter_var($inputUrl, FILTER_VALIDATE_URL) === false) {
+            throw new \Exception(sprintf('Invalid URL %s', $inputUrl));
         }
 
         $this->broadcast = $broadcast;
@@ -43,10 +43,10 @@ class File implements InputInterface
      */
     public function generateInputCmd()
     {
-        /** @var InputFile $inputEntity */
+        /** @var InputUrl $inputEntity */
         $inputEntity = $this->broadcast->getInput();
-        $inputFilename = $inputEntity->getFileLocation();
+        $inputUrl = $inputEntity->getUrl();
 
-        return sprintf('-re -i %s -vcodec copy -acodec copy', $inputFilename);
+        return sprintf('-re -i %s -vcodec copy -acodec copy', $inputUrl);
     }
 }

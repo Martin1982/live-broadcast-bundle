@@ -18,6 +18,7 @@ class RunningBroadcastTest extends \PHPUnit_Framework_TestCase
         $running = new RunningBroadcast(1, 2, 44);
         self::assertEquals($running->getBroadcastId(), 1);
         self::assertEquals($running->getProcessId(), 2);
+        self::assertEquals($running->getChannelId(), 44);
     }
 
     /**
