@@ -38,7 +38,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
                 ))
                 ->add('outputChannels', 'sonata_type_model', array(
                     'multiple' => true,
-                    'btn_add' => false,
+                    'expanded' => true
                 ))
                 ->end();
     }
