@@ -3,6 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Entity\Input;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class InputFile
@@ -15,6 +16,8 @@ class InputFile extends BaseInput
 {
     /**
      * @var string
+     *
+     * @Assert\NotBlank()
      *
      * @ORM\Column(name="file_location", type="string", length=128, nullable=false)
      */
@@ -37,6 +40,16 @@ class InputFile extends BaseInput
         $this->fileLocation = $fileLocation;
 
         return $this;
+    }
+
+    /**
+     * Get input string representation
+     * 
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getFileLocation();
     }
 }
 

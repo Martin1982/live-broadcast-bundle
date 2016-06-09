@@ -3,6 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Entity\Input;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class InputUrl
@@ -15,6 +16,9 @@ class InputUrl extends BaseInput
 {
     /**
      * @var string
+     *
+     * @Assert\NotBlank()
+     * @Assert\Url()
      *
      * @ORM\Column(name="url", type="string", length=128, nullable=false)
      */
@@ -36,5 +40,15 @@ class InputUrl extends BaseInput
     {
         $this->url = $url;
         return $this;
+    }
+
+    /**
+     * Get input string representation
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getUrl();
     }
 }
