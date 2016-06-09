@@ -21,24 +21,25 @@ class LiveBroadcastAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->tab('General')
-                ->with('General')
-                    ->add('name', 'text', array('label' => 'Name'))
-                    ->add('start_timestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast start', 'dp_side_by_side' => true))
-                    ->add('end_timestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast end', 'dp_side_by_side' => true))
-                ->end()
+            ->with('General', array(
+                    'class' => 'col-md-8'
+                ))
+                ->add('name', 'text', array('label' => 'Name'))
+                ->add('start_timestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast start', 'dp_side_by_side' => true))
+                ->add('end_timestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast end', 'dp_side_by_side' => true))
             ->end()
-            ->tab('Video Input')
-                ->with('Video Input')
-                    ->add('video_input_file', 'text', array('label' => 'Video input file'))
-                ->end()
+            ->with('Video Input', array(
+                    'class' => 'col-md-4'
+                ))
+                ->add('input', 'sonata_type_model_list', array())
             ->end()
-            ->tab('Channels')
-                ->with('Channels')
-                    ->add('outputChannels', 'sonata_type_model', array(
-                        'multiple' => true,
-                        'btn_add' => false,
-                    ))
+            ->with('Channels', array(
+                    'class' => 'col-md-4'
+                ))
+                ->add('outputChannels', 'sonata_type_model', array(
+                    'multiple' => true,
+                    'expanded' => true
+                ))
                 ->end();
     }
 

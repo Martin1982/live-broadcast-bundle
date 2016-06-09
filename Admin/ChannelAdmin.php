@@ -9,6 +9,10 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 
+/**
+ * Class ChannelAdmin
+ * @package Martin1982\LiveBroadcastBundle\Admin
+ */
 class ChannelAdmin extends AbstractAdmin
 {
     protected $baseRoutePattern = 'channel';
@@ -21,12 +25,12 @@ class ChannelAdmin extends AbstractAdmin
         $subject = $this->getSubject();
 
         $formMapper
-            ->tab('General')
-            ->with('General')
+            ->with('Channel')
                 ->add('channelName', 'text', array('label' => 'Channel name'));
 
         if ($subject instanceof ChannelTwitch) {
             $formMapper->add('streamKey', 'text', array('label' => 'Twitch stream key'));
+            $formMapper->add('streamServer', 'text', array('label' => 'Twitch stream server'));
         }
 
         if ($subject instanceof ChannelFacebook) {
@@ -34,8 +38,7 @@ class ChannelAdmin extends AbstractAdmin
             $formMapper->add('fbEntityId', 'text', array('label' => 'Facebook entity ID'));
         }
 
-        $formMapper->end()
-            ->end();
+        $formMapper->end();
     }
 
     /**
