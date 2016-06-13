@@ -54,9 +54,9 @@ class ShellTestCommand extends ContainerAwareCommand
      */
     protected function testPs(OutputInterface $output)
     {
-        exec('/bin/ps --help', $cmdResult);
+        exec('/bin/ps -o pid', $cmdResult);
 
-        return $this->analyseResult($cmdResult, 'Usage:', $output);
+        return $this->analyseResult($cmdResult, 'PID', $output);
     }
 
     /**
