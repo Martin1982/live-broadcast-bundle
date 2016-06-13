@@ -15,6 +15,12 @@ class ShellTestCommand extends ContainerAwareCommand
     /** @var bool $isWindows */
     private $isWindows = false;
 
+    /** @var bool $isMac */
+    private $isMac = false;
+
+    /** @var bool $isLinux */
+    private $isLinux = false;
+
     /**
      * {@inheritdoc}
      */
@@ -29,10 +35,16 @@ class ShellTestCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $this->isWindows = true;
-        } else {
-            $this->isWindows = false;
+        switch (strtoupper(substr(PHP_OS, 0, 3))) {
+            case 'WIN':
+                $this->isWindows = true;
+                break;
+            case 'DAR':
+                $this->isMac = true;
+                break;
+            default:
+                $this->isLinux = true;
+                break;
         }
 
         $output->write('Checking \'ffmpeg\' command availability... ');
@@ -44,12 +56,19 @@ class ShellTestCommand extends ContainerAwareCommand
 
             $output->write('Checking \'taskkill\' command availability... ');
             $this->testTaskkill($output);
-        } else {
+        }
+
+        if ($this->isMac || $this->isLinux) {
             $output->write('Checking \'ps\' command availability... ');
             $this->testPs($output);
 
             $output->write('Checking \'kill\' command availability... ');
             $this->testKill($output);
+        }
+
+        if ($this->isMac) {
+            $output->write('Checking \'grep\' command availability... ');
+            $this->testGrep($output);
         }
     }
 
@@ -95,9 +114,9 @@ class ShellTestCommand extends ContainerAwareCommand
      */
     protected function testGrep(OutputInterface $output)
     {
-        exec('grep --help', $cmdResult);
+        exec('echo "got grep" | grep "got grep"', $cmdResult);
 
-        return $this->analyseResult($cmdResult, 'Usage:', $output);
+        return $this->analyseResult($cmdResult, 'got grep', $output);
     }
 
     /**

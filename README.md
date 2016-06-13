@@ -57,10 +57,21 @@ $ app/console livebroadcaster:broadcast
 
 ## Prerequisites
 
-The Broadcaster currently only supports Linux based OS's and needs a few commands;
+The Broadcaster needs a few commands;
 
 * `ffmpeg`
+
+On Linux:
 * `ps`
 * `kill`
+
+On Mac:
+* `ps`
+* `grep`
+* `kill`
+
+On Windows:
+* `tasklist`
+* `taskkill`
 
 To test these prerequisites the Symfony command `livebroadcaster:test:shell` can be used.

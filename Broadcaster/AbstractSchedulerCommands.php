@@ -6,7 +6,7 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster;
  * Class SchedulerCommands
  * @package Martin1982\LiveBroadcastBundle\Broadcaster
  */
-class SchedulerCommands implements SchedulerCommandsInterface
+abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 {
     /**
      * @var string
@@ -47,7 +47,7 @@ class SchedulerCommands implements SchedulerCommandsInterface
      */
     public function stopProcess($pid)
     {
-        return exec(sprintf("kill %d", $pid));
+        throw new \Exception('stopProcess Cannot be called on the abstract class');
     }
 
     /**
@@ -55,9 +55,7 @@ class SchedulerCommands implements SchedulerCommandsInterface
      */
     public function getRunningProcesses()
     {
-        exec('/bin/ps -C ffmpeg -o pid=,args=', $output);
-
-        return $output;
+        throw new \Exception('getRunningProcesses Cannot be called on the abstract class');
     }
 
     /**

@@ -1,6 +1,7 @@
 services:
   live.broadcast.scheduler.commands:
-    class: Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommands
+    class: Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands
+    factory: [Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsDetector, createSchedulerCommands]
     arguments:
       - "%kernel.environment%"
   live.broadcast.scheduler:
