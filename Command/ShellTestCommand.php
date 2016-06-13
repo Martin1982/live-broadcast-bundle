@@ -12,6 +12,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ShellTestCommand extends ContainerAwareCommand
 {
+    /** @var bool $isWindows */
+    private $isWindows = false;
+
     /**
      * {@inheritdoc}
      */
@@ -26,14 +29,28 @@ class ShellTestCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $this->isWindows = true;
+        } else {
+            $this->isWindows = false;
+        }
+
         $output->write('Checking \'ffmpeg\' command availability... ');
         $this->testFfmpeg($output);
 
-        $output->write('Checking \'ps\' command availability... ');
-        $this->testPs($output);
+        if ($this->isWindows) {
+            $output->write('Checking \'tasklist\' command availability... ');
+            $this->testTasklist($output);
 
-        $output->write('Checking \'kill\' command availability... ');
-        $this->testKill($output);
+            $output->write('Checking \'taskkill\' command availability... ');
+            $this->testTaskkill($output);
+        } else {
+            $output->write('Checking \'ps\' command availability... ');
+            $this->testPs($output);
+
+            $output->write('Checking \'kill\' command availability... ');
+            $this->testKill($output);
+        }
     }
 
     /**
@@ -60,6 +77,18 @@ class ShellTestCommand extends ContainerAwareCommand
     }
 
     /**
+     * Test tasklist availability.
+     *
+     * @param OutputInterface $output
+     */
+    protected function testTasklist(OutputInterface $output)
+    {
+        exec('tasklist /?', $cmdResult);
+
+        return $this->analyseResult($cmdResult, 'currently running processes', $output);
+    }
+
+    /**
      * Test grep availability.
      *
      * @param OutputInterface $output
@@ -69,6 +98,18 @@ class ShellTestCommand extends ContainerAwareCommand
         exec('grep --help', $cmdResult);
 
         return $this->analyseResult($cmdResult, 'Usage:', $output);
+    }
+
+    /**
+     * Test taskkill availability.
+     *
+     * @param OutputInterface $output
+     */
+    protected function testTaskkill(OutputInterface $output)
+    {
+        exec('taskkill /?', $cmdResult);
+
+        return $this->analyseResult($cmdResult, 'terminate tasks by process id', $output);
     }
 
     /**
