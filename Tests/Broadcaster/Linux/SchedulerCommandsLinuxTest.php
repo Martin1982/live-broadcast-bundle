@@ -1,15 +1,15 @@
 <?php
 
-namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
+namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Linux;
 
-use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
+use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands;
 use phpmock\phpunit\PHPMock;
 
 /**
- * Class SchedulerCommandsTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster
+ * Class SchedulerCommandsLinuxTest
+ * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Linux
  */
-class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
+class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
 {
     use PHPMock;
 
@@ -18,7 +18,7 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
      */
     public function testStartProcess()
     {
-        $command = new AbstractSchedulerCommands('unittest');
+        $command = new SchedulerCommands('unittest');
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', "exec");
         $exec->expects($this->once())->willReturnCallback(
@@ -35,9 +35,9 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
      */
     public function testStopProcess()
     {
-        $command = new AbstractSchedulerCommands('unittest');
+        $command = new SchedulerCommands('unittest');
 
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', "exec");
+        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', "exec");
         $exec->expects($this->once())->willReturnCallback(
             function ($command) {
                 self::assertEquals("kill 1337", $command);
@@ -52,9 +52,9 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRunningProcesses()
     {
-        $command = new AbstractSchedulerCommands('unittest');
+        $command = new SchedulerCommands('unittest');
 
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', "exec");
+        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', "exec");
         $exec->expects($this->once())->willReturnCallback(
             function ($command, &$output) {
                 self::assertEquals("/bin/ps -C ffmpeg -o pid=,args=", $command);
@@ -71,19 +71,19 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetBroadcastId()
     {
-        $command = new AbstractSchedulerCommands('unittest');
+        $command = new SchedulerCommands('unittest');
         $id = $command->getBroadcastId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337');
         self::assertEquals(1337, $id);
 
-        $command = new AbstractSchedulerCommands('unittest');
+        $command = new SchedulerCommands('unittest');
         $id = $command->getBroadcastId('');
         self::assertEquals(null, $id);
 
-        $command = new AbstractSchedulerCommands('unittest');
+        $command = new SchedulerCommands('unittest');
         $id = $command->getBroadcastId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata');
         self::assertEquals(null, $id);
 
-        $command = new AbstractSchedulerCommands('unittest');
+        $command = new SchedulerCommands('unittest');
         $id = $command->getBroadcastId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=');
         self::assertEquals(null, $id);
     }
@@ -93,7 +93,7 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetProcessId()
     {
-        $command = new AbstractSchedulerCommands('unittest');
+        $command = new SchedulerCommands('unittest');
         $id = $command->getProcessId('');
         self::assertEquals(null, $id);
 
@@ -112,7 +112,7 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetChannelId()
     {
-        $command = new AbstractSchedulerCommands('unittest');
+        $command = new SchedulerCommands('unittest');
         $id = $command->getChannelId('');
         self::assertEquals(null, $id);
 

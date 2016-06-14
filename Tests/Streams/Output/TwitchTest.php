@@ -4,6 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Streams\Output;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Streams\Output\Twitch;
+use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
 
 /**
  * Class TwitchTest
@@ -41,6 +42,15 @@ class TwitchTest extends \PHPUnit_Framework_TestCase
     public function testGenerateOutputCmd()
     {
         $twitchOutput = new Twitch($this->twitchChannel);
-        self::assertEquals($twitchOutput->generateOutputCmd(), '-f flv rtmp://value1/app/value2');
+        self::assertEquals($twitchOutput->generateOutputCmd(), '-f flv "rtmp://value1/app/value2"');
+    }
+
+    /**
+     * Test the result of the output factory
+     */
+    public function testOutputFactory()
+    {
+        $outputFactory = OutputFactory::loadOutput($this->twitchChannel);
+        self::assertEquals('Martin1982\LiveBroadcastBundle\Streams\Output\Twitch', get_class($outputFactory));
     }
 }
