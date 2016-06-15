@@ -4,14 +4,15 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Martin1982\LiveBroadcastBundle\Entity\Input\InputFile;
 use Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl;
-use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 
 /**
  * Class InputAdmin
  * @package Martin1982\LiveBroadcastBundle\Admin
  */
-class InputAdmin extends Admin
+class InputAdmin extends AbstractAdmin
 {
     protected $baseRoutePattern = 'broadcast-input';
 
@@ -36,5 +37,13 @@ class InputAdmin extends Admin
 
         $formMapper->end()
             ->end();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureListFields(ListMapper $listMapper)
+    {
+        $listMapper->add('__toString', 'string', array('label' => 'Input'));
     }
 }
