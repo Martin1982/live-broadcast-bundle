@@ -39,6 +39,12 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
             $meta .= ' -metadata '.$key.'='.$value;
         }
 
+        $osCode = strtoupper(substr(PHP_OS, 0, 3));
+
+        if ($osCode === 'WIN') {
+            return exec(sprintf('ffmpeg %s %s%s >nul 2>nul', $input, $output, $meta));
+        }
+
         return exec(sprintf('ffmpeg %s %s%s >/dev/null 2>&1 &', $input, $output, $meta));
     }
 
