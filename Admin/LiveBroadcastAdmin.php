@@ -25,6 +25,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
                     'class' => 'col-md-8'
                 ))
                 ->add('name', 'text', array('label' => 'Name'))
+                ->add('description', 'textarea', array('label' => 'Description', 'attr' => array('class' => 'form-control', 'rows' => 5)))
                 ->add('start_timestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast start', 'dp_side_by_side' => true))
                 ->add('end_timestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast end', 'dp_side_by_side' => true))
             ->end()

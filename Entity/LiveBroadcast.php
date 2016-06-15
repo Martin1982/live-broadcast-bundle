@@ -33,6 +33,13 @@ class LiveBroadcast
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", length=65535, nullable=true)
+     */
+    private $description;
+
+    /**
      * @var BaseInput
      *
      * @ORM\OneToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput")
@@ -68,7 +75,8 @@ class LiveBroadcast
     /**
      * LiveBroadcast constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->outputChannels = new ArrayCollection();
         $this->setStartTimestamp(new \DateTime());
         $this->setEndTimestamp(new \DateTime('+1 hour'));
@@ -108,6 +116,26 @@ class LiveBroadcast
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return LiveBroadcast
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
 
         return $this;
     }
