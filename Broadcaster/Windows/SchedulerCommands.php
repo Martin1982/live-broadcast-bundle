@@ -26,4 +26,15 @@ class SchedulerCommands extends AbstractSchedulerCommands
 
         return $output;
     }
+
+    /**
+     * @param $input
+     * @param $output
+     * @param $meta
+     * @return string
+     */
+    protected function execStreamCommand($input, $output, $meta)
+    {
+        return exec(sprintf('ffmpeg %s %s%s >nul 2>nul &', $input, $output, $meta));
+    }
 }
