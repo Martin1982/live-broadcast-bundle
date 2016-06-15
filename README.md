@@ -7,6 +7,13 @@ Usage should be limited to development work.*
 [![Build Status](https://travis-ci.org/Martin1982/live-broadcast-bundle.svg?branch=master)](https://travis-ci.org/Martin1982/live-broadcast-bundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/6027a50f-06cf-4989-8267-9f481e838b2a/mini.png)](https://insight.sensiolabs.com/projects/6027a50f-06cf-4989-8267-9f481e838b2a)
 
+[![Latest Stable Version](https://poser.pugx.org/martin1982/live-broadcast-bundle/v/stable)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
+[![Total Downloads](https://poser.pugx.org/martin1982/live-broadcast-bundle/downloads)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
+[![Latest Unstable Version](https://poser.pugx.org/martin1982/live-broadcast-bundle/v/unstable)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
+[![License](https://poser.pugx.org/martin1982/live-broadcast-bundle/license)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
+[![Monthly Downloads](https://poser.pugx.org/martin1982/live-broadcast-bundle/d/monthly)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
+[![Daily Downloads](https://poser.pugx.org/martin1982/live-broadcast-bundle/d/daily)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
+
 The Live Broadcast Bundle will make it possible to plan live streams to
 various channels like Twitch, Youtube and Facebook (referred to as Output or Channels).
 
