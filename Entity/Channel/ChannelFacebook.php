@@ -16,7 +16,7 @@ class ChannelFacebook extends BaseChannel
     /**
      * @var string
      *
-     * @ORM\Column(name="access_token", type="string", length=128, nullable=false)
+     * @ORM\Column(name="access_token", type="string", length=255, nullable=false)
      */
     protected $accessToken;
 
@@ -26,6 +26,20 @@ class ChannelFacebook extends BaseChannel
      * @ORM\Column(name="fb_entity_id", type="string", length=128, nullable=false)
      */
     protected $fbEntityId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fb_app_id", type="string", length=128, nullable=false)
+     */
+    protected $applicationId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fb_app_secret", type="string", length=255, nullable=false)
+     */
+    protected $applicationSecret;
 
     /**
      * @return string
@@ -64,7 +78,48 @@ class ChannelFacebook extends BaseChannel
 
         return $this;
     }
-    
+
+    /**
+     * @return string
+     */
+    public function getApplicationId()
+    {
+        return $this->applicationId;
+    }
+
+    /**
+     * @param string $applicationId
+     * @return ChannelFacebook
+     */
+    public function setApplicationId($applicationId)
+    {
+        $this->applicationId = $applicationId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplicationSecret()
+    {
+        return $this->applicationSecret;
+    }
+
+    /**
+     * @param $applicationSecret
+     * @return ChannelFacebook
+     */
+    public function setApplicationSecret($applicationSecret)
+    {
+        $this->applicationSecret = $applicationSecret;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return 'Facebook: ' . $this->getChannelName();

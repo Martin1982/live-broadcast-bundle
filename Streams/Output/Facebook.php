@@ -25,6 +25,16 @@ class Facebook implements OutputInterface
     /**
      * @var string
      */
+    private $applicationId;
+
+    /**
+     * @var string
+     */
+    private $applicationSecret;
+
+    /**
+     * @var string
+     */
     private $streamUrl;
 
     /**
@@ -35,6 +45,40 @@ class Facebook implements OutputInterface
     {
         $this->accessToken = $channelFacebook->getAccessToken();
         $this->entityId = $channelFacebook->getFbEntityId();
+        $this->applicationId = $channelFacebook->getApplicationId();
+        $this->applicationSecret = $channelFacebook->getApplicationSecret();
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplicationId()
+    {
+        return $this->applicationId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplicationSecret()
+    {
+        return $this->applicationSecret;
     }
 
     /**

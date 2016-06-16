@@ -11,7 +11,8 @@
     "require": {
         "symfony/framework-bundle": "^2.8||^3.0",
         "symfony/console": "^2.8||^3.0",
-        "doctrine/orm": "^2.3"
+        "doctrine/orm": "^2.3",
+        "facebook/php-sdk-v4": "^5.2"
     },
     "suggest": {
         "sonata-project/doctrine-orm-admin-bundle": "Sonata admin (version 3.x) for easy broadcast planning"
