@@ -4,6 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Streams\Input;
 
 use Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**
  * Class Url
@@ -21,7 +22,7 @@ class Url implements InputInterface
      *
      * @param LiveBroadcast $broadcast
      *
-     * @throws \Exception
+     * @throws LiveBroadcastException
      */
     public function __construct(LiveBroadcast $broadcast)
     {
@@ -30,7 +31,7 @@ class Url implements InputInterface
         $inputUrl = $inputEntity->getUrl();
 
         if (filter_var($inputUrl, FILTER_VALIDATE_URL) === false) {
-            throw new \Exception(sprintf('Invalid URL %s', $inputUrl));
+            throw new LiveBroadcastException(sprintf('Invalid URL %s', $inputUrl));
         }
 
         $this->broadcast = $broadcast;

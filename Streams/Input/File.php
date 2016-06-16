@@ -4,6 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Streams\Input;
 
 use Martin1982\LiveBroadcastBundle\Entity\Input\InputFile;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**
  * Class File
@@ -21,7 +22,7 @@ class File implements InputInterface
      *
      * @param LiveBroadcast $broadcast
      *
-     * @throws \Exception
+     * @throws LiveBroadcastException
      */
     public function __construct(LiveBroadcast $broadcast)
     {
@@ -30,7 +31,7 @@ class File implements InputInterface
         $inputFilename = $inputEntity->getFileLocation();
 
         if (!file_exists($inputFilename)) {
-            throw new \Exception(sprintf('Could not find input file %s', $inputFilename));
+            throw new LiveBroadcastException(sprintf('Could not find input file %s', $inputFilename));
         }
 
         $this->broadcast = $broadcast;

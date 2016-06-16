@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Streams\InputFactory;
 use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
 use Psr\Log\LoggerInterface;
@@ -157,17 +158,21 @@ class Scheduler
      */
     public function startBroadcast(LiveBroadcast $broadcast, BaseChannel $channel)
     {
-        $inputProcessor = InputFactory::loadInputStream($broadcast);
-        $outputProcessor = OutputFactory::loadOutput($channel);
+        try {
+            $inputProcessor = InputFactory::loadInputStream($broadcast);
+            $outputProcessor = OutputFactory::loadOutput($channel);
 
-        $streamInput = $inputProcessor->generateInputCmd();
-        $streamOutput = $outputProcessor->generateOutputCmd();
+            $streamInput = $inputProcessor->generateInputCmd();
+            $streamOutput = $outputProcessor->generateOutputCmd();
 
-        $this->logger->info(sprintf('Start broadcast %d (%s) on %d (%s).', $broadcast->getBroadcastId(), $broadcast->getName(), $channel->getChannelId(), $channel->getChannelName()));
-        $this->schedulerCommands->startProcess($streamInput, $streamOutput, array(
-            'broadcast_id' => $broadcast->getBroadcastId(),
-            'channel_id'   => $channel->getChannelId(),
-        ));
+            $this->logger->info(sprintf('Start broadcast %d (%s) on %d (%s).', $broadcast->getBroadcastId(), $broadcast->getName(), $channel->getChannelId(), $channel->getChannelName()));
+            $this->schedulerCommands->startProcess($streamInput, $streamOutput, array(
+                'broadcast_id' => $broadcast->getBroadcastId(),
+                'channel_id' => $channel->getChannelId(),
+            ));
+        } catch (LiveBroadcastException $ex) {
+            $this->logger->error(sprintf('Could not start broadcast %d (%s): %s', $broadcast->getBroadcastId(), $broadcast->getName(), $ex->getMessage()));
+        }
     }
 
     /**
