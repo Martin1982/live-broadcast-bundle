@@ -54,7 +54,7 @@ class Facebook implements OutputInterface
     public function generateOutputCmd()
     {
         if (empty($this->streamUrl)) {
-            throw new LiveBroadcastException('The Faceboko stream url must be set');
+            throw new LiveBroadcastException('The Facebook stream url must be set');
         }
 
         return sprintf('-f flv "%s"', $this->streamUrl);
