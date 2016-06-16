@@ -30,7 +30,7 @@ class TwitchTest extends \PHPUnit_Framework_TestCase
     /**
      * Test if the Twitch output class implements the correct interface.
      */
-    public function testTwitchContstructor()
+    public function testTwitchConstructor()
     {
         $twitchOutput = new Twitch($this->twitchChannel);
         self::assertInstanceOf('Martin1982\LiveBroadcastBundle\Streams\Output\Twitch', $twitchOutput);
