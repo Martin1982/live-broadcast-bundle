@@ -24,26 +24,12 @@ class FileTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Exception
+     * @expectedException Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testFileNotExists()
     {
         $input = new InputFile();
         $input->setFileLocation('/not-really-there');
-
-        $broadcast = new LiveBroadcast();
-        $broadcast->setInput($input);
-
-        new File($broadcast);
-    }
-
-    /**
-     * @expectedException \Exception
-     */
-    public function testInvalidUrl()
-    {
-        $input = new InputFile();
-        $input->setFileLocation('http://w&w&w.invalid.url');
 
         $broadcast = new LiveBroadcast();
         $broadcast->setInput($input);

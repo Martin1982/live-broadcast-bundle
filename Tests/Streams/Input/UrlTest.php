@@ -24,7 +24,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Exception
+     * @expectedException Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testInvalidUrl()
     {
