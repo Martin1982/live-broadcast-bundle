@@ -48,6 +48,6 @@ class File implements InputInterface
         $inputEntity = $this->broadcast->getInput();
         $inputFilename = $inputEntity->getFileLocation();
 
-        return sprintf('-re -i %s -vcodec copy -acodec copy', $inputFilename);
+        return sprintf('-re -i %s', $inputFilename);
     }
 }

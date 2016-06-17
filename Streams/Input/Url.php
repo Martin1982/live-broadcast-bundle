@@ -48,6 +48,6 @@ class Url implements InputInterface
         $inputEntity = $this->broadcast->getInput();
         $inputUrl = $inputEntity->getUrl();
 
-        return sprintf('-re -i "%s" -vcodec copy -acodec copy', $inputUrl);
+        return sprintf('-re -i "%s"', $inputUrl);
     }
 }

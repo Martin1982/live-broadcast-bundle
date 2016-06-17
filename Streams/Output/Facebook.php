@@ -101,6 +101,6 @@ class Facebook implements OutputInterface
             throw new LiveBroadcastException('The Facebook stream url must be set');
         }
 
-        return sprintf('-f flv "%s"', $this->streamUrl);
+        return sprintf('-vcodec copy -acodec copy -f flv "%s"', $this->streamUrl);
     }
 }
