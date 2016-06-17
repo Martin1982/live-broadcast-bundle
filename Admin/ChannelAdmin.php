@@ -18,6 +18,21 @@ class ChannelAdmin extends AbstractAdmin
     protected $baseRoutePattern = 'channel';
 
     /**
+     * @param string $name
+     * @return mixed|null|string
+     */
+    public function getTemplate($name)
+    {
+        $subject = $this->getSubject();
+
+        if ($subject instanceof ChannelFacebook && $name === 'edit') {
+            return 'LiveBroadcastBundle:CRUD:channel_facebook_edit.html.twig';
+        }
+
+        return parent::getTemplate($name);
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
