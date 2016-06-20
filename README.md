@@ -60,6 +60,20 @@ To start a broadcast you can use a console command, you can add this to a cronjo
 $ app/console livebroadcaster:broadcast
 ```
 
+## Facebook Live
+
+Create a Facebook app on https://developers.facebook.com with the following permissions:
+
+- manage_pages
+- publish_actions
+- Live-Video API
+
+Add the Facebook application id to your config.yml:
+
+    twig:
+        globals:
+            live_broadcast_facebook_app_id: '{application_id}'    
+
 ## Prerequisites
 
 The Broadcaster needs a few commands;
