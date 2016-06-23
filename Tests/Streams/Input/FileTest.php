@@ -53,7 +53,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $inputFile = new File($broadcast);
 
         self::assertEquals(
-            $inputFile->generateInputCmd(), '-re -i ' . escapeshellarg($fileName) . ' -vcodec copy -acodec copy'
+            $inputFile->generateInputCmd(), '-re -i ' . escapeshellarg($fileName)
         );
 
         unlink($fileName);
