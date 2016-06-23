@@ -8,8 +8,7 @@ use Martin1982\LiveBroadcastBundle\Streams\Input\Url;
 use Martin1982\LiveBroadcastBundle\Streams\InputFactory;
 
 /**
- * Class UrlTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Streams\Input
+ * Class UrlTest.
  */
 class UrlTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,11 +50,13 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
         $inputUrl = new Url($broadcast);
 
-        self::assertEquals($inputUrl->generateInputCmd(), '-re -i "' . $url . '"');
+        self::assertEquals(
+            $inputUrl->generateInputCmd(), '-re -i ' . escapeshellarg($url) . ' -vcodec copy -acodec copy'
+        );
     }
 
     /**
-     * Test the output of the factory
+     * Test the output of the factory.
      */
     public function testUrlInputFactory()
     {

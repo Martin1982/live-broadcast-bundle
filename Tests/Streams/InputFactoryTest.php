@@ -8,13 +8,12 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Streams\InputFactory;
 
 /**
- * Class InputFactoryTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Streams
+ * Class InputFactoryTest.
  */
 class InputFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test an unknown input for a broadcast
+     * Test an unknown input for a broadcast.
      */
     public function testUnknownInputFactory()
     {
@@ -28,7 +27,7 @@ class InputFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test input factory with file
+     * Test input factory with file.
      */
     public function testFileInputFactory()
     {
@@ -49,7 +48,7 @@ class InputFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test input factory with URL
+     * Test input factory with URL.
      */
     public function testUrlInputFactory()
     {

@@ -8,8 +8,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput;
 
 /**
- * Class LiveBroadcast
- * @package Martin1982\LiveBroadcastBundle\Entity
+ * Class LiveBroadcast.
  *
  * @ORM\Table(name="live_broadcast", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
@@ -182,6 +181,7 @@ class LiveBroadcast
 
     /**
      * @param $channels
+     *
      * @return $this
      */
     public function setOutputChannels($channels)
@@ -197,6 +197,7 @@ class LiveBroadcast
 
     /**
      * @param BaseChannel $channel
+     *
      * @return $this
      */
     public function addOutputChannel(BaseChannel $channel)
@@ -208,6 +209,7 @@ class LiveBroadcast
 
     /**
      * @param BaseChannel $channel
+     *
      * @return $this
      */
     public function removeOutputChannel(BaseChannel $channel)
@@ -235,6 +237,7 @@ class LiveBroadcast
 
     /**
      * @param BaseInput $input
+     *
      * @return LiveBroadcast
      */
     public function setInput(BaseInput $input)

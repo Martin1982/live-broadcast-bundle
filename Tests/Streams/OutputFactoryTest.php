@@ -6,13 +6,12 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
 
 /**
- * Class OutputFactoryTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Streams
+ * Class OutputFactoryTest.
  */
 class OutputFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test an unknown output for a channel
+     * Test an unknown output for a channel.
      *
      * @expectedException \Exception
      */
@@ -22,7 +21,7 @@ class OutputFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test output factory with Twitch
+     * Test output factory with Twitch.
      */
     public function testTwitchOutputFactory()
     {

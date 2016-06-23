@@ -6,8 +6,7 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands;
 use phpmock\phpunit\PHPMock;
 
 /**
- * Class SchedulerCommandsLinuxTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Linux
+ * Class SchedulerCommandsLinuxTest.
  */
 class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,10 +19,10 @@ class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
     {
         $command = new SchedulerCommands('unittest');
 
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', "exec");
+        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'exec');
         $exec->expects($this->once())->willReturnCallback(
             function ($command) {
-                self::assertEquals("ffmpeg input output -metadata broadcast_id=4 -metadata unit=test -metadata env=unittest >/dev/null 2>&1 &", $command);
+                self::assertEquals('ffmpeg input output -metadata broadcast_id=4 -metadata unit=test -metadata env=unittest >/dev/null 2>&1 &', $command);
             }
         );
 
@@ -37,10 +36,10 @@ class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
     {
         $command = new SchedulerCommands('unittest');
 
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', "exec");
+        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
         $exec->expects($this->once())->willReturnCallback(
             function ($command) {
-                self::assertEquals("kill 1337", $command);
+                self::assertEquals('kill 1337', $command);
             }
         );
 
@@ -54,10 +53,10 @@ class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
     {
         $command = new SchedulerCommands('unittest');
 
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', "exec");
+        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
         $exec->expects($this->once())->willReturnCallback(
             function ($command, &$output) {
-                self::assertEquals("/bin/ps -C ffmpeg -o pid=,args=", $command);
+                self::assertEquals('/bin/ps -C ffmpeg -o pid=,args=', $command);
                 $output = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337';
             }
         );
@@ -108,7 +107,7 @@ class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test retrieval of the channel id
+     * Test retrieval of the channel id.
      */
     public function testGetChannelId()
     {

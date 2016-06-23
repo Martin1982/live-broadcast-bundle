@@ -7,8 +7,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**
- * Class File
- * @package Martin1982\LiveBroadcastBundle\Streams\Input
+ * Class File.
  */
 class File implements InputInterface
 {
@@ -48,6 +47,6 @@ class File implements InputInterface
         $inputEntity = $this->broadcast->getInput();
         $inputFilename = $inputEntity->getFileLocation();
 
-        return sprintf('-re -i %s', $inputFilename);
+        return sprintf('-re -i %s', escapeshellarg($inputFilename));
     }
 }

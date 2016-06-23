@@ -3,8 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 /**
- * Class SchedulerCommands
- * @package Martin1982\LiveBroadcastBundle\Broadcaster
+ * Class SchedulerCommands.
  */
 abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 {
@@ -20,6 +19,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 
     /**
      * SchedulerCommands constructor.
+     *
      * @param string $environment
      */
     public function __construct($environment)
@@ -65,7 +65,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     {
         preg_match('/^\s*([\d]+)/', $processString, $pid);
         if (count($pid) && is_numeric($pid[0])) {
-            return (int)$pid[0];
+            return (int) $pid[0];
         }
 
         return;
@@ -81,7 +81,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
         if (!count($this->metadata)) {
             $this->readMetadata($processString);
         }
-        
+
         if (array_key_exists($metadataKey, $this->metadata)) {
             return $this->metadata[$metadataKey];
         }
@@ -111,6 +111,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      * @param $input
      * @param $output
      * @param $meta
+     *
      * @return string
      */
     protected function execStreamCommand($input, $output, $meta)
@@ -119,7 +120,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     }
 
     /**
-     * Read metadata from a process string
+     * Read metadata from a process string.
      *
      * @param $processString
      */

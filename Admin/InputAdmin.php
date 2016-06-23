@@ -9,8 +9,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 
 /**
- * Class InputAdmin
- * @package Martin1982\LiveBroadcastBundle\Admin
+ * Class InputAdmin.
  */
 class InputAdmin extends AbstractAdmin
 {

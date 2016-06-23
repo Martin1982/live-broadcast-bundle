@@ -15,8 +15,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class Scheduler
- * @package Martin1982\LiveBroadcastBundle\Broadcaster
+ * Class Scheduler.
  */
 class Scheduler
 {
@@ -52,6 +51,7 @@ class Scheduler
 
     /**
      * Scheduler constructor.
+     *
      * @param EntityManager              $entityManager
      * @param SchedulerCommandsInterface $schedulerCommands
      * @param EventDispatcherInterface   $dispatcher
@@ -78,7 +78,7 @@ class Scheduler
     }
 
     /**
-     * Start planned broadcasts if not already running
+     * Start planned broadcasts if not already running.
      */
     public function startPlannedBroadcasts()
     {
@@ -113,10 +113,9 @@ class Scheduler
             }
         }
     }
-    
-    
+
     /**
-     * Stop running broadcasts that have expired
+     * Stop running broadcasts that have expired.
      */
     public function stopExpiredBroadcasts()
     {

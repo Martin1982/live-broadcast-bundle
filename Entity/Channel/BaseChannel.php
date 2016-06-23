@@ -5,8 +5,8 @@ namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class BaseChannel
- * @package Martin1982\LiveBroadcastBundle\Entity\Channel
+ * Class BaseChannel.
+ *
  * @ORM\Entity()
  * @ORM\Table(name="channel", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\InheritanceType("JOINED")
@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class BaseChannel
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -48,6 +48,7 @@ abstract class BaseChannel
 
     /**
      * @param string $channelName
+     *
      * @return BaseChannel
      */
     public function setChannelName($channelName)

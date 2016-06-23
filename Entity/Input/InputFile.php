@@ -6,8 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class InputFile
- * @package Martin1982\LiveBroadcastBundle\Entity\Input
+ * Class InputFile.
  *
  * @ORM\Table(name="broadcast_input_file", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
@@ -33,6 +32,7 @@ class InputFile extends BaseInput
 
     /**
      * @param string $fileLocation
+     *
      * @return InputFile
      */
     public function setFileLocation($fileLocation)
@@ -43,7 +43,7 @@ class InputFile extends BaseInput
     }
 
     /**
-     * Get input string representation
+     * Get input string representation.
      * 
      * @return string
      */
@@ -52,4 +52,3 @@ class InputFile extends BaseInput
         return $this->getFileLocation();
     }
 }
-
