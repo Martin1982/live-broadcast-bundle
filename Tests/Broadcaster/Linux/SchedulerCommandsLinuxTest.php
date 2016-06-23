@@ -22,6 +22,7 @@ class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'exec');
         $exec->expects($this->once())->willReturnCallback(
             function ($command) {
+                // @codingStandardsIgnoreLine
                 self::assertEquals('ffmpeg input output -metadata broadcast_id=4 -metadata unit=test -metadata env=unittest >/dev/null 2>&1 &', $command);
             }
         );
@@ -57,11 +58,13 @@ class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
         $exec->expects($this->once())->willReturnCallback(
             function ($command, &$output) {
                 self::assertEquals('/bin/ps -C ffmpeg -o pid=,args=', $command);
+                // @codingStandardsIgnoreLine
                 $output = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337';
             }
         );
 
         $running = $command->getRunningProcesses();
+        // @codingStandardsIgnoreLine
         self::assertEquals('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337', $running);
     }
 
@@ -71,6 +74,7 @@ class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
     public function testGetBroadcastId()
     {
         $command = new SchedulerCommands('unittest');
+        // @codingStandardsIgnoreLine
         $id = $command->getBroadcastId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337');
         self::assertEquals(1337, $id);
 
@@ -79,10 +83,12 @@ class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(null, $id);
 
         $command = new SchedulerCommands('unittest');
+        // @codingStandardsIgnoreLine
         $id = $command->getBroadcastId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata');
         self::assertEquals(null, $id);
 
         $command = new SchedulerCommands('unittest');
+        // @codingStandardsIgnoreLine
         $id = $command->getBroadcastId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=');
         self::assertEquals(null, $id);
     }
@@ -96,9 +102,11 @@ class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
         $id = $command->getProcessId('');
         self::assertEquals(null, $id);
 
+        // @codingStandardsIgnoreLine
         $id = $command->getProcessId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337');
         self::assertEquals(1234, $id);
 
+        // @codingStandardsIgnoreLine
         $id = $command->getProcessId('  5678 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337');
         self::assertEquals(5678, $id);
 
@@ -118,6 +126,7 @@ class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
         $id = $command->getChannelId('channelid=12');
         self::assertEquals(null, $id);
 
+        // @codingStandardsIgnoreLine
         $id = $command->getChannelId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337 -metadata channel_id=5');
         self::assertEquals(5, $id);
     }

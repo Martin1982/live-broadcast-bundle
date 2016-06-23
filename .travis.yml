@@ -22,4 +22,6 @@ install:
     - if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/symfony=$SYMFONY_VERSION; fi
     - composer update --no-interaction --prefer-source $COMPOSER_FLAGS
 
-script: phpunit --coverage-text --colors
+script:
+    - phpunit --coverage-text --colors
+    - php ./vendor/bin/phpcs --standard=psr2 Broadcaster/ Command/ DependencyInjection/ Entity/ Exception/ LiveBroadcastBundle.php Resources/ Streams/ Tests/
