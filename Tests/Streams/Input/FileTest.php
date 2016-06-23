@@ -8,8 +8,7 @@ use Martin1982\LiveBroadcastBundle\Streams\Input\File;
 use Martin1982\LiveBroadcastBundle\Streams\InputFactory;
 
 /**
- * Class FileTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Streams\Input
+ * Class FileTest.
  */
 class FileTest extends \PHPUnit_Framework_TestCase
 {
@@ -53,13 +52,13 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $inputFile = new File($broadcast);
 
-        self::assertEquals($inputFile->generateInputCmd(), '-re -i ' . $fileName . ' -vcodec copy -acodec copy');
+        self::assertEquals($inputFile->generateInputCmd(), '-re -i '.$fileName.' -vcodec copy -acodec copy');
 
         unlink($fileName);
     }
 
     /**
-     * Test the output of the factory
+     * Test the output of the factory.
      */
     public function testFileInputFactory()
     {

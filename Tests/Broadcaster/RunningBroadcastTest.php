@@ -5,13 +5,12 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
 
 /**
- * Class RunningBroadcastTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster
+ * Class RunningBroadcastTest.
  */
 class RunningBroadcastTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test get method
+     * Test get method.
      */
     public function testGetMethods()
     {
@@ -22,7 +21,7 @@ class RunningBroadcastTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the isValid method
+     * Test the isValid method.
      */
     public function testIsValid()
     {

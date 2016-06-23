@@ -3,8 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 /**
- * Class RunningBroadcast
- * @package Martin1982\LiveBroadcastBundle\Broadcaster
+ * Class RunningBroadcast.
  */
 class RunningBroadcast
 {
@@ -25,6 +24,7 @@ class RunningBroadcast
 
     /**
      * RunningBroadcast constructor.
+     *
      * @param int $broadcastId
      * @param int $processId
      */

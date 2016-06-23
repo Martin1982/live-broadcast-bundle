@@ -10,8 +10,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 
 /**
- * Class ChannelAdmin
- * @package Martin1982\LiveBroadcastBundle\Admin
+ * Class ChannelAdmin.
  */
 class ChannelAdmin extends AbstractAdmin
 {

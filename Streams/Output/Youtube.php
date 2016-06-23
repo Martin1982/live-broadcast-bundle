@@ -3,8 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Streams\Output;
 
 /**
- * Class Youtube
- * @package Martin1982\LiveBroadcastBundle\Streams\Output
+ * Class Youtube.
  */
 class Youtube implements OutputInterface
 {

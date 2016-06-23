@@ -1,11 +1,11 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Broadcaster\Windows;
+
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 
 /**
- * Class SchedulerCommands
- * @package Martin1982\LiveBroadcastBundle\Broadcaster
+ * Class SchedulerCommands.
  */
 class SchedulerCommands extends AbstractSchedulerCommands
 {
@@ -14,7 +14,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
      */
     public function stopProcess($pid)
     {
-        return exec(sprintf("TASKKILL /PID %d /T", $pid));
+        return exec(sprintf('TASKKILL /PID %d /T', $pid));
     }
 
     /**
@@ -31,6 +31,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
      * @param $input
      * @param $output
      * @param $meta
+     *
      * @return string
      */
     protected function execStreamCommand($input, $output, $meta)

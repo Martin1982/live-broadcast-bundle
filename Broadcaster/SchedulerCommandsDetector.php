@@ -7,14 +7,15 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\Darwin\SchedulerCommands as MacCo
 use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands as LinuxCommands;
 
 /**
- * Class SchedulerCommandsDetector
- * @package Martin1982\LiveBroadcastBundle\Broadcaster
+ * Class SchedulerCommandsDetector.
  */
 class SchedulerCommandsDetector
 {
     /**
-     * Create the class required for scheduler commands
+     * Create the class required for scheduler commands.
+     *
      * @param string $environment
+     *
      * @return SchedulerCommandsInterface
      */
     public static function createSchedulerCommands($environment)

@@ -1,11 +1,11 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Broadcaster\Darwin;
+
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 
 /**
- * Class SchedulerCommands
- * @package Martin1982\LiveBroadcastBundle\Broadcaster
+ * Class SchedulerCommands.
  */
 class SchedulerCommands extends AbstractSchedulerCommands
 {
@@ -14,7 +14,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
      */
     public function stopProcess($pid)
     {
-        return exec(sprintf("kill %d", $pid));
+        return exec(sprintf('kill %d', $pid));
     }
 
     /**

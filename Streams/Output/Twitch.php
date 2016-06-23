@@ -1,11 +1,11 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Streams\Output;
+
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 
 /**
- * Class Twitch
- * @package Martin1982\LiveBroadcastBundle\Streams\Output
+ * Class Twitch.
  */
 class Twitch implements OutputInterface
 {

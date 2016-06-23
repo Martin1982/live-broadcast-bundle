@@ -7,8 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class BroadcasterCommand
- * @package Martin1982\LiveBroadcastBundle\Command
+ * Class BroadcasterCommand.
  */
 class BroadcasterCommand extends ContainerAwareCommand
 {

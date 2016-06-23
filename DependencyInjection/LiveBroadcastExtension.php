@@ -8,8 +8,7 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Class LiveBroadcastExtension
- * @package Martin1982\LiveBroadcastBundle\DependencyInjection
+ * Class LiveBroadcastExtension.
  */
 class LiveBroadcastExtension extends Extension
 {
