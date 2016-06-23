@@ -7,8 +7,7 @@ use Martin1982\LiveBroadcastBundle\Streams\Output\Twitch;
 use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
 
 /**
- * Class TwitchTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Streams\Output
+ * Class TwitchTest.
  */
 class TwitchTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,7 +17,7 @@ class TwitchTest extends \PHPUnit_Framework_TestCase
     private $twitchChannel;
 
     /**
-     * Setup a testable Twitch channel
+     * Setup a testable Twitch channel.
      */
     public function setUp()
     {
@@ -46,7 +45,7 @@ class TwitchTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the result of the output factory
+     * Test the result of the output factory.
      */
     public function testOutputFactory()
     {

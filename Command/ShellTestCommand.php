@@ -7,8 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ShellTestCommand
- * @package Martin1982\LiveBroadcastBundle\Command
+ * Class ShellTestCommand.
  */
 class ShellTestCommand extends ContainerAwareCommand
 {

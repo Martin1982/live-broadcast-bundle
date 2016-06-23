@@ -5,8 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Streams\Input;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
- * Class Spotify
- * @package Martin1982\LiveBroadcastBundle\Streams\Input
+ * Class Spotify.
  */
 class Spotify implements InputInterface
 {

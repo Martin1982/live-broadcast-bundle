@@ -7,8 +7,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**
- * Class Url
- * @package Martin1982\LiveBroadcastBundle\Streams\Input
+ * Class Url.
  */
 class Url implements InputInterface
 {

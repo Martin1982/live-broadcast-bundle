@@ -5,8 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Streams\Input;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
- * Class Rtmp
- * @package Martin1982\LiveBroadcastBundle\Streams\Input
+ * Class Rtmp.
  */
 class Rtmp implements InputInterface
 {

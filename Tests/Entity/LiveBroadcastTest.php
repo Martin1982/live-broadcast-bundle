@@ -3,17 +3,15 @@
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
- * Class LiveBroadcastTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Entity
+ * Class LiveBroadcastTest.
  */
 class LiveBroadcastTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test class instance
+     * Test class instance.
      */
     public function testClass()
     {
@@ -22,7 +20,7 @@ class LiveBroadcastTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test get methods
+     * Test get methods.
      */
     public function testGetMethods()
     {

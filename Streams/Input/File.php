@@ -7,8 +7,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**
- * Class File
- * @package Martin1982\LiveBroadcastBundle\Streams\Input
+ * Class File.
  */
 class File implements InputInterface
 {

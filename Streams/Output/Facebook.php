@@ -3,8 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Streams\Output;
 
 /**
- * Class Facebook
- * @package Martin1982\LiveBroadcastBundle\Streams\Output
+ * Class Facebook.
  */
 class Facebook implements OutputInterface
 {

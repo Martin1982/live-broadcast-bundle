@@ -5,8 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class ChannelTwitch
- * @package Martin1982\LiveBroadcastBundle\Entity\Channel
+ * Class ChannelTwitch.
  *
  * @ORM\Table(name="channel_twitch", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
@@ -37,6 +36,7 @@ class ChannelTwitch extends BaseChannel
 
     /**
      * @param string $streamKey
+     *
      * @return ChannelTwitch
      */
     public function setStreamKey($streamKey)
@@ -56,17 +56,18 @@ class ChannelTwitch extends BaseChannel
 
     /**
      * @param string $streamServer
+     *
      * @return ChannelTwitch
      */
     public function setStreamServer($streamServer)
     {
         $this->streamServer = $streamServer;
-        
+
         return $this;
     }
 
     public function __toString()
     {
-        return 'Twitch: ' . $this->getChannelName();
+        return 'Twitch: '.$this->getChannelName();
     }
 }

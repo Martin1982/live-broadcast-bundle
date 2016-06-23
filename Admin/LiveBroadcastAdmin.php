@@ -8,8 +8,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 
 /**
- * Class LiveBroadcastAdmin
- * @package Martin1982\LiveBroadcastBundle\Admin
+ * Class LiveBroadcastAdmin.
  */
 class LiveBroadcastAdmin extends AbstractAdmin
 {
@@ -22,7 +21,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
     {
         $formMapper
             ->with('General', array(
-                    'class' => 'col-md-8'
+                    'class' => 'col-md-8',
                 ))
                 ->add('name', 'text', array('label' => 'Name'))
                 ->add('description', 'textarea', array('label' => 'Description', 'required' => false, 'attr' => array('class' => 'form-control', 'rows' => 5)))
@@ -30,16 +29,16 @@ class LiveBroadcastAdmin extends AbstractAdmin
                 ->add('end_timestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast end', 'dp_side_by_side' => true))
             ->end()
             ->with('Video Input', array(
-                    'class' => 'col-md-4'
+                    'class' => 'col-md-4',
                 ))
                 ->add('input', 'sonata_type_model_list', array())
             ->end()
             ->with('Channels', array(
-                    'class' => 'col-md-4'
+                    'class' => 'col-md-4',
                 ))
                 ->add('outputChannels', 'sonata_type_model', array(
                     'multiple' => true,
-                    'expanded' => true
+                    'expanded' => true,
                 ))
                 ->end();
     }

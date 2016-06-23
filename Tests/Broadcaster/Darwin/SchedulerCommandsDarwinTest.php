@@ -6,8 +6,7 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\Darwin\SchedulerCommands;
 use phpmock\phpunit\PHPMock;
 
 /**
- * Class SchedulerCommandsDarwinTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Darwin
+ * Class SchedulerCommandsDarwinTest.
  */
 class SchedulerCommandsDarwinTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,10 +19,10 @@ class SchedulerCommandsDarwinTest extends \PHPUnit_Framework_TestCase
     {
         $command = new SchedulerCommands('unittest');
 
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Darwin', "exec");
+        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Darwin', 'exec');
         $exec->expects($this->once())->willReturnCallback(
             function ($command) {
-                self::assertEquals("kill 1337", $command);
+                self::assertEquals('kill 1337', $command);
             }
         );
 
@@ -37,10 +36,10 @@ class SchedulerCommandsDarwinTest extends \PHPUnit_Framework_TestCase
     {
         $command = new SchedulerCommands('unittest');
 
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Darwin', "exec");
+        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Darwin', 'exec');
         $exec->expects($this->once())->willReturnCallback(
             function ($command, &$output) {
-                self::assertEquals("ps -o pid=,args= | grep ffmpeg | grep -v grep", $command);
+                self::assertEquals('ps -o pid=,args= | grep ffmpeg | grep -v grep', $command);
                 $output = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337';
             }
         );

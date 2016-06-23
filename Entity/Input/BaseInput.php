@@ -5,8 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Entity\Input;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class BaseInput
- * @package Martin1982\LiveBroadcastBundle\Entity\Input
+ * Class BaseInput.
  *
  * @ORM\Entity()
  * @ORM\Table(name="broadcast_input", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
@@ -16,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class BaseInput
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
