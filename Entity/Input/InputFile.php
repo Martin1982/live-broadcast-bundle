@@ -44,7 +44,7 @@ class InputFile extends BaseInput
 
     /**
      * Get input string representation.
-     * 
+     *
      * @return string
      */
     public function __toString()

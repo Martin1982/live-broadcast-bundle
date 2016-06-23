@@ -18,7 +18,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testFileInterface()
     {
         $implements = class_implements('Martin1982\LiveBroadcastBundle\Streams\Input\File');
-        self::assertEquals(count($implements),  1);
+        self::assertEquals(count($implements), 1);
         self::assertTrue(in_array('Martin1982\LiveBroadcastBundle\Streams\Input\InputInterface', $implements));
     }
 
@@ -53,7 +53,8 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $inputFile = new File($broadcast);
 
         self::assertEquals(
-            $inputFile->generateInputCmd(), '-re -i ' . escapeshellarg($fileName) . ' -vcodec copy -acodec copy'
+            $inputFile->generateInputCmd(),
+            '-re -i ' . escapeshellarg($fileName) . ' -vcodec copy -acodec copy'
         );
 
         unlink($fileName);

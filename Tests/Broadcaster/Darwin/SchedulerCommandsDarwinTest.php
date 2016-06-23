@@ -40,11 +40,13 @@ class SchedulerCommandsDarwinTest extends \PHPUnit_Framework_TestCase
         $exec->expects($this->once())->willReturnCallback(
             function ($command, &$output) {
                 self::assertEquals('ps -o pid=,args= | grep ffmpeg | grep -v grep', $command);
+                // @codingStandardsIgnoreLine
                 $output = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337';
             }
         );
 
         $running = $command->getRunningProcesses();
+        // @codingStandardsIgnoreLine
         self::assertEquals('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337', $running);
     }
 }

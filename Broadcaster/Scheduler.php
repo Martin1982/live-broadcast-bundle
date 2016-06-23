@@ -48,8 +48,11 @@ class Scheduler
      * @param SchedulerCommandsInterface $schedulerCommands
      * @param LoggerInterface            $logger
      */
-    public function __construct(EntityManager $entityManager, SchedulerCommandsInterface $schedulerCommands, LoggerInterface $logger)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        SchedulerCommandsInterface $schedulerCommands,
+        LoggerInterface $logger
+    ) {
         $this->entityManager = $entityManager;
         $this->schedulerCommands = $schedulerCommands;
         $this->logger = $logger;
@@ -90,10 +93,7 @@ class Scheduler
             $isChannelBroadcasting = false;
 
             foreach ($this->runningBroadcasts as $runningBroadcast) {
-                if (
-                    (int) $runningBroadcast->getBroadcastId() === (int) $plannedBroadcast->getBroadcastId() &&
-                    (int) $runningBroadcast->getChannelId() === (int) $channel->getChannelId()
-                ) {
+                if ($runningBroadcast->isBroadcasting($plannedBroadcast, $channel)) {
                     $isChannelBroadcasting = true;
                 }
             }
@@ -115,7 +115,14 @@ class Scheduler
             $broadcast = $broadcastRepository->find($runningBroadcast->getBroadcastId());
 
             if ($broadcast->getEndTimestamp() < new \DateTime()) {
-                $this->logger->info(sprintf('Stop broadcast %d (%s), PID: %d.', $broadcast->getBroadcastId(), $broadcast->getName(), $runningBroadcast->getBroadcastId()));
+                $this->logger->info(
+                    sprintf(
+                        'Stop broadcast %d (%s), PID: %d.',
+                        $broadcast->getBroadcastId(),
+                        $broadcast->getName(),
+                        $runningBroadcast->getBroadcastId()
+                    )
+                );
                 $this->schedulerCommands->stopProcess($runningBroadcast->getProcessId());
             }
         }
@@ -164,13 +171,28 @@ class Scheduler
             $streamInput = $inputProcessor->generateInputCmd();
             $streamOutput = $outputProcessor->generateOutputCmd();
 
-            $this->logger->info(sprintf('Start broadcast %d (%s) on %d (%s).', $broadcast->getBroadcastId(), $broadcast->getName(), $channel->getChannelId(), $channel->getChannelName()));
+            $this->logger->info(
+                sprintf(
+                    'Start broadcast %d (%s) on %d (%s).',
+                    $broadcast->getBroadcastId(),
+                    $broadcast->getName(),
+                    $channel->getChannelId(),
+                    $channel->getChannelName()
+                )
+            );
             $this->schedulerCommands->startProcess($streamInput, $streamOutput, array(
                 'broadcast_id' => $broadcast->getBroadcastId(),
                 'channel_id' => $channel->getChannelId(),
             ));
         } catch (LiveBroadcastException $ex) {
-            $this->logger->error(sprintf('Could not start broadcast %d (%s): %s', $broadcast->getBroadcastId(), $broadcast->getName(), $ex->getMessage()));
+            $this->logger->error(
+                sprintf(
+                    'Could not start broadcast %d (%s): %s',
+                    $broadcast->getBroadcastId(),
+                    $broadcast->getName(),
+                    $ex->getMessage()
+                )
+            );
         }
     }
 

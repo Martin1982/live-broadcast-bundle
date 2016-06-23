@@ -2,6 +2,9 @@
 
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
+use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+
 /**
  * Class RunningBroadcast.
  */
@@ -57,6 +60,16 @@ class RunningBroadcast
     public function getChannelId()
     {
         return $this->channelId;
+    }
+
+    /**
+     * @param $broadcast
+     * @param $channel
+     * @return bool
+     */
+    public function isBroadcasting(LiveBroadcast $broadcast, BaseChannel $channel)
+    {
+        return $this->broadcastId === $broadcast->getBroadcastId() && $this->channelId === $channel->getChannelId();
     }
 
     /**

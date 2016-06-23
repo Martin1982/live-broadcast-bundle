@@ -18,7 +18,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     public function testUrlInterface()
     {
         $implements = class_implements('Martin1982\LiveBroadcastBundle\Streams\Input\Url');
-        self::assertEquals(count($implements),  1);
+        self::assertEquals(count($implements), 1);
         self::assertTrue(in_array('Martin1982\LiveBroadcastBundle\Streams\Input\InputInterface', $implements));
     }
 
@@ -51,7 +51,8 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $inputUrl = new Url($broadcast);
 
         self::assertEquals(
-            $inputUrl->generateInputCmd(), '-re -i ' . escapeshellarg($url) . ' -vcodec copy -acodec copy'
+            $inputUrl->generateInputCmd(),
+            '-re -i ' . escapeshellarg($url) . ' -vcodec copy -acodec copy'
         );
     }
 
