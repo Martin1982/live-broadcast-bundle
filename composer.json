@@ -22,6 +22,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^1.11",
-        "php-mock/php-mock-phpunit": ">=1.1.1 ^1.1"
+        "php-mock/php-mock-phpunit": ">=1.1.1 ^1.1",
+        "squizlabs/php_codesniffer": "^2.6"
     }
 }
