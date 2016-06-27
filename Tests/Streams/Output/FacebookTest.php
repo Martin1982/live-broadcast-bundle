@@ -55,7 +55,8 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $output->setStreamUrl('http://streamurl/video/');
         self::assertEquals(
             '-c:v libx264 -crf 18 -vf scale=-1:720 -preset slow -c:a copy -f flv "http://streamurl/video/"',
-            $output->generateOutputCmd());
+            $output->generateOutputCmd()
+        );
     }
 
     /**

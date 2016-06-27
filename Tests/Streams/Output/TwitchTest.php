@@ -43,7 +43,8 @@ class TwitchTest extends \PHPUnit_Framework_TestCase
         $twitchOutput = new Twitch($this->twitchChannel);
         self::assertEquals(
             $twitchOutput->generateOutputCmd(),
-            '-vcodec copy -acodec copy -f flv "rtmp://value1/app/value2"');
+            '-vcodec copy -acodec copy -f flv "rtmp://value1/app/value2"'
+        );
     }
 
     /**
