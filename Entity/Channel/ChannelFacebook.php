@@ -27,20 +27,6 @@ class ChannelFacebook extends BaseChannel
     protected $fbEntityId;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="fb_app_id", type="string", length=128, nullable=false)
-     */
-    protected $applicationId;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="fb_app_secret", type="string", length=255, nullable=false)
-     */
-    protected $applicationSecret;
-
-    /**
      * @return string
      */
     public function getAccessToken()
@@ -76,44 +62,6 @@ class ChannelFacebook extends BaseChannel
     public function setFbEntityId($fbEntityId)
     {
         $this->fbEntityId = $fbEntityId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApplicationId()
-    {
-        return $this->applicationId;
-    }
-
-    /**
-     * @param string $applicationId
-     * @return ChannelFacebook
-     */
-    public function setApplicationId($applicationId)
-    {
-        $this->applicationId = $applicationId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApplicationSecret()
-    {
-        return $this->applicationSecret;
-    }
-
-    /**
-     * @param $applicationSecret
-     * @return ChannelFacebook
-     */
-    public function setApplicationSecret($applicationSecret)
-    {
-        $this->applicationSecret = $applicationSecret;
 
         return $this;
     }

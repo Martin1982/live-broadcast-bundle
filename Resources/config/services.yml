@@ -19,3 +19,4 @@ services:
           - { name: kernel.event_subscriber }
   live.broadcast.facebooklive.service:
       class: Martin1982\LiveBroadcastBundle\Streams\Service\FacebookLiveService
+      arguments: ["%fb_app_id%", "%fb_app_secret%"]

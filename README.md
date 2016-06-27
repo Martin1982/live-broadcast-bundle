@@ -70,9 +70,17 @@ Create a Facebook app on https://developers.facebook.com with the following perm
 
 Add the Facebook application id to your config.yml:
 
+    parameters:
+        live_broadcast_fb_app_id: '{application_id}'
+
+	live_broadcast:
+	    facebook:
+	        application_id: '%live_broadcast_fb_app_id%'
+	        application_secret: '{application_secret}'
+
     twig:
         globals:
-            live_broadcast_facebook_app_id: '{application_id}'    
+            live_broadcast_facebook_app_id: '%live_broadcast_fb_app_id%'    
 
 ## Prerequisites
 

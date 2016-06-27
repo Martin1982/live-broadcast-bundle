@@ -50,8 +50,6 @@ class ChannelAdmin extends AbstractAdmin
         if ($subject instanceof ChannelFacebook) {
             $formMapper->add('accessToken', 'text', array('label' => 'Facebook access token'));
             $formMapper->add('fbEntityId', 'text', array('label' => 'Facebook entity ID'));
-            $formMapper->add('applicationId', 'text', array('label' => 'Facebook app ID'));
-            $formMapper->add('applicationSecret', 'text', array('label' => 'Facebook app secret'));
         }
 
         $formMapper->end();

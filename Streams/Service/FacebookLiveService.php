@@ -11,10 +11,32 @@ use Martin1982\LiveBroadcastBundle\Streams\Output\Facebook as FacebookOutput;
 
 /**
  * Class FacebookLiveService
- * @package Martin1982\LiveBroadcastBundle\Streams\Service
  */
 class FacebookLiveService
 {
+    /**
+     * @var FacebookSDK
+     */
+    private $facebookSDK;
+
+    /**
+     * FacebookLiveService constructor.
+     * @param string $applicationId
+     * @param string $applicationSecret
+     * @throws LiveBroadcastException
+     */
+    public function __construct($applicationId, $applicationSecret)
+    {
+        if (empty($applicationId) || empty($applicationSecret)) {
+            throw new LiveBroadcastException('The Facebook application settings are not correct.');
+        }
+
+        $this->facebookSDK = new FacebookSDK([
+            'app_id' => $applicationId,
+            'app_secret' => $applicationSecret,
+        ]);
+    }
+
     /**
      * @param LiveBroadcast  $liveBroadcast
      * @param FacebookOutput $facebookOutput
@@ -23,20 +45,15 @@ class FacebookLiveService
      */
     public function createFacebookLiveVideo(LiveBroadcast $liveBroadcast, FacebookOutput $facebookOutput)
     {
-        $fbSDK = new FacebookSDK([
-            'app_id' => $facebookOutput->getApplicationId(),
-            'app_secret' => $facebookOutput->getApplicationSecret(),
-        ]);
-
         try {
             $params = array('title' => $liveBroadcast->getName(),
                             'description' => $liveBroadcast->getDescription());
 
-            $fbSDK->setDefaultAccessToken($facebookOutput->getAccessToken());
-            $response = $fbSDK->post($facebookOutput->getEntityId().'/live_videos', $params);
-        } catch(FacebookResponseException $ex) {
+            $this->facebookSDK->setDefaultAccessToken($facebookOutput->getAccessToken());
+            $response = $this->facebookSDK->post($facebookOutput->getEntityId().'/live_videos', $params);
+        } catch (FacebookResponseException $ex) {
             throw new LiveBroadcastException('Facebook exception: '.$ex->getMessage());
-        } catch(FacebookSDKException $ex) {
+        } catch (FacebookSDKException $ex) {
             throw new LiveBroadcastException('Facebook SDK exception: '.$ex->getMessage());
         }
 
