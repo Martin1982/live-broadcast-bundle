@@ -4,17 +4,22 @@
     {{ parent() }}
     <div class="col-md-12">
         <div class="tab-content">
-            <div class="box-header">
-                <h4 class="box-title">Facebook Login</h4>
-                <p>Login with Facebook to choose from your available Facebook entities</p>
-            </div>
-            <div class="box-body">
-                <div class="sonata-ba-collapsed-fields fb-login-column">
-                    <fb:login-button scope="public_profile,email,manage_pages" onlogin="checkLoginState();">
-                    </fb:login-button>
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h4 class="box-title">Facebook Login</h4>
+                    <p id="fb-status">Login with Facebook and choose from your available Facebook entities.</p>
                 </div>
+                <div class="box-body">
+                    <div class="sonata-ba-collapsed-fields">
+                        <div class="form-group">
+                            <fb:login-button scope="public_profile,email,manage_pages" onlogin="checkLoginState();" autologoutlink="true"></fb:login-button>
+                        </div>
+                        <div class="form-group">
+                            <select id="livebroadcast-fb-entity-select"></select>
+                        </div>
+                    </div>
 
-                <select id="livebroadcast-fb-entity-select"></select>
+                </div>
             </div>
         </div>
     </div>
@@ -22,24 +27,23 @@
         <script type="text/javascript">
             // This is called with the results from from FB.getLoginStatus().
             function statusChangeCallback(response) {
-                console.log('statusChangeCallback');
-                console.log(response);
                 // The response object is returned with a status field that lets the
                 // app know the current login status of the person.
                 // Full docs on the response object can be found in the documentation
                 // for FB.getLoginStatus().
+                $('#livebroadcast-fb-entity-select').html('');
+
                 if (response.status === 'connected') {
+                    document.getElementById('fb-status').innerHTML = 'Login with Facebook and choose from your available Facebook entities.';
                     // Logged into your app and Facebook.
                     getAccountsForLoggedInUser();
                 } else if (response.status === 'not_authorized') {
                     // The person is logged into Facebook, but not your app.
-                    document.getElementById('status').innerHTML = 'Please log ' +
-                            'into this app.';
+                    document.getElementById('fb-status').innerHTML = 'Please request Facebook access from your Live Stream app maintainer.';
                 } else {
                     // The person is not logged into Facebook, so we're not sure if
                     // they are logged into this app or not.
-                    document.getElementById('status').innerHTML = 'Please log ' +
-                            'into Facebook.';
+                    document.getElementById('fb-status').innerHTML = 'Please log into Facebook.';
                 }
             }
 
@@ -103,7 +107,6 @@
                 FB.api('/me/accounts', function(response) {
                     //Todo: fetch managed pages accounts and access token and display in a drop down list
                     //Todo: check how to handle paginated content
-                    console.log(response.data);
                     for (var i=0, l=response.data.length; i<l; i++) {
                         channel = response.data[i];
                         option = $('<option>');
@@ -112,9 +115,7 @@
                         option.attr('data-access-token', channel.access_token);
 
                         $('#livebroadcast-fb-entity-select').append(option);
-//                        document.getElementById('status').innerHTML += response.data[i].name + " - " + response.data[i].id + " - " + response.data[i].access_token + "<br />";
                     }
-                    $('.fb-login-column').hide();
                 });
             }
         </script>
