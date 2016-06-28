@@ -108,6 +108,21 @@
             function getAccountsForLoggedInUser() {
                 var channel, option;
 
+                function makeMeSelectable(meResponse) {
+                    if (meResponse.id) {
+                        FB.getLoginStatus(function (response) {
+                            if (response.authResponse) {
+                                option = $('<option>');
+                                option.text('Personal Facebook account: ' + meResponse.name);
+                                option.attr('value', meResponse.id);
+                                option.attr('data-access-token', response.authResponse.accessToken);
+
+                                $('#livebroadcast-fb-entity-select').append(option);
+                            }
+                        });
+                    }
+                }
+
                 /*
                  * Handle a page with data
                  */
@@ -128,6 +143,7 @@
                     }
                 }
 
+                FB.api('/me', makeMeSelectable);
                 FB.api('/me/accounts', makeAccountSelectable);
             }
         </script>
