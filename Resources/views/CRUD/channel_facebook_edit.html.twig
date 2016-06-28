@@ -108,8 +108,10 @@
             function getAccountsForLoggedInUser() {
                 var channel, option;
 
-                FB.api('/me/accounts', function(response) {
-                    //Todo: check how to handle paginated content
+                /*
+                 * Handle a page with data
+                 */
+                function makeAccountSelectable(response) {
                     for (var i=0, l=response.data.length; i<l; i++) {
                         channel = response.data[i];
                         option = $('<option>');
@@ -119,7 +121,14 @@
 
                         $('#livebroadcast-fb-entity-select').append(option);
                     }
-                });
+
+                    if (response.paging && response.paging.next) {
+                        var params = $.deparam.querystring(response.paging.next);
+                        FB.api('/me/accounts', params, makeAccountSelectable)
+                    }
+                }
+
+                FB.api('/me/accounts', makeAccountSelectable);
             }
         </script>
     {% endblock %}
