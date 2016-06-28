@@ -109,7 +109,6 @@
                 var channel, option;
 
                 FB.api('/me/accounts', function(response) {
-                    //Todo: fetch managed pages accounts and access token and display in a drop down list
                     //Todo: check how to handle paginated content
                     for (var i=0, l=response.data.length; i<l; i++) {
                         channel = response.data[i];
