@@ -114,6 +114,11 @@ class Scheduler
         foreach ($this->runningBroadcasts as $runningBroadcast) {
             $broadcast = $broadcastRepository->find($runningBroadcast->getBroadcastId());
 
+            if (!($broadcast instanceof LiveBroadcast)) {
+                $this->logger->error(sprintf('Unable to stop broadcast %d, PID: %d not found in database.', $runningBroadcast->getBroadcastId(), $runningBroadcast->getProcessId()));
+                continue;
+            }
+
             if ($broadcast->getEndTimestamp() < new \DateTime()) {
                 $this->logger->info(
                     sprintf(
