@@ -15,7 +15,9 @@
                             <fb:login-button scope="public_profile,email,manage_pages,publish_pages" onlogin="checkLoginState();" autologoutlink="true"></fb:login-button>
                         </div>
                         <div class="form-group">
-                            <select id="livebroadcast-fb-entity-select"></select>
+                            <select id="livebroadcast-fb-entity-select">
+                                <option>Select your Facebook entity</option>
+                            </select>
                         </div>
                     </div>
 
@@ -31,7 +33,7 @@
                 // app know the current login status of the person.
                 // Full docs on the response object can be found in the documentation
                 // for FB.getLoginStatus().
-                $('#livebroadcast-fb-entity-select').html('');
+                $('#livebroadcast-fb-entity-select').html('<option>Select your Facebook entity</option>');
 
                 if (response.status === 'connected') {
                     document.getElementById('fb-status').innerHTML = 'Login with Facebook and choose from your available Facebook entities.';
@@ -84,9 +86,11 @@
                 $('#livebroadcast-fb-entity-select').on('change', function(){
                     var selected = $(this).find('option:selected');
 
-                    $('input.generic-channel-name').val(selected.text());
-                    $('input.fb-access-token').val(selected.attr('data-access-token'));
-                    $('input.fb-entity-id').val(selected.val());
+                    if (selected.val().length > 0) {
+                        $('input.generic-channel-name').val(selected.text());
+                        $('input.fb-access-token').val(selected.attr('data-access-token'));
+                        $('input.fb-entity-id').val(selected.val());
+                    }
                 });
             };
 
