@@ -31,7 +31,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->with('Video Input', array(
                     'class' => 'col-md-4',
                 ))
-                ->add('input', 'sonata_type_model_list', array())
+                ->add('input', 'sonata_type_model_list', array('btn_list' => false))
             ->end()
             ->with('Channels', array(
                     'class' => 'col-md-4',
