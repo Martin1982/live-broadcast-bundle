@@ -60,6 +60,7 @@ class Scheduler
     public function __construct(
         EntityManager $entityManager,
         SchedulerCommandsInterface $schedulerCommands,
+        EventDispatcherInterface $dispatcher,
         LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
