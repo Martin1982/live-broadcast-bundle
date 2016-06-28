@@ -91,7 +91,6 @@ Create a Facebook app on https://developers.facebook.com with the following perm
 - Live-Video API
 
 ### Step 2: Add your App ID and Secret to app/config/parameters.yml
-
     parameters:
         live_broadcast_fb_app_id: '{application_id}'
 
