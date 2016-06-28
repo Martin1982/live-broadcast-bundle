@@ -20,12 +20,10 @@ class InputFactory
     const INPUT_FILE = 'Martin1982\LiveBroadcastBundle\Entity\Input\InputFile';
     const INPUT_URL = 'Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl';
     const INPUT_RTMP = 'Martin1982\LiveBroadcastBundle\Entity\Input\InputRtmp';
-    const INPUT_SPOTIFY = 'Martin1982\LiveBroadcastBundle\Entity\Input\InputSpotify';
 
     const INPUT_STREAM_FILE = 'Martin1982\LiveBroadcastBundle\Streams\Input\File';
     const INPUT_STREAM_URL = 'Martin1982\LiveBroadcastBundle\Streams\Input\Url';
     const INPUT_STREAM_RTMP = 'Martin1982\LiveBroadcastBundle\Streams\Input\Rtmp';
-    const INPUT_STREAM_SPOTIFY = 'Martin1982\LiveBroadcastBundle\Streams\Input\Spotify';
 
     /**
      * @var array
@@ -34,7 +32,6 @@ class InputFactory
         self::INPUT_FILE => self::INPUT_STREAM_FILE,
         self::INPUT_URL => self::INPUT_STREAM_URL,
         self::INPUT_RTMP => self::INPUT_STREAM_RTMP,
-        self::INPUT_SPOTIFY => self::INPUT_STREAM_SPOTIFY,
     );
 
     /**
