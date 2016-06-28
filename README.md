@@ -17,6 +17,27 @@ various channels like Twitch, Youtube and Facebook (referred to as Output or Cha
 
 The basic "Input" will be a file that can be read. Other inputs will be created thereafter.
 
+## Prerequisites
+
+The Broadcaster needs a few commands;
+
+* `ffmpeg`
+
+On Linux:
+* `ps`
+* `kill`
+
+On Mac:
+* `ps`
+* `grep`
+* `kill`
+
+On Windows:
+* `tasklist`
+* `taskkill`
+
+To test these prerequisites the Symfony command `livebroadcaster:test:shell` can be used after the installation described below.
+
 ## Installation
 
 ### Step 1: Download Bundle
@@ -62,43 +83,25 @@ $ app/console livebroadcaster:broadcast
 
 ## Facebook Live
 
+### Step 1: Create a Facebook App
 Create a Facebook app on https://developers.facebook.com with the following permissions:
 
 - manage_pages
 - publish_actions
 - Live-Video API
 
-Add the Facebook application id to your config.yml:
+### Step 2: Add your App ID and Secret to app/config/parameters.yml
 
     parameters:
         live_broadcast_fb_app_id: '{application_id}'
 
+### Step 3: Add the Facebook application id to your config.yml:
 	live_broadcast:
 	    facebook:
 	        application_id: '%live_broadcast_fb_app_id%'
-	        application_secret: '{application_secret}'
+	        application_secret: '%live_broadcast_fb_app_secret%'
 
+### Step 4 (Sonata users only): Load the app ID in Twig
     twig:
         globals:
             live_broadcast_facebook_app_id: '%live_broadcast_fb_app_id%'    
-
-## Prerequisites
-
-The Broadcaster needs a few commands;
-
-* `ffmpeg`
-
-On Linux:
-* `ps`
-* `kill`
-
-On Mac:
-* `ps`
-* `grep`
-* `kill`
-
-On Windows:
-* `tasklist`
-* `taskkill`
-
-To test these prerequisites the Symfony command `livebroadcaster:test:shell` can be used.
