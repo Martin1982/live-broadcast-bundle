@@ -86,6 +86,9 @@ $ app/console livebroadcaster:broadcast
 ### Step 1: Create a Facebook App
 Create a Facebook app on https://developers.facebook.com with the following permissions:
 
+- user_videos
+- user_events
+- user_managed_groups
 - manage_pages
 - publish_actions
 - Live-Video API

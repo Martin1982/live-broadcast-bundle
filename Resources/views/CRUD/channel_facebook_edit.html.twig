@@ -143,8 +143,21 @@
                     }
                 }
 
+                function makeGroupsSelectable(response) {
+                    // @todo stubbed
+                    console.log(response);
+                }
+
+
+                function makeEventsSelectable(response) {
+                    // @todo stubbed
+                    console.log(response);
+                }
+
                 FB.api('/me', makeMeSelectable);
                 FB.api('/me/accounts', makeAccountSelectable);
+                FB.api('/me/admined_groups', makeGroupsSelectable);
+                FB.api('/me/events', makeEventsSelectable);
             }
         </script>
     {% endblock %}
