@@ -9,5 +9,14 @@ services:
     arguments:
       - "@doctrine.orm.entity_manager"
       - "@live.broadcast.scheduler.commands"
+      - "@event_dispatcher"
       - "@logger"
     tags: [{ name: monolog.logger, channel: livebroadcaster }]
+  live.broadcast.facebook_pre_broadcast_listener:
+      class: Martin1982\LiveBroadcastBundle\EventListener\FacebookPreBroadcastListener
+      arguments: ["@live.broadcast.facebooklive.service"]
+      tags:
+          - { name: kernel.event_subscriber }
+  live.broadcast.facebooklive.service:
+      class: Martin1982\LiveBroadcastBundle\Streams\Service\FacebookLiveService
+      arguments: ["%fb_app_id%", "%fb_app_secret%"]

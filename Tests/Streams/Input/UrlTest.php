@@ -52,7 +52,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
         self::assertEquals(
             $inputUrl->generateInputCmd(),
-            '-re -i ' . escapeshellarg($url) . ' -vcodec copy -acodec copy'
+            '-re -i ' . escapeshellarg($url)
         );
     }
 

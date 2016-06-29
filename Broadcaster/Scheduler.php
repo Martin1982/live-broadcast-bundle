@@ -6,10 +6,13 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
+use Martin1982\LiveBroadcastBundle\Events;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Streams\InputFactory;
 use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class Scheduler.
@@ -25,6 +28,11 @@ class Scheduler
      * @var SchedulerCommandsInterface
      */
     protected $schedulerCommands;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
 
     /**
      * @var LoggerInterface
@@ -46,15 +54,18 @@ class Scheduler
      *
      * @param EntityManager              $entityManager
      * @param SchedulerCommandsInterface $schedulerCommands
+     * @param EventDispatcherInterface   $dispatcher
      * @param LoggerInterface            $logger
      */
     public function __construct(
         EntityManager $entityManager,
         SchedulerCommandsInterface $schedulerCommands,
+        EventDispatcherInterface $dispatcher,
         LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->schedulerCommands = $schedulerCommands;
+        $this->dispatcher = $dispatcher;
         $this->logger = $logger;
     }
 
@@ -176,6 +187,9 @@ class Scheduler
         try {
             $inputProcessor = InputFactory::loadInputStream($broadcast);
             $outputProcessor = OutputFactory::loadOutput($channel);
+
+            $preBroadcastEvent = new PreBroadcastEvent($broadcast, $outputProcessor);
+            $this->dispatcher->dispatch(Events::LIVE_BROADCAST_PRE_BROADCAST, $preBroadcastEvent);
 
             $streamInput = $inputProcessor->generateInputCmd();
             $streamOutput = $outputProcessor->generateOutputCmd();

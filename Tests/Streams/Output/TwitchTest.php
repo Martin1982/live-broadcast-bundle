@@ -29,7 +29,7 @@ class TwitchTest extends \PHPUnit_Framework_TestCase
     /**
      * Test if the Twitch output class implements the correct interface.
      */
-    public function testTwitchContstructor()
+    public function testTwitchConstructor()
     {
         $twitchOutput = new Twitch($this->twitchChannel);
         self::assertInstanceOf('Martin1982\LiveBroadcastBundle\Streams\Output\Twitch', $twitchOutput);
@@ -41,7 +41,10 @@ class TwitchTest extends \PHPUnit_Framework_TestCase
     public function testGenerateOutputCmd()
     {
         $twitchOutput = new Twitch($this->twitchChannel);
-        self::assertEquals($twitchOutput->generateOutputCmd(), '-f flv "rtmp://value1/app/value2"');
+        self::assertEquals(
+            $twitchOutput->generateOutputCmd(),
+            '-vcodec copy -acodec copy -f flv "rtmp://value1/app/value2"'
+        );
     }
 
     /**

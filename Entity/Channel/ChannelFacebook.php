@@ -15,7 +15,7 @@ class ChannelFacebook extends BaseChannel
     /**
      * @var string
      *
-     * @ORM\Column(name="access_token", type="string", length=128, nullable=false)
+     * @ORM\Column(name="access_token", type="string", length=255, nullable=false)
      */
     protected $accessToken;
 
@@ -66,6 +66,9 @@ class ChannelFacebook extends BaseChannel
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return 'Facebook: '.$this->getChannelName();

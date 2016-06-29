@@ -39,6 +39,6 @@ class Twitch implements OutputInterface
      */
     public function generateOutputCmd()
     {
-        return sprintf('-f flv "rtmp://%s/app/%s"', $this->server, $this->streamKey);
+        return sprintf('-vcodec copy -acodec copy -f flv "rtmp://%s/app/%s"', $this->server, $this->streamKey);
     }
 }
