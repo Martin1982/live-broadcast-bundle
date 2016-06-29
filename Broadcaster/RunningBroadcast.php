@@ -30,12 +30,13 @@ class RunningBroadcast
      *
      * @param int $broadcastId
      * @param int $processId
+     * @param int $channelId
      */
     public function __construct($broadcastId, $processId, $channelId)
     {
-        $this->broadcastId = $broadcastId;
-        $this->processId = $processId;
-        $this->channelId = $channelId;
+        $this->broadcastId = (int) $broadcastId;
+        $this->processId = (int) $processId;
+        $this->channelId = (int) $channelId;
     }
 
     /**
@@ -69,7 +70,7 @@ class RunningBroadcast
      */
     public function isBroadcasting(LiveBroadcast $broadcast, BaseChannel $channel)
     {
-        return $this->broadcastId === $broadcast->getBroadcastId() && $this->channelId === $channel->getChannelId();
+        return ($this->broadcastId === $broadcast->getBroadcastId()) && ($this->channelId === $channel->getChannelId());
     }
 
     /**
@@ -77,8 +78,8 @@ class RunningBroadcast
      */
     public function isValid()
     {
-        return ($this->getProcessId() !== null) &&
-            ($this->getBroadcastId() !== null) &&
-            ($this->getChannelId() !== null);
+        return ($this->getProcessId() !== 0) &&
+            ($this->getBroadcastId() !== 0) &&
+            ($this->getChannelId() !== 0);
     }
 }
