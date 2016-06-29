@@ -12,7 +12,7 @@
                 <div class="box-body">
                     <div class="sonata-ba-collapsed-fields">
                         <div class="form-group">
-                            <fb:login-button scope="public_profile,email,manage_pages,publish_pages" onlogin="checkLoginState();" autologoutlink="true"></fb:login-button>
+                            <fb:login-button scope="public_profile,email,manage_pages,publish_pages,user_videos,user_events,user_managed_groups,publish_actions" onlogin="checkLoginState();" autologoutlink="true"></fb:login-button>
                         </div>
                         <div class="form-group">
                             <select id="livebroadcast-fb-entity-select">
@@ -108,6 +108,23 @@
             function getAccountsForLoggedInUser() {
                 var channel, option;
 
+                /**
+                 * Get URL variables
+                 */
+                function getUrlVars(url) {
+                    var vars = {}, hash;
+                    var hashes = url.slice(url.indexOf('?') + 1).split('&');
+                    for(var i = 0; i < hashes.length; i++)
+                    {
+                        hash = hashes[i].split('=');
+                        vars[hash[0]] = hash[1];
+                    }
+                    return vars;
+                }
+
+                /**
+                 * Make user selectable
+                 */
                 function makeMeSelectable(meResponse) {
                     if (meResponse.id) {
                         FB.getLoginStatus(function (response) {
@@ -123,7 +140,7 @@
                     }
                 }
 
-                /*
+                /**
                  * Handle a page with data
                  */
                 function makeAccountSelectable(response) {
@@ -138,20 +155,53 @@
                     }
 
                     if (response.paging && response.paging.next) {
-                        var params = $.deparam.querystring(response.paging.next);
+                        var params = getUrlVars(response.paging.next);
                         FB.api('/me/accounts', params, makeAccountSelectable)
                     }
                 }
 
+                /**
+                 * Make groups selectable
+                 * @param response
+                 */
                 function makeGroupsSelectable(response) {
-                    // @todo stubbed
-                    console.log(response);
+                    for (var i=0, l=response.data.length; i<l; i++) {
+                        channel = response.data[i];
+                        option = $('<option>');
+                        option.text('Group: ' + channel.name);
+                        option.attr('value', channel.id);
+                        // @todo find access token
+                        option.attr('data-access-token', 'TBD');
+
+                        $('#livebroadcast-fb-entity-select').append(option);
+                    }
+
+                    if (response.paging && response.paging.next) {
+                        var params = getUrlVars(response.paging.next);
+                        FB.api('/me/admined_groups', params, makeGroupsSelectable)
+                    }
                 }
 
-
+                /**
+                 * Make events selectable
+                 * @param response
+                 */
                 function makeEventsSelectable(response) {
-                    // @todo stubbed
-                    console.log(response);
+                    for (var i=0, l=response.data.length; i<l; i++) {
+                        channel = response.data[i];
+                        option = $('<option>');
+                        option.text('Event: ' + channel.name);
+                        option.attr('value', channel.id);
+                        // @todo find access token
+                        option.attr('data-access-token', 'TBD');
+
+                        $('#livebroadcast-fb-entity-select').append(option);
+                    }
+
+                    if (response.paging && response.paging.next) {
+                        var params = getUrlVars(response.paging.next);
+                        FB.api('/me/events', params, makeEventsSelectable)
+                    }
                 }
 
                 FB.api('/me', makeMeSelectable);
