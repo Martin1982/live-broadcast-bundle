@@ -127,16 +127,30 @@
                  */
                 function makeMeSelectable(meResponse) {
                     if (meResponse.id) {
-                        FB.getLoginStatus(function (response) {
-                            if (response.authResponse) {
-                                option = $('<option>');
-                                option.text('Personal Facebook account: ' + meResponse.name);
-                                option.attr('value', meResponse.id);
-                                option.attr('data-access-token', response.authResponse.accessToken);
+                        option = $('<option>');
+                        option.text('Personal Facebook account: ' + meResponse.name);
+                        option.attr('value', meResponse.id);
+                        option.attr('data-access-token', FB.getAccessToken());
 
-                                $('#livebroadcast-fb-entity-select').append(option);
-                            }
-                        });
+                        $('#livebroadcast-fb-entity-select').append(option);
+                    }
+                }
+
+                /**
+                 * Loop streamable data and create option values
+                 */
+                function loopStreams(response, accessToken, typeLabel) {
+                    var useStaticToken = accessToken ? true : false,
+                        useStaticLabel = typeLabel ? true: false;
+
+                    for (var i=0, l=response.data.length; i<l; i++) {
+                        channel = response.data[i];
+                        option = $('<option>');
+                        option.text((useStaticLabel ? typeLabel: channel.category) + ': ' + channel.name);
+                        option.attr('value', channel.id);
+                        option.attr('data-access-token', (useStaticToken ? accessToken : channel.access_token));
+
+                        $('#livebroadcast-fb-entity-select').append(option);
                     }
                 }
 
@@ -144,15 +158,7 @@
                  * Handle a page with data
                  */
                 function makeAccountSelectable(response) {
-                    for (var i=0, l=response.data.length; i<l; i++) {
-                        channel = response.data[i];
-                        option = $('<option>');
-                        option.text(channel.category + ': ' + channel.name);
-                        option.attr('value', channel.id);
-                        option.attr('data-access-token', channel.access_token);
-
-                        $('#livebroadcast-fb-entity-select').append(option);
-                    }
+                    loopStreams(response, null, null);
 
                     if (response.paging && response.paging.next) {
                         var params = getUrlVars(response.paging.next);
@@ -165,16 +171,7 @@
                  * @param response
                  */
                 function makeGroupsSelectable(response) {
-                    for (var i=0, l=response.data.length; i<l; i++) {
-                        channel = response.data[i];
-                        option = $('<option>');
-                        option.text('Group: ' + channel.name);
-                        option.attr('value', channel.id);
-                        // @todo find access token
-                        option.attr('data-access-token', 'TBD');
-
-                        $('#livebroadcast-fb-entity-select').append(option);
-                    }
+                    loopStreams(response, FB.getAccessToken(), 'Group');
 
                     if (response.paging && response.paging.next) {
                         var params = getUrlVars(response.paging.next);
@@ -187,16 +184,7 @@
                  * @param response
                  */
                 function makeEventsSelectable(response) {
-                    for (var i=0, l=response.data.length; i<l; i++) {
-                        channel = response.data[i];
-                        option = $('<option>');
-                        option.text('Event: ' + channel.name);
-                        option.attr('value', channel.id);
-                        // @todo find access token
-                        option.attr('data-access-token', 'TBD');
-
-                        $('#livebroadcast-fb-entity-select').append(option);
-                    }
+                    loopStreams(response, FB.getAccessToken(), 'Event');
 
                     if (response.paging && response.paging.next) {
                         var params = getUrlVars(response.paging.next);
