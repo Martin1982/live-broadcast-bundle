@@ -73,6 +73,6 @@ class Facebook implements OutputInterface
             throw new LiveBroadcastException('The Facebook stream url must be set');
         }
 
-        return sprintf('-c:v libx264 -crf 18 -vf scale=-1:720 -preset slow -c:a copy -f flv "%s"', $this->streamUrl);
+        return sprintf('-c:v libx264 -crf 30 -preset ultrafast -c:a copy -f flv "%s"', $this->streamUrl);
     }
 }
