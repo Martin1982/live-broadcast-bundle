@@ -23,6 +23,7 @@ services:
         arguments:
             - ~
             - Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel
+            - LiveBroadcastBundle:CRUD
             - ~
         calls:
             - [setSubClasses, [ { "Twitch Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch, "Facebook Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook } ] ]

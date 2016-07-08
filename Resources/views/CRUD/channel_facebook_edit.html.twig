@@ -130,9 +130,25 @@
                         option = $('<option>');
                         option.text('Personal Facebook account: ' + meResponse.name);
                         option.attr('value', meResponse.id);
-                        option.attr('data-access-token', FB.getAccessToken());
 
-                        $('#livebroadcast-fb-entity-select').append(option);
+                        /* Get a long lived access token for the user access token */
+                        $.ajax({
+                            url: '{{ admin.generateUrl('longLivedAccessToken') }}',
+                            data: {
+                                'userAccessToken': FB.getAccessToken()
+                            },
+                            success: function(data) {
+                                option.attr('data-access-token', data.accessToken);
+                                $('#livebroadcast-fb-entity-select').append(option);
+
+                                FB.broadcast = { accessToken: data.accessToken };
+
+                                /* Retrieve page access tokens with the long lived user access token */
+                                FB.api('/me/accounts', {access_token: data.accessToken }, makeAccountSelectable);
+                                FB.api('/me/admined_groups', makeGroupsSelectable);
+                                FB.api('/me/events', makeEventsSelectable);
+                            }
+                        });
                     }
                 }
 
@@ -171,7 +187,7 @@
                  * @param response
                  */
                 function makeGroupsSelectable(response) {
-                    loopStreams(response, FB.getAccessToken(), 'Group');
+                    loopStreams(response, FB.broadcast.accessToken, 'Group');
 
                     if (response.paging && response.paging.next) {
                         var params = getUrlVars(response.paging.next);
@@ -184,7 +200,7 @@
                  * @param response
                  */
                 function makeEventsSelectable(response) {
-                    loopStreams(response, FB.getAccessToken(), 'Event');
+                    loopStreams(response, FB.broadcast.accessToken, 'Event');
 
                     if (response.paging && response.paging.next) {
                         var params = getUrlVars(response.paging.next);
@@ -193,9 +209,6 @@
                 }
 
                 FB.api('/me', makeMeSelectable);
-                FB.api('/me/accounts', makeAccountSelectable);
-                FB.api('/me/admined_groups', makeGroupsSelectable);
-                FB.api('/me/events', makeEventsSelectable);
             }
         </script>
     {% endblock %}
