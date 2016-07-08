@@ -5,9 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Controller;
 use Facebook\Authentication\AccessToken;
 use Martin1982\LiveBroadcastBundle\Streams\Service\FacebookLiveService;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
