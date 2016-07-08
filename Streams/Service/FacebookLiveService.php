@@ -77,7 +77,7 @@ class FacebookLiveService
 
         try {
             return $this->facebookSDK->getOAuth2Client()->getLongLivedAccessToken($userAccessToken);
-        } catch( FacebookSDKException $ex) {
+        } catch (FacebookSDKException $ex) {
             throw new LiveBroadcastException('Facebook SDK exception: '.$ex->getMessage());
         }
 
