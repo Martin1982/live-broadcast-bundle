@@ -26,16 +26,24 @@ class RunningBroadcast
     private $channelId;
 
     /**
+     * @var string
+     */
+    private $environment;
+
+    /**
      * RunningBroadcast constructor.
      *
-     * @param int $broadcastId
-     * @param int $processId
+     * @param int    $broadcastId
+     * @param int    $processId
+     * @param int    $channelId
+     * @param string $environment
      */
-    public function __construct($broadcastId, $processId, $channelId)
+    public function __construct($broadcastId, $processId, $channelId, $environment)
     {
-        $this->broadcastId = $broadcastId;
-        $this->processId = $processId;
-        $this->channelId = $channelId;
+        $this->broadcastId = (int) $broadcastId;
+        $this->processId = (int) $processId;
+        $this->channelId = (int) $channelId;
+        $this->environment = $environment;
     }
 
     /**
@@ -63,22 +71,33 @@ class RunningBroadcast
     }
 
     /**
+     * @return string
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    /**
      * @param $broadcast
      * @param $channel
      * @return bool
      */
     public function isBroadcasting(LiveBroadcast $broadcast, BaseChannel $channel)
     {
-        return $this->broadcastId === $broadcast->getBroadcastId() && $this->channelId === $channel->getChannelId();
+        return ($this->broadcastId === $broadcast->getBroadcastId()) && ($this->channelId === $channel->getChannelId());
     }
 
     /**
+     * @param string $kernelEnvironment
+     *
      * @return bool
      */
-    public function isValid()
+    public function isValid($kernelEnvironment)
     {
-        return ($this->getProcessId() !== null) &&
-            ($this->getBroadcastId() !== null) &&
-            ($this->getChannelId() !== null);
+        return ($kernelEnvironment === $this->getEnvironment()) &&
+            ($this->getProcessId() !== 0) &&
+            ($this->getBroadcastId() !== 0) &&
+            ($this->getChannelId() !== 0);
     }
 }

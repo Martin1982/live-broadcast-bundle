@@ -159,16 +159,17 @@ class Scheduler
     {
         $this->runningBroadcasts = array();
         $this->logger->debug('Get running broadcasts');
-        $output = $this->schedulerCommands->getRunningProcesses();
+        $processStrings = $this->schedulerCommands->getRunningProcesses();
 
-        foreach ($output as $runningBroadcast) {
+        foreach ($processStrings as $processString) {
             $runningItem = new RunningBroadcast(
-                $this->schedulerCommands->getBroadcastId($runningBroadcast),
-                $this->schedulerCommands->getProcessId($runningBroadcast),
-                $this->schedulerCommands->getChannelId($runningBroadcast)
+                $this->schedulerCommands->getBroadcastId($processString),
+                $this->schedulerCommands->getProcessId($processString),
+                $this->schedulerCommands->getChannelId($processString),
+                $this->schedulerCommands->getEnvironment($processString)
             );
 
-            if ($runningItem->isValid()) {
+            if ($runningItem->isValid($this->schedulerCommands->getKernelEnvironment())) {
                 $this->runningBroadcasts[] = $runningItem;
             }
         }
@@ -230,9 +231,9 @@ class Scheduler
     {
         $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
         $expr = Criteria::expr();
-        $criterea = Criteria::create();
+        $criteria = Criteria::create();
 
-        $criterea->where($expr->andX(
+        $criteria->where($expr->andX(
             $expr->lte('startTimestamp', new \DateTime()),
             $expr->gte('endTimestamp', new \DateTime())
         ));
@@ -241,7 +242,7 @@ class Scheduler
 
         /* @var LiveBroadcast[] $nowLive */
         $this->plannedBroadcasts = $broadcastRepository->createQueryBuilder('lb')
-            ->addCriteria($criterea)
+            ->addCriteria($criteria)
             ->getQuery()
             ->getResult();
 
