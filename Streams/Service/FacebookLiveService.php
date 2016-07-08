@@ -63,4 +63,24 @@ class FacebookLiveService
             return $body['stream_url'];
         }
     }
+
+    /**
+     * @param string $userAccessToken
+     * @return \Facebook\Authentication\AccessToken|null
+     * @throws LiveBroadcastException
+     */
+    public function getLongLivedAccessToken($userAccessToken)
+    {
+        if (!$userAccessToken) {
+            return null;
+        }
+
+        try {
+            return $this->facebookSDK->getOAuth2Client()->getLongLivedAccessToken($userAccessToken);
+        } catch (FacebookSDKException $ex) {
+            throw new LiveBroadcastException('Facebook SDK exception: '.$ex->getMessage());
+        }
+
+        return null;
+    }
 }
