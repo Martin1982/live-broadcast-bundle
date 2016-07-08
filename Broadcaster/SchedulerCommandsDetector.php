@@ -25,13 +25,10 @@ class SchedulerCommandsDetector
         switch ($osCode) {
             case 'WIN':
                 return new WindowsCommands($environment);
-                break;
             case 'DAR':
                 return new MacCommands($environment);
-                break;
             default:
                 return new LinuxCommands($environment);
-                break;
         }
     }
 }

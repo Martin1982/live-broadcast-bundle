@@ -7,24 +7,23 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster;
  */
 abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 {
+    const METADATA_BROADCAST = 'broadcast_id';
+    const METADATA_CHANNEL = 'channel_id';
+    const METADATA_ENVIRONMENT = 'env';
+
     /**
      * @var string
      */
-    protected $environment;
-
-    /**
-     * @var array
-     */
-    protected $metadata = array();
+    protected $kernelEnvironment;
 
     /**
      * SchedulerCommands constructor.
      *
-     * @param string $environment
+     * @param string $kernelEnvironment
      */
-    public function __construct($environment)
+    public function __construct($kernelEnvironment)
     {
-        $this->environment = $environment;
+        $this->kernelEnvironment = $kernelEnvironment;
     }
 
     /**
@@ -33,7 +32,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     public function startProcess($input, $output, $metadata)
     {
         $meta = '';
-        $metadata['env'] = $this->getEnvironment();
+        $metadata['env'] = $this->getKernelEnvironment();
 
         foreach ($metadata as $key => $value) {
             $meta .= ' -metadata '.$key.'='.$value;
@@ -68,7 +67,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
             return (int) $pid[0];
         }
 
-        return;
+        return 0;
     }
 
     /**
@@ -76,17 +75,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      */
     public function getBroadcastId($processString)
     {
-        $metadataKey = 'broadcast_id';
-
-        if (!count($this->metadata)) {
-            $this->readMetadata($processString);
-        }
-
-        if (array_key_exists($metadataKey, $this->metadata)) {
-            return $this->metadata[$metadataKey];
-        }
-
-        return;
+        return $this->getMetadataValue($processString, self::METADATA_BROADCAST);
     }
 
     /**
@@ -94,17 +83,23 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      */
     public function getChannelId($processString)
     {
-        $metadataKey = 'channel_id';
+        return $this->getMetadataValue($processString, self::METADATA_CHANNEL);
+    }
 
-        if (!count($this->metadata)) {
-            $this->readMetadata($processString);
-        }
+    /**
+     * {@inheritdoc}
+     */
+    public function getEnvironment($processString)
+    {
+        return $this->getMetadataValue($processString, self::METADATA_ENVIRONMENT);
+    }
 
-        if (array_key_exists($metadataKey, $this->metadata)) {
-            return $this->metadata[$metadataKey];
-        }
-
-        return;
+    /**
+     * {@inheritdoc}
+     */
+    public function getKernelEnvironment()
+    {
+        return $this->kernelEnvironment;
     }
 
     /**
@@ -123,24 +118,37 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      * Read metadata from a process string.
      *
      * @param $processString
+     *
+     * @return array
      */
     protected function readMetadata($processString)
     {
-        $metadataRegex = '/-metadata ([a-z_]+)=([\d]+)/';
+        $processMetadata = array();
+        $metadataRegex = '/-metadata ([a-z_]+)=([[:alnum:]]+)/';
         preg_match_all($metadataRegex, $processString, $metadata);
 
         if (count($metadata) === 3 && is_array($metadata[1]) && is_array($metadata[2])) {
             foreach ($metadata[1] as $metadataIndex => $metadataKey) {
-                $this->metadata[$metadataKey] = $metadata[2][$metadataIndex];
+                $processMetadata[$metadataKey] = $metadata[2][$metadataIndex];
             }
         }
+
+        return $processMetadata;
     }
 
     /**
-     * @return string
+     * @param string $processString
+     * @param string $metadataKey
+     * @return mixed|void
      */
-    private function getEnvironment()
+    private function getMetadataValue($processString, $metadataKey)
     {
-        return $this->environment;
+        $metadata = $this->readMetadata($processString);
+
+        if (array_key_exists($metadataKey, $metadata)) {
+            return $metadata[$metadataKey];
+        }
+
+        return;
     }
 }

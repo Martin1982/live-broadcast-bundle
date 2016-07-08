@@ -48,4 +48,16 @@ interface SchedulerCommandsInterface
      * @return int|null
      */
     public function getChannelId($processString);
+
+    /**
+     * @param string $processString
+     *
+     * @return string|null
+     */
+    public function getEnvironment($processString);
+
+    /**
+     * @return string
+     */
+    public function getKernelEnvironment();
 }
