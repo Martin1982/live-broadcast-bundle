@@ -36,5 +36,10 @@ class LiveBroadcastTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(new ArrayCollection(), $broadcast->getOutputChannels());
         self::assertEquals('Test', $broadcast->getName());
         self::assertEquals('Description of broadcast', $broadcast->getDescription());
+
+        /* Check default value */
+        self::assertTrue($broadcast->isStopOnEndTimestamp());
+        $broadcast->setStopOnEndTimestamp(false);
+        self::assertFalse($broadcast->isStopOnEndTimestamp());
     }
 }
