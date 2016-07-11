@@ -134,7 +134,8 @@ class Scheduler
                 continue;
             }
 
-            if ($broadcast->getEndTimestamp() < new \DateTime()) {
+            if ($broadcast->isStopOnEndTimestamp() &&
+                $broadcast->getEndTimestamp() < new \DateTime()) {
                 $this->logger->info(
                     sprintf(
                         'Stop broadcast %d (%s), PID: %d.',
