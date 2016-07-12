@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  */
-abstract class BaseInput
+abstract class BaseInput implements InputInterface
 {
     /**
      * @var int
