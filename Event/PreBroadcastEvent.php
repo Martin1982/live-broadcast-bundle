@@ -12,6 +12,8 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class PreBroadcastEvent extends Event
 {
+    const NAME = 'martin1982.livebroadcast.pre_broadcast';
+
     /**
      * @var LiveBroadcast
      */

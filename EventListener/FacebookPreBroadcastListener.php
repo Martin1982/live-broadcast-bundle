@@ -3,7 +3,6 @@
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
-use Martin1982\LiveBroadcastBundle\Events;
 use Martin1982\LiveBroadcastBundle\Streams\Output\Facebook;
 use Martin1982\LiveBroadcastBundle\Streams\Service\FacebookLiveService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -47,6 +46,6 @@ class FacebookPreBroadcastListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(Events::LIVE_BROADCAST_PRE_BROADCAST => 'onPreBroadcast');
+        return array(PreBroadcastEvent::NAME => 'onPreBroadcast');
     }
 }

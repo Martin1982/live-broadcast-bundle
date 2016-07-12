@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
-use Martin1982\LiveBroadcastBundle\Events;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
 use Psr\Log\LoggerInterface;
@@ -190,7 +189,7 @@ class Scheduler
             $outputProcessor = OutputFactory::loadOutput($channel);
 
             $preBroadcastEvent = new PreBroadcastEvent($broadcast, $outputProcessor);
-            $this->dispatcher->dispatch(Events::LIVE_BROADCAST_PRE_BROADCAST, $preBroadcastEvent);
+            $this->dispatcher->dispatch(PreBroadcastEvent::NAME, $preBroadcastEvent);
 
             $streamOutput = $outputProcessor->generateOutputCmd();
 
