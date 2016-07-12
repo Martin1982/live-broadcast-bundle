@@ -24,10 +24,10 @@ class InputUrlTest extends \PHPUnit_Framework_TestCase
     public function testGetUrl()
     {
         $input = new InputUrl();
-        self::assertEquals('',  $input->getUrl());
+        self::assertEquals('', $input->getUrl());
 
         $input->setUrl('http://www.google.com');
-        self::assertEquals('http://www.google.com',  $input->getUrl());
+        self::assertEquals('http://www.google.com', $input->getUrl());
     }
 
     /**

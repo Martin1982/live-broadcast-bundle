@@ -62,6 +62,8 @@ class FacebookLiveService
         if (array_key_exists('stream_url', $body)) {
             return $body['stream_url'];
         }
+
+        return null;
     }
 
     /**
@@ -80,7 +82,5 @@ class FacebookLiveService
         } catch (FacebookSDKException $ex) {
             throw new LiveBroadcastException('Facebook SDK exception: '.$ex->getMessage());
         }
-
-        return null;
     }
 }
