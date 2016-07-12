@@ -50,7 +50,7 @@ class InputFile extends BaseInput
      */
     public function __toString()
     {
-        return $this->getFileLocation();
+        return (string) $this->getFileLocation();
     }
 
     /**

@@ -15,8 +15,34 @@ class InputFileTest extends \PHPUnit_Framework_TestCase
     public function testFileInterface()
     {
         $implements = class_implements('Martin1982\LiveBroadcastBundle\Entity\Input\InputFile');
-        self::assertEquals(count($implements), 1);
         self::assertTrue(in_array('Martin1982\LiveBroadcastBundle\Entity\Input\InputInterface', $implements));
+    }
+
+    /**
+     * Test the getFileLocation method
+     */
+    public function testFileLocation()
+    {
+        $input = new InputFile();
+        self::assertEquals('', $input->getFileLocation());
+
+        $input->setFileLocation('/tmp/file/location');
+        self::assertEquals('/tmp/file/location', $input->getFileLocation());
+
+        $input->setFileLocation('/tmp/test');
+        self::assertEquals('/tmp/test', $input->getFileLocation());
+    }
+
+    /**
+     * Test the __toString method
+     */
+    public function testToString()
+    {
+        $input = new InputFile();
+        self::assertEquals('', (string) $input);
+
+        $input->setFileLocation('/tmp/test');
+        self::assertEquals('/tmp/test', (string) $input);
     }
 
     /**

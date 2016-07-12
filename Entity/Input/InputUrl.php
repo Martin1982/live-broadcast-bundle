@@ -51,7 +51,7 @@ class InputUrl extends BaseInput
      */
     public function __toString()
     {
-        return $this->getUrl();
+        return (string) $this->getUrl();
     }
 
     /**

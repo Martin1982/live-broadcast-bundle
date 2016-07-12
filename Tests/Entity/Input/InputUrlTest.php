@@ -15,8 +15,31 @@ class InputUrlTest extends \PHPUnit_Framework_TestCase
     public function testUrlInterface()
     {
         $implements = class_implements('Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl');
-        self::assertEquals(count($implements), 1);
         self::assertTrue(in_array('Martin1982\LiveBroadcastBundle\Entity\Input\InputInterface', $implements));
+    }
+
+    /**
+     * Test the getUrl method
+     */
+    public function testGetUrl()
+    {
+        $input = new InputUrl();
+        self::assertEquals('',  $input->getUrl());
+
+        $input->setUrl('http://www.google.com');
+        self::assertEquals('http://www.google.com',  $input->getUrl());
+    }
+
+    /**
+     * Test the __toString method
+     */
+    public function testToString()
+    {
+        $input = new InputUrl();
+        self::assertEquals('', (string) $input);
+
+        $input->setUrl('https://github.com/Martin1982/live-broadcast-bundle');
+        self::assertEquals('https://github.com/Martin1982/live-broadcast-bundle', $input->getUrl());
     }
 
     /**
