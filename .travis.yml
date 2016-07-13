@@ -23,4 +23,4 @@ install:
 
 script:
     - phpunit --coverage-text --colors
-    - php ./vendor/bin/phpcs --standard=psr2 Broadcaster/ Command/ DependencyInjection/ Entity/ Exception/ LiveBroadcastBundle.php Resources/ Streams/ Tests/
+    - php ./vendor/bin/phpcs --standard=psr2 Broadcaster/ Command/ DependencyInjection/ Entity/ Exception/ LiveBroadcastBundle.php Resources/ Service/ Tests/
