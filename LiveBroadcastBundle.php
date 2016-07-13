@@ -19,5 +19,4 @@ class LiveBroadcastBundle extends Bundle
         parent::build($container);
         $container->addCompilerPass(new AddStreamOutputPass());
     }
-
 }
