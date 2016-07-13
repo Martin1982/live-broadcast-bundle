@@ -38,8 +38,11 @@ class OutputTwitch implements OutputInterface
             throw new LiveBroadcastException(__FUNCTION__.' Twitch channel not configured');
         }
 
-        return sprintf('-vcodec copy -acodec copy -f flv "rtmp://%s/app/%s"',
-            $this->channel->getStreamServer(), $this->channel->getStreamKey());
+        return sprintf(
+            '-vcodec copy -acodec copy -f flv "rtmp://%s/app/%s"',
+            $this->channel->getStreamServer(),
+            $this->channel->getStreamKey()
+        );
     }
 
     /**
