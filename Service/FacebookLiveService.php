@@ -1,13 +1,13 @@
 <?php
 
-namespace Martin1982\LiveBroadcastBundle\Streams\Service;
+namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook as FacebookSDK;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
-use Martin1982\LiveBroadcastBundle\Streams\Output\Facebook as FacebookOutput;
+use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 
 /**
  * Class FacebookLiveService
@@ -39,18 +39,18 @@ class FacebookLiveService
 
     /**
      * @param LiveBroadcast  $liveBroadcast
-     * @param FacebookOutput $facebookOutput
+     * @param OutputFacebook $outputFacebook
      * @return null|string
      * @throws LiveBroadcastException
      */
-    public function createFacebookLiveVideo(LiveBroadcast $liveBroadcast, FacebookOutput $facebookOutput)
+    public function createFacebookLiveVideo(LiveBroadcast $liveBroadcast, OutputFacebook $outputFacebook)
     {
         try {
             $params = array('title' => $liveBroadcast->getName(),
                             'description' => $liveBroadcast->getDescription());
 
-            $this->facebookSDK->setDefaultAccessToken($facebookOutput->getAccessToken());
-            $response = $this->facebookSDK->post($facebookOutput->getEntityId().'/live_videos', $params);
+            $this->facebookSDK->setDefaultAccessToken($outputFacebook->getAccessToken());
+            $response = $this->facebookSDK->post($outputFacebook->getEntityId().'/live_videos', $params);
         } catch (FacebookResponseException $ex) {
             throw new LiveBroadcastException('Facebook exception: '.$ex->getMessage());
         } catch (FacebookSDKException $ex) {
@@ -61,6 +61,26 @@ class FacebookLiveService
 
         if (array_key_exists('stream_url', $body)) {
             return $body['stream_url'];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $userAccessToken
+     * @return \Facebook\Authentication\AccessToken|null
+     * @throws LiveBroadcastException
+     */
+    public function getLongLivedAccessToken($userAccessToken)
+    {
+        if (!$userAccessToken) {
+            return null;
+        }
+
+        try {
+            return $this->facebookSDK->getOAuth2Client()->getLongLivedAccessToken($userAccessToken);
+        } catch (FacebookSDKException $ex) {
+            throw new LiveBroadcastException('Facebook SDK exception: '.$ex->getMessage());
         }
     }
 }

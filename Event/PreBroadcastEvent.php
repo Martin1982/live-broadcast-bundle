@@ -3,7 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Event;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Streams\Output\OutputInterface;
+use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -12,6 +12,8 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class PreBroadcastEvent extends Event
 {
+    const NAME = 'martin1982.livebroadcast.pre_broadcast';
+
     /**
      * @var LiveBroadcast
      */

@@ -106,4 +106,31 @@ Create a Facebook app on https://developers.facebook.com with the following perm
 ### Step 4 (Sonata users only): Load the app ID in Twig
     twig:
         globals:
-            live_broadcast_facebook_app_id: '%live_broadcast_fb_app_id%'    
+            live_broadcast_facebook_app_id: '%live_broadcast_fb_app_id%'   
+             
+## Add new output platforms
+
+### Step 1: Create a new Channel Entity in Entity/Channel that extends the BaseChannel (for e.g. ChannelNew)
+
+### Step 2: Create a new StreamOutput service in Service/StreamOutput that implements the OutputInterface (for e.g. OutputNew)
+
+### Step 3: Configure the service with the output tag in Resources/config/services.yml
+    live.broadcast.output.new:
+        class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputNew
+        tags:
+            - { name: live.broadcast.output, platform: 'New' }
+
+### Step 4: (Optional) Add a new form for the Channel in Admin/ChannelAdmin.php
+``` php
+protected function configureFormFields(FormMapper $formMapper)
+{
+    if ($subject instanceof ChannelNew) {
+        $formMapper->add('...', 'text', array('label' => '...'));
+    }
+}
+```
+
+### Step 5: (Optional) Add the sub class for the channelAdmin in Resources/config/admin.yml for 
+    sonata.admin.channel
+        calls:
+            - [setSubClasses, [ { "Name": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelNew } ] ]

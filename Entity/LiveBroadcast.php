@@ -61,6 +61,13 @@ class LiveBroadcast
     private $endTimestamp;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="stop_on_end_timestamp", type="boolean", nullable=false)
+     */
+    private $stopOnEndTimestamp = true;
+
+    /**
      * @var BaseChannel
      *
      * @ORM\ManyToMany(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel")
@@ -243,6 +250,26 @@ class LiveBroadcast
     public function setInput(BaseInput $input)
     {
         $this->input = $input;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isStopOnEndTimestamp()
+    {
+        return $this->stopOnEndTimestamp;
+    }
+
+    /**
+     * @param boolean $stopOnEndTimestamp
+     *
+     * @return LiveBroadcast
+     */
+    public function setStopOnEndTimestamp($stopOnEndTimestamp)
+    {
+        $this->stopOnEndTimestamp = $stopOnEndTimestamp;
 
         return $this;
     }

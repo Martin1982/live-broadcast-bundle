@@ -7,10 +7,8 @@ use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
-use Martin1982\LiveBroadcastBundle\Events;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
-use Martin1982\LiveBroadcastBundle\Streams\InputFactory;
-use Martin1982\LiveBroadcastBundle\Streams\OutputFactory;
+use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -28,6 +26,11 @@ class Scheduler
      * @var SchedulerCommandsInterface
      */
     protected $schedulerCommands;
+
+    /**
+     * @var StreamOutputService
+     */
+    protected $outputService;
 
     /**
      * @var EventDispatcherInterface
@@ -54,17 +57,20 @@ class Scheduler
      *
      * @param EntityManager              $entityManager
      * @param SchedulerCommandsInterface $schedulerCommands
+     * @param StreamOutputService        $outputService
      * @param EventDispatcherInterface   $dispatcher
      * @param LoggerInterface            $logger
      */
     public function __construct(
         EntityManager $entityManager,
         SchedulerCommandsInterface $schedulerCommands,
+        StreamOutputService $outputService,
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->schedulerCommands = $schedulerCommands;
+        $this->outputService = $outputService;
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
     }
@@ -134,7 +140,8 @@ class Scheduler
                 continue;
             }
 
-            if ($broadcast->getEndTimestamp() < new \DateTime()) {
+            if ($broadcast->isStopOnEndTimestamp() &&
+                $broadcast->getEndTimestamp() < new \DateTime()) {
                 $this->logger->info(
                     sprintf(
                         'Stop broadcast %d (%s), PID: %d.',
@@ -186,14 +193,11 @@ class Scheduler
     public function startBroadcast(LiveBroadcast $broadcast, BaseChannel $channel)
     {
         try {
-            $inputProcessor = InputFactory::loadInputStream($broadcast);
-            $outputProcessor = OutputFactory::loadOutput($channel);
+            $input = $broadcast->getInput()->generateInputCmd();
+            $output = $this->outputService->getOutputInterface($channel);
 
-            $preBroadcastEvent = new PreBroadcastEvent($broadcast, $outputProcessor);
-            $this->dispatcher->dispatch(Events::LIVE_BROADCAST_PRE_BROADCAST, $preBroadcastEvent);
-
-            $streamInput = $inputProcessor->generateInputCmd();
-            $streamOutput = $outputProcessor->generateOutputCmd();
+            $preBroadcastEvent = new PreBroadcastEvent($broadcast, $output);
+            $this->dispatcher->dispatch(PreBroadcastEvent::NAME, $preBroadcastEvent);
 
             $this->logger->info(
                 sprintf(
@@ -204,7 +208,7 @@ class Scheduler
                     $channel->getChannelName()
                 )
             );
-            $this->schedulerCommands->startProcess($streamInput, $streamOutput, array(
+            $this->schedulerCommands->startProcess($input, $output->generateOutputCmd(), array(
                 'broadcast_id' => $broadcast->getBroadcastId(),
                 'channel_id' => $channel->getChannelId(),
             ));
