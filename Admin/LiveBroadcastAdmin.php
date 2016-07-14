@@ -27,7 +27,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
                 ->add('description', 'textarea', array('label' => 'Description', 'required' => false, 'attr' => array('class' => 'form-control', 'rows' => 5)))
                 ->add('startTimestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast start', 'dp_side_by_side' => true))
                 ->add('endTimestamp', 'sonata_type_datetime_picker', array('label' => 'Broadcast end', 'dp_side_by_side' => true))
-                ->add('stopOnEndTimestamp', 'checkbox', array('label' => 'Stop on broadcast end timestamp'))
+                ->add('stopOnEndTimestamp', 'checkbox', array('label' => 'Stop on broadcast end timestamp', 'required' => false))
             ->end()
             ->with('Video Input', array(
                     'class' => 'col-md-4',
