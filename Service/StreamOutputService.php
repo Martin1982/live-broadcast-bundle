@@ -2,9 +2,6 @@
 
 namespace Martin1982\LiveBroadcastBundle\Service;
 
-use Facebook\Exceptions\FacebookResponseException;
-use Facebook\Exceptions\FacebookSDKException;
-use Facebook\Facebook as FacebookSDK;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
