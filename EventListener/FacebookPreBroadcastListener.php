@@ -3,8 +3,8 @@
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
-use Martin1982\LiveBroadcastBundle\Streams\Output\Facebook;
-use Martin1982\LiveBroadcastBundle\Streams\Service\FacebookLiveService;
+use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
+use Martin1982\LiveBroadcastBundle\Service\FacebookLiveService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -35,7 +35,7 @@ class FacebookPreBroadcastListener implements EventSubscriberInterface
         $liveBroadcast = $event->getLiveBroadcast();
         $output = $event->getOutput();
 
-        if ($output instanceof Facebook) {
+        if ($output instanceof OutputFacebook) {
             $streamUrl = $this->facebookLiveService->createFacebookLiveVideo($liveBroadcast, $output);
             $output->setStreamUrl($streamUrl);
         }

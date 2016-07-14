@@ -3,6 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Input;
 
 use Martin1982\LiveBroadcastBundle\Entity\Input\InputFile;
+use Martin1982\LiveBroadcastBundle\Entity\Input\InputInterface;
 
 /**
  * Class InputFileTest.
@@ -14,8 +15,8 @@ class InputFileTest extends \PHPUnit_Framework_TestCase
      */
     public function testFileInterface()
     {
-        $implements = class_implements('Martin1982\LiveBroadcastBundle\Entity\Input\InputFile');
-        self::assertTrue(in_array('Martin1982\LiveBroadcastBundle\Entity\Input\InputInterface', $implements));
+        $implements = class_implements(InputFile::class);
+        self::assertTrue(in_array(InputInterface::class, $implements));
     }
 
     /**

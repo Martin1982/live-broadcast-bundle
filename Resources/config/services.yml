@@ -9,6 +9,7 @@ services:
     arguments:
       - "@doctrine.orm.entity_manager"
       - "@live.broadcast.scheduler.commands"
+      - "@live.broadcast.streamoutput.service"
       - "@event_dispatcher"
       - "@logger"
     tags: [{ name: monolog.logger, channel: livebroadcaster }]
@@ -18,5 +19,15 @@ services:
       tags:
           - { name: kernel.event_subscriber }
   live.broadcast.facebooklive.service:
-      class: Martin1982\LiveBroadcastBundle\Streams\Service\FacebookLiveService
+      class: Martin1982\LiveBroadcastBundle\Service\FacebookLiveService
       arguments: ["%fb_app_id%", "%fb_app_secret%"]
+  live.broadcast.streamoutput.service:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamOutputService
+  live.broadcast.output.facebook:
+    class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook
+    tags:
+        - { name: live.broadcast.output, platform: 'Facebook' }
+  live.broadcast.output.twitch:
+    class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch
+    tags:
+        - { name: live.broadcast.output, platform: 'Twitch' }

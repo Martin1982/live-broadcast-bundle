@@ -2,6 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Input;
 
+use Martin1982\LiveBroadcastBundle\Entity\Input\InputInterface;
 use Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl;
 
 /**
@@ -14,8 +15,8 @@ class InputUrlTest extends \PHPUnit_Framework_TestCase
      */
     public function testUrlInterface()
     {
-        $implements = class_implements('Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl');
-        self::assertTrue(in_array('Martin1982\LiveBroadcastBundle\Entity\Input\InputInterface', $implements));
+        $implements = class_implements(InputUrl::class);
+        self::assertTrue(in_array(InputInterface::class, $implements));
     }
 
     /**
