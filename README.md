@@ -96,6 +96,7 @@ Create a Facebook app on https://developers.facebook.com with the following perm
 ### Step 2: Add your App ID and Secret to app/config/parameters.yml
     parameters:
         live_broadcast_fb_app_id: '{application_id}'
+        live_broadcast_fb_app_secret: '{application_secret}'
 
 ### Step 3: Add the Facebook application id to your config.yml:
 	live_broadcast:
