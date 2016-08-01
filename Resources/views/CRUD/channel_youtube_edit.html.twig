@@ -7,7 +7,7 @@
             <div class="box box-primary">
                 <div class="box-header">
                     <h4 class="box-title">YouTube Login</h4>
-                    <p id="yt-status">Login with YouTube and choose from your available YouTube entities.</p>
+                    <p id="yt-status">Login with YouTube and choose from your available YouTube channels.</p>
                 </div>
                 <div class="box-body">
                     <div class="sonata-ba-collapsed-fields">
@@ -27,7 +27,9 @@
     </div>
     {% block youtube_js %}
         <script type="text/javascript">
-            console.log('{{ admin.generateUrl('youTubeAccessToken') }}');
+            $(document).ready(function(){
+                console.log('{{ admin.generateUrl('youTubeAccessToken') }}');
+            });
         </script>
     {% endblock %}
 {% endblock %}

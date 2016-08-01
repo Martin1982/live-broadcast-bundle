@@ -41,13 +41,35 @@ class YouTubeLiveService
         $this->youtubeApi = $youtubeApi;
     }
 
+    /**
+     * @return array
+     */
     public function getAccessToken()
     {
-        $this->googleClient->getAccessToken();
+        return $this->googleClient->getAccessToken();
     }
 
+    /**
+     * @return mixed
+     */
     public function getRefreshToken()
     {
-        $this->googleClient->getRefreshToken();
+        return $this->googleClient->getRefreshToken();
+    }
+
+    /**
+     * @param $state
+     */
+    public function setState($state)
+    {
+        $this->googleClient->setState($state);
+    }
+
+    /**
+     * @return string
+     */
+    public function createAuthUrl()
+    {
+        return $this->googleClient->createAuthUrl();
     }
 }

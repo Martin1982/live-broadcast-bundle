@@ -41,7 +41,6 @@ class CRUDController extends Controller
         $session = $request->getSession();
 
         $requestCode = $request->get('code');
-        $sessionCode = $session->get('code');
 
         $requestState = $request->get('state');
         $sessionState = $session->get('state');
@@ -53,11 +52,24 @@ class CRUDController extends Controller
 
             $youTubeService->authenticate($requestCode);
             $session->set('token', $youTubeService->getAccessToken());
-            // Redir?
+            $youTubeService->setRedirectUrl($request->get('redirectUrl'));
         }
 
         if (isset($sessionToken)) {
             $youTubeService->setAccessToken($session->get('token'));
+        }
+
+        if ($youTubeService->getAccessToken()) {
+
+        } else {
+            $state = mt_rand();
+            $youTubeService->setState($state);
+            $session->set('state', $state);
+            $authUrl = $youTubeService->createAuthUrl();
+
+            return new JsonResponse(array(
+                'authUrl' => $authUrl
+            ), 401);
         }
 
         return new JsonResponse(null, 500);
