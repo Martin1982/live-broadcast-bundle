@@ -4,6 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -29,6 +30,10 @@ class ChannelAdmin extends AbstractAdmin
             return 'LiveBroadcastBundle:CRUD:channel_facebook_edit.html.twig';
         }
 
+        if ($subject instanceof ChannelYoutube && $name ==='edit') {
+            return 'LiveBroadcastBundle:CRUD:channel_youtube_edit.html.twig';
+        }
+
         return parent::getTemplate($name);
     }
 
@@ -38,6 +43,7 @@ class ChannelAdmin extends AbstractAdmin
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('longLivedAccessToken', 'facebook/accesstoken');
+        $collection->add('youTubeAccessToken', 'youtube/accesstoken');
     }
 
     /**

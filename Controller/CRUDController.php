@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class CRUDController extends Controller
 {
     /**
+     * @param Request $request
      * @return JsonResponse
      */
     public function longLivedAccessTokenAction(Request $request)
@@ -25,6 +26,18 @@ class CRUDController extends Controller
         if ($accessToken instanceof AccessToken) {
             return new JsonResponse(array('accessToken' => $accessToken->getValue()));
         }
+
+        return new JsonResponse(null, 500);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function youTubeAccessTokenAction(Request $request)
+    {
+        $youTubeService = $this->get('live.broadcast.youtubelive.service');
+
 
         return new JsonResponse(null, 500);
     }
