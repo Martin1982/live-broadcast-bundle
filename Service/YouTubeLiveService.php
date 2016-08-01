@@ -2,6 +2,8 @@
 
 namespace Martin1982\LiveBroadcastBundle\Service;
 
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+
 /**
  * Class YouTubeLiveService
  * @package Martin1982\LiveBroadcastBundle\Service
