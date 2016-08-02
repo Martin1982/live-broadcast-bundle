@@ -3,7 +3,6 @@
 namespace Martin1982\LiveBroadcastBundle\Controller;
 
 use Facebook\Authentication\AccessToken;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\FacebookLiveService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +38,8 @@ class CRUDController extends Controller
     public function youtubeOAuthAction(Request $request)
     {
         $youTubeService = $this->get('live.broadcast.youtubelive.service');
+        $redirectUrl = $youTubeService->getReferUrl();
 
-        return $this->redirectToRoute('admin_martin1982_livebroadcast_channel_basechannel_list');
+        return $this->redirect($redirectUrl);
     }
 }

@@ -88,8 +88,17 @@ class YouTubeLiveService
         $state = mt_rand();
         $this->googleClient->setState($state);
         $this->session->set('state', $state);
+        $this->session->set('authreferer', $this->requestStack->getCurrentRequest()->getRequestUri());
 
         return $this->googleClient->createAuthUrl();
+    }
+
+    /**
+     * Get the referring URL from the session
+     */
+    public function getReferUrl()
+    {
+        return $this->session->get('authreferer', '/');
     }
 
     /**
