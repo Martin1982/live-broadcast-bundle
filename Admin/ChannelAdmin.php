@@ -5,6 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -19,8 +20,7 @@ class ChannelAdmin extends AbstractAdmin
     protected $baseRoutePattern = 'channel';
 
     /**
-     * @param string $name
-     * @return mixed|null|string
+     * {@inheritdoc}
      */
     public function getTemplate($name)
     {
@@ -40,10 +40,26 @@ class ChannelAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
+    public function prePersist($object)
+    {
+        $this->createYouTubeBroadcast($object);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preUpdate($object)
+    {
+        $this->createYouTubeBroadcast($object);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('longLivedAccessToken', 'facebook/accesstoken');
-        $collection->add('youTubeAccessToken', 'youtube/accesstoken');
+        $collection->add('youtubeoauth', 'youtube/oauthprovider');
     }
 
     /**
@@ -92,5 +108,17 @@ class ChannelAdmin extends AbstractAdmin
                     'delete' => array(),
                 ),
             ));
+    }
+
+    /**
+     * @param $object
+     */
+    protected function createYouTubeBroadcast($object)
+    {
+        if (!($object instanceof ChannelYoutube)) {
+            return;
+        }
+
+        throw new LiveBroadcastException('Handling isn\'t complete yet for YouTube');
     }
 }

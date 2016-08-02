@@ -23,7 +23,7 @@ services:
       arguments: ["%fb_app_id%", "%fb_app_secret%"]
   live.broadcast.youtubelive.service:
       class: Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService
-      arguments: ["%yt_client_id%", "%yt_client_secret%"]
+      arguments: ["%yt_client_id%", "%yt_client_secret%", "@session", "@request_stack", "@router"]
   live.broadcast.streamoutput.service:
       class: Martin1982\LiveBroadcastBundle\Service\StreamOutputService
   live.broadcast.output.facebook:

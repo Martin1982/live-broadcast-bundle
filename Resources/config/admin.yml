@@ -29,15 +29,24 @@ services:
             - [setSubClasses, [ { "Twitch Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch, "Facebook Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook, "YouTube Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube } ] ]
 
     sonata.admin.streaminput:
-            class: Martin1982\LiveBroadcastBundle\Admin\InputAdmin
-            tags:
-                - name: sonata.admin
-                  manager_type: orm
-                  group: "Live"
-                  label: "Inputs"
-            arguments:
-                - ~
-                - Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput
-                - ~
-            calls:
-                - [setSubClasses, [ { "File Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputFile, "URL Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl } ] ]
+        class: Martin1982\LiveBroadcastBundle\Admin\InputAdmin
+        tags:
+            - name: sonata.admin
+              manager_type: orm
+              group: "Live"
+              label: "Inputs"
+        arguments:
+            - ~
+            - Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput
+            - ~
+        calls:
+            - [setSubClasses, [ { "File Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputFile, "URL Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl } ] ]
+
+    sonata.block.service.youtubeauth:
+        class: Martin1982\LiveBroadcastBundle\Admin\Block\YouTubeBlockService
+        arguments:
+            - sonata.block.service.youtubeauth
+            - "@templating"
+            - "@live.broadcast.youtubelive.service"
+        tags:
+            - { name: sonata.block }

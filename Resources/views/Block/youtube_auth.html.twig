@@ -1,0 +1,18 @@
+<div class="box box-primary">
+    <div class="box-header">
+        <h4 class="box-title">YouTube Login</h4>
+        <p id="yt-status">Login with YouTube and choose from your available YouTube channels.</p>
+    </div>
+    <div class="box-body">
+        <div class="sonata-ba-collapsed-fields">
+            <div class="form-group">
+                {% if isAuthenticated %}
+                    <p>You are authenticated, <a href="{{ path('admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth', {'cleartoken': '1'}) }}">click here to logout</a></p>
+                {% else %}
+                    <a href="{{ authUrl }}" id="yt-login"><i class="fa fa-youtube-play" style="color: #cd201f"></i>&nbsp;Login with YouTube</a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
