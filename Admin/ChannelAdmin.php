@@ -71,7 +71,10 @@ class ChannelAdmin extends AbstractAdmin
 
         $formMapper
             ->with('Channel')
-                ->add('channelName', 'text', array('label' => 'Channel name', 'attr' => array('class' => 'generic-channel-name')));
+                ->add('channelName', 'text', array(
+                    'label' => 'Channel name',
+                    'attr' => array('class' => 'generic-channel-name'),
+                ));
 
         if ($subject instanceof ChannelTwitch) {
             $formMapper->add('streamKey', 'text', array('label' => 'Twitch stream key'));
@@ -79,8 +82,14 @@ class ChannelAdmin extends AbstractAdmin
         }
 
         if ($subject instanceof ChannelFacebook) {
-            $formMapper->add('accessToken', 'hidden', array('label' => 'Facebook access token', 'attr' => array('class' => 'fb-access-token')));
-            $formMapper->add('fbEntityId', 'hidden', array('label' => 'Facebook entity ID', 'attr' => array('class' => 'fb-entity-id')));
+            $formMapper->add('accessToken', 'hidden', array(
+                'label' => 'Facebook access token',
+                'attr' => array('class' => 'fb-access-token'),
+            ));
+            $formMapper->add('fbEntityId', 'hidden', array(
+                'label' => 'Facebook entity ID',
+                'attr' => array('class' => 'fb-entity-id'),
+            ));
         }
 
         $formMapper->end();
