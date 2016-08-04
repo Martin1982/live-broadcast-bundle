@@ -15,26 +15,26 @@ class ChannelYoutube extends BaseChannel
     /**
      * @var string
      *
-     * @ORM\Column(name="access_token", type="string", length=255, nullable=false)
+     * @ORM\Column(name="refresh_token", type="string", length=255, nullable=false)
      */
-    protected $accessToken;
+    protected $refreshToken;
 
     /**
      * @return string
      */
-    public function getAccessToken()
+    public function getRefreshToken()
     {
-        return $this->accessToken;
+        return $this->refreshToken;
     }
 
     /**
-     * @param string $accessToken
+     * @param string $refreshToken
      *
      * @return ChannelYoutube
      */
-    public function setAccessToken($accessToken)
+    public function setRefreshToken($refreshToken)
     {
-        $this->accessToken = $accessToken;
+        $this->refreshToken = $refreshToken;
 
         return $this;
     }

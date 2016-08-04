@@ -6,6 +6,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -40,22 +41,6 @@ class ChannelAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    public function prePersist($object)
-    {
-        $this->createYouTubeBroadcast($object);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function preUpdate($object)
-    {
-        $this->createYouTubeBroadcast($object);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('longLivedAccessToken', 'facebook/accesstoken');
@@ -83,13 +68,20 @@ class ChannelAdmin extends AbstractAdmin
 
         if ($subject instanceof ChannelFacebook) {
             $formMapper->add('accessToken', 'hidden', array(
-                'label' => 'Facebook access token',
                 'attr' => array('class' => 'fb-access-token'),
             ));
             $formMapper->add('fbEntityId', 'hidden', array(
-                'label' => 'Facebook entity ID',
                 'attr' => array('class' => 'fb-entity-id'),
             ));
+        }
+
+        if ($subject instanceof ChannelYoutube) {
+            $youtubeService = $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubelive.service');
+            $refreshToken = $youtubeService->getRefreshToken();
+
+            $subject->setRefreshToken($refreshToken);
+
+            $formMapper->add('refreshToken', 'hidden');
         }
 
         $formMapper->end();
@@ -117,17 +109,5 @@ class ChannelAdmin extends AbstractAdmin
                     'delete' => array(),
                 ),
             ));
-    }
-
-    /**
-     * @param $object
-     */
-    protected function createYouTubeBroadcast($object)
-    {
-        if (!($object instanceof ChannelYoutube)) {
-            return;
-        }
-
-        throw new LiveBroadcastException('Handling isn\'t complete yet for YouTube');
     }
 }

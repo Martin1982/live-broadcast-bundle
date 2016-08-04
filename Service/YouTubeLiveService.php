@@ -58,6 +58,7 @@ class YouTubeLiveService
         $googleClient->setClientId($clientId);
         $googleClient->setClientSecret($clientSecret);
         $googleClient->setScopes('https://www.googleapis.com/auth/youtube');
+        $googleClient->setAccessType('offline');
         $googleClient->setRedirectUri($redirectUri);
 
         $this->googleClient = $googleClient;
@@ -69,6 +70,28 @@ class YouTubeLiveService
     }
 
     /**
+     * @param $title
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @param string $status
+     */
+    public function setupLivestream($title, \DateTime $start, \DateTime $end, $status = 'public')
+    {
+        $broadcastResponse = $this->createBroadcast($title, $start, $end, $status);
+        $streamsResponse = $this->createStream($title);
+
+        // Bind Broadcast and Stream
+        $bindBroadcastResponse = $this->youtubeApi->liveBroadcasts->bind(
+            $broadcastResponse->getId(),
+            'id,contentDetails',
+            array('streamId' => $streamsResponse->getId())
+        );
+
+        // Get RTMP URL
+        $cdn->getIngestionInfo();
+    }
+
+    /**
      * Check if the client has authenticated the user
      *
      * @return bool
@@ -76,6 +99,16 @@ class YouTubeLiveService
     public function isAuthenticated()
     {
         return (bool) $this->googleClient->getAccessToken();
+    }
+
+    /**
+     * Retrieve the client's refresh token
+     *
+     * @return mixed
+     */
+    public function getRefreshToken()
+    {
+        return $this->googleClient->getRefreshToken();
     }
 
     /**
@@ -108,6 +141,7 @@ class YouTubeLiveService
     {
         if ($this->requestStack->getCurrentRequest()->get('cleartoken')) {
             $this->session->remove('token');
+            $this->googleClient->revokeToken();
         }
     }
 
@@ -144,5 +178,51 @@ class YouTubeLiveService
         }
 
         $this->googleClient->setAccessToken($sessionToken);
+    }
+
+    /**
+     * @param $title
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @param string $status
+     * @return \Google_Service_YouTube_LiveBroadcast
+     */
+    protected function createBroadcast($title, \DateTime $start, \DateTime $end, $status = 'public')
+    {
+        $broadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet();
+        $broadcastSnippet->setTitle($title);
+        $broadcastSnippet->setScheduledStartTime($start);
+        $broadcastSnippet->setScheduledEndTime($end);
+
+        $status = new \Google_Service_YouTube_LiveBroadcastStatus();
+        $status->setPrivacyStatus($status);
+
+        $broadcastInsert = new \Google_Service_YouTube_LiveBroadcast();
+        $broadcastInsert->setSnippet($broadcastSnippet);
+        $broadcastInsert->setStatus($status);
+        $broadcastInsert->setKind('youtube#liveBroadcast');
+
+        return $this->youtubeApi->liveBroadcasts->insert('snippet,status', $broadcastInsert);
+    }
+
+    /**
+     * @param $title
+     * @return \Google_Service_YouTube_LiveStream
+     */
+    protected function createStream($title)
+    {
+        $streamSnippet = new \Google_Service_YouTube_LiveStreamSnippet();
+        $streamSnippet->setTitle($title);
+
+        $cdn = new \Google_Service_YouTube_CdnSettings();
+        $cdn->setFormat('1080p');
+        $cdn->setIngestionType('rtmp');
+
+        $streamInsert = new \Google_Service_YouTube_LiveStream();
+        $streamInsert->setSnippet($streamSnippet);
+        $streamInsert->setCdn($cdn);
+        $streamInsert->setKind('youtube#liveStream');
+
+        return $this->youtubeApi->liveStreams->insert('snippet,cdn', $streamInsert);
     }
 }
