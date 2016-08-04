@@ -15,6 +15,15 @@ class LiveBroadcastAdmin extends AbstractAdmin
     protected $baseRoutePattern = 'broadcast';
 
     /**
+     * @var array
+     */
+    protected $datagridValues = array(
+        '_page' => 1,
+        '_sort_order' => 'DESC',
+        '_sort_by' => 'startTimestamp',
+    );
+
+    /**
      * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
