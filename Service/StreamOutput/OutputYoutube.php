@@ -32,6 +32,14 @@ class OutputYoutube implements OutputInterface
     }
 
     /**
+     * @return ChannelYoutube
+     */
+    public function getChannel()
+    {
+        return $this->channel;
+    }
+
+    /**
      * Give the cmd string to start the stream.
      *
      * @throws LiveBroadcastException

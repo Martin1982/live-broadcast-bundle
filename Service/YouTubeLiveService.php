@@ -2,6 +2,8 @@
 
 namespace Martin1982\LiveBroadcastBundle\Service;
 
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
+use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
@@ -159,13 +161,18 @@ class YouTubeLiveService
     }
 
     /**
-     * @param $title
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param LiveBroadcast $liveBroadcast
+     * @param ChannelYoutube $channel
      * @param string $status
      */
-    public function setupLivestream($title, \DateTime $start, \DateTime $end, $status = 'public')
+    public function setupLivestream(LiveBroadcast $liveBroadcast, ChannelYoutube $channel, $status = 'public')
     {
+        $this->getAccessToken($channel->getRefreshToken());
+
+        $title = $liveBroadcast->getName();
+        $start = $liveBroadcast->getStartTimestamp();
+        $end = $liveBroadcast->getEndTimestamp();
+
         $broadcastResponse = $this->createBroadcast($title, $start, $end, $status);
         $streamsResponse = $this->createStream($title);
 
