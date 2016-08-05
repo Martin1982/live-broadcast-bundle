@@ -5,6 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Service;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
@@ -33,8 +34,9 @@ class YouTubeLiveService
      * @param string $clientId
      * @param string $clientSecret
      * @param Router $router
+     * @param Logger $logger
      */
-    public function __construct($clientId, $clientSecret, Router $router)
+    public function __construct($clientId, $clientSecret, Router $router, LoggerInterface $logger)
     {
         if (empty($clientId) || empty($clientSecret)) {
             throw new LiveBroadcastException('The YouTube oAuth settings are not correct.');
@@ -47,6 +49,7 @@ class YouTubeLiveService
         );
 
         $googleClient = new \Google_Client();
+        $googleClient->setLogger($logger);
         $googleClient->setClientId($clientId);
         $googleClient->setClientSecret($clientSecret);
         $googleClient->setScopes('https://www.googleapis.com/auth/youtube');
