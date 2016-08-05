@@ -31,8 +31,12 @@ class YouTubeBlockService extends BaseBlockService
      * @param EngineInterface $templating
      * @param YouTubeLiveService $youtubeLive
      */
-    public function __construct($name, EngineInterface $templating, YouTubeLiveService $youtubeLive, RequestStack $requestStack)
-    {
+    public function __construct(
+        $name,
+        EngineInterface $templating,
+        YouTubeLiveService $youtubeLive,
+        RequestStack $requestStack
+    ) {
         $this->youtubeLive = $youtubeLive;
         $this->requestStack = $requestStack;
 
