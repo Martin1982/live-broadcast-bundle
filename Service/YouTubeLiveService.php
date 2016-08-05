@@ -4,8 +4,6 @@ namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class YouTubeLiveService
@@ -179,6 +177,8 @@ class YouTubeLiveService
         );
 
         $this->streamUrl = $streamsResponse->getCdn()->getIngestionInfo()->getIngestionAddress();
+
+        return $bindBroadcastResponse;
     }
 
     /**

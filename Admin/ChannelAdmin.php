@@ -5,8 +5,6 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -76,8 +74,6 @@ class ChannelAdmin extends AbstractAdmin
         }
 
         if ($subject instanceof ChannelYoutube) {
-            $youtubeService = $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubelive.service');
-
             $formMapper->add('youtubeChannelName', 'text', array(
                 'attr' => array('class' => 'input-yt-channelname', 'readonly' => 'readonly')
             ));
