@@ -63,19 +63,6 @@ class OutputYoutube implements OutputInterface
     }
 
     /**
-     * @return string
-     * @throws LiveBroadcastException
-     */
-    public function getAccessToken()
-    {
-        if (!($this->channel instanceof ChannelYoutube)) {
-            throw new LiveBroadcastException(__FUNCTION__.' YouTube channel not configured');
-        }
-
-        return $this->channel->getRefreshToken();
-    }
-
-    /**
      * @param string $streamUrl
      */
     public function setStreamUrl($streamUrl)

@@ -208,6 +208,8 @@ class Scheduler
                     $channel->getChannelName()
                 )
             );
+
+            $this->logger->info(sprintf('Starting broadcast with %s', $output->generateOutputCmd()));
             $this->schedulerCommands->startProcess($input, $output->generateOutputCmd(), array(
                 'broadcast_id' => $broadcast->getBroadcastId(),
                 'channel_id' => $channel->getChannelId(),

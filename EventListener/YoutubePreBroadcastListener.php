@@ -41,7 +41,6 @@ class YoutubePreBroadcastListener implements EventSubscriberInterface
             $this->youtubeLiveService->setupLivestream($liveBroadcast, $output->getChannel());
 
             $streamUrl = $this->youtubeLiveService->getStreamUrl();
-
             $output->setStreamUrl($streamUrl);
         }
     }

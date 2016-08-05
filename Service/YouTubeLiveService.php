@@ -7,6 +7,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class YouTubeLiveService
@@ -186,7 +187,9 @@ class YouTubeLiveService
             array('streamId' => $streamsResponse->getId())
         );
 
-        $this->streamUrl = $streamsResponse->getCdn()->getIngestionInfo()->getIngestionAddress();
+        $streamAddress = $streamsResponse->getCdn()->getIngestionInfo()->getIngestionAddress();
+        $streamName = $streamsResponse->getCdn()->getIngestionInfo()->getStreamName();
+        $this->streamUrl = $streamAddress.'/'.$streamName;
 
         return $bindBroadcastResponse;
     }
@@ -195,18 +198,23 @@ class YouTubeLiveService
      * @param $title
      * @param \DateTime $start
      * @param \DateTime $end
-     * @param string $status
+     * @param string $privacyStatus
      * @return \Google_Service_YouTube_LiveBroadcast
      */
-    protected function createBroadcast($title, \DateTime $start, \DateTime $end, $status = 'public')
+    protected function createBroadcast($title, \DateTime $start, \DateTime $end, $privacyStatus = 'public')
     {
+        if (new \DateTime() > $start) {
+            $start = new \DateTime();
+            $start->add(new \DateInterval('PT1M'));
+        }
+
         $broadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet();
         $broadcastSnippet->setTitle($title);
-        $broadcastSnippet->setScheduledStartTime($start);
-        $broadcastSnippet->setScheduledEndTime($end);
+        $broadcastSnippet->setScheduledStartTime($start->format(\DateTime::ATOM));
+        $broadcastSnippet->setScheduledEndTime($end->format(\DateTime::ATOM));
 
         $status = new \Google_Service_YouTube_LiveBroadcastStatus();
-        $status->setPrivacyStatus($status);
+        $status->setPrivacyStatus($privacyStatus);
 
         $broadcastInsert = new \Google_Service_YouTube_LiveBroadcast();
         $broadcastInsert->setSnippet($broadcastSnippet);
