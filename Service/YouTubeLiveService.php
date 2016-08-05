@@ -205,7 +205,7 @@ class YouTubeLiveService
     {
         if (new \DateTime() > $start) {
             $start = new \DateTime();
-            $start->add(new \DateInterval('PT1M'));
+            $start->add(new \DateInterval('PT1S'));
         }
 
         $broadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet();
