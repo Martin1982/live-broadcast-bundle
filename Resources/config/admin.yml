@@ -47,5 +47,6 @@ services:
             - sonata.block.service.youtubeauth
             - "@templating"
             - "@live.broadcast.youtubelive.service"
+            - "@request_stack"
         tags:
             - { name: sonata.block }

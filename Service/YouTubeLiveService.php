@@ -24,29 +24,21 @@ class YouTubeLiveService
     protected $youtubeApi;
 
     /**
-     * @var Session
+     * @var string
      */
-    protected $session;
-
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
+    protected $streamUrl;
 
     /**
      * YouTubeLiveService constructor.
      * @param string $clientId
      * @param string $clientSecret
-     * @param Session $session
+     * @param Router $router
      */
-    public function __construct($clientId, $clientSecret, Session $session, RequestStack $requestStack, Router $router)
+    public function __construct($clientId, $clientSecret, Router $router)
     {
         if (empty($clientId) || empty($clientSecret)) {
             throw new LiveBroadcastException('The YouTube oAuth settings are not correct.');
         }
-
-        $this->session = $session;
-        $this->requestStack = $requestStack;
 
         $redirectUri = $router->generate(
             'admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth',
@@ -63,10 +55,109 @@ class YouTubeLiveService
 
         $this->googleClient = $googleClient;
         $this->youtubeApi = new \Google_Service_YouTube($googleClient);
+    }
 
-        $this->clearTokenByRequest();
-        $this->getCodeFromRequest();
-        $this->setAccessTokenFromSession();
+    /**
+     * @param $refreshToken
+     * @return array
+     */
+    public function getAccessToken($refreshToken)
+    {
+        $this->googleClient->fetchAccessTokenWithRefreshToken($refreshToken);
+
+        return $this->googleClient->getAccessToken();
+    }
+
+    /**
+     * Set the access token
+     * @param string $sessionToken
+     */
+    public function setAccessToken($sessionToken)
+    {
+        $this->googleClient->setAccessToken($sessionToken);
+    }
+
+    /**
+     * Check if the client has authenticated the user
+     *
+     * @return bool
+     */
+    public function isAuthenticated()
+    {
+        return (bool) $this->googleClient->getAccessToken();
+    }
+
+    /**
+     * @param $requestCode
+     * @param $requestState
+     * @param $sessionState
+     * @return array|void
+     */
+    public function authenticate($requestCode, $requestState, $sessionState)
+    {
+        if (strval($sessionState) !== strval($requestState)) {
+            return;
+        }
+
+        $this->googleClient->authenticate($requestCode);
+
+        return $this->googleClient->getAccessToken();
+    }
+
+    /**
+     * Clear auth token
+     */
+    public function clearToken()
+    {
+        $this->googleClient->revokeToken();
+    }
+
+    /**
+     * Retrieve the client's refresh token
+     *
+     * @return mixed
+     */
+    public function getRefreshToken()
+    {
+        return $this->googleClient->getRefreshToken();
+    }
+
+    /**
+     * Get the authentication URL for the googleclient
+     *
+     * @param string $state
+     * @return string
+     */
+    public function getAuthenticationUrl($state)
+    {
+        $this->googleClient->setState($state);
+        return $this->googleClient->createAuthUrl();
+    }
+
+    public function getChannelName()
+    {
+        $parts = "id,brandingSettings";
+        $opts = array("mine" => true);
+
+        $channels = $this->youtubeApi->channels->listChannels($parts, $opts);
+
+        if ($channels->count()) {
+            /** @var \Google_Service_YouTube_Channel $channel */
+            $channel = $channels->getItems()[0];
+
+            /** @var \Google_Service_YouTube_ChannelBrandingSettings $branding */
+            $branding = $channel->getBrandingSettings();
+
+            return $branding->getChannel()->title;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreamUrl()
+    {
+        return $this->streamUrl;
     }
 
     /**
@@ -87,97 +178,7 @@ class YouTubeLiveService
             array('streamId' => $streamsResponse->getId())
         );
 
-        // Get RTMP URL
-        $cdn->getIngestionInfo();
-    }
-
-    /**
-     * Check if the client has authenticated the user
-     *
-     * @return bool
-     */
-    public function isAuthenticated()
-    {
-        return (bool) $this->googleClient->getAccessToken();
-    }
-
-    /**
-     * Retrieve the client's refresh token
-     *
-     * @return mixed
-     */
-    public function getRefreshToken()
-    {
-        return $this->googleClient->getRefreshToken();
-    }
-
-    /**
-     * Get the authentication URL for the googleclient
-     *
-     * @return string
-     */
-    public function getAuthenticationUrl()
-    {
-        $state = mt_rand();
-        $this->googleClient->setState($state);
-        $this->session->set('state', $state);
-        $this->session->set('authreferer', $this->requestStack->getCurrentRequest()->getRequestUri());
-
-        return $this->googleClient->createAuthUrl();
-    }
-
-    /**
-     * Get the referring URL from the session
-     */
-    public function getReferUrl()
-    {
-        return $this->session->get('authreferer', '/');
-    }
-
-    /**
-     * Clear token by the 'cleartoken' request variable
-     */
-    protected function clearTokenByRequest()
-    {
-        if ($this->requestStack->getCurrentRequest()->get('cleartoken')) {
-            $this->session->remove('token');
-            $this->googleClient->revokeToken();
-        }
-    }
-
-    /**
-     * Get the authentication code from the request
-     */
-    protected function getCodeFromRequest()
-    {
-        $request = $this->requestStack->getCurrentRequest();
-        $requestCode = $request->get('code');
-        $requestState = $request->get('state');
-        $sessionState = $this->session->get('state');
-
-        if (!$requestCode) {
-            return;
-        }
-
-        if (strval($sessionState) !== strval($requestState)) {
-            return;
-        }
-
-        $this->googleClient->authenticate($requestCode);
-        $this->session->set('token', $this->googleClient->getAccessToken());
-    }
-
-    /**
-     * Set the access token from the session
-     */
-    protected function setAccessTokenFromSession()
-    {
-        $sessionToken = $this->session->get('token');
-        if (!$sessionToken) {
-            return;
-        }
-
-        $this->googleClient->setAccessToken($sessionToken);
+        $this->streamUrl = $streamsResponse->getCdn()->getIngestionInfo()->getIngestionAddress();
     }
 
     /**

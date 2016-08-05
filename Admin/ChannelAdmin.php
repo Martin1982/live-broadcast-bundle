@@ -77,11 +77,14 @@ class ChannelAdmin extends AbstractAdmin
 
         if ($subject instanceof ChannelYoutube) {
             $youtubeService = $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubelive.service');
-            $refreshToken = $youtubeService->getRefreshToken();
 
-            $subject->setRefreshToken($refreshToken);
+            $formMapper->add('youtubeChannelName', 'text', array(
+                'attr' => array('class' => 'input-yt-channelname', 'readonly' => 'readonly')
+            ));
 
-            $formMapper->add('refreshToken', 'hidden');
+            $formMapper->add('refreshToken', 'text', array(
+                'attr' => array('class' => 'input-yt-refreshtoken', 'readonly' => 'readonly')
+            ));
         }
 
         $formMapper->end();

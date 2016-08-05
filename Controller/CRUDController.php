@@ -38,8 +38,26 @@ class CRUDController extends Controller
     public function youtubeOAuthAction(Request $request)
     {
         $youTubeService = $this->get('live.broadcast.youtubelive.service');
-        $redirectUrl = $youTubeService->getReferUrl();
+        $session = $request->getSession();
 
-        return $this->redirect($redirectUrl);
+        if ($request->get('cleartoken')) {
+            $session->remove('youtubeRefreshToken');
+            $youTubeService->clearToken();
+        }
+
+        $requestCode = $request->get('code');
+        if ($requestCode) {
+            $requestState = $request->get('state');
+            $sessionState = $session->get('state');
+            $youTubeService->authenticate($requestCode, $requestState, $sessionState);
+            $refreshToken = $youTubeService->getRefreshToken();
+
+            if ($refreshToken) {
+                $session->set('youtubeChannelName', $youTubeService->getChannelName());
+                $session->set('youtubeRefreshToken', $refreshToken);
+            }
+        }
+
+        return $this->redirect($session->get('authreferer', '/'));
     }
 }

@@ -20,6 +20,13 @@ class ChannelYoutube extends BaseChannel
     protected $refreshToken;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="youtube_channel_name", type="string", length=255, nullable=false)
+     */
+    protected $youtubeChannelName;
+
+    /**
      * @return string
      */
     public function getRefreshToken()
@@ -35,6 +42,25 @@ class ChannelYoutube extends BaseChannel
     public function setRefreshToken($refreshToken)
     {
         $this->refreshToken = $refreshToken;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getYoutubeChannelName()
+    {
+        return $this->youtubeChannelName;
+    }
+
+    /**
+     * @param string $youtubeChannelName
+     * @return ChannelYoutube
+     */
+    public function setYoutubeChannelName($youtubeChannelName)
+    {
+        $this->youtubeChannelName = $youtubeChannelName;
 
         return $this;
     }
