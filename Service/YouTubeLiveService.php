@@ -234,7 +234,7 @@ class YouTubeLiveService
         $streamSnippet->setTitle($title);
 
         $cdn = new \Google_Service_YouTube_CdnSettings();
-        $cdn->setFormat('1080p');
+        $cdn->setFormat('720p');
         $cdn->setIngestionType('rtmp');
 
         $streamInsert = new \Google_Service_YouTube_LiveStream();
