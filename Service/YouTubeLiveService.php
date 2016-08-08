@@ -2,8 +2,10 @@
 
 namespace Martin1982\LiveBroadcastBundle\Service;
 
+use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\YoutubeEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -18,27 +20,33 @@ class YouTubeLiveService
     /**
      * @var \Google_Client
      */
-    protected $googleClient;
+    protected $googleApiClient;
 
     /**
      * @var \Google_Service_YouTube
      */
-    protected $youtubeApi;
+    protected $youtubeApiClient;
 
     /**
-     * @var string
+     * @var EntityManager
      */
-    protected $streamUrl;
+    protected $entityManager;
 
     /**
      * YouTubeLiveService constructor.
      * @param string $clientId
      * @param string $clientSecret
+     * @param EntityManager $entityManager
      * @param Router $router
      * @param Logger $logger
      */
-    public function __construct($clientId, $clientSecret, Router $router, LoggerInterface $logger)
-    {
+    public function __construct(
+        $clientId,
+        $clientSecret,
+        EntityManager $entityManager,
+        Router $router,
+        LoggerInterface $logger
+    ) {
         if (empty($clientId) || empty($clientSecret)) {
             throw new LiveBroadcastException('The YouTube oAuth settings are not correct.');
         }
@@ -49,16 +57,18 @@ class YouTubeLiveService
             Router::ABSOLUTE_URL
         );
 
-        $googleClient = new \Google_Client();
-        $googleClient->setLogger($logger);
-        $googleClient->setClientId($clientId);
-        $googleClient->setClientSecret($clientSecret);
-        $googleClient->setScopes('https://www.googleapis.com/auth/youtube');
-        $googleClient->setAccessType('offline');
-        $googleClient->setRedirectUri($redirectUri);
+        $this->entityManager = $entityManager;
 
-        $this->googleClient = $googleClient;
-        $this->youtubeApi = new \Google_Service_YouTube($googleClient);
+        $googleApiClient = new \Google_Client();
+        $googleApiClient->setLogger($logger);
+        $googleApiClient->setClientId($clientId);
+        $googleApiClient->setClientSecret($clientSecret);
+        $googleApiClient->setScopes('https://www.googleapis.com/auth/youtube');
+        $googleApiClient->setAccessType('offline');
+        $googleApiClient->setRedirectUri($redirectUri);
+
+        $this->googleApiClient = $googleApiClient;
+        $this->youtubeApiClient = new \Google_Service_YouTube($googleApiClient);
     }
 
     /**
@@ -67,9 +77,9 @@ class YouTubeLiveService
      */
     public function getAccessToken($refreshToken)
     {
-        $this->googleClient->fetchAccessTokenWithRefreshToken($refreshToken);
+        $this->googleApiClient->fetchAccessTokenWithRefreshToken($refreshToken);
 
-        return $this->googleClient->getAccessToken();
+        return $this->googleApiClient->getAccessToken();
     }
 
     /**
@@ -78,7 +88,7 @@ class YouTubeLiveService
      */
     public function setAccessToken($sessionToken)
     {
-        $this->googleClient->setAccessToken($sessionToken);
+        $this->googleApiClient->setAccessToken($sessionToken);
     }
 
     /**
@@ -88,7 +98,7 @@ class YouTubeLiveService
      */
     public function isAuthenticated()
     {
-        return (bool) $this->googleClient->getAccessToken();
+        return (bool) $this->googleApiClient->getAccessToken();
     }
 
     /**
@@ -103,9 +113,9 @@ class YouTubeLiveService
             return;
         }
 
-        $this->googleClient->authenticate($requestCode);
+        $this->googleApiClient->authenticate($requestCode);
 
-        return $this->googleClient->getAccessToken();
+        return $this->googleApiClient->getAccessToken();
     }
 
     /**
@@ -113,7 +123,7 @@ class YouTubeLiveService
      */
     public function clearToken()
     {
-        $this->googleClient->revokeToken();
+        $this->googleApiClient->revokeToken();
     }
 
     /**
@@ -123,7 +133,7 @@ class YouTubeLiveService
      */
     public function getRefreshToken()
     {
-        return $this->googleClient->getRefreshToken();
+        return $this->googleApiClient->getRefreshToken();
     }
 
     /**
@@ -134,16 +144,20 @@ class YouTubeLiveService
      */
     public function getAuthenticationUrl($state)
     {
-        $this->googleClient->setState($state);
-        return $this->googleClient->createAuthUrl();
+        $this->googleApiClient->setState($state);
+
+        return $this->googleApiClient->createAuthUrl();
     }
 
+    /**
+     * @return string|null
+     */
     public function getChannelName()
     {
-        $parts = "id,brandingSettings";
-        $opts = array("mine" => true);
+        $parts = 'id,brandingSettings';
+        $opts = array('mine' => true);
 
-        $channels = $this->youtubeApi->channels->listChannels($parts, $opts);
+        $channels = $this->youtubeApiClient->channels->listChannels($parts, $opts);
 
         if ($channels->count()) {
             /** @var \Google_Service_YouTube_Channel $channel */
@@ -154,22 +168,130 @@ class YouTubeLiveService
 
             return $branding->getChannel()->title;
         }
+
+        return null;
     }
 
     /**
+     * @param LiveBroadcast $liveBroadcast
+     * @param ChannelYoutube $channelYoutube
      * @return string
      */
-    public function getStreamUrl()
+    public function getStreamUrl(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube)
     {
-        return $this->streamUrl;
+        $this->getAccessToken($channelYoutube->getRefreshToken());
+        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
+        $event = $eventRepository->findOneBy(array(
+            'broadcast' => $liveBroadcast,
+            'channel'   => $channelYoutube,
+        ));
+
+        $youtubeId = $event->getYoutubeId();
+        $youtubeBroadcast = $this->getExternalBroadcastById($youtubeId);
+
+        if (!$youtubeBroadcast) {
+            return;
+        }
+
+        /** @var \Google_Service_YouTube_LiveBroadcastContentDetails $youtubeSnippet */
+        $youtubeDetails = $youtubeBroadcast->getContentDetails();
+        $streamId = $youtubeDetails->getBoundStreamId();
+
+        $streamResponse = $this->getExternalStreamById($streamId);
+
+        $streamAddress = $streamResponse->getCdn()->getIngestionInfo()->getIngestionAddress();
+        $streamName = $streamResponse->getCdn()->getIngestionInfo()->getStreamName();
+
+        return $streamAddress.'/'.$streamName;
+    }
+
+    /**
+     * @param LiveBroadcast $broadcast
+     */
+    public function createLiveEvent(LiveBroadcast $broadcast, ChannelYoutube $channel)
+    {
+        $youtubeData = $this->setupLivestream($broadcast, $channel);
+
+        $youtubeEvent = new YoutubeEvent();
+        $youtubeEvent->setBroadcast($broadcast);
+        $youtubeEvent->setChannel($channel);
+        $youtubeEvent->setYoutubeId($youtubeData->getId());
+
+        $this->entityManager->persist($youtubeEvent);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param LiveBroadcast $broadcast
+     */
+    public function updateLiveEvent(LiveBroadcast $broadcast, ChannelYoutube $channel)
+    {
+        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
+        $youtubeEvent = $eventRepository->findOneBy(array(
+            'broadcast' => $broadcast,
+            'channel' => $channel,
+        ));
+
+        $broadcast = $this->updateLiveStream($youtubeEvent);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param LiveBroadcast $broadcast
+     */
+    public function removeLiveEvent(LiveBroadcast $broadcast, ChannelYoutube $channel)
+    {
+        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
+        $youtubeEvent = $eventRepository->findOneBy(array(
+            'broadcast' => $broadcast,
+            'channel' => $channel,
+        ));
+
+        $this->removeLiveStream($youtubeEvent);
+        $this->entityManager->remove($youtubeEvent);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param LiveBroadcast $liveBroadcast
+     * @param ChannelYoutube $channelYoutube
+     */
+    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube)
+    {
+        $this->getAccessToken($channelYoutube->getRefreshToken());
+
+        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
+        $event = $eventRepository->findOneBy(array(
+            'broadcast' => $liveBroadcast,
+            'channel'   => $channelYoutube,
+        ));
+
+        $youtubeId = $event->getYoutubeId();
+
+        $youtubeBroadcast = $this->getExternalBroadcastById($youtubeId);
+
+        /** @var \Google_Service_YouTube_LiveBroadcastContentDetails $youtubeDetails */
+        $youtubeDetails = $youtubeBroadcast->getContentDetails();
+        $streamId = $youtubeDetails->getBoundStreamId();
+
+        /** @var \Google_Service_YouTube_LiveStream $streamResponse */
+        $streamResponse = $this->getExternalStreamById($streamId);
+
+        /** @var \Google_Service_YouTube_LiveStreamStatus $status */
+        $statusses = $streamResponse->getStatus();
+        $status = $statusses->getStreamStatus();
+
+        $this->youtubeApiClient->liveBroadcasts->transition($state, $youtubeId, 'status');
     }
 
     /**
      * @param LiveBroadcast $liveBroadcast
      * @param ChannelYoutube $channel
      * @param string $status
+     *
+     * @return \Google_Service_YouTube_LiveBroadcast
      */
-    public function setupLivestream(LiveBroadcast $liveBroadcast, ChannelYoutube $channel, $status = 'public')
+    protected function setupLivestream(LiveBroadcast $liveBroadcast, ChannelYoutube $channel, $status = 'public')
     {
         $this->getAccessToken($channel->getRefreshToken());
 
@@ -181,17 +303,47 @@ class YouTubeLiveService
         $streamsResponse = $this->createStream($title);
 
         // Bind Broadcast and Stream
-        $bindBroadcastResponse = $this->youtubeApi->liveBroadcasts->bind(
+        $bindBroadcastResponse = $this->youtubeApiClient->liveBroadcasts->bind(
             $broadcastResponse->getId(),
             'id,contentDetails',
             array('streamId' => $streamsResponse->getId())
         );
 
-        $streamAddress = $streamsResponse->getCdn()->getIngestionInfo()->getIngestionAddress();
-        $streamName = $streamsResponse->getCdn()->getIngestionInfo()->getStreamName();
-        $this->streamUrl = $streamAddress.'/'.$streamName;
-
         return $bindBroadcastResponse;
+    }
+
+    /**
+     * Edit a planned live event
+     *
+     * @param YoutubeEvent $event
+     */
+    protected function updateLiveStream(YoutubeEvent $event)
+    {
+        $channel = $event->getChannel();
+        $this->getAccessToken($channel->getRefreshToken());
+        $liveBroadcast = $event->getBroadcast();
+
+        $title = $liveBroadcast->getName();
+        $start = $liveBroadcast->getStartTimestamp();
+        $end = $liveBroadcast->getEndTimestamp();
+
+        $broadcastResponse = $this->updateBroadcast($title, $start, $end, 'public', $event->getYoutubeId());
+        $event->setYoutubeId($broadcastResponse->getId());
+
+        $this->entityManager->persist($event);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Remove a planned live event on YouTube
+     *
+     * @param YoutubeEvent $event
+     */
+    protected function removeLivestream(YoutubeEvent $event)
+    {
+        $channel = $event->getChannel();
+        $this->getAccessToken($channel->getRefreshToken());
+        $this->youtubeApiClient->liveBroadcasts->delete($event->getYoutubeId());
     }
 
     /**
@@ -203,10 +355,46 @@ class YouTubeLiveService
      */
     protected function createBroadcast($title, \DateTime $start, \DateTime $end, $privacyStatus = 'public')
     {
+        $externalBroadcast = $this->setupBroadcast($title, $start, $end, $privacyStatus);
+
+        return $this->youtubeApiClient->liveBroadcasts->insert('snippet,status,contentDetails', $externalBroadcast);
+    }
+
+    /**
+     * @param $title
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @param string $privacyStatus
+     * @param null $id
+     * @return \Google_Service_YouTube_LiveBroadcast
+     */
+    protected function updateBroadcast($title, \DateTime $start, \DateTime $end, $privacyStatus = 'public', $id = null)
+    {
+        $externalBroadcast = $this->setupBroadcast($title, $start, $end, $privacyStatus, $id);
+
+        return $this->youtubeApiClient->liveBroadcasts->update('snippet,status,contentDetails', $externalBroadcast);
+    }
+
+    /**
+     * @param $title
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @param string $privacyStatus
+     * @param null $id
+     * @return \Google_Service_YouTube_LiveBroadcast
+     */
+    protected function setupBroadcast($title, \DateTime $start, \DateTime $end, $privacyStatus = 'public', $id = null)
+    {
         if (new \DateTime() > $start) {
             $start = new \DateTime();
             $start->add(new \DateInterval('PT1S'));
         }
+
+        $monitorStream = new \Google_Service_YouTube_MonitorStreamInfo();
+        $monitorStream->setEnableMonitorStream(false);
+
+        $broadcastContentDetails = new \Google_Service_YouTube_LiveBroadcastContentDetails();
+        $broadcastContentDetails->setMonitorStream($monitorStream);
 
         $broadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet();
         $broadcastSnippet->setTitle($title);
@@ -217,11 +405,15 @@ class YouTubeLiveService
         $status->setPrivacyStatus($privacyStatus);
 
         $broadcastInsert = new \Google_Service_YouTube_LiveBroadcast();
+        if (!$id !== null) {
+            $broadcastInsert->setId($id);
+        }
         $broadcastInsert->setSnippet($broadcastSnippet);
         $broadcastInsert->setStatus($status);
         $broadcastInsert->setKind('youtube#liveBroadcast');
+        $broadcastInsert->setContentDetails($broadcastContentDetails);
 
-        return $this->youtubeApi->liveBroadcasts->insert('snippet,status', $broadcastInsert);
+        return $broadcastInsert;
     }
 
     /**
@@ -242,6 +434,41 @@ class YouTubeLiveService
         $streamInsert->setCdn($cdn);
         $streamInsert->setKind('youtube#liveStream');
 
-        return $this->youtubeApi->liveStreams->insert('snippet,cdn', $streamInsert);
+        return $this->youtubeApiClient->liveStreams->insert('snippet,cdn', $streamInsert);
     }
+
+    /**
+     * @param string $youtubeId
+     * @return \Google_Service_YouTube_LiveBroadcast|null
+     */
+    protected function getExternalBroadcastById($youtubeId)
+    {
+        $broadcasts = $this->youtubeApiClient->liveBroadcasts->listLiveBroadcasts('contentDetails', array(
+            'id' => $youtubeId,
+        ))->getItems();
+
+        if (!count($broadcasts)) {
+            return null;
+        }
+
+        return $broadcasts[0];
+    }
+
+    /**
+     * @param string $streamId
+     * @return \Google_Service_YouTube_LiveStream|null
+     */
+    protected function getExternalStreamById($streamId)
+    {
+        $streamItems = $this->youtubeApiClient->liveStreams->listLiveStreams('snippet,cdn,status', array(
+            'id' => $streamId,
+        ))->getItems();
+
+        if (!count($streamItems)) {
+            return null;
+        }
+
+        return $streamItems[0];
+    }
+
 }

@@ -25,13 +25,18 @@ services:
       arguments: ["@live.broadcast.youtubelive.service"]
       tags:
           - { name: kernel.event_subscriber }
+  live.broadcast.youtube_post_broadcast_listener:
+      class: Martin1982\LiveBroadcastBundle\EventListener\YoutubePostBroadcastListener
+      arguments: ["@live.broadcast.youtubelive.service"]
+      tags:
+          - { name: kernel.event_subscriber }
 
   live.broadcast.facebooklive.service:
       class: Martin1982\LiveBroadcastBundle\Service\FacebookLiveService
       arguments: ["%fb_app_id%", "%fb_app_secret%"]
   live.broadcast.youtubelive.service:
       class: Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService
-      arguments: ["%yt_client_id%", "%yt_client_secret%", "@router", "@logger"]
+      arguments: ["%yt_client_id%", "%yt_client_secret%", "@doctrine.orm.entity_manager", "@router", "@logger"]
 
   live.broadcast.streamoutput.service:
       class: Martin1982\LiveBroadcastBundle\Service\StreamOutputService

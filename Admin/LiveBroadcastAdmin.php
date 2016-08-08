@@ -2,6 +2,9 @@
 
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
+use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -55,6 +58,61 @@ class LiveBroadcastAdmin extends AbstractAdmin
                     'expanded' => true,
                 ))
                 ->end();
+    }
+
+    /**
+     * @param LiveBroadcast $broadcast
+     */
+    public function postPersist($broadcast)
+    {
+        foreach ($broadcast->getOutputChannels() as $channel) {
+            if ($channel instanceof ChannelYoutube) {
+                $youtubeService = $this->getYouTubeService();
+                $youtubeService->createLiveEvent($broadcast, $channel);
+            }
+        }
+
+        parent::postPersist($broadcast);
+    }
+
+    /**
+     * @param LiveBroadcast $broadcast
+     */
+    public function preUpdate($broadcast)
+    {
+        foreach ($broadcast->getOutputChannels() as $channel) {
+            if ($channel instanceof ChannelYoutube) {
+                $youtubeService = $this->getYouTubeService();
+                $youtubeService->updateLiveEvent($broadcast, $channel);
+            }
+        }
+
+        parent::preUpdate($broadcast);
+    }
+
+    /**
+     * @param LiveBroadcast $broadcast
+     */
+    public function preRemove($broadcast)
+    {
+        foreach ($broadcast->getOutputChannels() as $channel) {
+            if ($channel instanceof ChannelYoutube) {
+                $youtubeService = $this->getYouTubeService();
+                $youtubeService->removeLiveEvent($broadcast, $channel);
+            }
+        }
+
+        parent::preRemove($broadcast);
+    }
+
+    /**
+     * Get the YouTube Live service
+     *
+     * @return YouTubeLiveService
+     */
+    protected function getYouTubeService()
+    {
+        return $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubelive.service');
     }
 
     /**

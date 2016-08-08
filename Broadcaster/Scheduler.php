@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
@@ -214,6 +215,9 @@ class Scheduler
                 'broadcast_id' => $broadcast->getBroadcastId(),
                 'channel_id' => $channel->getChannelId(),
             ));
+
+            $postBroadcastEvent = new PostBroadcastEvent($broadcast, $output);
+            $this->dispatcher->dispatch(PostBroadcastEvent::NAME, $postBroadcastEvent);
         } catch (LiveBroadcastException $ex) {
             $this->logger->error(
                 sprintf(

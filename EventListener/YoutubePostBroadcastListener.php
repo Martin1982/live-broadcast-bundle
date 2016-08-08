@@ -3,16 +3,16 @@
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
+use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYoutube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class YoutubePreBroadcastListener
+ * Class YoutubePostBroadcastListener
  * @package Martin1982\LiveBroadcastBundle\EventListener
  */
-class YoutubePreBroadcastListener implements EventSubscriberInterface
+class YoutubePostBroadcastListener implements EventSubscriberInterface
 {
     /**
      * @var YoutubeLiveService
@@ -20,7 +20,7 @@ class YoutubePreBroadcastListener implements EventSubscriberInterface
     private $youtubeLiveService;
 
     /**
-     * YoutubePreBroadcastListener constructor.
+     * YoutubePostBroadcastListener constructor.
      * @param YouTubeLiveService $youtubeLiveService
      */
     public function __construct(YouTubeLiveService $youtubeLiveService)
@@ -29,20 +29,17 @@ class YoutubePreBroadcastListener implements EventSubscriberInterface
     }
 
     /**
-     * @param PreBroadcastEvent $event
+     * @param PostBroadcastEvent $event
      */
-    public function onPreBroadcast(PreBroadcastEvent $event)
+    public function onPostBroadcast(PostBroadcastEvent $event)
     {
         /** @var LiveBroadcast $liveBroadcast */
         $liveBroadcast = $event->getLiveBroadcast();
         $output = $event->getOutput();
 
-        if ($output instanceof OutputYoutube) {
-            $streamUrl = $this->youtubeLiveService->getStreamUrl($liveBroadcast, $output->getChannel());
-            if ($streamUrl) {
-                $output->setStreamUrl($streamUrl);
-            }
-        }
+//        if ($output instanceof OutputYoutube) {
+//            $this->youtubeLiveService->transitionState($liveBroadcast, $output->getChannel());
+//        }
     }
 
     /**
@@ -50,6 +47,6 @@ class YoutubePreBroadcastListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(PreBroadcastEvent::NAME => 'onPreBroadcast');
+        return array(PostBroadcastEvent::NAME => 'onPostBroadcast');
     }
 }
