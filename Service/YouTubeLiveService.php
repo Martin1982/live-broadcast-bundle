@@ -281,7 +281,9 @@ class YouTubeLiveService
         $statusses = $streamResponse->getStatus();
         $status = $statusses->getStreamStatus();
 
-        $this->youtubeApiClient->liveBroadcasts->transition($state, $youtubeId, 'status');
+        if ($status === 'testing') {
+            $this->youtubeApiClient->liveBroadcasts->transition($state, $youtubeId, 'status');
+        }
     }
 
     /**
