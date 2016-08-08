@@ -470,5 +470,4 @@ class YouTubeLiveService
 
         return $streamItems[0];
     }
-
 }
