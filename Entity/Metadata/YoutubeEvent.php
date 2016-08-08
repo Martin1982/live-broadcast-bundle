@@ -48,6 +48,14 @@ class YoutubeEvent
     protected $youtubeId;
 
     /**
+     * @return int
+     */
+    public function getEventId()
+    {
+        return $this->eventId;
+    }
+
+    /**
      * @return mixed
      */
     public function getBroadcast()
