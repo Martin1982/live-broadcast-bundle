@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
  * Class CRUDController
@@ -38,6 +39,15 @@ class CRUDController extends Controller
     public function youtubeOAuthAction(Request $request)
     {
         $youTubeService = $this->get('live.broadcast.youtubelive.service');
+        $router = $this->get('router');
+
+        $redirectUri = $router->generate(
+            'admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth',
+            array(),
+            Router::ABSOLUTE_URL
+        );
+        $youTubeService->initApiClients($redirectUri);
+
         $session = $request->getSession();
 
         if ($request->get('cleartoken')) {

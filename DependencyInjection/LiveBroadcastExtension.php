@@ -27,5 +27,6 @@ class LiveBroadcastExtension extends Extension
         $container->setParameter('fb_app_secret', $config['facebook']['application_secret']);
         $container->setParameter('yt_client_id', $config['youtube']['client_id']);
         $container->setParameter('yt_client_secret', $config['youtube']['client_secret']);
+        $container->setParameter('yt_redirect_route', $config['youtube']['redirect_route']);
     }
 }

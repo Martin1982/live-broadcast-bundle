@@ -9,6 +9,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
  * Class LiveBroadcastAdmin.
@@ -112,7 +113,18 @@ class LiveBroadcastAdmin extends AbstractAdmin
      */
     protected function getYouTubeService()
     {
-        return $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubelive.service');
+        $service = $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubelive.service');
+        $router = $this->getConfigurationPool()->getContainer()->get('router');
+
+        $redirectUri = $router->generate(
+            $this->getConfigurationPool()->getContainer()->getParameter('live_broadcast_yt_redirect_route'),
+            array(),
+            Router::ABSOLUTE_URL
+        );
+
+        $service->initApiClients($redirectUri);
+
+        return $service;
     }
 
     /**

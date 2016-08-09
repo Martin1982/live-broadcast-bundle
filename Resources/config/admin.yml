@@ -48,5 +48,7 @@ services:
             - "@templating"
             - "@live.broadcast.youtubelive.service"
             - "@request_stack"
+            - "@router"
+            - "%live_broadcast_yt_redirect_route%"
         tags:
             - { name: sonata.block }

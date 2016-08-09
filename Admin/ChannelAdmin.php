@@ -52,11 +52,16 @@ class ChannelAdmin extends AbstractAdmin
     {
         $subject = $this->getSubject();
 
+        $nameClasses = 'generic-channel-name';
+        if ($subject instanceof ChannelYoutube) {
+            $nameClasses = 'generic-channel-name input-yt-channelname';
+        }
+
         $formMapper
             ->with('Channel')
                 ->add('channelName', 'text', array(
                     'label' => 'Channel name',
-                    'attr' => array('class' => 'generic-channel-name'),
+                    'attr' => array('class' => $nameClasses),
                 ));
 
         if ($subject instanceof ChannelTwitch) {

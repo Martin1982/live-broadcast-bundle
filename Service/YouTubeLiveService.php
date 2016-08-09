@@ -18,6 +18,21 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class YouTubeLiveService
 {
     /**
+     * @var string
+     */
+    protected $clientId;
+
+    /**
+     * @var string
+     */
+    protected $clientSecret;
+
+    /**
+     * @var Logger|LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @var \Google_Client
      */
     protected $googleApiClient;
@@ -37,14 +52,12 @@ class YouTubeLiveService
      * @param string $clientId
      * @param string $clientSecret
      * @param EntityManager $entityManager
-     * @param Router $router
      * @param Logger $logger
      */
     public function __construct(
         $clientId,
         $clientSecret,
         EntityManager $entityManager,
-        Router $router,
         LoggerInterface $logger
     ) {
         if (empty($clientId) || empty($clientSecret)) {
@@ -52,20 +65,25 @@ class YouTubeLiveService
         }
 
         $this->entityManager = $entityManager;
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->logger = $logger;
+    }
 
-        $redirectUri = $router->generate(
-            'admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth',
-            array(),
-            Router::ABSOLUTE_URL
-        );
-
+    /**
+     * Initialize API to Google and YouTube
+     *
+     * @param $oAuthRedirectUrl
+     */
+    public function initApiClients($oAuthRedirectUrl)
+    {
         $googleApiClient = new \Google_Client();
-        $googleApiClient->setLogger($logger);
-        $googleApiClient->setClientId($clientId);
-        $googleApiClient->setClientSecret($clientSecret);
+        $googleApiClient->setLogger($this->logger);
+        $googleApiClient->setClientId($this->clientId);
+        $googleApiClient->setClientSecret($this->clientSecret);
         $googleApiClient->setScopes('https://www.googleapis.com/auth/youtube');
         $googleApiClient->setAccessType('offline');
-        $googleApiClient->setRedirectUri($redirectUri);
+        $googleApiClient->setRedirectUri($oAuthRedirectUrl);
 
         $this->googleApiClient = $googleApiClient;
         $this->youtubeApiClient = new \Google_Service_YouTube($googleApiClient);
@@ -350,7 +368,11 @@ class YouTubeLiveService
     {
         $externalBroadcast = $this->setupBroadcast($liveBroadcast, $privacyStatus, $id);
 
-        return $this->youtubeApiClient->liveBroadcasts->update('snippet,status,contentDetails', $externalBroadcast);
+        if ($id !== null) {
+            return $this->youtubeApiClient->liveBroadcasts->update('snippet,status,contentDetails', $externalBroadcast);
+        }
+
+        return $this->youtubeApiClient->liveBroadcasts->insert('snippet,status,contentDetails', $externalBroadcast);
     }
 
     /**
@@ -387,7 +409,7 @@ class YouTubeLiveService
         $status->setPrivacyStatus($privacyStatus);
 
         $broadcastInsert = new \Google_Service_YouTube_LiveBroadcast();
-        if (!$id !== null) {
+        if ($id !== null) {
             $broadcastInsert->setId($id);
         }
         $broadcastInsert->setSnippet($broadcastSnippet);

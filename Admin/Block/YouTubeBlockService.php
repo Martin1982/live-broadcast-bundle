@@ -8,6 +8,7 @@ use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
  * Class YouTubeBlockService
@@ -30,15 +31,26 @@ class YouTubeBlockService extends BaseBlockService
      * @param string $name
      * @param EngineInterface $templating
      * @param YouTubeLiveService $youtubeLive
+     * @param Router $router,
+     * @param string $redirectRoute
      */
     public function __construct(
         $name,
         EngineInterface $templating,
         YouTubeLiveService $youtubeLive,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        Router $router,
+        $redirectRoute
     ) {
         $this->youtubeLive = $youtubeLive;
         $this->requestStack = $requestStack;
+
+        $redirectUri = $router->generate(
+            $redirectRoute,
+            array(),
+            Router::ABSOLUTE_URL
+        );
+        $this->youtubeLive->initApiClients($redirectUri);
 
         parent::__construct($name, $templating);
     }

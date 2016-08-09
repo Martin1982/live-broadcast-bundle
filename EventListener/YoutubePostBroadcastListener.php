@@ -6,6 +6,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYoutube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -22,10 +23,19 @@ class YoutubePostBroadcastListener implements EventSubscriberInterface
     /**
      * YoutubePostBroadcastListener constructor.
      * @param YouTubeLiveService $youtubeLiveService
+     * @param Router $router
+     * @param string $redirectRoute
      */
-    public function __construct(YouTubeLiveService $youtubeLiveService)
+    public function __construct(YouTubeLiveService $youtubeLiveService, Router $router, $redirectRoute)
     {
         $this->youtubeLiveService = $youtubeLiveService;
+
+        $redirectUri = $router->generate(
+            $redirectRoute,
+            array(),
+            Router::ABSOLUTE_URL
+        );
+        $this->youtubeLiveService->initApiClients($redirectUri);
     }
 
     /**
