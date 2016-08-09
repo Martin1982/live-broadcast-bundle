@@ -4,11 +4,13 @@ namespace Martin1982\LiveBroadcastBundle\Controller;
 
 use Facebook\Authentication\AccessToken;
 use Martin1982\LiveBroadcastBundle\Service\FacebookLiveService;
+use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class CRUDController
@@ -40,34 +42,52 @@ class CRUDController extends Controller
     {
         $youTubeService = $this->get('live.broadcast.youtubelive.service');
         $router = $this->get('router');
-
         $redirectUri = $router->generate(
             'admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth',
             array(),
             Router::ABSOLUTE_URL
         );
         $youTubeService->initApiClients($redirectUri);
-
         $session = $request->getSession();
 
         if ($request->get('cleartoken')) {
-            $session->remove('youtubeRefreshToken');
-            $youTubeService->clearToken();
+            $this->clearToken($session);
         }
 
         $requestCode = $request->get('code');
         if ($requestCode) {
-            $requestState = $request->get('state');
-            $sessionState = $session->get('state');
-            $youTubeService->authenticate($requestCode, $requestState, $sessionState);
-            $refreshToken = $youTubeService->getRefreshToken();
-
-            if ($refreshToken) {
-                $session->set('youtubeChannelName', $youTubeService->getChannelName());
-                $session->set('youtubeRefreshToken', $refreshToken);
-            }
+            $this->checkRequestCode($request, $session, $youTubeService);
         }
 
         return $this->redirect($session->get('authreferer', '/'));
+    }
+
+    /**
+     * @param Session $session
+     */
+    protected function clearToken(Session $session)
+    {
+        $session->remove('youtubeRefreshToken');
+        $youTubeService->clearToken();
+    }
+
+    /**
+     * @param Request $request
+     * @param Session $session
+     * @param YouTubeLiveService $youTubeService
+     */
+    protected function checkRequestCode(Request $request, Session $session, YouTubeLiveService $youTubeService)
+    {
+        $requestCode = $request->get('code');
+        $requestState = $request->get('state');
+        $sessionState = $session->get('state');
+
+        $youTubeService->authenticate($requestCode, $requestState, $sessionState);
+        $refreshToken = $youTubeService->getRefreshToken();
+
+        if ($refreshToken) {
+            $session->set('youtubeChannelName', $youTubeService->getChannelName());
+            $session->set('youtubeRefreshToken', $refreshToken);
+        }
     }
 }
