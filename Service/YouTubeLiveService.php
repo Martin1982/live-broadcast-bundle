@@ -369,10 +369,10 @@ class YouTubeLiveService
         $externalBroadcast = $this->setupBroadcast($liveBroadcast, $privacyStatus, $id);
 
         if ($id !== null) {
-            return $this->youtubeApiClient->liveBroadcasts->update('snippet,status,contentDetails', $externalBroadcast);
+            return $this->youtubeApiClient->liveBroadcasts->update('snippet,status', $externalBroadcast);
         }
 
-        return $this->youtubeApiClient->liveBroadcasts->insert('snippet,status,contentDetails', $externalBroadcast);
+        return $this->youtubeApiClient->liveBroadcasts->insert('snippet,status', $externalBroadcast);
     }
 
     /**
@@ -393,12 +393,6 @@ class YouTubeLiveService
             $start->add(new \DateInterval('PT1S'));
         }
 
-        $monitorStream = new \Google_Service_YouTube_MonitorStreamInfo();
-        $monitorStream->setEnableMonitorStream(false);
-
-        $broadcastContentDetails = new \Google_Service_YouTube_LiveBroadcastContentDetails();
-        $broadcastContentDetails->setMonitorStream($monitorStream);
-
         $broadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet();
         $broadcastSnippet->setTitle($title);
         $broadcastSnippet->setDescription($description);
@@ -415,7 +409,6 @@ class YouTubeLiveService
         $broadcastInsert->setSnippet($broadcastSnippet);
         $broadcastInsert->setStatus($status);
         $broadcastInsert->setKind('youtube#liveBroadcast');
-        $broadcastInsert->setContentDetails($broadcastContentDetails);
 
         return $broadcastInsert;
     }

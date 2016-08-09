@@ -22,12 +22,12 @@ services:
           - { name: kernel.event_subscriber }
   live.broadcast.youtube_pre_broadcast_listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\YoutubePreBroadcastListener
-      arguments: ["@live.broadcast.youtubelive.service", "@router"]
+      arguments: ["@live.broadcast.youtubelive.service", "@router", "%live_broadcast_yt_redirect_route%"]
       tags:
           - { name: kernel.event_subscriber }
   live.broadcast.youtube_post_broadcast_listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\YoutubePostBroadcastListener
-      arguments: ["@live.broadcast.youtubelive.service", "@router"]
+      arguments: ["@live.broadcast.youtubelive.service", "@router", "%live_broadcast_yt_redirect_route%"]
       tags:
           - { name: kernel.event_subscriber }
 

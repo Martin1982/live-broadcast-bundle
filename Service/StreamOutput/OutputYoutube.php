@@ -52,7 +52,7 @@ class OutputYoutube implements OutputInterface
         }
 
         return sprintf(
-            '-vf scale=-1:720 -c:v libx264 -crf 30 -preset ultrafast -c:a copy -f flv "%s"',
+            '-vf scale=-1:720 -c:v libx264 -pix_fmt yuv420p -preset veryfast -r 30 -g 60 -b:v 4000k -c:a copy -f flv "%s"',
             $this->streamUrl
         );
     }
