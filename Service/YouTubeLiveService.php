@@ -302,7 +302,7 @@ class YouTubeLiveService
         $start = $liveBroadcast->getStartTimestamp();
         $end = $liveBroadcast->getEndTimestamp();
 
-        $broadcastResponse = $this->createBroadcast($title, $description, $start, $end, $status);
+        $broadcastResponse = $this->updateBroadcast($liveBroadcast, $status);
         $streamsResponse = $this->createStream($title);
 
         // Bind Broadcast and Stream
@@ -326,12 +326,7 @@ class YouTubeLiveService
         $this->getAccessToken($channel->getRefreshToken());
         $liveBroadcast = $event->getBroadcast();
 
-        $title = $liveBroadcast->getName();
-        $description = $liveBroadcast->getDescription();
-        $start = $liveBroadcast->getStartTimestamp();
-        $end = $liveBroadcast->getEndTimestamp();
-
-        $broadcastResponse = $this->updateBroadcast($title, $description, $start, $end, 'public', $event->getYoutubeId());
+        $broadcastResponse = $this->updateBroadcast($liveBroadcast, 'public', $event->getYoutubeId());
         $event->setYoutubeId($broadcastResponse->getId());
 
         $this->entityManager->persist($event);
@@ -351,47 +346,31 @@ class YouTubeLiveService
     }
 
     /**
-     * @param $title
-     * @param $description
-     * @param \DateTime $start
-     * @param \DateTime $end
-     * @param string $privacyStatus
-     * @return \Google_Service_YouTube_LiveBroadcast
-     */
-    protected function createBroadcast($title, $description, \DateTime $start, \DateTime $end, $privacyStatus = 'public')
-    {
-        $externalBroadcast = $this->setupBroadcast($title, $description, $start, $end, $privacyStatus);
-
-        return $this->youtubeApiClient->liveBroadcasts->insert('snippet,status,contentDetails', $externalBroadcast);
-    }
-
-    /**
-     * @param $title
-     * @param $description
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param LiveBroadcast $liveBroadcast
      * @param string $privacyStatus
      * @param null $id
      * @return \Google_Service_YouTube_LiveBroadcast
      */
-    protected function updateBroadcast($title, $description, \DateTime $start, \DateTime $end, $privacyStatus = 'public', $id = null)
+    protected function updateBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $id = null)
     {
-        $externalBroadcast = $this->setupBroadcast($title, $description, $start, $end, $privacyStatus, $id);
+        $externalBroadcast = $this->setupBroadcast($liveBroadcast, $privacyStatus, $id);
 
         return $this->youtubeApiClient->liveBroadcasts->update('snippet,status,contentDetails', $externalBroadcast);
     }
 
     /**
-     * @param $title
-     * @param $description
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param LiveBroadcast $liveBroadcast
      * @param string $privacyStatus
      * @param null $id
      * @return \Google_Service_YouTube_LiveBroadcast
      */
-    protected function setupBroadcast($title, $description, \DateTime $start, \DateTime $end, $privacyStatus = 'public', $id = null)
+    protected function setupBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $id = null)
     {
+        $title = $liveBroadcast->getName();
+        $description = $liveBroadcast->getDescription();
+        $start = $liveBroadcast->getStartTimestamp();
+        $end = $liveBroadcast->getEndTimestamp();
+
         if (new \DateTime() > $start) {
             $start = new \DateTime();
             $start->add(new \DateInterval('PT1S'));
