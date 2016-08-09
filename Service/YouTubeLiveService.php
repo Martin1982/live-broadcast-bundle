@@ -51,13 +51,13 @@ class YouTubeLiveService
             throw new LiveBroadcastException('The YouTube oAuth settings are not correct.');
         }
 
+        $this->entityManager = $entityManager;
+
         $redirectUri = $router->generate(
             'admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth',
             array(),
             Router::ABSOLUTE_URL
         );
-
-        $this->entityManager = $entityManager;
 
         $googleApiClient = new \Google_Client();
         $googleApiClient->setLogger($logger);
@@ -297,13 +297,8 @@ class YouTubeLiveService
     {
         $this->getAccessToken($channel->getRefreshToken());
 
-        $title = $liveBroadcast->getName();
-        $description = $liveBroadcast->getDescription();
-        $start = $liveBroadcast->getStartTimestamp();
-        $end = $liveBroadcast->getEndTimestamp();
-
         $broadcastResponse = $this->updateBroadcast($liveBroadcast, $status);
-        $streamsResponse = $this->createStream($title);
+        $streamsResponse = $this->createStream($liveBroadcast->getName());
 
         // Bind Broadcast and Stream
         $bindBroadcastResponse = $this->youtubeApiClient->liveBroadcasts->bind(
