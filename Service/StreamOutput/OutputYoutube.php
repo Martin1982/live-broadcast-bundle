@@ -51,8 +51,11 @@ class OutputYoutube implements OutputInterface
             throw new LiveBroadcastException('The YouTube stream url must be set');
         }
 
+        $params = '-vf scale=-1:720 -c:v libx264 -pix_fmt yuv420p ';
+        $params = $params.'-preset veryfast -r 30 -g 60 -b:v 4000k -c:a copy -f flv "%s"';
+
         return sprintf(
-            '-vf scale=-1:720 -c:v libx264 -pix_fmt yuv420p -preset veryfast -r 30 -g 60 -b:v 4000k -c:a copy -f flv "%s"',
+            $params,
             $this->streamUrl
         );
     }
