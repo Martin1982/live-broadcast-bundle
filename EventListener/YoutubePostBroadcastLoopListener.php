@@ -101,8 +101,7 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
         $streamFound = false;
 
         foreach ($runningProcesses as $process) {
-            if (
-                $process->getBroadcastId() === $broadcast->getBroadcastId() &&
+            if ($process->getBroadcastId() === $broadcast->getBroadcastId() &&
                 $process->getChannelId() === $channel->getChannelId()
             ) {
                 $streamFound = true;
@@ -141,10 +140,9 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
 
         try {
             $this->commands->startProcess($input, $outputService->generateOutputCmd(), $metadata);
-        } catch(LiveBroadcastException $e) {
+        } catch (LiveBroadcastException $e) {
             return;
         }
-
     }
 
     /**
