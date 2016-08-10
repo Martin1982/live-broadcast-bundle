@@ -8,7 +8,6 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YoutubeEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class YouTubeLiveService
@@ -27,7 +26,7 @@ class YouTubeLiveService
     protected $clientSecret;
 
     /**
-     * @var Logger|LoggerInterface
+     * @var LoggerInterface
      */
     protected $logger;
 
@@ -51,7 +50,8 @@ class YouTubeLiveService
      * @param string $clientId
      * @param string $clientSecret
      * @param EntityManager $entityManager
-     * @param Logger $logger
+     * @param LoggerInterface $logger
+     * @throws LiveBroadcastException
      */
     public function __construct(
         $clientId,
@@ -126,7 +126,7 @@ class YouTubeLiveService
      */
     public function authenticate($requestCode, $requestState, $sessionState)
     {
-        if (strval($sessionState) !== strval($requestState)) {
+        if ((string) $sessionState !== (string) $requestState) {
             return;
         }
 
@@ -198,10 +198,7 @@ class YouTubeLiveService
     {
         $this->getAccessToken($channelYoutube->getRefreshToken());
         $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
-        $event = $eventRepository->findOneBy(array(
-            'broadcast' => $liveBroadcast,
-            'channel'   => $channelYoutube,
-        ));
+        $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYoutube);
 
         $youtubeId = $event->getYoutubeId();
         $youtubeBroadcast = $this->getExternalBroadcastById($youtubeId);
@@ -240,31 +237,26 @@ class YouTubeLiveService
 
     /**
      * @param LiveBroadcast $broadcast
+     * @param ChannelYoutube $channel
      */
     public function updateLiveEvent(LiveBroadcast $broadcast, ChannelYoutube $channel)
     {
         $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
-        $youtubeEvent = $eventRepository->findOneBy(array(
-            'broadcast' => $broadcast,
-            'channel' => $channel,
-        ));
+        $youtubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
 
-        $broadcast = $this->updateLiveStream($youtubeEvent);
-        $this->entityManager->flush();
+        $this->updateLiveStream($youtubeEvent);
     }
 
     /**
      * @param LiveBroadcast $broadcast
+     * @param ChannelYoutube $channel
      */
     public function removeLiveEvent(LiveBroadcast $broadcast, ChannelYoutube $channel)
     {
         $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
-        $youtubeEvent = $eventRepository->findOneBy(array(
-            'broadcast' => $broadcast,
-            'channel' => $channel,
-        ));
+        $youtubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
 
-        $this->removeLiveStream($youtubeEvent);
+        $this->removeLivestream($youtubeEvent);
         $this->entityManager->remove($youtubeEvent);
         $this->entityManager->flush();
     }
@@ -272,16 +264,14 @@ class YouTubeLiveService
     /**
      * @param LiveBroadcast $liveBroadcast
      * @param ChannelYoutube $channelYoutube
+     * @param string $state
      */
-    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube)
+    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube, $state)
     {
         $this->getAccessToken($channelYoutube->getRefreshToken());
 
         $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
-        $event = $eventRepository->findOneBy(array(
-            'broadcast' => $liveBroadcast,
-            'channel'   => $channelYoutube,
-        ));
+        $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYoutube);
 
         $youtubeId = $event->getYoutubeId();
 

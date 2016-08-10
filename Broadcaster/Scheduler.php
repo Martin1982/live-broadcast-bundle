@@ -2,11 +2,11 @@
 
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
+use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
@@ -83,9 +83,11 @@ class Scheduler
     {
         $this->getRunningBroadcasts();
         $this->stopExpiredBroadcasts();
-
         $this->getPlannedBroadcasts();
         $this->startPlannedBroadcasts();
+
+        $postBroadcastLoopEvent = new PostBroadcastLoopEvent();
+        $this->dispatcher->dispatch(PostBroadcastLoopEvent::NAME, $postBroadcastLoopEvent);
     }
 
     /**
@@ -240,21 +242,8 @@ class Scheduler
     protected function getPlannedBroadcasts()
     {
         $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
-        $expr = Criteria::expr();
-        $criteria = Criteria::create();
-
-        $criteria->where($expr->andX(
-            $expr->lte('startTimestamp', new \DateTime()),
-            $expr->gte('endTimestamp', new \DateTime())
-        ));
-
         $this->logger->debug('Get planned broadcasts');
-
-        /* @var LiveBroadcast[] $nowLive */
-        $this->plannedBroadcasts = $broadcastRepository->createQueryBuilder('lb')
-            ->addCriteria($criteria)
-            ->getQuery()
-            ->getResult();
+        $this->plannedBroadcasts = $broadcastRepository->getPlannedBroadcasts();
 
         return $this->plannedBroadcasts;
     }
