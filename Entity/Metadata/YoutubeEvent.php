@@ -183,5 +183,4 @@ class YoutubeEvent
 
         return $this->stateMapping[$localState];
     }
-
 }
