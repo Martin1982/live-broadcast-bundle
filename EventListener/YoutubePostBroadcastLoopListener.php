@@ -11,6 +11,7 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYoutube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class YoutubePostBroadcastLoopListener
@@ -39,6 +40,9 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
      */
     protected $youtubeLiveService;
 
+    /** @var KernelInterface  */
+    protected $kernel;
+
     /**
      * YoutubePostBroadcastLoopListener constructor.
      * @param EntityManager $entityManager
@@ -48,11 +52,13 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
     public function __construct(
         EntityManager $entityManager,
         SchedulerCommandsInterface $commands,
-        YouTubeLiveService $youTubeLiveService
+        YouTubeLiveService $youTubeLiveService,
+        KernelInterface $kernel
     ) {
         $this->entityManager = $entityManager;
         $this->commands = $commands;
         $this->youtubeLiveService = $youTubeLiveService;
+        $this->kernel = $kernel;
     }
 
     /**
@@ -118,7 +124,7 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
      */
     protected function startTestStream(YoutubeEvent $event)
     {
-        $placeholderImage = dirname(__DIR__) . '/../Resources/images/placeholder.jpg';
+        $placeholderImage = $this->kernel->locateResource('@LiveBroadcastBundle') . '/Resources/images/placeholder.jpg';
 
         $input = sprintf(
             '-re -framerate 1/%d -i %s',
