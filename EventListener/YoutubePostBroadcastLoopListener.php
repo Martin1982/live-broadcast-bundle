@@ -88,7 +88,6 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
             $testableEvent->setLastKnownState($localState);
 
             $this->entityManager->persist($testableEvent);
-            $this->entityManager->flush();
 
             if ($localState > YoutubeEvent::STATE_LOCAL_READY) {
                 continue;
@@ -99,6 +98,8 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
             }
             $this->transitionState($testableEvent);
         }
+
+        $this->entityManager->flush();
     }
 
     /**
