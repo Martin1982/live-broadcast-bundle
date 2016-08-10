@@ -80,6 +80,20 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
         $runningProcesses = $this->commands->getRunningProcesses();
 
         foreach ($testableEvents as $testableEvent) {
+            $remoteState = $this->youtubeLiveService->getStreamState(
+                $testableEvent->getBroadcast(),
+                $testableEvent->getChannel()
+            );
+            $localState = $testableEvent->getLocalStateByRemoteState($remoteState);
+            $testableEvent->setLastKnownState($localState);
+
+            $this->entityManager->persist($testableEvent);
+            $this->entityManager->flush();
+
+            if ($localState > YoutubeEvent::STATE_LOCAL_READY) {
+                continue;
+            }
+
             if (!$this->hasRunningTestStream($testableEvent, $runningProcesses)) {
                 $this->startTestStream($testableEvent);
             }

@@ -264,9 +264,9 @@ class YouTubeLiveService
     /**
      * @param LiveBroadcast $liveBroadcast
      * @param ChannelYoutube $channelYoutube
-     * @param string $state
+     * @return mixed
      */
-    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube, $state)
+    public function getStreamState(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube)
     {
         $this->getAccessToken($channelYoutube->getRefreshToken());
 
@@ -286,11 +286,25 @@ class YouTubeLiveService
 
         /** @var \Google_Service_YouTube_LiveStreamStatus $status */
         $statusses = $streamResponse->getStatus();
-        $status = $statusses->getStreamStatus();
 
-        if ($status === 'testing') {
-            $this->youtubeApiClient->liveBroadcasts->transition($state, $youtubeId, 'status');
-        }
+        return $statusses->getStreamStatus();
+    }
+
+    /**
+     * @param LiveBroadcast $liveBroadcast
+     * @param ChannelYoutube $channelYoutube
+     * @param string $state
+     */
+    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube, $state)
+    {
+        $this->getAccessToken($channelYoutube->getRefreshToken());
+
+        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
+        $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYoutube);
+
+        $youtubeId = $event->getYoutubeId();
+
+        $this->youtubeApiClient->liveBroadcasts->transition($state, $youtubeId, 'status');
     }
 
     /**

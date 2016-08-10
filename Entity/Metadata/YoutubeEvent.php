@@ -5,6 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Entity\Metadata;
 use Doctrine\ORM\Mapping as ORM;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**
  * Class YoutubeEvent
@@ -24,6 +25,13 @@ class YoutubeEvent
     const STATE_REMOTE_TESTING = 'testing';
     const STATE_REMOTE_LIVE = 'live';
     const STATE_REMOTE_COMPLETE = 'complete';
+
+    private $stateMapping = array(
+        self::STATE_LOCAL_READY => self::STATE_REMOTE_READY,
+        self::STATE_LOCAL_TESTING => self::STATE_REMOTE_TESTING,
+        self::STATE_LOCAL_LIVE => self::STATE_REMOTE_LIVE,
+        self::STATE_LOCAL_COMPLETE => self::STATE_REMOTE_COMPLETE,
+    );
 
     /**
      * @var int
@@ -147,4 +155,33 @@ class YoutubeEvent
 
         return $this;
     }
+
+    /**
+     * @param $remoteState
+     * @return mixed
+     * @throws LiveBroadcastException
+     */
+    public function getLocalStateByRemoteState($remoteState)
+    {
+        if (!in_array($remoteState, $this->stateMapping, true)) {
+            throw new LiveBroadcastException('Invalid remote state');
+        }
+
+        return array_search($remoteState, $this->stateMapping, true);
+    }
+
+    /**
+     * @param $localState
+     * @return mixed
+     * @throws LiveBroadcastException
+     */
+    public function getRemoteStateByLocalState($localState)
+    {
+        if (!array_key_exists($localState, $this->stateMapping)) {
+            throw new LiveBroadcastException('Invalid local state');
+        }
+
+        return $this->stateMapping[$localState];
+    }
+
 }
