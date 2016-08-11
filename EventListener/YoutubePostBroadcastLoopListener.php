@@ -141,13 +141,7 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
         $streamFound = false;
 
         foreach ($runningProcesses as $processString) {
-            $process = new RunningBroadcast(
-                $this->commands->getBroadcastId($processString),
-                $this->commands->getProcessId($processString),
-                $this->commands->getChannelId($processString),
-                $this->commands->getEnvironment($processString),
-                $this->commands->isMonitorStream($processString)
-            );
+            $process = $this->createRunningProcess($processString);
 
             if ($process->getBroadcastId() === $broadcast->getBroadcastId() &&
                 $process->getChannelId() === $channel->getChannelId()
@@ -202,13 +196,7 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
         $runningStreams = $this->commands->getRunningProcesses();
         
         foreach ($runningStreams as $streamCmd) {
-            $process = new RunningBroadcast(
-                $this->commands->getBroadcastId($streamCmd),
-                $this->commands->getProcessId($streamCmd),
-                $this->commands->getChannelId($streamCmd),
-                $this->commands->getEnvironment($streamCmd),
-                $this->commands->isMonitorStream($streamCmd)
-            );
+            $process = $this->createRunningProcess($streamCmd);
 
             if ($process->isMonitor() === false) {
                 continue;
@@ -232,5 +220,20 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
     {
         $liveService = $this->youtubeLiveService;
         $liveService->transitionState($event->getBroadcast(), $event->getChannel(), YoutubeEvent::STATE_REMOTE_TESTING);
+    }
+
+    /**
+     * @param string $processString
+     * @return RunningBroadcast
+     */
+    protected function createRunningProcess($processString)
+    {
+        return new RunningBroadcast(
+            $this->commands->getBroadcastId($processString),
+            $this->commands->getProcessId($processString),
+            $this->commands->getChannelId($processString),
+            $this->commands->getEnvironment($processString),
+            $this->commands->isMonitorStream($processString)
+        );
     }
 }
