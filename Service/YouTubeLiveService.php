@@ -304,7 +304,11 @@ class YouTubeLiveService
 
         $youtubeId = $event->getYoutubeId();
 
-        $this->youtubeApiClient->liveBroadcasts->transition($state, $youtubeId, 'status');
+        try {
+            $this->youtubeApiClient->liveBroadcasts->transition($state, $youtubeId, 'status');
+        } catch (\Google_Service_Exception $exception) {
+            $this->logger->warning($exception->getMessage());
+        }
     }
 
     /**

@@ -52,7 +52,7 @@ class OutputYoutube implements OutputInterface
         }
 
         $params = '-vf scale=-1:720 -c:v libx264 -pix_fmt yuv420p ';
-        $params.= '-preset veryfast -r 30 -g 60 -b:v 4000k -c:a copy -f flv "%s"';
+        $params.= '-preset veryfast -r 30 -g 60 -b:v 4000k -c:a aac -f flv "%s"';
 
         return sprintf(
             $params,

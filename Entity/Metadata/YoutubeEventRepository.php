@@ -2,6 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Entity\Metadata;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -30,8 +31,22 @@ class YoutubeEventRepository extends EntityRepository
      */
     public function getTestableEvents()
     {
-        return $this->findBy(array(
-            'lastKnownState' => YoutubeEvent::STATE_LOCAL_READY,
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+
+        $criteria->where($expr->andX(
+            $expr->lt('event.lastKnownState', YoutubeEvent::STATE_LOCAL_TESTING),
+            $expr->gte('broadcast.endTimestamp', new \DateTime())
         ));
+
+        return $this->createQueryBuilder('event')
+            ->leftJoin(
+                'Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast',
+                'broadcast',
+                'event.broadcast = broadcast.broadcast'
+            )
+            ->addCriteria($criteria)
+            ->getQuery()
+            ->getResult();
     }
 }
