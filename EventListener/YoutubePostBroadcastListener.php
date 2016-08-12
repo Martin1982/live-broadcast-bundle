@@ -49,7 +49,8 @@ class YoutubePostBroadcastListener implements EventSubscriberInterface
         $output = $event->getOutput();
 
         if ($output instanceof OutputYoutube) {
-            $this->youtubeLiveService->transitionState($liveBroadcast, $output->getChannel(), YoutubeEvent::STATE_REMOTE_LIVE);
+            $channel = $output->getChannel();
+            $this->youtubeLiveService->transitionState($liveBroadcast, $channel, YoutubeEvent::STATE_REMOTE_LIVE);
         }
     }
 
