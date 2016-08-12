@@ -266,7 +266,7 @@ class YouTubeLiveService
      * @param ChannelYoutube $channelYoutube
      * @return mixed
      */
-    public function getStreamState(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube)
+    public function getBroadcastStatus(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube)
     {
         $this->getAccessToken($channelYoutube->getRefreshToken());
 
@@ -277,17 +277,10 @@ class YouTubeLiveService
 
         $youtubeBroadcast = $this->getExternalBroadcastById($youtubeId);
 
-        /** @var \Google_Service_YouTube_LiveBroadcastContentDetails $youtubeDetails */
-        $youtubeDetails = $youtubeBroadcast->getContentDetails();
-        $streamId = $youtubeDetails->getBoundStreamId();
+        /** @var \Google_Service_YouTube_LiveBroadcastStatus $youtubeStatus */
+        $youtubeStatus = $youtubeBroadcast->getStatus();
 
-        /** @var \Google_Service_YouTube_LiveStream $streamResponse */
-        $streamResponse = $this->getExternalStreamById($streamId);
-
-        /** @var \Google_Service_YouTube_LiveStreamStatus $status */
-        $statusses = $streamResponse->getStatus();
-
-        return $statusses->getStreamStatus();
+        return $youtubeStatus->getLifeCycleStatus();
     }
 
     /**
@@ -447,7 +440,7 @@ class YouTubeLiveService
      */
     protected function getExternalBroadcastById($youtubeId)
     {
-        $broadcasts = $this->youtubeApiClient->liveBroadcasts->listLiveBroadcasts('contentDetails', array(
+        $broadcasts = $this->youtubeApiClient->liveBroadcasts->listLiveBroadcasts('status,contentDetails', array(
             'id' => $youtubeId,
         ))->getItems();
 

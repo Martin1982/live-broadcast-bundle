@@ -16,26 +16,44 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
  */
 class YoutubeEvent
 {
-    const STATE_LOCAL_READY = 0;
-    const STATE_LOCAL_INACTIVE = 1;
-    const STATE_LOCAL_ACTIVE = 2;
-    const STATE_LOCAL_TESTING = 3;
-    const STATE_LOCAL_LIVE = 4;
-    const STATE_LOCAL_COMPLETE = 5;
 
+    const STATE_LOCAL_CREATED = 0;
+    const STATE_LOCAL_READY = 1;
+    const STATE_LOCAL_TEST_STARTING = 2;
+    const STATE_LOCAL_TESTING = 3;
+    const STATE_LOCAL_REVOKED = 4;
+    const STATE_LOCAL_ABANDONED = 5;
+    const STATE_LOCAL_LIVE_STARTING = 6;
+    const STATE_LOCAL_LIVE = 7;
+    const STATE_LOCAL_RECLAIMED = 8;
+    const STATE_LOCAL_COMPLETE = 9;
+    
+    const STATE_REMOTE_CREATED = 'created';
     const STATE_REMOTE_READY = 'ready';
-    const STATE_REMOTE_INACTIVE = 'inactive';
-    const STATE_REMOTE_ACTIVE = 'active';
+    const STATE_REMOTE_TEST_STARTING = 'testStarting';
     const STATE_REMOTE_TESTING = 'testing';
+    const STATE_REMOTE_REVOKED = 'revoked';
+    const STATE_REMOTE_ABANDONED = 'abandoned';
+    const STATE_REMOTE_LIVE_STARTING = 'liveStarting';
     const STATE_REMOTE_LIVE = 'live';
+    const STATE_REMOTE_RECLAIMED = 'reclaimed';
     const STATE_REMOTE_COMPLETE = 'complete';
 
+    /**
+     * Remote / local state mapping
+     *
+     * @var array
+     */
     private $stateMapping = array(
+        self::STATE_LOCAL_CREATED => self::STATE_REMOTE_CREATED,
         self::STATE_LOCAL_READY => self::STATE_REMOTE_READY,
-        self::STATE_LOCAL_INACTIVE => self::STATE_REMOTE_INACTIVE,
-        self::STATE_LOCAL_ACTIVE => self::STATE_REMOTE_ACTIVE,
+        self::STATE_LOCAL_TEST_STARTING => self::STATE_REMOTE_TEST_STARTING,
         self::STATE_LOCAL_TESTING => self::STATE_REMOTE_TESTING,
+        self::STATE_LOCAL_REVOKED => self::STATE_REMOTE_REVOKED,
+        self::STATE_LOCAL_ABANDONED => self::STATE_REMOTE_ABANDONED,
+        self::STATE_LOCAL_LIVE_STARTING => self::STATE_REMOTE_LIVE_STARTING,
         self::STATE_LOCAL_LIVE => self::STATE_REMOTE_LIVE,
+        self::STATE_LOCAL_RECLAIMED => self::STATE_REMOTE_RECLAIMED,
         self::STATE_LOCAL_COMPLETE => self::STATE_REMOTE_COMPLETE,
     );
 

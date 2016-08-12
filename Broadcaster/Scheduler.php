@@ -8,6 +8,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
+use Martin1982\LiveBroadcastBundle\Event\SwitchMonitorEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Psr\Log\LoggerInterface;
@@ -116,6 +117,11 @@ class Scheduler
                 if ($runningBroadcast->isBroadcasting($plannedBroadcast, $channel)) {
                     $isChannelBroadcasting = true;
                 }
+
+                if ($runningBroadcast->isMonitor()) {
+                    $switchMonitorEvent = new SwitchMonitorEvent($runningBroadcast, $plannedBroadcast, $channel);
+                    $this->dispatcher->dispatch(SwitchMonitorEvent::NAME, $switchMonitorEvent);
+                }
             }
 
             if (!$isChannelBroadcasting) {
@@ -176,7 +182,8 @@ class Scheduler
                 $this->schedulerCommands->getBroadcastId($processString),
                 $this->schedulerCommands->getProcessId($processString),
                 $this->schedulerCommands->getChannelId($processString),
-                $this->schedulerCommands->getEnvironment($processString)
+                $this->schedulerCommands->getEnvironment($processString),
+                $this->schedulerCommands->isMonitorStream($processString)
             );
 
             if ($runningItem->isValid($this->schedulerCommands->getKernelEnvironment())) {

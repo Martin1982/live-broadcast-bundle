@@ -118,7 +118,7 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
      */
     protected function updateEventState(YoutubeEvent $testableEvent)
     {
-        $remoteState = $this->youtubeLiveService->getStreamState(
+        $remoteState = $this->youtubeLiveService->getBroadcastStatus(
             $testableEvent->getBroadcast(),
             $testableEvent->getChannel()
         );
@@ -205,7 +205,7 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
             $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
             $event = $eventRepository->find($process->getBroadcastId());
 
-            if ($event && $event->getLastKnownState() >= YoutubeEvent::STATE_LOCAL_TESTING) {
+            if ($event && $event->getLastKnownState() >= YoutubeEvent::STATE_LOCAL_COMPLETE) {
                 $this->commands->stopProcess($process->getProcessId());
             }
         }

@@ -35,6 +35,11 @@ services:
       arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.scheduler.commands", "@live.broadcast.youtubelive.service", "@kernel", "@router", "%live_broadcast_yt_redirect_route%"]
       tags:
           - { name: kernel.event_subscriber }
+  live.broadcast.youtube_switch_monitor_listener:
+      class: Martin1982\LiveBroadcastBundle\EventListener\YoutubeSwitchMonitorListener
+      arguments: ["@live.broadcast.scheduler.commands", "@live.broadcast.streamoutput.service", "@live.broadcast.youtubelive.service", "@router", "%live_broadcast_yt_redirect_route%"]
+      tags:
+          - { name: kernel.event_subscriber }
 
   live.broadcast.facebooklive.service:
       class: Martin1982\LiveBroadcastBundle\Service\FacebookLiveService

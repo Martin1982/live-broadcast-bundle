@@ -3,6 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\YoutubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYoutube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
@@ -48,7 +49,7 @@ class YoutubePostBroadcastListener implements EventSubscriberInterface
         $output = $event->getOutput();
 
         if ($output instanceof OutputYoutube) {
-            $this->youtubeLiveService->transitionState($liveBroadcast, $output->getChannel());
+            $this->youtubeLiveService->transitionState($liveBroadcast, $output->getChannel(), YoutubeEvent::STATE_REMOTE_LIVE);
         }
     }
 
