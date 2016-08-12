@@ -51,7 +51,7 @@ class CRUDController extends Controller
         $session = $request->getSession();
 
         if ($request->get('cleartoken')) {
-            $this->clearToken($session);
+            $this->clearToken($session, $youTubeService);
         }
 
         $requestCode = $request->get('code');
@@ -65,7 +65,7 @@ class CRUDController extends Controller
     /**
      * @param Session $session
      */
-    protected function clearToken(Session $session)
+    protected function clearToken(Session $session, YouTubeLiveService $youTubeService)
     {
         $session->remove('youtubeRefreshToken');
         $youTubeService->clearToken();
