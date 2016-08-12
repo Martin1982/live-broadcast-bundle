@@ -3,13 +3,13 @@
 namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
- * Class OutputYoutube.
+ * Class OutputYouTube.
  */
-class OutputYoutube implements OutputInterface
+class OutputYouTube implements OutputInterface
 {
     /**
      * @var string
@@ -17,7 +17,7 @@ class OutputYoutube implements OutputInterface
     private $streamUrl;
 
     /**
-     * @var ChannelYoutube
+     * @var ChannelYouTube
      */
     private $channel;
 
@@ -32,7 +32,7 @@ class OutputYoutube implements OutputInterface
     }
 
     /**
-     * @return ChannelYoutube
+     * @return ChannelYouTube
      */
     public function getChannel()
     {
@@ -65,7 +65,7 @@ class OutputYoutube implements OutputInterface
      */
     public function getChannelType()
     {
-        return ChannelYoutube::class;
+        return ChannelYouTube::class;
     }
 
     /**

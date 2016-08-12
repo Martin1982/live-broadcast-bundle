@@ -4,7 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -30,7 +30,7 @@ class ChannelAdmin extends AbstractAdmin
             return 'LiveBroadcastBundle:CRUD:channel_facebook_edit.html.twig';
         }
 
-        if ($subject instanceof ChannelYoutube && $name ==='edit') {
+        if ($subject instanceof ChannelYouTube && $name ==='edit') {
             return 'LiveBroadcastBundle:CRUD:channel_youtube_edit.html.twig';
         }
 
@@ -54,7 +54,7 @@ class ChannelAdmin extends AbstractAdmin
         $subject = $this->getSubject();
 
         $nameClasses = 'generic-channel-name';
-        if ($subject instanceof ChannelYoutube) {
+        if ($subject instanceof ChannelYouTube) {
             $nameClasses = 'generic-channel-name input-yt-channelname';
         }
 
@@ -79,8 +79,8 @@ class ChannelAdmin extends AbstractAdmin
             ));
         }
 
-        if ($subject instanceof ChannelYoutube) {
-            $formMapper->add('youtubeChannelName', 'text', array(
+        if ($subject instanceof ChannelYouTube) {
+            $formMapper->add('youTubeChannelName', 'text', array(
                 'attr' => array('class' => 'input-yt-channelname', 'readonly' => 'readonly')
             ));
 

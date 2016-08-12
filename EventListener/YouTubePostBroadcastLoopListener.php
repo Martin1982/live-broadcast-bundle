@@ -6,20 +6,20 @@ use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
 use Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsInterface;
 use Martin1982\LiveBroadcastBundle\Entity\Input\InputMonitorStream;
-use Martin1982\LiveBroadcastBundle\Entity\Metadata\YoutubeEvent;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
-use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYoutube;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
+use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
+use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Router;
 
 /**
- * Class YoutubePostBroadcastLoopListener
+ * Class YouTubePostBroadcastLoopListener
  * @package Martin1982\LiveBroadcastBundle\EventListener
  */
-class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
+class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
 {
     /**
      * Test video duration in seconds
@@ -38,18 +38,18 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
     protected $entityManager;
 
     /**
-     * @var YouTubeLiveService
+     * @var YouTubeApiService
      */
-    protected $youtubeLiveService;
+    protected $youTubeApiService;
 
     /** @var KernelInterface  */
     protected $kernel;
 
     /**
-     * YoutubePostBroadcastLoopListener constructor.
+     * YouTubePostBroadcastLoopListener constructor.
      * @param EntityManager $entityManager
      * @param SchedulerCommandsInterface $commands
-     * @param YouTubeLiveService $youTubeLiveService
+     * @param YouTubeApiService $youTubeApiService
      * @param KernelInterface $kernel
      * @param Router $router
      * @param $redirectRoute
@@ -57,14 +57,14 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
     public function __construct(
         EntityManager $entityManager,
         SchedulerCommandsInterface $commands,
-        YouTubeLiveService $youTubeLiveService,
+        YouTubeApiService $youTubeApiService,
         KernelInterface $kernel,
         Router $router,
         $redirectRoute
     ) {
         $this->entityManager = $entityManager;
         $this->commands = $commands;
-        $this->youtubeLiveService = $youTubeLiveService;
+        $this->youTubeApiService = $youTubeApiService;
         $this->kernel = $kernel;
 
         $redirectUri = $router->generate(
@@ -72,7 +72,7 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
             array(),
             Router::ABSOLUTE_URL
         );
-        $this->youtubeLiveService->initApiClients($redirectUri);
+        $this->youTubeApiService->initApiClients($redirectUri);
     }
 
     /**
@@ -83,7 +83,7 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
     public function onPostBroadcastLoop(PostBroadcastLoopEvent $event)
     {
         $entityManager = $this->entityManager;
-        $eventRepository = $entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
+        $eventRepository = $entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
 
         $runningProcesses = $this->commands->getRunningProcesses();
         $testableEvents = $eventRepository->getTestableEvents();
@@ -91,7 +91,7 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
         foreach ($testableEvents as $testableEvent) {
             $this->updateEventState($testableEvent);
 
-            if ($testableEvent->getLastKnownState() >= YoutubeEvent::STATE_LOCAL_TESTING) {
+            if ($testableEvent->getLastKnownState() >= YouTubeEvent::STATE_LOCAL_TESTING) {
                 continue;
             }
 
@@ -114,11 +114,11 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
     }
 
     /**
-     * @param YoutubeEvent $testableEvent
+     * @param YouTubeEvent $testableEvent
      */
-    protected function updateEventState(YoutubeEvent $testableEvent)
+    protected function updateEventState(YouTubeEvent $testableEvent)
     {
-        $remoteState = $this->youtubeLiveService->getBroadcastStatus(
+        $remoteState = $this->youTubeApiService->getBroadcastStatus(
             $testableEvent->getBroadcast(),
             $testableEvent->getChannel()
         );
@@ -130,11 +130,11 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
     }
 
     /**
-     * @param YoutubeEvent $event
+     * @param YouTubeEvent $event
      * @param RunningBroadcast[] $runningProcesses
      * @return bool
      */
-    protected function hasRunningTestStream(YoutubeEvent $event, $runningProcesses)
+    protected function hasRunningTestStream(YouTubeEvent $event, $runningProcesses)
     {
         $broadcast = $event->getBroadcast();
         $channel = $event->getChannel();
@@ -156,18 +156,18 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
     /**
      * Start a test stream with a placeholder image
      *
-     * @param YoutubeEvent $event
+     * @param YouTubeEvent $event
      */
-    protected function startTestStream(YoutubeEvent $event)
+    protected function startTestStream(YouTubeEvent $event)
     {
         $placeholderImage = $this->kernel->locateResource('@LiveBroadcastBundle') . '/Resources/images/placeholder.png';
 
         $inputService = new InputMonitorStream();
         $inputService->setMonitorImage($placeholderImage);
 
-        $streamUrl = $this->youtubeLiveService->getStreamUrl($event->getBroadcast(), $event->getChannel());
+        $streamUrl = $this->youTubeApiService->getStreamUrl($event->getBroadcast(), $event->getChannel());
 
-        $outputService = new OutputYoutube();
+        $outputService = new OutputYouTube();
         $outputService->setChannel($event->getChannel());
         $outputService->setStreamUrl($streamUrl);
 
@@ -202,10 +202,10 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
                 continue;
             }
 
-            $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
+            $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
             $event = $eventRepository->find($process->getBroadcastId());
 
-            if ($event && $event->getLastKnownState() >= YoutubeEvent::STATE_LOCAL_COMPLETE) {
+            if ($event && $event->getLastKnownState() >= YouTubeEvent::STATE_LOCAL_COMPLETE) {
                 $this->commands->stopProcess($process->getProcessId());
             }
         }
@@ -214,12 +214,12 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
     /**
      * Try to transition the state of the stream
      *
-     * @param YoutubeEvent $event
+     * @param YouTubeEvent $event
      */
-    protected function transitionState(YoutubeEvent $event)
+    protected function transitionState(YouTubeEvent $event)
     {
-        $liveService = $this->youtubeLiveService;
-        $liveService->transitionState($event->getBroadcast(), $event->getChannel(), YoutubeEvent::STATE_REMOTE_TESTING);
+        $liveService = $this->youTubeApiService;
+        $liveService->transitionState($event->getBroadcast(), $event->getChannel(), YouTubeEvent::STATE_REMOTE_TESTING);
     }
 
     /**

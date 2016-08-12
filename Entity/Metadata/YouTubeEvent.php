@@ -3,18 +3,18 @@
 namespace Martin1982\LiveBroadcastBundle\Entity\Metadata;
 
 use Doctrine\ORM\Mapping as ORM;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
- * Class YoutubeEvent
+ * Class YouTubeEvent
  * @package Martin1982\LiveBroadcastBundle\Entity\Metadata
  *
  * @ORM\Table(name="live_broadcast_youtube_event", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity(repositoryClass="Martin1982\LiveBroadcastBundle\Entity\Metadata\YoutubeEventRepository")
+ * @ORM\Entity(repositoryClass="Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEventRepository")
  */
-class YoutubeEvent
+class YouTubeEvent
 {
 
     const STATE_LOCAL_CREATED = 0;
@@ -75,9 +75,9 @@ class YoutubeEvent
     protected $broadcast;
 
     /**
-     * @var ChannelYoutube
+     * @var ChannelYouTube
      *
-     * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube")
+     * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube")
      * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", unique=false)
      */
     protected $channel;
@@ -87,7 +87,7 @@ class YoutubeEvent
      *
      * @ORM\Column(name="youtube_id", type="string", length=128, nullable=false)
      */
-    protected $youtubeId;
+    protected $youTubeId;
 
     /**
      * @var string
@@ -114,7 +114,7 @@ class YoutubeEvent
 
     /**
      * @param mixed $broadcast
-     * @return YoutubeEvent
+     * @return YouTubeEvent
      */
     public function setBroadcast($broadcast)
     {
@@ -124,7 +124,7 @@ class YoutubeEvent
     }
 
     /**
-     * @return ChannelYoutube
+     * @return ChannelYouTube
      */
     public function getChannel()
     {
@@ -133,7 +133,7 @@ class YoutubeEvent
 
     /**
      * @param mixed $channel
-     * @return YoutubeEvent
+     * @return YouTubeEvent
      */
     public function setChannel($channel)
     {
@@ -145,18 +145,18 @@ class YoutubeEvent
     /**
      * @return mixed
      */
-    public function getYoutubeId()
+    public function getYouTubeId()
     {
-        return $this->youtubeId;
+        return $this->youTubeId;
     }
 
     /**
-     * @param mixed $youtubeId
-     * @return YoutubeEvent
+     * @param mixed $youTubeId
+     * @return YouTubeEvent
      */
-    public function setYoutubeId($youtubeId)
+    public function setYouTubeId($youTubeId)
     {
-        $this->youtubeId = $youtubeId;
+        $this->youTubeId = $youTubeId;
 
         return $this;
     }
@@ -171,7 +171,7 @@ class YoutubeEvent
 
     /**
      * @param string $lastKnownState
-     * @return YoutubeEvent
+     * @return YouTubeEvent
      */
     public function setLastKnownState($lastKnownState)
     {

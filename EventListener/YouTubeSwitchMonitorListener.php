@@ -4,17 +4,21 @@ namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
 use Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsInterface;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Entity\Metadata\YoutubeEvent;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\SwitchMonitorEvent;
-use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYoutube;
+use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
+use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Router;
 
-class YoutubeSwitchMonitorListener implements EventSubscriberInterface
+/**
+ * Class YouTubeSwitchMonitorListener
+ * @package Martin1982\LiveBroadcastBundle\EventListener
+ */
+class YouTubeSwitchMonitorListener implements EventSubscriberInterface
 {
     /**
      * @var RunningBroadcast
@@ -27,7 +31,7 @@ class YoutubeSwitchMonitorListener implements EventSubscriberInterface
     protected $plannedBroadcast;
 
     /**
-     * @var ChannelYoutube
+     * @var ChannelYouTube
      */
     protected $channel;
 
@@ -42,35 +46,35 @@ class YoutubeSwitchMonitorListener implements EventSubscriberInterface
     protected $outputService;
 
     /**
-     * @var YouTubeLiveService
+     * @var YouTubeApiService
      */
-    protected $youtubeLiveService;
+    protected $youTubeApiService;
 
     /**
-     * YoutubeSwitchMonitorListener constructor.
+     * YouTubeSwitchMonitorListener constructor.
      * @param SchedulerCommandsInterface $command
      * @param StreamOutputService $outputService
-     * @param YouTubeLiveService $youtubeLiveService
+     * @param YouTubeApiService $youTubeApiService
      * @param Router $router
      * @param $redirectRoute
      */
     public function __construct(
         SchedulerCommandsInterface $command,
         StreamOutputService $outputService,
-        YouTubeLiveService $youtubeLiveService,
+        YouTubeApiService $youTubeApiService,
         Router $router,
         $redirectRoute
     ) {
         $this->command = $command;
         $this->outputService = $outputService;
-        $this->youtubeLiveService = $youtubeLiveService;
+        $this->youTubeApiService = $youTubeApiService;
 
         $redirectUri = $router->generate(
             $redirectRoute,
             array(),
             Router::ABSOLUTE_URL
         );
-        $this->youtubeLiveService->initApiClients($redirectUri);
+        $this->youTubeApiService->initApiClients($redirectUri);
     }
 
     /**
@@ -82,10 +86,10 @@ class YoutubeSwitchMonitorListener implements EventSubscriberInterface
         $this->plannedBroadcast = $event->getPlannedBroadcast();
         $this->channel = $event->getChannel();
 
-        $this->youtubeLiveService->transitionState(
+        $this->youTubeApiService->transitionState(
             $this->plannedBroadcast,
             $this->channel,
-            YoutubeEvent::STATE_REMOTE_LIVE
+            YouTubeEvent::STATE_REMOTE_LIVE
         );
 
         $this->stopMonitorStream();
@@ -114,9 +118,9 @@ class YoutubeSwitchMonitorListener implements EventSubscriberInterface
     protected function startBroadcast()
     {
         $input = $this->plannedBroadcast->getInput()->generateInputCmd();
-        /** @var OutputYoutube $outputService */
+        /** @var OutputYouTube $outputService */
         $outputService = $this->outputService->getOutputInterface($this->channel);
-        $outputService->setStreamUrl($this->youtubeLiveService->getStreamUrl($this->plannedBroadcast, $this->channel));
+        $outputService->setStreamUrl($this->youTubeApiService->getStreamUrl($this->plannedBroadcast, $this->channel));
 
         $output = $outputService->generateOutputCmd();
 

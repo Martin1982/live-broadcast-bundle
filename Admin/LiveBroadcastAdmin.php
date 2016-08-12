@@ -2,9 +2,9 @@
 
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
+use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -76,9 +76,9 @@ class LiveBroadcastAdmin extends AbstractAdmin
     public function postPersist($broadcast)
     {
         foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof ChannelYoutube) {
-                $youtubeService = $this->getYouTubeService();
-                $youtubeService->createLiveEvent($broadcast, $channel);
+            if ($channel instanceof ChannelYouTube) {
+                $youTubeService = $this->getYouTubeService();
+                $youTubeService->createLiveEvent($broadcast, $channel);
             }
         }
 
@@ -91,9 +91,9 @@ class LiveBroadcastAdmin extends AbstractAdmin
     public function preUpdate($broadcast)
     {
         foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof ChannelYoutube) {
-                $youtubeService = $this->getYouTubeService();
-                $youtubeService->updateLiveEvent($broadcast, $channel);
+            if ($channel instanceof ChannelYouTube) {
+                $youTubeService = $this->getYouTubeService();
+                $youTubeService->updateLiveEvent($broadcast, $channel);
             }
         }
 
@@ -106,9 +106,9 @@ class LiveBroadcastAdmin extends AbstractAdmin
     public function preRemove($broadcast)
     {
         foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof ChannelYoutube) {
-                $youtubeService = $this->getYouTubeService();
-                $youtubeService->removeLiveEvent($broadcast, $channel);
+            if ($channel instanceof ChannelYouTube) {
+                $youTubeService = $this->getYouTubeService();
+                $youTubeService->removeLiveEvent($broadcast, $channel);
             }
         }
 
@@ -118,11 +118,11 @@ class LiveBroadcastAdmin extends AbstractAdmin
     /**
      * Get the YouTube Live service
      *
-     * @return YouTubeLiveService
+     * @return YouTubeApiService
      */
     protected function getYouTubeService()
     {
-        $service = $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubelive.service');
+        $service = $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubeapi.service');
         $router = $this->getConfigurationPool()->getContainer()->get('router');
 
         $redirectUri = $router->generate(

@@ -82,7 +82,7 @@ class Scheduler
      */
     public function applySchedule()
     {
-        $this->getRunningBroadcasts();
+        $this->updateRunningBroadcasts();
         $this->stopExpiredBroadcasts();
         $this->getPlannedBroadcasts();
         $this->startPlannedBroadcasts();
@@ -100,7 +100,7 @@ class Scheduler
             $this->startBroadcastOnChannels($plannedBroadcast);
         }
 
-        $this->getRunningBroadcasts();
+        $this->updateRunningBroadcasts();
     }
 
     /**
@@ -163,7 +163,7 @@ class Scheduler
             }
         }
 
-        $this->getRunningBroadcasts();
+        $this->updateRunningBroadcasts();
     }
 
     /**
@@ -171,10 +171,10 @@ class Scheduler
      *
      * @return RunningBroadcast[]
      */
-    public function getRunningBroadcasts()
+    public function updateRunningBroadcasts()
     {
         $this->runningBroadcasts = array();
-        $this->logger->debug('Get running broadcasts');
+        $this->logger->debug('Retrieve running broadcasts');
         $processStrings = $this->schedulerCommands->getRunningProcesses();
 
         foreach ($processStrings as $processString) {

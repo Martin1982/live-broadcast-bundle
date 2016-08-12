@@ -4,38 +4,38 @@ namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
-use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYoutube;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
+use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
+use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Router;
 
 /**
- * Class YoutubePreBroadcastListener
+ * Class YouTubePreBroadcastListener
  * @package Martin1982\LiveBroadcastBundle\EventListener
  */
-class YoutubePreBroadcastListener implements EventSubscriberInterface
+class YouTubePreBroadcastListener implements EventSubscriberInterface
 {
     /**
-     * @var YoutubeLiveService
+     * @var YouTubeApiService
      */
-    private $youtubeLiveService;
+    private $youTubeApiService;
 
     /**
-     * YoutubePreBroadcastListener constructor.
-     * @param YouTubeLiveService $youtubeLiveService
+     * YouTubePreBroadcastListener constructor.
+     * @param YouTubeApiService $youTubeApiService
      * @param Router $router
      * @param string $redirectRoute
      */
-    public function __construct(YouTubeLiveService $youtubeLiveService, Router $router, $redirectRoute)
+    public function __construct(YouTubeApiService $youTubeApiService, Router $router, $redirectRoute)
     {
-        $this->youtubeLiveService = $youtubeLiveService;
+        $this->youTubeApiService = $youTubeApiService;
 
         $redirectUri = $router->generate(
             $redirectRoute,
             array(),
             Router::ABSOLUTE_URL
         );
-        $this->youtubeLiveService->initApiClients($redirectUri);
+        $this->youTubeApiService->initApiClients($redirectUri);
     }
 
     /**
@@ -47,8 +47,8 @@ class YoutubePreBroadcastListener implements EventSubscriberInterface
         $liveBroadcast = $event->getLiveBroadcast();
         $output = $event->getOutput();
 
-        if ($output instanceof OutputYoutube) {
-            $streamUrl = $this->youtubeLiveService->getStreamUrl($liveBroadcast, $output->getChannel());
+        if ($output instanceof OutputYouTube) {
+            $streamUrl = $this->youTubeApiService->getStreamUrl($liveBroadcast, $output->getChannel());
             if ($streamUrl) {
                 $output->setStreamUrl($streamUrl);
             }

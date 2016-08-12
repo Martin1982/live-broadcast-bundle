@@ -1,6 +1,7 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
+
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**

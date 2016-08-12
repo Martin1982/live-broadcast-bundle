@@ -3,17 +3,17 @@
 namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Doctrine\ORM\EntityManager;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Entity\Metadata\YoutubeEvent;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class YouTubeLiveService
+ * Class YouTubeApiService
  * @package Martin1982\LiveBroadcastBundle\Service
  */
-class YouTubeLiveService
+class YouTubeApiService
 {
     /**
      * @var string
@@ -38,7 +38,7 @@ class YouTubeLiveService
     /**
      * @var \Google_Service_YouTube
      */
-    protected $youtubeApiClient;
+    protected $youTubeApiClient;
 
     /**
      * @var EntityManager
@@ -46,7 +46,7 @@ class YouTubeLiveService
     protected $entityManager;
 
     /**
-     * YouTubeLiveService constructor.
+     * YouTubeApiService constructor.
      * @param string $clientId
      * @param string $clientSecret
      * @param EntityManager $entityManager
@@ -85,7 +85,7 @@ class YouTubeLiveService
         $googleApiClient->setRedirectUri($oAuthRedirectUrl);
 
         $this->googleApiClient = $googleApiClient;
-        $this->youtubeApiClient = new \Google_Service_YouTube($googleApiClient);
+        $this->youTubeApiClient = new \Google_Service_YouTube($googleApiClient);
     }
 
     /**
@@ -174,7 +174,7 @@ class YouTubeLiveService
         $parts = 'id,brandingSettings';
         $opts = array('mine' => true);
 
-        $channels = $this->youtubeApiClient->channels->listChannels($parts, $opts);
+        $channels = $this->youTubeApiClient->channels->listChannels($parts, $opts);
 
         if ($channels->count()) {
             /** @var \Google_Service_YouTube_Channel $channel */
@@ -191,25 +191,24 @@ class YouTubeLiveService
 
     /**
      * @param LiveBroadcast $liveBroadcast
-     * @param ChannelYoutube $channelYoutube
+     * @param ChannelYouTube $channelYouTube
      * @return string
      */
-    public function getStreamUrl(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube)
+    public function getStreamUrl(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube)
     {
-        $this->getAccessToken($channelYoutube->getRefreshToken());
-        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
-        $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYoutube);
+        $this->getAccessToken($channelYouTube->getRefreshToken());
+        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
+        $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYouTube);
 
-        $youtubeId = $event->getYoutubeId();
-        $youtubeBroadcast = $this->getExternalBroadcastById($youtubeId);
+        $youTubeId = $event->getYouTubeId();
+        $youTubeBroadcast = $this->getExternalBroadcastById($youTubeId);
 
-        if (!$youtubeBroadcast) {
+        if (!$youTubeBroadcast) {
             return;
         }
 
-        /** @var \Google_Service_YouTube_LiveBroadcastContentDetails $youtubeSnippet */
-        $youtubeDetails = $youtubeBroadcast->getContentDetails();
-        $streamId = $youtubeDetails->getBoundStreamId();
+        $youTubeDetails = $youTubeBroadcast->getContentDetails();
+        $streamId = $youTubeDetails->getBoundStreamId();
 
         $streamResponse = $this->getExternalStreamById($streamId);
 
@@ -222,83 +221,83 @@ class YouTubeLiveService
     /**
      * @param LiveBroadcast $broadcast
      */
-    public function createLiveEvent(LiveBroadcast $broadcast, ChannelYoutube $channel)
+    public function createLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
-        $youtubeData = $this->setupLivestream($broadcast, $channel);
+        $youTubeData = $this->setupLivestream($broadcast, $channel);
 
-        $youtubeEvent = new YoutubeEvent();
-        $youtubeEvent->setBroadcast($broadcast);
-        $youtubeEvent->setChannel($channel);
-        $youtubeEvent->setYoutubeId($youtubeData->getId());
+        $youTubeEvent = new YouTubeEvent();
+        $youTubeEvent->setBroadcast($broadcast);
+        $youTubeEvent->setChannel($channel);
+        $youTubeEvent->setYouTubeId($youTubeData->getId());
 
-        $this->entityManager->persist($youtubeEvent);
+        $this->entityManager->persist($youTubeEvent);
         $this->entityManager->flush();
     }
 
     /**
      * @param LiveBroadcast $broadcast
-     * @param ChannelYoutube $channel
+     * @param ChannelYouTube $channel
      */
-    public function updateLiveEvent(LiveBroadcast $broadcast, ChannelYoutube $channel)
+    public function updateLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
-        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
-        $youtubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
+        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
+        $youTubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
 
-        $this->updateLiveStream($youtubeEvent);
+        $this->updateLiveStream($youTubeEvent);
     }
 
     /**
      * @param LiveBroadcast $broadcast
-     * @param ChannelYoutube $channel
+     * @param ChannelYouTube $channel
      */
-    public function removeLiveEvent(LiveBroadcast $broadcast, ChannelYoutube $channel)
+    public function removeLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
-        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
-        $youtubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
+        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
+        $youTubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
 
-        $this->removeLivestream($youtubeEvent);
-        $this->entityManager->remove($youtubeEvent);
+        $this->removeLivestream($youTubeEvent);
+        $this->entityManager->remove($youTubeEvent);
         $this->entityManager->flush();
     }
 
     /**
      * @param LiveBroadcast $liveBroadcast
-     * @param ChannelYoutube $channelYoutube
+     * @param ChannelYouTube $channelYouTube
      * @return mixed
      */
-    public function getBroadcastStatus(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube)
+    public function getBroadcastStatus(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube)
     {
-        $this->getAccessToken($channelYoutube->getRefreshToken());
+        $this->getAccessToken($channelYouTube->getRefreshToken());
 
-        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
-        $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYoutube);
+        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
+        $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYouTube);
 
-        $youtubeId = $event->getYoutubeId();
+        $youTubeId = $event->getYouTubeId();
 
-        $youtubeBroadcast = $this->getExternalBroadcastById($youtubeId);
+        $youTubeBroadcast = $this->getExternalBroadcastById($youTubeId);
 
-        /** @var \Google_Service_YouTube_LiveBroadcastStatus $youtubeStatus */
-        $youtubeStatus = $youtubeBroadcast->getStatus();
+        /** @var \Google_Service_YouTube_LiveBroadcastStatus $youTubeStatus */
+        $youTubeStatus = $youTubeBroadcast->getStatus();
 
-        return $youtubeStatus->getLifeCycleStatus();
+        return $youTubeStatus->getLifeCycleStatus();
     }
 
     /**
      * @param LiveBroadcast $liveBroadcast
-     * @param ChannelYoutube $channelYoutube
+     * @param ChannelYouTube $channelYouTube
      * @param string $state
      */
-    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYoutube $channelYoutube, $state)
+    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube, $state)
     {
-        $this->getAccessToken($channelYoutube->getRefreshToken());
+        $this->getAccessToken($channelYouTube->getRefreshToken());
 
-        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YoutubeEvent');
-        $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYoutube);
+        $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
+        $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYouTube);
 
-        $youtubeId = $event->getYoutubeId();
+        $youTubeId = $event->getYouTubeId();
 
         try {
-            $this->youtubeApiClient->liveBroadcasts->transition($state, $youtubeId, 'status');
+            $this->youTubeApiClient->liveBroadcasts->transition($state, $youTubeId, 'status');
         } catch (\Google_Service_Exception $exception) {
             $this->logger->warning($exception->getMessage());
         }
@@ -306,12 +305,12 @@ class YouTubeLiveService
 
     /**
      * @param LiveBroadcast $liveBroadcast
-     * @param ChannelYoutube $channel
+     * @param ChannelYouTube $channel
      * @param string $status
      *
      * @return \Google_Service_YouTube_LiveBroadcast
      */
-    protected function setupLivestream(LiveBroadcast $liveBroadcast, ChannelYoutube $channel, $status = 'public')
+    protected function setupLivestream(LiveBroadcast $liveBroadcast, ChannelYouTube $channel, $status = 'public')
     {
         $this->getAccessToken($channel->getRefreshToken());
 
@@ -319,7 +318,7 @@ class YouTubeLiveService
         $streamsResponse = $this->createStream($liveBroadcast->getName());
 
         // Bind Broadcast and Stream
-        $bindBroadcastResponse = $this->youtubeApiClient->liveBroadcasts->bind(
+        $bindBroadcastResponse = $this->youTubeApiClient->liveBroadcasts->bind(
             $broadcastResponse->getId(),
             'id,contentDetails',
             array('streamId' => $streamsResponse->getId())
@@ -331,16 +330,16 @@ class YouTubeLiveService
     /**
      * Edit a planned live event
      *
-     * @param YoutubeEvent $event
+     * @param YouTubeEvent $event
      */
-    protected function updateLiveStream(YoutubeEvent $event)
+    protected function updateLiveStream(YouTubeEvent $event)
     {
         $channel = $event->getChannel();
         $this->getAccessToken($channel->getRefreshToken());
         $liveBroadcast = $event->getBroadcast();
 
-        $broadcastResponse = $this->updateBroadcast($liveBroadcast, 'public', $event->getYoutubeId());
-        $event->setYoutubeId($broadcastResponse->getId());
+        $broadcastResponse = $this->updateBroadcast($liveBroadcast, 'public', $event->getYouTubeId());
+        $event->setYouTubeId($broadcastResponse->getId());
 
         $this->entityManager->persist($event);
         $this->entityManager->flush();
@@ -349,13 +348,13 @@ class YouTubeLiveService
     /**
      * Remove a planned live event on YouTube
      *
-     * @param YoutubeEvent $event
+     * @param YouTubeEvent $event
      */
-    protected function removeLivestream(YoutubeEvent $event)
+    protected function removeLivestream(YouTubeEvent $event)
     {
         $channel = $event->getChannel();
         $this->getAccessToken($channel->getRefreshToken());
-        $this->youtubeApiClient->liveBroadcasts->delete($event->getYoutubeId());
+        $this->youTubeApiClient->liveBroadcasts->delete($event->getYouTubeId());
     }
 
     /**
@@ -369,10 +368,10 @@ class YouTubeLiveService
         $externalBroadcast = $this->setupBroadcast($liveBroadcast, $privacyStatus, $id);
 
         if ($id !== null) {
-            return $this->youtubeApiClient->liveBroadcasts->update('snippet,status', $externalBroadcast);
+            return $this->youTubeApiClient->liveBroadcasts->update('snippet,status', $externalBroadcast);
         }
 
-        return $this->youtubeApiClient->liveBroadcasts->insert('snippet,status', $externalBroadcast);
+        return $this->youTubeApiClient->liveBroadcasts->insert('snippet,status', $externalBroadcast);
     }
 
     /**
@@ -431,17 +430,17 @@ class YouTubeLiveService
         $streamInsert->setCdn($cdn);
         $streamInsert->setKind('youtube#liveStream');
 
-        return $this->youtubeApiClient->liveStreams->insert('snippet,cdn', $streamInsert);
+        return $this->youTubeApiClient->liveStreams->insert('snippet,cdn', $streamInsert);
     }
 
     /**
-     * @param string $youtubeId
+     * @param string $youTubeId
      * @return \Google_Service_YouTube_LiveBroadcast|null
      */
-    protected function getExternalBroadcastById($youtubeId)
+    protected function getExternalBroadcastById($youTubeId)
     {
-        $broadcasts = $this->youtubeApiClient->liveBroadcasts->listLiveBroadcasts('status,contentDetails', array(
-            'id' => $youtubeId,
+        $broadcasts = $this->youTubeApiClient->liveBroadcasts->listLiveBroadcasts('status,contentDetails', array(
+            'id' => $youTubeId,
         ))->getItems();
 
         if (!count($broadcasts)) {
@@ -457,7 +456,7 @@ class YouTubeLiveService
      */
     protected function getExternalStreamById($streamId)
     {
-        $streamItems = $this->youtubeApiClient->liveStreams->listLiveStreams('snippet,cdn,status', array(
+        $streamItems = $this->youTubeApiClient->liveStreams->listLiveStreams('snippet,cdn,status', array(
             'id' => $streamId,
         ))->getItems();
 

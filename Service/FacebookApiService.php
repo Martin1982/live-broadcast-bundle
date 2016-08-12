@@ -10,9 +10,9 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 
 /**
- * Class FacebookLiveService
+ * Class FacebookApiService
  */
-class FacebookLiveService
+class FacebookApiService
 {
     /**
      * @var FacebookSDK
@@ -20,7 +20,7 @@ class FacebookLiveService
     private $facebookSDK;
 
     /**
-     * FacebookLiveService constructor.
+     * FacebookApiService constructor.
      * @param string $applicationId
      * @param string $applicationSecret
      * @throws LiveBroadcastOutputException

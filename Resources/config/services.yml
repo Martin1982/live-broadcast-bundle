@@ -17,44 +17,44 @@ services:
 
   live.broadcast.facebook_pre_broadcast_listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\FacebookPreBroadcastListener
-      arguments: ["@live.broadcast.facebooklive.service"]
+      arguments: ["@live.broadcast.facebookapi.service"]
       tags:
           - { name: kernel.event_subscriber }
   live.broadcast.youtube_pre_broadcast_listener:
-      class: Martin1982\LiveBroadcastBundle\EventListener\YoutubePreBroadcastListener
-      arguments: ["@live.broadcast.youtubelive.service", "@router", "%live_broadcast_yt_redirect_route%"]
+      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubePreBroadcastListener
+      arguments: ["@live.broadcast.youtubeapi.service", "@router", "%live_broadcast_yt_redirect_route%"]
       tags:
           - { name: kernel.event_subscriber }
   live.broadcast.youtube_post_broadcast_listener:
-      class: Martin1982\LiveBroadcastBundle\EventListener\YoutubePostBroadcastListener
-      arguments: ["@live.broadcast.youtubelive.service", "@router", "%live_broadcast_yt_redirect_route%"]
+      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubePostBroadcastListener
+      arguments: ["@live.broadcast.youtubeapi.service", "@router", "%live_broadcast_yt_redirect_route%"]
       tags:
           - { name: kernel.event_subscriber }
   live.broadcast.youtube_post_broadcastloop_listener:
-      class: Martin1982\LiveBroadcastBundle\EventListener\YoutubePostBroadcastLoopListener
-      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.scheduler.commands", "@live.broadcast.youtubelive.service", "@kernel", "@router", "%live_broadcast_yt_redirect_route%"]
+      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubePostBroadcastLoopListener
+      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.scheduler.commands", "@live.broadcast.youtubeapi.service", "@kernel", "@router", "%live_broadcast_yt_redirect_route%"]
       tags:
           - { name: kernel.event_subscriber }
   live.broadcast.youtube_switch_monitor_listener:
-      class: Martin1982\LiveBroadcastBundle\EventListener\YoutubeSwitchMonitorListener
-      arguments: ["@live.broadcast.scheduler.commands", "@live.broadcast.streamoutput.service", "@live.broadcast.youtubelive.service", "@router", "%live_broadcast_yt_redirect_route%"]
+      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubeSwitchMonitorListener
+      arguments: ["@live.broadcast.scheduler.commands", "@live.broadcast.streamoutput.service", "@live.broadcast.youtubeapi.service", "@router", "%live_broadcast_yt_redirect_route%"]
       tags:
           - { name: kernel.event_subscriber }
 
-  live.broadcast.facebooklive.service:
-      class: Martin1982\LiveBroadcastBundle\Service\FacebookLiveService
+  live.broadcast.facebookapi.service:
+      class: Martin1982\LiveBroadcastBundle\Service\FacebookApiService
       arguments: ["%fb_app_id%", "%fb_app_secret%"]
-  live.broadcast.youtubelive.service:
-      class: Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService
+  live.broadcast.youtubeapi.service:
+      class: Martin1982\LiveBroadcastBundle\Service\YouTubeApiService
       arguments: ["%yt_client_id%", "%yt_client_secret%", "@doctrine.orm.entity_manager", "@logger"]
 
   live.broadcast.streamoutput.service:
       class: Martin1982\LiveBroadcastBundle\Service\StreamOutputService
 
   live.broadcast.output.youtube:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYoutube
+      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube
       tags:
-          - { name: live.broadcast.output, platform: 'Youtube' }
+          - { name: live.broadcast.output, platform: 'YouTube' }
   live.broadcast.output.facebook:
       class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook
       tags:

@@ -1,8 +1,8 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Entity\Input;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 
 /**
  * Class InputMonitorStream

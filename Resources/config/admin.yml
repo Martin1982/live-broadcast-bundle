@@ -25,7 +25,7 @@ services:
             - Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel
             - LiveBroadcastBundle:CRUD
         calls:
-            - [setSubClasses, [ { "Twitch Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch, "Facebook Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook, "YouTube Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube, "Ustream Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream } ] ]
+            - [setSubClasses, [ { "Twitch Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch, "Facebook Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook, "YouTube Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube, "Ustream Channel": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream } ] ]
 
     sonata.admin.streaminput:
         class: Martin1982\LiveBroadcastBundle\Admin\InputAdmin
@@ -46,7 +46,7 @@ services:
         arguments:
             - sonata.block.service.youtubeauth
             - "@templating"
-            - "@live.broadcast.youtubelive.service"
+            - "@live.broadcast.youtubeapi.service"
             - "@request_stack"
             - "@router"
             - "%live_broadcast_yt_redirect_route%"

@@ -4,7 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
-use Martin1982\LiveBroadcastBundle\Service\FacebookLiveService;
+use Martin1982\LiveBroadcastBundle\Service\FacebookApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -14,17 +14,17 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class FacebookPreBroadcastListener implements EventSubscriberInterface
 {
     /**
-     * @var FacebookLiveService
+     * @var FacebookApiService
      */
-    private $facebookLiveService;
+    private $facebookApiService;
 
     /**
      * FacebookPreBroadcastListener constructor.
-     * @param FacebookLiveService $facebookLiveService
+     * @param FacebookApiService $facebookApiService
      */
-    public function __construct(FacebookLiveService $facebookLiveService)
+    public function __construct(FacebookApiService $facebookApiService)
     {
-        $this->facebookLiveService = $facebookLiveService;
+        $this->facebookApiService = $facebookApiService;
     }
 
     /**
@@ -36,7 +36,7 @@ class FacebookPreBroadcastListener implements EventSubscriberInterface
         $output = $event->getOutput();
 
         if ($output instanceof OutputFacebook) {
-            $streamUrl = $this->facebookLiveService->createFacebookLiveVideo($liveBroadcast, $output);
+            $streamUrl = $this->facebookApiService->createFacebookLiveVideo($liveBroadcast, $output);
             $output->setStreamUrl($streamUrl);
         }
     }

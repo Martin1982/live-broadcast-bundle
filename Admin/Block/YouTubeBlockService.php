@@ -2,7 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Admin\Block;
 
-use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
+use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Sonata\BlockBundle\Block\BaseBlockService;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -17,9 +17,9 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 class YouTubeBlockService extends BaseBlockService
 {
     /**
-     * @var YouTubeLiveService
+     * @var YouTubeApiService
      */
-    protected $youtubeLive;
+    protected $youTubeApi;
 
     /**
      * @var RequestStack
@@ -30,7 +30,7 @@ class YouTubeBlockService extends BaseBlockService
      * YouTubeBlockService constructor.
      * @param string $name
      * @param EngineInterface $templating
-     * @param YouTubeLiveService $youtubeLive
+     * @param YouTubeApiService $youTubeApi
      * @param RequestStack $requestStack
      * @param Router $router ,
      * @param string $redirectRoute
@@ -38,12 +38,12 @@ class YouTubeBlockService extends BaseBlockService
     public function __construct(
         $name,
         EngineInterface $templating,
-        YouTubeLiveService $youtubeLive,
+        YouTubeApiService $youTubeApi,
         RequestStack $requestStack,
         Router $router,
         $redirectRoute
     ) {
-        $this->youtubeLive = $youtubeLive;
+        $this->youTubeApi = $youTubeApi;
         $this->requestStack = $requestStack;
 
         $redirectUri = $router->generate(
@@ -51,7 +51,7 @@ class YouTubeBlockService extends BaseBlockService
             array(),
             Router::ABSOLUTE_URL
         );
-        $this->youtubeLive->initApiClients($redirectUri);
+        $this->youTubeApi->initApiClients($redirectUri);
 
         parent::__construct($name, $templating);
     }
@@ -66,11 +66,11 @@ class YouTubeBlockService extends BaseBlockService
         $request = $this->requestStack->getCurrentRequest();
         $session = $request->getSession();
 
-        if ($refreshToken = $session->get('youtubeRefreshToken')) {
-            $this->youtubeLive->getAccessToken($refreshToken);
+        if ($refreshToken = $session->get('youTubeRefreshToken')) {
+            $this->youTubeApi->getAccessToken($refreshToken);
         }
 
-        $isAuthenticated = $this->youtubeLive->isAuthenticated();
+        $isAuthenticated = $this->youTubeApi->isAuthenticated();
 
         if (!$isAuthenticated) {
             $state = mt_rand();
@@ -80,9 +80,9 @@ class YouTubeBlockService extends BaseBlockService
 
         return $this->renderResponse('LiveBroadcastBundle:Block:youtube_auth.html.twig', array(
             'isAuthenticated' => $isAuthenticated,
-            'authUrl' => $isAuthenticated ? '#' : $this->youtubeLive->getAuthenticationUrl($state),
-            'youtubeChannelName' => $session->get('youtubeChannelName'),
-            'youtubeRefreshToken' => $session->get('youtubeRefreshToken'),
+            'authUrl' => $isAuthenticated ? '#' : $this->youTubeApi->getAuthenticationUrl($state),
+            'youTubeChannelName' => $session->get('youTubeChannelName'),
+            'youTubeRefreshToken' => $session->get('youTubeRefreshToken'),
             'block' => $blockContext->getBlock(),
             'settings' => $blockContext->getSettings(),
         ), $response);

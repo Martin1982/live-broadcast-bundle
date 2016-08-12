@@ -13,7 +13,7 @@ Usage should be limited to development work.*
 [![License](https://poser.pugx.org/martin1982/live-broadcast-bundle/license)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
 
 The Live Broadcast Bundle will make it possible to plan live streams to
-various channels like Twitch, Youtube and Facebook (referred to as Output or Channels).
+various channels like Twitch, YouTube and Facebook (referred to as Output or Channels).
 
 The basic "Input" will be a file that can be read. Other inputs will be created thereafter.
 

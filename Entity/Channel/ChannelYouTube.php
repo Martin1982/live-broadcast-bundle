@@ -5,12 +5,12 @@ namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class ChannelYoutube.
+ * Class ChannelYouTube.
  *
  * @ORM\Table(name="channel_youtube", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class ChannelYoutube extends BaseChannel
+class ChannelYouTube extends BaseChannel
 {
     /**
      * @var string
@@ -24,7 +24,7 @@ class ChannelYoutube extends BaseChannel
      *
      * @ORM\Column(name="youtube_channel_name", type="string", length=255, nullable=false)
      */
-    protected $youtubeChannelName;
+    protected $youTubeChannelName;
 
     /**
      * @return string
@@ -37,7 +37,7 @@ class ChannelYoutube extends BaseChannel
     /**
      * @param string $refreshToken
      *
-     * @return ChannelYoutube
+     * @return ChannelYouTube
      */
     public function setRefreshToken($refreshToken)
     {
@@ -49,18 +49,18 @@ class ChannelYoutube extends BaseChannel
     /**
      * @return string
      */
-    public function getYoutubeChannelName()
+    public function getYouTubeChannelName()
     {
-        return $this->youtubeChannelName;
+        return $this->youTubeChannelName;
     }
 
     /**
-     * @param string $youtubeChannelName
-     * @return ChannelYoutube
+     * @param string $youTubeChannelName
+     * @return ChannelYouTube
      */
-    public function setYoutubeChannelName($youtubeChannelName)
+    public function setYouTubeChannelName($youTubeChannelName)
     {
-        $this->youtubeChannelName = $youtubeChannelName;
+        $this->youTubeChannelName = $youTubeChannelName;
 
         return $this;
     }
@@ -70,6 +70,6 @@ class ChannelYoutube extends BaseChannel
      */
     public function __toString()
     {
-        return 'Youtube: '.$this->getChannelName();
+        return 'YouTube: '.$this->getChannelName();
     }
 }
