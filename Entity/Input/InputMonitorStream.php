@@ -22,6 +22,7 @@ class InputMonitorStream extends BaseInput
     /**
      * @param string $monitorImage
      * @return InputMonitorStream
+     * @throws LiveBroadcastException
      */
     public function setMonitorImage($monitorImage)
     {
