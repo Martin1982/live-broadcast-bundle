@@ -36,6 +36,12 @@ interface SchedulerCommandsInterface
     public function getProcessId($processString);
 
     /**
+     * @param $processString
+     * @return bool
+     */
+    public function isMonitorStream($processString);
+
+    /**
      * @param string $processString
      *
      * @return int|null

@@ -2,11 +2,13 @@
 
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
+use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
+use Martin1982\LiveBroadcastBundle\Event\SwitchMonitorEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Psr\Log\LoggerInterface;
@@ -82,9 +84,11 @@ class Scheduler
     {
         $this->getRunningBroadcasts();
         $this->stopExpiredBroadcasts();
-
         $this->getPlannedBroadcasts();
         $this->startPlannedBroadcasts();
+
+        $postBroadcastLoopEvent = new PostBroadcastLoopEvent();
+        $this->dispatcher->dispatch(PostBroadcastLoopEvent::NAME, $postBroadcastLoopEvent);
     }
 
     /**
@@ -112,6 +116,11 @@ class Scheduler
             foreach ($this->runningBroadcasts as $runningBroadcast) {
                 if ($runningBroadcast->isBroadcasting($plannedBroadcast, $channel)) {
                     $isChannelBroadcasting = true;
+                }
+
+                if ($runningBroadcast->isMonitor()) {
+                    $switchMonitorEvent = new SwitchMonitorEvent($runningBroadcast, $plannedBroadcast, $channel);
+                    $this->dispatcher->dispatch(SwitchMonitorEvent::NAME, $switchMonitorEvent);
                 }
             }
 
@@ -173,7 +182,8 @@ class Scheduler
                 $this->schedulerCommands->getBroadcastId($processString),
                 $this->schedulerCommands->getProcessId($processString),
                 $this->schedulerCommands->getChannelId($processString),
-                $this->schedulerCommands->getEnvironment($processString)
+                $this->schedulerCommands->getEnvironment($processString),
+                $this->schedulerCommands->isMonitorStream($processString)
             );
 
             if ($runningItem->isValid($this->schedulerCommands->getKernelEnvironment())) {
@@ -208,10 +218,15 @@ class Scheduler
                     $channel->getChannelName()
                 )
             );
+
+            $this->logger->info(sprintf('Starting broadcast with %s', $output->generateOutputCmd()));
             $this->schedulerCommands->startProcess($input, $output->generateOutputCmd(), array(
                 'broadcast_id' => $broadcast->getBroadcastId(),
                 'channel_id' => $channel->getChannelId(),
             ));
+
+            $postBroadcastEvent = new PostBroadcastEvent($broadcast, $output);
+            $this->dispatcher->dispatch(PostBroadcastEvent::NAME, $postBroadcastEvent);
         } catch (LiveBroadcastException $ex) {
             $this->logger->error(
                 sprintf(
@@ -234,21 +249,8 @@ class Scheduler
     protected function getPlannedBroadcasts()
     {
         $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
-        $expr = Criteria::expr();
-        $criteria = Criteria::create();
-
-        $criteria->where($expr->andX(
-            $expr->lte('startTimestamp', new \DateTime()),
-            $expr->gte('endTimestamp', new \DateTime())
-        ));
-
         $this->logger->debug('Get planned broadcasts');
-
-        /* @var LiveBroadcast[] $nowLive */
-        $this->plannedBroadcasts = $broadcastRepository->createQueryBuilder('lb')
-            ->addCriteria($criteria)
-            ->getQuery()
-            ->getResult();
+        $this->plannedBroadcasts = $broadcastRepository->getPlannedBroadcasts();
 
         return $this->plannedBroadcasts;
     }

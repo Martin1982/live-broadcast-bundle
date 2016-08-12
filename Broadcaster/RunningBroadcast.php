@@ -31,19 +31,26 @@ class RunningBroadcast
     private $environment;
 
     /**
+     * @var bool
+     */
+    private $isMonitor;
+
+    /**
      * RunningBroadcast constructor.
      *
-     * @param int    $broadcastId
-     * @param int    $processId
-     * @param int    $channelId
+     * @param int $broadcastId
+     * @param int $processId
+     * @param int $channelId
      * @param string $environment
+     * @param bool $isMonitor
      */
-    public function __construct($broadcastId, $processId, $channelId, $environment)
+    public function __construct($broadcastId, $processId, $channelId, $environment, $isMonitor = false)
     {
         $this->broadcastId = (int) $broadcastId;
         $this->processId = (int) $processId;
         $this->channelId = (int) $channelId;
         $this->environment = $environment;
+        $this->isMonitor = $isMonitor;
     }
 
     /**
@@ -76,6 +83,14 @@ class RunningBroadcast
     public function getEnvironment()
     {
         return $this->environment;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMonitor()
+    {
+        return $this->isMonitor;
     }
 
     /**

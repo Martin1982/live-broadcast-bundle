@@ -4,6 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -19,8 +20,7 @@ class ChannelAdmin extends AbstractAdmin
     protected $baseRoutePattern = 'channel';
 
     /**
-     * @param string $name
-     * @return mixed|null|string
+     * {@inheritdoc}
      */
     public function getTemplate($name)
     {
@@ -28,6 +28,10 @@ class ChannelAdmin extends AbstractAdmin
 
         if ($subject instanceof ChannelFacebook && $name === 'edit') {
             return 'LiveBroadcastBundle:CRUD:channel_facebook_edit.html.twig';
+        }
+
+        if ($subject instanceof ChannelYoutube && $name ==='edit') {
+            return 'LiveBroadcastBundle:CRUD:channel_youtube_edit.html.twig';
         }
 
         return parent::getTemplate($name);
@@ -39,6 +43,7 @@ class ChannelAdmin extends AbstractAdmin
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('longLivedAccessToken', 'facebook/accesstoken');
+        $collection->add('youtubeoauth', 'youtube/oauthprovider');
     }
 
     /**
@@ -48,9 +53,17 @@ class ChannelAdmin extends AbstractAdmin
     {
         $subject = $this->getSubject();
 
+        $nameClasses = 'generic-channel-name';
+        if ($subject instanceof ChannelYoutube) {
+            $nameClasses = 'generic-channel-name input-yt-channelname';
+        }
+
         $formMapper
             ->with('Channel')
-                ->add('channelName', 'text', array('label' => 'Channel name', 'attr' => array('class' => 'generic-channel-name')));
+                ->add('channelName', 'text', array(
+                    'label' => 'Channel name',
+                    'attr' => array('class' => $nameClasses),
+                ));
 
         if ($subject instanceof ChannelTwitch || $subject instanceof ChannelUstream) {
             $formMapper->add('streamKey', 'text', array('label' => 'Stream key'));
@@ -58,8 +71,22 @@ class ChannelAdmin extends AbstractAdmin
         }
 
         if ($subject instanceof ChannelFacebook) {
-            $formMapper->add('accessToken', 'hidden', array('label' => 'Facebook access token', 'attr' => array('class' => 'fb-access-token')));
-            $formMapper->add('fbEntityId', 'hidden', array('label' => 'Facebook entity ID', 'attr' => array('class' => 'fb-entity-id')));
+            $formMapper->add('accessToken', 'hidden', array(
+                'attr' => array('class' => 'fb-access-token'),
+            ));
+            $formMapper->add('fbEntityId', 'hidden', array(
+                'attr' => array('class' => 'fb-entity-id'),
+            ));
+        }
+
+        if ($subject instanceof ChannelYoutube) {
+            $formMapper->add('youtubeChannelName', 'text', array(
+                'attr' => array('class' => 'input-yt-channelname', 'readonly' => 'readonly')
+            ));
+
+            $formMapper->add('refreshToken', 'text', array(
+                'attr' => array('class' => 'input-yt-refreshtoken', 'readonly' => 'readonly')
+            ));
         }
 
         $formMapper->end();

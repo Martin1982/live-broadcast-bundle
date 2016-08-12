@@ -27,6 +27,14 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('application_secret')->defaultNull()->end()
                     ->end()
                 ->end()
+                ->arrayNode('youtube')
+                    ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('client_id')->defaultNull()->end()
+                        ->scalarNode('client_secret')->defaultNull()->end()
+                        ->scalarNode('redirect_route')->defaultNull()->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

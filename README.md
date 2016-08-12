@@ -108,6 +108,34 @@ Create a Facebook app on https://developers.facebook.com with the following perm
     twig:
         globals:
             live_broadcast_facebook_app_id: '%live_broadcast_fb_app_id%'   
+
+## YouTube Live
+
+### Step 1: Request API access
+Login to https://console.developers.google.com/ and enable the 'YouTube Data API v3'.
+
+Setup oAuth Credentials for your server. In case you're using the Sonata Admin from this
+bundle the redirect URI's path is `<your domain>/admin/channel/youtube/oauthprovider`
+
+### Step 2: Add your Client ID and Secret and redirect route to app/config/parameters.yml
+    parameters:
+        live_broadcast_yt_client_id: '{application_id}'
+        live_broadcast_yt_client_secret: '{application_secret}'
+        live_broadcast_yt_redirect_route: '{your_oauth_handler_url or admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth}'
+
+### Step 3: Add the YouTube API info to your config.yml:
+	live_broadcast:
+	    youtube:
+            client_id: '%live_broadcast_yt_client_id%'
+            client_secret: '%live_broadcast_yt_client_secret%'
+            redirect_route: '%live_broadcast_yt_redirect_route%'
+
+### Step 4 (Sonata users only): Add the Sonata block to your blocks config:
+    
+    sonata_block:
+        blocks:
+        sonata.block.service.youtubeauth:
+            contexts:   [admin]
              
 ## Add new output platforms
 

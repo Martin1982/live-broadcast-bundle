@@ -1,0 +1,10 @@
+{% extends 'SonataAdminBundle:CRUD:edit.html.twig' %}
+
+{% block sonata_pre_fieldsets %}
+    {{ parent() }}
+    <div class="col-md-12">
+        <div class="tab-content">
+            {{ sonata_block_render({ 'type': 'sonata.block.service.youtubeauth' }) }}
+        </div>
+    </div>
+{% endblock %}

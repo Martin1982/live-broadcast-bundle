@@ -11,7 +11,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput;
  * Class LiveBroadcast.
  *
  * @ORM\Table(name="live_broadcast", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository")
  */
 class LiveBroadcast
 {

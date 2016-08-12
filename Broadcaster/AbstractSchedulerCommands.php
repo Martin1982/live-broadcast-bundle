@@ -10,6 +10,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     const METADATA_BROADCAST = 'broadcast_id';
     const METADATA_CHANNEL = 'channel_id';
     const METADATA_ENVIRONMENT = 'env';
+    const METADATA_MONITOR = 'monitor_stream';
 
     /**
      * @var string
@@ -68,6 +69,14 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
         }
 
         return 0;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isMonitorStream($processString)
+    {
+        return ($this->getMetadataValue($processString, self::METADATA_MONITOR) === 'yes');
     }
 
     /**
