@@ -5,6 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -64,9 +65,9 @@ class ChannelAdmin extends AbstractAdmin
                     'attr' => array('class' => $nameClasses),
                 ));
 
-        if ($subject instanceof ChannelTwitch) {
-            $formMapper->add('streamKey', 'text', array('label' => 'Twitch stream key'));
-            $formMapper->add('streamServer', 'text', array('label' => 'Twitch stream server'));
+        if ($subject instanceof ChannelTwitch || $subject instanceof ChannelUstream) {
+            $formMapper->add('streamKey', 'text', array('label' => 'Stream key'));
+            $formMapper->add('streamServer', 'text', array('label' => 'Stream server'));
         }
 
         if ($subject instanceof ChannelFacebook) {

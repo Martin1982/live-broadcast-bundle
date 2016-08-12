@@ -60,6 +60,10 @@ services:
       tags:
           - { name: live.broadcast.output, platform: 'Facebook' }
   live.broadcast.output.twitch:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch
-      tags:
-          - { name: live.broadcast.output, platform: 'Twitch' }
+    class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch
+    tags:
+        - { name: live.broadcast.output, platform: 'Twitch' }
+  live.broadcast.output.ustream:
+    class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputUstream
+    tags:
+        - { name: live.broadcast.output, platform: 'Ustream' }
