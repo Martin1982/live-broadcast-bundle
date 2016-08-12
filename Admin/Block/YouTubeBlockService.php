@@ -7,7 +7,7 @@ use Sonata\BlockBundle\Block\BaseBlockService;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\EngineInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
@@ -31,7 +31,8 @@ class YouTubeBlockService extends BaseBlockService
      * @param string $name
      * @param EngineInterface $templating
      * @param YouTubeLiveService $youtubeLive
-     * @param Router $router,
+     * @param RequestStack $requestStack
+     * @param Router $router ,
      * @param string $redirectRoute
      */
     public function __construct(

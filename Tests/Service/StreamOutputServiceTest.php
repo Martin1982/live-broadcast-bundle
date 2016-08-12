@@ -14,7 +14,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 class StreamOutputServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGetOutputInterfaceWithoutChannels()
     {
@@ -24,7 +24,7 @@ class StreamOutputServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGetOutputInterfaceWithNotConfiguredChannel()
     {

@@ -3,7 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 
 /**
@@ -28,7 +28,7 @@ class StreamOutputService
     /**
      * @param BaseChannel $channel
      * @return OutputInterface
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastOutputException
      */
     public function getOutputInterface(BaseChannel $channel)
     {
@@ -41,6 +41,6 @@ class StreamOutputService
             }
         }
 
-        throw new LiveBroadcastException('No OutputInterface configured for channel '.$channel->getChannelName());
+        throw new LiveBroadcastOutputException('No OutputInterface configured for channel '.$channel->getChannelName());
     }
 }

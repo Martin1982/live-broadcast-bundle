@@ -4,7 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Class OutputFacebook.
@@ -34,13 +34,13 @@ class OutputFacebook implements OutputInterface
     /**
      * Give the cmd string to start the stream.
      *
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastOutputException
      * @return string
      */
     public function generateOutputCmd()
     {
         if (empty($this->streamUrl)) {
-            throw new LiveBroadcastException('The Facebook stream url must be set');
+            throw new LiveBroadcastOutputException('The Facebook stream url must be set');
         }
 
         return sprintf('-c:v libx264 -crf 30 -preset ultrafast -c:a copy -f flv "%s"', $this->streamUrl);
@@ -56,12 +56,12 @@ class OutputFacebook implements OutputInterface
 
     /**
      * @return string
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastOutputException
      */
     public function getAccessToken()
     {
         if (!($this->channel instanceof ChannelFacebook)) {
-            throw new LiveBroadcastException(__FUNCTION__.' Facebook channel not configured');
+            throw new LiveBroadcastOutputException(__FUNCTION__.' Facebook channel not configured');
         }
 
         return $this->channel->getAccessToken();
@@ -69,12 +69,12 @@ class OutputFacebook implements OutputInterface
 
     /**
      * @return string
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastOutputException
      */
     public function getEntityId()
     {
         if (!($this->channel instanceof ChannelFacebook)) {
-            throw new LiveBroadcastException(__FUNCTION__.' Facebook channel not configured');
+            throw new LiveBroadcastOutputException(__FUNCTION__.' Facebook channel not configured');
         }
 
         return $this->channel->getFbEntityId();

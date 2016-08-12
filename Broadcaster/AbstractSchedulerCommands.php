@@ -1,6 +1,7 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**
  * Class SchedulerCommands.
@@ -44,18 +45,20 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 
     /**
      * {@inheritdoc}
+     * @throws LiveBroadcastException
      */
     public function stopProcess($pid)
     {
-        throw new \Exception('stopProcess Cannot be called on the abstract class');
+        throw new LiveBroadcastException('stopProcess Cannot be called on the abstract class');
     }
 
     /**
      * {@inheritdoc}
+     * @throws LiveBroadcastException
      */
     public function getRunningProcesses()
     {
-        throw new \Exception('getRunningProcesses Cannot be called on the abstract class');
+        throw new LiveBroadcastException('getRunningProcesses Cannot be called on the abstract class');
     }
 
     /**

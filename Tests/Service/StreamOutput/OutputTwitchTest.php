@@ -37,7 +37,7 @@ class OutputTwitchTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the generate output command without a channel
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithoutChannel()
     {
@@ -47,7 +47,7 @@ class OutputTwitchTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the generate output command with an invalid channel
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithInvalidChannel()
     {

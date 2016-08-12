@@ -3,7 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Entity\Input;
 
 use Doctrine\ORM\Mapping as ORM;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -55,14 +55,14 @@ class InputFile extends BaseInput
 
     /**
      * @return string
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastInputException
      */
     public function generateInputCmd()
     {
         $inputFilename = $this->getFileLocation();
 
         if (!file_exists($inputFilename)) {
-            throw new LiveBroadcastException(sprintf('Could not find input file %s', $inputFilename));
+            throw new LiveBroadcastInputException(sprintf('Could not find input file %s', $inputFilename));
         }
 
         return sprintf('-re -i %s', escapeshellarg($inputFilename));

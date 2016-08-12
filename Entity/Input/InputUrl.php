@@ -3,7 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Entity\Input;
 
 use Doctrine\ORM\Mapping as ORM;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -56,14 +56,14 @@ class InputUrl extends BaseInput
 
     /**
      * @return string
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastInputException
      */
     public function generateInputCmd()
     {
         $inputUrl = $this->getUrl();
 
         if (filter_var($inputUrl, FILTER_VALIDATE_URL) === false) {
-            throw new LiveBroadcastException(sprintf('Invalid URL %s', $inputUrl));
+            throw new LiveBroadcastInputException(sprintf('Invalid URL %s', $inputUrl));
         }
 
         return sprintf('-re -i %s', escapeshellarg($inputUrl));

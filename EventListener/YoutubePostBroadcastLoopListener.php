@@ -8,7 +8,7 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsInterface;
 use Martin1982\LiveBroadcastBundle\Entity\Input\InputMonitorStream;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YoutubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYoutube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeLiveService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -183,7 +183,7 @@ class YoutubePostBroadcastLoopListener implements EventSubscriberInterface
                 $outputService->generateOutputCmd(),
                 $metadata
             );
-        } catch (LiveBroadcastException $e) {
+        } catch (LiveBroadcastOutputException $e) {
             return;
         }
     }

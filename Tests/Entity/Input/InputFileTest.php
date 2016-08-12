@@ -47,7 +47,7 @@ class InputFileTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
     public function testFileNotExists()
     {

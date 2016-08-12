@@ -4,7 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Class OutputUstream
@@ -28,14 +28,14 @@ class OutputUstream implements OutputInterface
      * Get the output parameters for streaming.
      *
      * @return string
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastOutputException
      */
     public function generateOutputCmd()
     {
         if ((!($this->channel instanceof ChannelUstream)) ||
             empty($this->channel->getStreamKey()) ||
             empty($this->channel->getStreamServer())) {
-            throw new LiveBroadcastException(__FUNCTION__.' Ustream channel not configured');
+            throw new LiveBroadcastOutputException(__FUNCTION__.' Ustream channel not configured');
         }
 
         return sprintf(

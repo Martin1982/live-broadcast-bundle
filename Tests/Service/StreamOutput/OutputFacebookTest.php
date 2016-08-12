@@ -4,6 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
+use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 
 /**
  * Class OutputFacebookTest
@@ -36,7 +37,7 @@ class OutputFacebookTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the generate output command without a channel
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithoutChannel()
     {
@@ -46,7 +47,7 @@ class OutputFacebookTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the generate output command with an invalid channel
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithInvalidChannel()
     {
@@ -59,7 +60,7 @@ class OutputFacebookTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the generate output command without a stream url set
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithoutStreamUrl()
     {

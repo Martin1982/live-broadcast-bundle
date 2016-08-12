@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YoutubeEvent;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -51,7 +51,7 @@ class YouTubeLiveService
      * @param string $clientSecret
      * @param EntityManager $entityManager
      * @param LoggerInterface $logger
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastOutputException
      */
     public function __construct(
         $clientId,
@@ -60,7 +60,7 @@ class YouTubeLiveService
         LoggerInterface $logger
     ) {
         if (empty($clientId) || empty($clientSecret)) {
-            throw new LiveBroadcastException('The YouTube oAuth settings are not correct.');
+            throw new LiveBroadcastOutputException('The YouTube oAuth settings are not correct.');
         }
 
         $this->entityManager = $entityManager;

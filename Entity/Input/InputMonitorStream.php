@@ -1,9 +1,13 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Entity\Input;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
+/**
+ * Class InputMonitorStream
+ * @package Martin1982\LiveBroadcastBundle\Entity\Input
+ */
 class InputMonitorStream extends BaseInput
 {
     /**
@@ -22,12 +26,12 @@ class InputMonitorStream extends BaseInput
     /**
      * @param string $monitorImage
      * @return InputMonitorStream
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastInputException
      */
     public function setMonitorImage($monitorImage)
     {
         if (!file_exists($monitorImage)) {
-            throw new LiveBroadcastException(sprintf('Monitor image \'%s\' not found', $monitorImage));
+            throw new LiveBroadcastInputException(sprintf('Monitor image \'%s\' not found', $monitorImage));
         }
         $this->monitorImage = $monitorImage;
 

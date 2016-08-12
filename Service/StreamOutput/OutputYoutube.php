@@ -4,7 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Class OutputYoutube.
@@ -42,13 +42,13 @@ class OutputYoutube implements OutputInterface
     /**
      * Give the cmd string to start the stream.
      *
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastOutputException
      * @return string
      */
     public function generateOutputCmd()
     {
         if (empty($this->streamUrl)) {
-            throw new LiveBroadcastException('The YouTube stream url must be set');
+            throw new LiveBroadcastOutputException('The YouTube stream url must be set');
         }
 
         $params = '-vf scale=-1:720 -c:v libx264 -pix_fmt yuv420p ';
