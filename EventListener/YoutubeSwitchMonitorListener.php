@@ -4,7 +4,6 @@ namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
 use Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsInterface;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYoutube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YoutubeEvent;
@@ -61,7 +60,7 @@ class YoutubeSwitchMonitorListener implements EventSubscriberInterface
         YouTubeLiveService $youtubeLiveService,
         Router $router,
         $redirectRoute
-    ){
+    ) {
         $this->command = $command;
         $this->outputService = $outputService;
         $this->youtubeLiveService = $youtubeLiveService;
