@@ -3,6 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\QueryException;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
@@ -89,6 +90,8 @@ class Scheduler
 
     /**
      * Run streams that need to be running.
+     * @throws QueryException
+     * @throws LiveBroadcastException
      */
     public function applySchedule()
     {
@@ -104,7 +107,7 @@ class Scheduler
     /**
      * Start planned broadcasts if not already running.
      */
-    public function startPlannedBroadcasts()
+    protected function startPlannedBroadcasts()
     {
         foreach ($this->plannedBroadcasts as $plannedBroadcast) {
             $this->startBroadcastOnChannels($plannedBroadcast);
@@ -116,7 +119,7 @@ class Scheduler
     /**
      * @param LiveBroadcast $plannedBroadcast
      */
-    public function startBroadcastOnChannels(LiveBroadcast $plannedBroadcast)
+    protected function startBroadcastOnChannels(LiveBroadcast $plannedBroadcast)
     {
         $channels = $plannedBroadcast->getOutputChannels();
 
@@ -143,7 +146,7 @@ class Scheduler
     /**
      * Stop running broadcasts that have expired.
      */
-    public function stopExpiredBroadcasts()
+    protected function stopExpiredBroadcasts()
     {
         $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
 
@@ -181,7 +184,7 @@ class Scheduler
      *
      * @return RunningBroadcast[]
      */
-    public function updateRunningBroadcasts()
+    protected function updateRunningBroadcasts()
     {
         $this->runningBroadcasts = array();
         $this->logger->debug('Retrieve running broadcasts');
@@ -210,7 +213,7 @@ class Scheduler
      * @param LiveBroadcast $broadcast
      * @param BaseChannel   $channel
      */
-    public function startBroadcast(LiveBroadcast $broadcast, BaseChannel $channel)
+    protected function startBroadcast(LiveBroadcast $broadcast, BaseChannel $channel)
     {
         try {
             $input = $this->inputService->getInputInterface($broadcast->getInput());
@@ -255,6 +258,7 @@ class Scheduler
      * @return LiveBroadcast[]
      *
      * @throws \Doctrine\ORM\Query\QueryException
+     * @throws LiveBroadcastException
      */
     protected function getPlannedBroadcasts()
     {
