@@ -1,6 +1,7 @@
 <?php
 
 namespace Martin1982\LiveBroadcastBundle\Service\StreamInput;
+
 use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
 
 /**
