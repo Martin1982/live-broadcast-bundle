@@ -7,7 +7,6 @@ use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -38,7 +37,7 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
         $redirectUri = $router->generate(
             $redirectRoute,
             array(),
-            Router::ABSOLUTE_URL
+            $router::ABSOLUTE_URL
         );
         $this->youTubeApiService->initApiClients($redirectUri);
     }

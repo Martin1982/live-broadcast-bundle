@@ -8,7 +8,6 @@ use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -51,7 +50,7 @@ class YouTubeBlockService extends BaseBlockService
         $redirectUri = $router->generate(
             $redirectRoute,
             array(),
-            Router::ABSOLUTE_URL
+            $router::ABSOLUTE_URL
         );
         $this->youTubeApi->initApiClients($redirectUri);
 
