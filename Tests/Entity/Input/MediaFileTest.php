@@ -46,33 +46,4 @@ class MediaFileTest extends \PHPUnit_Framework_TestCase
         $input->setFileLocation('/tmp/test');
         self::assertEquals('/tmp/test', (string) $input);
     }
-
-    /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
-     */
-    public function testFileNotExists()
-    {
-        $input = new MediaFile();
-        $input->setFileLocation('/not-really-there');
-        $input->generateInputCmd();
-    }
-
-    /**
-     * Test if the input command is correct
-     */
-    public function testGenerateInputCmd()
-    {
-        $fileName = '/tmp/videoFile.txt';
-        fopen($fileName, 'w');
-
-        $input = new MediaFile();
-        $input->setFileLocation($fileName);
-
-        self::assertEquals(
-            $input->generateInputCmd(),
-            '-re -i ' . escapeshellarg($fileName)
-        );
-
-        unlink($fileName);
-    }
 }

@@ -43,29 +43,4 @@ class MediaUrlTest extends \PHPUnit_Framework_TestCase
         $input->setUrl('https://github.com/Martin1982/live-broadcast-bundle');
         self::assertEquals('https://github.com/Martin1982/live-broadcast-bundle', $input->getUrl());
     }
-
-    /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
-     */
-    public function testInvalidUrl()
-    {
-        $input = new MediaUrl();
-        $input->setUrl('http://w&w&w.invalid.url');
-        $input->generateInputCmd();
-    }
-
-    /**
-     * Test if the input command is correct
-     */
-    public function testGenerateInputCmd()
-    {
-        $url = 'https://www.video.com/test.mp4';
-        $input = new MediaUrl();
-        $input->setUrl($url);
-
-        self::assertEquals(
-            $input->generateInputCmd(),
-            '-re -i ' . escapeshellarg($url)
-        );
-    }
 }
