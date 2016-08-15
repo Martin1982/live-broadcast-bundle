@@ -47,9 +47,9 @@ class YouTubeApiService
 
     /**
      * YouTubeApiService constructor.
-     * @param string $clientId
-     * @param string $clientSecret
-     * @param EntityManager $entityManager
+     * @param string          $clientId
+     * @param string          $clientSecret
+     * @param EntityManager   $entityManager
      * @param LoggerInterface $logger
      * @throws LiveBroadcastOutputException
      */
@@ -72,7 +72,7 @@ class YouTubeApiService
     /**
      * Initialize API to Google and YouTube
      *
-     * @param $oAuthRedirectUrl
+     * @param string $oAuthRedirectUrl
      */
     public function initApiClients($oAuthRedirectUrl)
     {
@@ -89,7 +89,7 @@ class YouTubeApiService
     }
 
     /**
-     * @param $refreshToken
+     * @param string $refreshToken
      * @return array
      */
     public function getAccessToken($refreshToken)
@@ -119,15 +119,15 @@ class YouTubeApiService
     }
 
     /**
-     * @param $requestCode
-     * @param $requestState
-     * @param $sessionState
-     * @return array|void
+     * @param string $requestCode
+     * @param string $requestState
+     * @param string $sessionState
+     * @return array|null
      */
     public function authenticate($requestCode, $requestState, $sessionState)
     {
         if ((string) $sessionState !== (string) $requestState) {
-            return;
+            return null;
         }
 
         $this->googleApiClient->authenticate($requestCode);
@@ -190,9 +190,9 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast $liveBroadcast
+     * @param LiveBroadcast  $liveBroadcast
      * @param ChannelYouTube $channelYouTube
-     * @return string
+     * @return string|null
      */
     public function getStreamUrl(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube)
     {
@@ -204,7 +204,7 @@ class YouTubeApiService
         $youTubeBroadcast = $this->getExternalBroadcastById($youTubeId);
 
         if (!$youTubeBroadcast) {
-            return;
+            return null;
         }
 
         $youTubeDetails = $youTubeBroadcast->getContentDetails();
@@ -219,7 +219,8 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast $broadcast
+     * @param LiveBroadcast  $broadcast
+     * @param ChannelYouTube $channel
      */
     public function createLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
@@ -235,7 +236,7 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast $broadcast
+     * @param LiveBroadcast  $broadcast
      * @param ChannelYouTube $channel
      */
     public function updateLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
@@ -247,7 +248,7 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast $broadcast
+     * @param LiveBroadcast  $broadcast
      * @param ChannelYouTube $channel
      */
     public function removeLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
@@ -261,7 +262,7 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast $liveBroadcast
+     * @param LiveBroadcast  $liveBroadcast
      * @param ChannelYouTube $channelYouTube
      * @return mixed
      */
@@ -283,7 +284,7 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast $liveBroadcast
+     * @param LiveBroadcast  $liveBroadcast
      * @param ChannelYouTube $channelYouTube
      * @param string $state
      */
@@ -304,7 +305,7 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast $liveBroadcast
+     * @param LiveBroadcast  $liveBroadcast
      * @param ChannelYouTube $channel
      * @param string $status
      *
@@ -359,8 +360,8 @@ class YouTubeApiService
 
     /**
      * @param LiveBroadcast $liveBroadcast
-     * @param string $privacyStatus
-     * @param null $id
+     * @param string        $privacyStatus
+     * @param string|null   $id
      * @return \Google_Service_YouTube_LiveBroadcast
      */
     protected function updateBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $id = null)
@@ -376,8 +377,8 @@ class YouTubeApiService
 
     /**
      * @param LiveBroadcast $liveBroadcast
-     * @param string $privacyStatus
-     * @param null $id
+     * @param string        $privacyStatus
+     * @param string|null   $id
      * @return \Google_Service_YouTube_LiveBroadcast
      */
     protected function setupBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $id = null)
@@ -413,7 +414,7 @@ class YouTubeApiService
     }
 
     /**
-     * @param $title
+     * @param string $title
      * @return \Google_Service_YouTube_LiveStream
      */
     protected function createStream($title)
