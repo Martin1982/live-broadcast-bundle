@@ -12,15 +12,6 @@ use Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl;
 class MediaUrlTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test if the Url input class implements the correct interface.
-     */
-    public function testUrlInterface()
-    {
-        $implements = class_implements(MediaUrl::class);
-        self::assertTrue(in_array(InputInterface::class, $implements));
-    }
-
-    /**
      * Test the getUrl method
      */
     public function testGetUrl()

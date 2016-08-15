@@ -3,7 +3,6 @@
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
-use Martin1982\LiveBroadcastBundle\Entity\Media\InputInterface;
 
 /**
  * Class MediaFileTest
@@ -11,15 +10,6 @@ use Martin1982\LiveBroadcastBundle\Entity\Media\InputInterface;
  */
 class MediaFileTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Test if the File input class implements the correct interface.
-     */
-    public function testFileInterface()
-    {
-        $implements = class_implements(MediaFile::class);
-        self::assertTrue(in_array(InputInterface::class, $implements));
-    }
-
     /**
      * Test the getFileLocation method
      */
