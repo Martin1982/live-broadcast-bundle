@@ -3,7 +3,8 @@
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 /**
- * Interface SchedulerCommandsInterface.
+ * Interface SchedulerCommandsInterface
+ * @package Martin1982\LiveBroadcastBundle\Broadcaster
  */
 interface SchedulerCommandsInterface
 {

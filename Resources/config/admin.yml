@@ -36,10 +36,10 @@ services:
               label: "Inputs"
         arguments:
             - ~
-            - Martin1982\LiveBroadcastBundle\Entity\Input\BaseInput
+            - Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia
             - ~
         calls:
-            - [setSubClasses, [ { "File Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputFile, "URL Input": Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl } ] ]
+            - [setSubClasses, [ { "File Input": Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile, "URL Input": Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl } ] ]
 
     sonata.block.service.youtubeauth:
         class: Martin1982\LiveBroadcastBundle\Admin\Block\YouTubeBlockService

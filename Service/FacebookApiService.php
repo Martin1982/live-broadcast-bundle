@@ -11,6 +11,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 
 /**
  * Class FacebookApiService
+ * @package Martin1982\LiveBroadcastBundle\Service
  */
 class FacebookApiService
 {

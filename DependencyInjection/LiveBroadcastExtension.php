@@ -8,12 +8,14 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Class LiveBroadcastExtension.
+ * Class LiveBroadcastExtension
+ * @package Martin1982\LiveBroadcastBundle\DependencyInjection
  */
 class LiveBroadcastExtension extends Extension
 {
     /**
      * {@inheritdoc}
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {

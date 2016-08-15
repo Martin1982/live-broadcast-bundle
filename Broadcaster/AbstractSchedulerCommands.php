@@ -5,7 +5,8 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**
- * Class SchedulerCommands.
+ * Class AbstractSchedulerCommands
+ * @package Martin1982\LiveBroadcastBundle\Broadcaster
  */
 abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 {
@@ -15,6 +16,8 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     const METADATA_MONITOR = 'monitor_stream';
 
     /**
+     * Symfony kernel environment name
+     *
      * @var string
      */
     protected $kernelEnvironment;

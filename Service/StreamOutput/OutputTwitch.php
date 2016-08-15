@@ -7,7 +7,8 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
- * Class OutputTwitch.
+ * Class OutputTwitch
+ * @package Martin1982\LiveBroadcastBundle\Service\StreamOutput
  */
 class OutputTwitch implements OutputInterface
 {

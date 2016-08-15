@@ -8,6 +8,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 
 /**
  * Class StreamOutputService
+ * @package Martin1982\LiveBroadcastBundle\Service
  */
 class StreamOutputService
 {
@@ -32,7 +33,6 @@ class StreamOutputService
      */
     public function getOutputInterface(BaseChannel $channel)
     {
-        /** @var OutputInterface $streamOutput */
         foreach ($this->streamOutputs as $streamOutput) {
             if ($streamOutput->getChannelType() === get_class($channel)) {
                 $streamOutput->setChannel($channel);

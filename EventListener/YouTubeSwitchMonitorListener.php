@@ -8,6 +8,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\SwitchMonitorEvent;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
@@ -57,6 +58,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
      * @param YouTubeApiService $youTubeApiService
      * @param Router $router
      * @param $redirectRoute
+     * @throws \Exception
      */
     public function __construct(
         SchedulerCommandsInterface $command,
@@ -114,6 +116,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
 
     /**
      * Start the actual broadcast
+     * @throws LiveBroadcastOutputException
      */
     protected function startBroadcast()
     {

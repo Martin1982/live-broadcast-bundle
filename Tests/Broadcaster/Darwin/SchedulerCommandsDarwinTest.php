@@ -6,7 +6,8 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\Darwin\SchedulerCommands;
 use phpmock\phpunit\PHPMock;
 
 /**
- * Class SchedulerCommandsDarwinTest.
+ * Class SchedulerCommandsDarwinTest
+ * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Darwin
  */
 class SchedulerCommandsDarwinTest extends \PHPUnit_Framework_TestCase
 {

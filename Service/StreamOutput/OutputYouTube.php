@@ -7,7 +7,8 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
- * Class OutputYouTube.
+ * Class OutputYouTube
+ * @package Martin1982\LiveBroadcastBundle\Service\StreamOutput
  */
 class OutputYouTube implements OutputInterface
 {

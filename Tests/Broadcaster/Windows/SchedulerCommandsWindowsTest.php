@@ -6,7 +6,8 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\Windows\SchedulerCommands;
 use phpmock\phpunit\PHPMock;
 
 /**
- * Class SchedulerCommandsWindowsTest.
+ * Class SchedulerCommandsWindowsTest
+ * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Windows
  */
 class SchedulerCommandsWindowsTest extends \PHPUnit_Framework_TestCase
 {

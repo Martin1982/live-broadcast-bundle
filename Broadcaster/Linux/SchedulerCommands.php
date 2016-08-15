@@ -5,7 +5,8 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster\Linux;
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 
 /**
- * Class SchedulerCommands.
+ * Class SchedulerCommands
+ * @package Martin1982\LiveBroadcastBundle\Broadcaster\Linux
  */
 class SchedulerCommands extends AbstractSchedulerCommands
 {

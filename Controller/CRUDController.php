@@ -14,7 +14,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class CRUDController
-  */
+ * @package Martin1982\LiveBroadcastBundle\Controller
+ */
 class CRUDController extends Controller
 {
     /**

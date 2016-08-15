@@ -4,8 +4,10 @@ namespace Martin1982\LiveBroadcastBundle\Entity\Metadata;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\QueryException;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Class YouTubeEventRepository
@@ -16,7 +18,7 @@ class YouTubeEventRepository extends EntityRepository
     /**
      * @param LiveBroadcast $broadcast
      * @param ChannelYouTube $channel
-     * @return null|YouTubeEvent
+     * @return null|object|YouTubeEvent
      */
     public function findBroadcastingToChannel(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
@@ -28,6 +30,7 @@ class YouTubeEventRepository extends EntityRepository
 
     /**
      * @return YouTubeEvent[]
+     * @throws LiveBroadcastOutputException
      */
     public function getTestableEvents()
     {
@@ -39,14 +42,18 @@ class YouTubeEventRepository extends EntityRepository
             $expr->gte('broadcast.endTimestamp', new \DateTime())
         ));
 
-        return $this->createQueryBuilder('event')
-            ->leftJoin(
-                'Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast',
-                'broadcast',
-                'event.broadcast = broadcast.broadcast'
-            )
-            ->addCriteria($criteria)
-            ->getQuery()
-            ->getResult();
+        try {
+            return $this->createQueryBuilder('event')
+                ->leftJoin(
+                    'Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast',
+                    'broadcast',
+                    'event.broadcast = broadcast.broadcast'
+                )
+                ->addCriteria($criteria)
+                ->getQuery()
+                ->getResult();
+        } catch (QueryException $ex) {
+            throw new LiveBroadcastOutputException('Cannot query testable events: '.$ex->getMessage());
+        }
     }
 }

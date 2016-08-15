@@ -1,18 +1,19 @@
 <?php
 
-namespace Martin1982\LiveBroadcastBundle\Entity\Input;
+namespace Martin1982\LiveBroadcastBundle\Entity\Media;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class BaseInput.
+ * Class BaseMedia
+ * @package Martin1982\LiveBroadcastBundle\Entity\Media
  *
  * @ORM\Entity()
  * @ORM\Table(name="broadcast_input", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  */
-abstract class BaseInput implements InputInterface
+abstract class BaseMedia
 {
     /**
      * @var int
@@ -29,5 +30,13 @@ abstract class BaseInput implements InputInterface
     public function getInputId()
     {
         return $this->inputId;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string) $this->getInputId();
     }
 }

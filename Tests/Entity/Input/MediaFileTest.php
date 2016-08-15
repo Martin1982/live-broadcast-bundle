@@ -1,21 +1,22 @@
 <?php
 
-namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Input;
+namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
-use Martin1982\LiveBroadcastBundle\Entity\Input\InputFile;
-use Martin1982\LiveBroadcastBundle\Entity\Input\InputInterface;
+use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
+use Martin1982\LiveBroadcastBundle\Entity\Media\InputInterface;
 
 /**
- * Class InputFileTest.
+ * Class MediaFileTest
+ * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Media
  */
-class InputFileTest extends \PHPUnit_Framework_TestCase
+class MediaFileTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test if the File input class implements the correct interface.
      */
     public function testFileInterface()
     {
-        $implements = class_implements(InputFile::class);
+        $implements = class_implements(MediaFile::class);
         self::assertTrue(in_array(InputInterface::class, $implements));
     }
 
@@ -24,7 +25,7 @@ class InputFileTest extends \PHPUnit_Framework_TestCase
      */
     public function testFileLocation()
     {
-        $input = new InputFile();
+        $input = new MediaFile();
         self::assertEquals('', $input->getFileLocation());
 
         $input->setFileLocation('/tmp/file/location');
@@ -39,7 +40,7 @@ class InputFileTest extends \PHPUnit_Framework_TestCase
      */
     public function testToString()
     {
-        $input = new InputFile();
+        $input = new MediaFile();
         self::assertEquals('', (string) $input);
 
         $input->setFileLocation('/tmp/test');
@@ -51,7 +52,7 @@ class InputFileTest extends \PHPUnit_Framework_TestCase
      */
     public function testFileNotExists()
     {
-        $input = new InputFile();
+        $input = new MediaFile();
         $input->setFileLocation('/not-really-there');
         $input->generateInputCmd();
     }
@@ -64,7 +65,7 @@ class InputFileTest extends \PHPUnit_Framework_TestCase
         $fileName = '/tmp/videoFile.txt';
         fopen($fileName, 'w');
 
-        $input = new InputFile();
+        $input = new MediaFile();
         $input->setFileLocation($fileName);
 
         self::assertEquals(

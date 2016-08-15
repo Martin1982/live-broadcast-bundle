@@ -1,18 +1,18 @@
 <?php
 
-namespace Martin1982\LiveBroadcastBundle\Entity\Input;
+namespace Martin1982\LiveBroadcastBundle\Entity\Media;
 
 use Doctrine\ORM\Mapping as ORM;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class InputUrl.
+ * Class MediaUrl
+ * @package Martin1982\LiveBroadcastBundle\Entity\Media
  *
  * @ORM\Table(name="broadcast_input_url", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class InputUrl extends BaseInput
+class MediaUrl extends BaseMedia
 {
     /**
      * @var string
@@ -35,7 +35,7 @@ class InputUrl extends BaseInput
     /**
      * @param string $url
      *
-     * @return InputUrl
+     * @return MediaUrl
      */
     public function setUrl($url)
     {
@@ -52,20 +52,5 @@ class InputUrl extends BaseInput
     public function __toString()
     {
         return (string) $this->getUrl();
-    }
-
-    /**
-     * @return string
-     * @throws LiveBroadcastInputException
-     */
-    public function generateInputCmd()
-    {
-        $inputUrl = $this->getUrl();
-
-        if (filter_var($inputUrl, FILTER_VALIDATE_URL) === false) {
-            throw new LiveBroadcastInputException(sprintf('Invalid URL %s', $inputUrl));
-        }
-
-        return sprintf('-re -i %s', escapeshellarg($inputUrl));
     }
 }

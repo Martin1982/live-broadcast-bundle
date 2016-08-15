@@ -7,7 +7,8 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch;
 
 /**
- * Class OutputTwitchTest.
+ * Class OutputTwitchTest
+ * @package Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput
  */
 class OutputTwitchTest extends \PHPUnit_Framework_TestCase
 {

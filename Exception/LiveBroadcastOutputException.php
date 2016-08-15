@@ -3,7 +3,8 @@
 namespace Martin1982\LiveBroadcastBundle\Exception;
 
 /**
- * Class LiveBroadcastOutputException.
+ * Class LiveBroadcastOutputException
+ * @package Martin1982\LiveBroadcastBundle\Exception
  */
 class LiveBroadcastOutputException extends LiveBroadcastException
 {

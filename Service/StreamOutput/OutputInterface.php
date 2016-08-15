@@ -4,6 +4,10 @@ namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 
+/**
+ * Interface OutputInterface
+ * @package Martin1982\LiveBroadcastBundle\Service\StreamOutput
+ */
 interface OutputInterface
 {
     /**

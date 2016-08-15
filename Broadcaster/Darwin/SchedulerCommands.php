@@ -5,7 +5,8 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster\Darwin;
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 
 /**
- * Class SchedulerCommands.
+ * Class SchedulerCommands
+ * @package Martin1982\LiveBroadcastBundle\Broadcaster\Darwin
  */
 class SchedulerCommands extends AbstractSchedulerCommands
 {

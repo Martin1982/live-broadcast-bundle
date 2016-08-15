@@ -1,21 +1,22 @@
 <?php
 
-namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Input;
+namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
-use Martin1982\LiveBroadcastBundle\Entity\Input\InputInterface;
-use Martin1982\LiveBroadcastBundle\Entity\Input\InputUrl;
+use Martin1982\LiveBroadcastBundle\Entity\Media\InputInterface;
+use Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl;
 
 /**
- * Class InputUrlTest.
+ * Class MediaUrlTest
+ * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Media
  */
-class InputUrlTest extends \PHPUnit_Framework_TestCase
+class MediaUrlTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test if the Url input class implements the correct interface.
      */
     public function testUrlInterface()
     {
-        $implements = class_implements(InputUrl::class);
+        $implements = class_implements(MediaUrl::class);
         self::assertTrue(in_array(InputInterface::class, $implements));
     }
 
@@ -24,7 +25,7 @@ class InputUrlTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUrl()
     {
-        $input = new InputUrl();
+        $input = new MediaUrl();
         self::assertEquals('', $input->getUrl());
 
         $input->setUrl('http://www.google.com');
@@ -36,7 +37,7 @@ class InputUrlTest extends \PHPUnit_Framework_TestCase
      */
     public function testToString()
     {
-        $input = new InputUrl();
+        $input = new MediaUrl();
         self::assertEquals('', (string) $input);
 
         $input->setUrl('https://github.com/Martin1982/live-broadcast-bundle');
@@ -48,7 +49,7 @@ class InputUrlTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidUrl()
     {
-        $input = new InputUrl();
+        $input = new MediaUrl();
         $input->setUrl('http://w&w&w.invalid.url');
         $input->generateInputCmd();
     }
@@ -59,7 +60,7 @@ class InputUrlTest extends \PHPUnit_Framework_TestCase
     public function testGenerateInputCmd()
     {
         $url = 'https://www.video.com/test.mp4';
-        $input = new InputUrl();
+        $input = new MediaUrl();
         $input->setUrl($url);
 
         self::assertEquals(

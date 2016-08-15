@@ -8,7 +8,8 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 
 /**
  * Class OutputFacebookTest
-  */
+ * @package Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput
+ */
 class OutputFacebookTest extends \PHPUnit_Framework_TestCase
 {
     /**

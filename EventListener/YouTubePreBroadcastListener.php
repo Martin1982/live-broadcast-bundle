@@ -25,6 +25,7 @@ class YouTubePreBroadcastListener implements EventSubscriberInterface
      * @param YouTubeApiService $youTubeApiService
      * @param Router $router
      * @param string $redirectRoute
+     * @throws \Exception
      */
     public function __construct(YouTubeApiService $youTubeApiService, Router $router, $redirectRoute)
     {

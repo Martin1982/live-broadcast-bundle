@@ -6,7 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
- * Class LiveBroadcastTest.
+ * Class LiveBroadcastTest
+ * @package Martin1982\LiveBroadcastBundle\Tests\Entity
  */
 class LiveBroadcastTest extends \PHPUnit_Framework_TestCase
 {

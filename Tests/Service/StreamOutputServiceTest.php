@@ -10,6 +10,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 
 /**
  * Class StreamOutputServiceTest
+ * @package Martin1982\LiveBroadcastBundle\Tests\Service
  */
 class StreamOutputServiceTest extends \PHPUnit_Framework_TestCase
 {

@@ -7,7 +7,8 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
- * Class OutputFacebook.
+ * Class OutputFacebook
+ * @package Martin1982\LiveBroadcastBundle\Service\StreamOutput
  */
 class OutputFacebook implements OutputInterface
 {

@@ -5,7 +5,8 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster\Windows;
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 
 /**
- * Class SchedulerCommands.
+ * Class SchedulerCommands
+ * @package Martin1982\LiveBroadcastBundle\Broadcaster\Windows
  */
 class SchedulerCommands extends AbstractSchedulerCommands
 {
@@ -28,6 +29,8 @@ class SchedulerCommands extends AbstractSchedulerCommands
     }
 
     /**
+     * Execute the shell command to start the stream
+     *
      * @param $input
      * @param $output
      * @param $meta

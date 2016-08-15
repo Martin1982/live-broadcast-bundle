@@ -5,7 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\EventListener;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
 use Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsInterface;
-use Martin1982\LiveBroadcastBundle\Entity\Input\InputMonitorStream;
+use Martin1982\LiveBroadcastBundle\Entity\Media\MediaMonitorStream;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
@@ -162,7 +162,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     {
         $placeholderImage = $this->kernel->locateResource('@LiveBroadcastBundle') . '/Resources/images/placeholder.png';
 
-        $inputService = new InputMonitorStream();
+        $inputService = new MediaMonitorStream();
         $inputService->setMonitorImage($placeholderImage);
 
         $streamUrl = $this->youTubeApiService->getStreamUrl($event->getBroadcast(), $event->getChannel());

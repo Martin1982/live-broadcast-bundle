@@ -7,7 +7,8 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
- * Class RunningBroadcastTest.
+ * Class RunningBroadcastTest
+ * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster
  */
 class RunningBroadcastTest extends \PHPUnit_Framework_TestCase
 {

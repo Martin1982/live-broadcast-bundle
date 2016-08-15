@@ -5,7 +5,8 @@ namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class BaseChannel.
+ * Class BaseChannel
+ * @package Martin1982\LiveBroadcastBundle\Entity\Channel
  *
  * @ORM\Entity()
  * @ORM\Table(name="channel", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})

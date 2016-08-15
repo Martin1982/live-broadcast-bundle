@@ -29,6 +29,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
 
     /**
      * {@inheritdoc}
+     * @throws \RuntimeException
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -119,6 +120,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
      * Get the YouTube Live service
      *
      * @return YouTubeApiService
+     * @throws \Exception
      */
     protected function getYouTubeService()
     {
@@ -138,6 +140,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
 
     /**
      * {@inheritdoc}
+     * @throws \RuntimeException
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -149,6 +152,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
 
     /**
      * {@inheritdoc}
+     * @throws \RuntimeException
      */
     protected function configureListFields(ListMapper $listMapper)
     {

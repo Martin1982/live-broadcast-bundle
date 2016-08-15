@@ -13,10 +13,14 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 
 /**
- * Class ChannelAdmin.
+ * Class ChannelAdmin
+ * @package Martin1982\LiveBroadcastBundle\Admin
  */
 class ChannelAdmin extends AbstractAdmin
 {
+    /**
+     * @var string
+     */
     protected $baseRoutePattern = 'channel';
 
     /**
@@ -48,6 +52,7 @@ class ChannelAdmin extends AbstractAdmin
 
     /**
      * {@inheritdoc}
+     * @throws \RuntimeException
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -94,6 +99,7 @@ class ChannelAdmin extends AbstractAdmin
 
     /**
      * {@inheritdoc}
+     * @throws \RuntimeException
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -103,6 +109,7 @@ class ChannelAdmin extends AbstractAdmin
 
     /**
      * {@inheritdoc}
+     * @throws \RuntimeException
      */
     protected function configureListFields(ListMapper $listMapper)
     {

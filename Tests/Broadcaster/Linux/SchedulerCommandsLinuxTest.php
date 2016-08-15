@@ -6,7 +6,8 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands;
 use phpmock\phpunit\PHPMock;
 
 /**
- * Class SchedulerCommandsLinuxTest.
+ * Class SchedulerCommandsLinuxTest
+ * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Linux
  */
 class SchedulerCommandsLinuxTest extends \PHPUnit_Framework_TestCase
 {

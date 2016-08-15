@@ -34,6 +34,7 @@ class YouTubeBlockService extends BaseBlockService
      * @param RequestStack $requestStack
      * @param Router $router ,
      * @param string $redirectRoute
+     * @throws \Exception
      */
     public function __construct(
         $name,
@@ -71,9 +72,9 @@ class YouTubeBlockService extends BaseBlockService
         }
 
         $isAuthenticated = $this->youTubeApi->isAuthenticated();
+        $state = mt_rand();
 
         if (!$isAuthenticated) {
-            $state = mt_rand();
             $session->set('state', $state);
             $session->set('authreferer', $request->getRequestUri());
         }

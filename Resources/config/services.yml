@@ -1,19 +1,20 @@
 services:
   live.broadcast.scheduler.commands:
-    class: Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands
-    factory: [Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsDetector, createSchedulerCommands]
-    arguments:
-      - "%kernel.environment%"
+      class: Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands
+      factory: [Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsDetector, createSchedulerCommands]
+      arguments:
+          - "%kernel.environment%"
 
   live.broadcast.scheduler:
-    class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler
-    arguments:
-      - "@doctrine.orm.entity_manager"
-      - "@live.broadcast.scheduler.commands"
-      - "@live.broadcast.streamoutput.service"
-      - "@event_dispatcher"
-      - "@logger"
-    tags: [{ name: monolog.logger, channel: livebroadcaster }]
+      class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler
+      arguments:
+          - "@doctrine.orm.entity_manager"
+          - "@live.broadcast.scheduler.commands"
+          - "@live.broadcast.streamoutput.service"
+          - "@live.broadcast.streaminput.service"
+          - "@event_dispatcher"
+          - "@logger"
+      tags: [{ name: monolog.logger, channel: livebroadcaster }]
 
   live.broadcast.facebook_pre_broadcast_listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\FacebookPreBroadcastListener
@@ -41,12 +42,21 @@ services:
       tags:
           - { name: kernel.event_subscriber }
 
-  live.broadcast.facebookapi.service:
-      class: Martin1982\LiveBroadcastBundle\Service\FacebookApiService
-      arguments: ["%fb_app_id%", "%fb_app_secret%"]
-  live.broadcast.youtubeapi.service:
-      class: Martin1982\LiveBroadcastBundle\Service\YouTubeApiService
-      arguments: ["%yt_client_id%", "%yt_client_secret%", "@doctrine.orm.entity_manager", "@logger"]
+  live.broadcast.streaminput.service:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamInputService
+
+  live.broadcast.input.file:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputFile
+      tags:
+          - { name: live.broadcast.input, inputtype: 'File' }
+  live.broadcast.input.url:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputUrl
+      tags:
+          - { name: live.broadcast.input, inputtype: 'Url' }
+  live.broadcast.input.monitor:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputMonitorStream
+      tags:
+          - { name: live.broadcast.input, inputtype: 'Monitor' }
 
   live.broadcast.streamoutput.service:
       class: Martin1982\LiveBroadcastBundle\Service\StreamOutputService
@@ -60,10 +70,17 @@ services:
       tags:
           - { name: live.broadcast.output, platform: 'Facebook' }
   live.broadcast.output.twitch:
-    class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch
-    tags:
-        - { name: live.broadcast.output, platform: 'Twitch' }
+      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch
+      tags:
+          - { name: live.broadcast.output, platform: 'Twitch' }
   live.broadcast.output.ustream:
-    class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputUstream
-    tags:
-        - { name: live.broadcast.output, platform: 'Ustream' }
+      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputUstream
+      tags:
+          - { name: live.broadcast.output, platform: 'Ustream' }
+
+  live.broadcast.facebookapi.service:
+      class: Martin1982\LiveBroadcastBundle\Service\FacebookApiService
+      arguments: ["%fb_app_id%", "%fb_app_secret%"]
+  live.broadcast.youtubeapi.service:
+      class: Martin1982\LiveBroadcastBundle\Service\YouTubeApiService
+      arguments: ["%yt_client_id%", "%yt_client_secret%", "@doctrine.orm.entity_manager", "@logger"]

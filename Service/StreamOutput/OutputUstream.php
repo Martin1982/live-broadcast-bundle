@@ -8,6 +8,7 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Class OutputUstream
+ * @package Martin1982\LiveBroadcastBundle\Service\StreamOutput
  */
 class OutputUstream implements OutputInterface
 {

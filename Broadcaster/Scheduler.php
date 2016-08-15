@@ -10,12 +10,14 @@ use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Event\SwitchMonitorEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class Scheduler.
+ * Class Scheduler
+ * @package Martin1982\LiveBroadcastBundle\Broadcaster
  */
 class Scheduler
 {
@@ -33,6 +35,11 @@ class Scheduler
      * @var StreamOutputService
      */
     protected $outputService;
+
+    /**
+     * @var StreamInputService
+     */
+    protected $inputService;
 
     /**
      * @var EventDispatcherInterface
@@ -57,22 +64,25 @@ class Scheduler
     /**
      * Scheduler constructor.
      *
-     * @param EntityManager              $entityManager
+     * @param EntityManager $entityManager
      * @param SchedulerCommandsInterface $schedulerCommands
-     * @param StreamOutputService        $outputService
-     * @param EventDispatcherInterface   $dispatcher
-     * @param LoggerInterface            $logger
+     * @param StreamOutputService $outputService
+     * @param StreamInputService $inputService
+     * @param EventDispatcherInterface $dispatcher
+     * @param LoggerInterface $logger
      */
     public function __construct(
         EntityManager $entityManager,
         SchedulerCommandsInterface $schedulerCommands,
         StreamOutputService $outputService,
+        StreamInputService $inputService,
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->schedulerCommands = $schedulerCommands;
         $this->outputService = $outputService;
+        $this->inputService = $inputService;
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
     }
@@ -203,7 +213,7 @@ class Scheduler
     public function startBroadcast(LiveBroadcast $broadcast, BaseChannel $channel)
     {
         try {
-            $input = $broadcast->getInput()->generateInputCmd();
+            $input = $this->inputService->getInputInterface($broadcast->getInput());
             $output = $this->outputService->getOutputInterface($channel);
 
             $preBroadcastEvent = new PreBroadcastEvent($broadcast, $output);
@@ -220,7 +230,7 @@ class Scheduler
             );
 
             $this->logger->info(sprintf('Starting broadcast with %s', $output->generateOutputCmd()));
-            $this->schedulerCommands->startProcess($input, $output->generateOutputCmd(), array(
+            $this->schedulerCommands->startProcess($input->generateInputCmd(), $output->generateOutputCmd(), array(
                 'broadcast_id' => $broadcast->getBroadcastId(),
                 'channel_id' => $channel->getChannelId(),
             ));

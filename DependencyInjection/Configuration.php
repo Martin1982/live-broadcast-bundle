@@ -7,6 +7,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * Class Configuration
+ * @package Martin1982\LiveBroadcastBundle\DependencyInjection
  */
 class Configuration implements ConfigurationInterface
 {
