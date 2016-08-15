@@ -9,6 +9,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\SwitchMonitorEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
+use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
@@ -47,6 +48,11 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
     protected $outputService;
 
     /**
+     * @var StreamInputService
+     */
+    protected $inputService;
+
+    /**
      * @var YouTubeApiService
      */
     protected $youTubeApiService;
@@ -55,20 +61,25 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
      * YouTubeSwitchMonitorListener constructor.
      * @param SchedulerCommandsInterface $command
      * @param StreamOutputService $outputService
+     * @param StreamInputService $inputService
      * @param YouTubeApiService $youTubeApiService
      * @param Router $router
      * @param $redirectRoute
-     * @throws \Exception
+     * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
+     * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
      */
     public function __construct(
         SchedulerCommandsInterface $command,
         StreamOutputService $outputService,
+        StreamInputService $inputService,
         YouTubeApiService $youTubeApiService,
         Router $router,
         $redirectRoute
     ) {
         $this->command = $command;
         $this->outputService = $outputService;
+        $this->inputService = $inputService;
         $this->youTubeApiService = $youTubeApiService;
 
         $redirectUri = $router->generate(
@@ -87,6 +98,10 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
         $this->monitorBroadcast = $event->getMonitorBroadcast();
         $this->plannedBroadcast = $event->getPlannedBroadcast();
         $this->channel = $event->getChannel();
+
+        if (!$this->channel instanceof ChannelYouTube) {
+            return;
+        }
 
         $this->youTubeApiService->transitionState(
             $this->plannedBroadcast,

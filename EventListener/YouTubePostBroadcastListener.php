@@ -26,6 +26,9 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
      * @param YouTubeApiService $youTubeApiService
      * @param Router $router
      * @param string $redirectRoute
+     * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
+     * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
      */
     public function __construct(YouTubeApiService $youTubeApiService, Router $router, $redirectRoute)
     {

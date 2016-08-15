@@ -9,6 +9,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Media\MediaMonitorStream;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
+use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputMonitorStream;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -53,6 +54,9 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * @param KernelInterface $kernel
      * @param Router $router
      * @param $redirectRoute
+     * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
+     * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
      */
     public function __construct(
         EntityManager $entityManager,
@@ -79,6 +83,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * Get planned streams which aren't live yet on the monitor
      *
      * @param PostBroadcastLoopEvent $event
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function onPostBroadcastLoop(PostBroadcastLoopEvent $event)
     {
@@ -157,13 +162,19 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * Start a test stream with a placeholder image
      *
      * @param YouTubeEvent $event
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
     protected function startTestStream(YouTubeEvent $event)
     {
         $placeholderImage = $this->kernel->locateResource('@LiveBroadcastBundle') . '/Resources/images/placeholder.png';
 
-        $inputService = new MediaMonitorStream();
-        $inputService->setMonitorImage($placeholderImage);
+        $inputMedia = new MediaMonitorStream();
+        $inputMedia->setMonitorImage($placeholderImage);
+
+        $inputService = new InputMonitorStream();
+        $inputService->setMedia($inputMedia);
 
         $streamUrl = $this->youTubeApiService->getStreamUrl($event->getBroadcast(), $event->getChannel());
 
