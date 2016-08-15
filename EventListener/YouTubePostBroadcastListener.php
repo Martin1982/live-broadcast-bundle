@@ -9,6 +9,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class YouTubePostBroadcastListener
@@ -24,13 +25,13 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
     /**
      * YouTubePostBroadcastListener constructor.
      * @param YouTubeApiService $youTubeApiService
-     * @param Router $router
+     * @param RouterInterface $router
      * @param string $redirectRoute
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
      * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
      */
-    public function __construct(YouTubeApiService $youTubeApiService, Router $router, $redirectRoute)
+    public function __construct(YouTubeApiService $youTubeApiService, RouterInterface $router, $redirectRoute)
     {
         $this->youTubeApiService = $youTubeApiService;
 

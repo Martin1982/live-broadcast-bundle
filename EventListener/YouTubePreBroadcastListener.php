@@ -8,6 +8,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class YouTubePreBroadcastListener
@@ -23,11 +24,11 @@ class YouTubePreBroadcastListener implements EventSubscriberInterface
     /**
      * YouTubePreBroadcastListener constructor.
      * @param YouTubeApiService $youTubeApiService
-     * @param Router $router
+     * @param RouterInterface $router
      * @param string $redirectRoute
      * @throws \Exception
      */
-    public function __construct(YouTubeApiService $youTubeApiService, Router $router, $redirectRoute)
+    public function __construct(YouTubeApiService $youTubeApiService, RouterInterface $router, $redirectRoute)
     {
         $this->youTubeApiService = $youTubeApiService;
 

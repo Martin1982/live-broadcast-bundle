@@ -15,6 +15,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class YouTubeSwitchMonitorListener
@@ -63,7 +64,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
      * @param StreamOutputService $outputService
      * @param StreamInputService $inputService
      * @param YouTubeApiService $youTubeApiService
-     * @param Router $router
+     * @param RouterInterface $router
      * @param $redirectRoute
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
      * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
@@ -74,7 +75,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
         StreamOutputService $outputService,
         StreamInputService $inputService,
         YouTubeApiService $youTubeApiService,
-        Router $router,
+        RouterInterface $router,
         $redirectRoute
     ) {
         $this->command = $command;

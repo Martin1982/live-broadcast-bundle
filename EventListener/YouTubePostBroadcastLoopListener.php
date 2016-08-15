@@ -15,6 +15,7 @@ use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class YouTubePostBroadcastLoopListener
@@ -52,7 +53,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * @param SchedulerCommandsInterface $commands
      * @param YouTubeApiService $youTubeApiService
      * @param KernelInterface $kernel
-     * @param Router $router
+     * @param RouterInterface $router
      * @param $redirectRoute
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
      * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
@@ -63,7 +64,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
         SchedulerCommandsInterface $commands,
         YouTubeApiService $youTubeApiService,
         KernelInterface $kernel,
-        Router $router,
+        RouterInterface $router,
         $redirectRoute
     ) {
         $this->entityManager = $entityManager;

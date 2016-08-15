@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class YouTubeBlockService
@@ -32,7 +33,7 @@ class YouTubeBlockService extends BaseBlockService
      * @param EngineInterface $templating
      * @param YouTubeApiService $youTubeApi
      * @param RequestStack $requestStack
-     * @param Router $router ,
+     * @param RouterInterface $router
      * @param string $redirectRoute
      * @throws \Exception
      */
@@ -41,7 +42,7 @@ class YouTubeBlockService extends BaseBlockService
         EngineInterface $templating,
         YouTubeApiService $youTubeApi,
         RequestStack $requestStack,
-        Router $router,
+        RouterInterface $router,
         $redirectRoute
     ) {
         $this->youTubeApi = $youTubeApi;
