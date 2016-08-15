@@ -244,6 +244,10 @@ class YouTubeApiService
         $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
         $youTubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
 
+        if (!$youTubeEvent) {
+            return $this->createLiveEvent($broadcast, $channel);
+        }
+
         $this->updateLiveStream($youTubeEvent);
     }
 

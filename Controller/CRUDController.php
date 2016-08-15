@@ -20,6 +20,7 @@ class CRUDController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function longLivedAccessTokenAction(Request $request)
     {
@@ -64,6 +65,7 @@ class CRUDController extends Controller
 
     /**
      * @param Session $session
+     * @param YouTubeApiService $youTubeService
      */
     protected function clearToken(Session $session, YouTubeApiService $youTubeService)
     {

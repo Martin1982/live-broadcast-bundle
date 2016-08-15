@@ -5,6 +5,7 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Psr\Log\LoggerInterface;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -108,7 +109,13 @@ class LiveBroadcastAdmin extends AbstractAdmin
         foreach ($broadcast->getOutputChannels() as $channel) {
             if ($channel instanceof ChannelYouTube) {
                 $youTubeService = $this->getYouTubeService();
-                $youTubeService->removeLiveEvent($broadcast, $channel);
+                try {
+                    $youTubeService->removeLiveEvent($broadcast, $channel);
+                } catch (\Google_Service_Exception $ex) {
+                    /** @var LoggerInterface $logger */
+                    $logger = $this->getConfigurationPool()->getContainer()->get('logger');
+                    $logger->warning($ex->getMessage());
+                }
             }
         }
 
