@@ -132,10 +132,13 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
     /**
      * Start the actual broadcast
      * @throws LiveBroadcastOutputException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
     protected function startBroadcast()
     {
-        $input = $this->plannedBroadcast->getInput()->generateInputCmd();
+        $media = $this->plannedBroadcast->getInput();
+        $input = $this->inputService->getInputInterface($media)->generateInputCmd();
+
         /** @var OutputYouTube $outputService */
         $outputService = $this->outputService->getOutputInterface($this->channel);
         $outputService->setStreamUrl($this->youTubeApiService->getStreamUrl($this->plannedBroadcast, $this->channel));
