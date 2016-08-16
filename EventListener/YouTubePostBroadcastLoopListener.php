@@ -47,6 +47,16 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     protected $logger;
 
     /**
+     * @var GoogleRedirectService
+     */
+    protected $redirectService;
+
+    /**
+     * @var string
+     */
+    protected $googleRedirectUri;
+
+    /**
      * YouTubePostBroadcastLoopListener constructor.
      * @param EntityManager $entityManager
      * @param SchedulerCommandsInterface $commands
@@ -69,9 +79,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
         $this->youTubeApiService = $youTubeApiService;
         $this->kernel = $kernel;
         $this->logger = $logger;
-
-        $redirectUri = $redirectService->getOAuthRedirectUrl();
-        $this->youTubeApiService->initApiClients($redirectUri);
+        $this->redirectService = $redirectService;
     }
 
     /**
@@ -114,11 +122,25 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     }
 
     /**
+     * @return YouTubeApiService
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    protected function getYouTubeApiService()
+    {
+        if (!$this->googleRedirectUri) {
+            $this->googleRedirectUri = $this->redirectService->getOAuthRedirectUrl();
+            $this->youTubeApiService->initApiClients($this->googleRedirectUri);
+        }
+
+        return $this->youTubeApiService;
+    }
+
+    /**
      * @param YouTubeEvent $testableEvent
      */
     protected function updateEventState(YouTubeEvent $testableEvent)
     {
-        $remoteState = $this->youTubeApiService->getBroadcastStatus(
+        $remoteState = $this->getYouTubeApiService()->getBroadcastStatus(
             $testableEvent->getBroadcast(),
             $testableEvent->getChannel()
         );
@@ -171,7 +193,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
         $inputService = new InputMonitorStream();
         $inputService->setMedia($inputMedia);
 
-        $streamUrl = $this->youTubeApiService->getStreamUrl($event->getBroadcast(), $event->getChannel());
+        $streamUrl = $this->getYouTubeApiService()->getStreamUrl($event->getBroadcast(), $event->getChannel());
 
         $outputService = new OutputYouTube();
         $outputService->setChannel($event->getChannel());
@@ -228,7 +250,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      */
     protected function transitionState(YouTubeEvent $event)
     {
-        $liveService = $this->youTubeApiService;
+        $liveService = $this->getYouTubeApiService();
         $liveService->transitionState($event->getBroadcast(), $event->getChannel(), YouTubeEvent::STATE_REMOTE_TESTING);
     }
 
