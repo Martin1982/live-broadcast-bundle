@@ -309,7 +309,7 @@ class YouTubeApiService
             );
             $this->youTubeApiClient->liveBroadcasts->transition($state, $youTubeId, 'status');
         } catch (\Google_Service_Exception $exception) {
-            $this->logger->warning(
+            $this->logger->error(
                 'YouTube transition state',
                 array('exception' => $exception->getMessage())
             );
@@ -367,7 +367,19 @@ class YouTubeApiService
     {
         $channel = $event->getChannel();
         $this->getAccessToken($channel->getRefreshToken());
-        $this->youTubeApiClient->liveBroadcasts->delete($event->getYouTubeId());
+
+        try {
+            $this->youTubeApiClient->liveBroadcasts->delete($event->getYouTubeId());
+        } catch (\Google_Service_Exception $exception) {
+            $this->logger->error(
+                'YouTube remove live stream',
+                array(
+                    'broadcast_id' => $event->getBroadcast()->getBroadcastId(),
+                    'broadcast_name' => $event->getBroadcast()->getName(),
+                    'exception' => $exception->getMessage(),
+                    )
+            );
+        }
     }
 
     /**
