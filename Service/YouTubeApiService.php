@@ -83,6 +83,7 @@ class YouTubeApiService
         $googleApiClient->setScopes('https://www.googleapis.com/auth/youtube');
         $googleApiClient->setAccessType('offline');
         $googleApiClient->setRedirectUri($oAuthRedirectUrl);
+        $googleApiClient->setApprovalPrompt('force');
 
         $this->googleApiClient = $googleApiClient;
         $this->youTubeApiClient = new \Google_Service_YouTube($googleApiClient);
