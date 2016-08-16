@@ -154,23 +154,25 @@ class Scheduler
             $broadcast = $broadcastRepository->find($runningBroadcast->getBroadcastId());
 
             if (!($broadcast instanceof LiveBroadcast)) {
-                $this->logger->error(sprintf(
-                    'Unable to stop broadcast %d, PID: %d not found in database.',
-                    $runningBroadcast->getBroadcastId(),
-                    $runningBroadcast->getProcessId()
-                ));
+                $this->logger->error(
+                    'Unable to stop broadcast, PID not found in database',
+                    array(
+                        'broadcast_id' => $runningBroadcast->getBroadcastId(),
+                        'pid' => $runningBroadcast->getProcessId(),
+                        )
+                );
                 continue;
             }
 
             if ($broadcast->isStopOnEndTimestamp() &&
                 $broadcast->getEndTimestamp() < new \DateTime()) {
                 $this->logger->info(
-                    sprintf(
-                        'Stop broadcast %d (%s), PID: %d.',
-                        $broadcast->getBroadcastId(),
-                        $broadcast->getName(),
-                        $runningBroadcast->getBroadcastId()
-                    )
+                    'Stop broadcast',
+                    array(
+                        'broadcast_id' => $broadcast->getBroadcastId(),
+                        'broadcast_name' => $broadcast->getName(),
+                        'pid' => $runningBroadcast->getProcessId(),
+                        )
                 );
                 $this->schedulerCommands->stopProcess($runningBroadcast->getProcessId());
             }
@@ -223,16 +225,16 @@ class Scheduler
             $this->dispatcher->dispatch(PreBroadcastEvent::NAME, $preBroadcastEvent);
 
             $this->logger->info(
-                sprintf(
-                    'Start broadcast %d (%s) on %d (%s).',
-                    $broadcast->getBroadcastId(),
-                    $broadcast->getName(),
-                    $channel->getChannelId(),
-                    $channel->getChannelName()
-                )
+                'Start broadcast',
+                array(
+                    'broadcast_id' => $broadcast->getBroadcastId(),
+                    'broadcast_name' => $broadcast->getName(),
+                    'channel_id' => $channel->getChannelId(),
+                    'channel_name' => $channel->getChannelName(),
+                    'output_cmd' => $output->generateOutputCmd(),
+                    )
             );
 
-            $this->logger->info(sprintf('Starting broadcast with %s', $output->generateOutputCmd()));
             $this->schedulerCommands->startProcess($input->generateInputCmd(), $output->generateOutputCmd(), array(
                 'broadcast_id' => $broadcast->getBroadcastId(),
                 'channel_id' => $channel->getChannelId(),
@@ -242,12 +244,12 @@ class Scheduler
             $this->dispatcher->dispatch(PostBroadcastEvent::NAME, $postBroadcastEvent);
         } catch (LiveBroadcastException $ex) {
             $this->logger->error(
-                sprintf(
-                    'Could not start broadcast %d (%s): %s',
-                    $broadcast->getBroadcastId(),
-                    $broadcast->getName(),
-                    $ex->getMessage()
-                )
+                'Could not start broadcast',
+                array(
+                    'broadcast_id' => $broadcast->getBroadcastId(),
+                    'broadcast_name' => $broadcast->getName(),
+                    'exception' => $ex->getMessage(),
+                    )
             );
         }
     }

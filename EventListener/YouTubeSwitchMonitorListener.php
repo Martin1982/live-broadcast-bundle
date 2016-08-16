@@ -127,7 +127,10 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
      */
     protected function stopMonitorStream()
     {
-        $this->logger->info('YouTube stop monitor stream, broadcast id: '.$this->monitorBroadcast->getBroadcastId());
+        $this->logger->info(
+            'YouTube stop monitor stream',
+            array('broadcast_id' => $this->monitorBroadcast->getBroadcastId())
+        );
         $this->command->stopProcess($this->monitorBroadcast->getProcessId());
     }
 
@@ -147,7 +150,10 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
 
         $output = $outputService->generateOutputCmd();
 
-        $this->logger->info('YouTube start broadcast, broadcast id: '.$this->plannedBroadcast->getBroadcastId());
+        $this->logger->info(
+            'YouTube start broadcast',
+            array('broadcast_id' => $this->plannedBroadcast->getBroadcastId())
+        );
         $this->command->startProcess($input, $output, array(
             'broadcast_id' => $this->plannedBroadcast->getBroadcastId(),
             'channel_id' => $this->channel->getChannelId(),

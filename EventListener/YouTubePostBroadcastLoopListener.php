@@ -184,7 +184,10 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
         );
 
         try {
-            $this->logger->info('YouTube start monitor stream, broadcast id: '. $metadata['broadcast_id']);
+            $this->logger->info(
+                'YouTube start monitor stream',
+                array('broadcast_id' => $metadata['broadcast_id'])
+            );
             $this->commands->startProcess(
                 $inputService->generateInputCmd(),
                 $outputService->generateOutputCmd(),
