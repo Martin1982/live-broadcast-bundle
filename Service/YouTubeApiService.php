@@ -303,6 +303,7 @@ class YouTubeApiService
         $youTubeId = $event->getYouTubeId();
 
         try {
+            $this->logger->info('YouTube transition state to: '. $state);
             $this->youTubeApiClient->liveBroadcasts->transition($state, $youTubeId, 'status');
         } catch (\Google_Service_Exception $exception) {
             $this->logger->warning($exception->getMessage());

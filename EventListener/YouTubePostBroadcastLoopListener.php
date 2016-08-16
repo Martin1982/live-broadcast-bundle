@@ -13,6 +13,7 @@ use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputMonitorStream;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -22,12 +23,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
 {
-    /**
-     * Test video duration in seconds
-     * @var int
-     */
-    public $testDuration = 300;
-
     /**
      * @var SchedulerCommandsInterface
      */
@@ -47,12 +42,18 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     protected $kernel;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * YouTubePostBroadcastLoopListener constructor.
      * @param EntityManager $entityManager
      * @param SchedulerCommandsInterface $commands
      * @param YouTubeApiService $youTubeApiService
      * @param KernelInterface $kernel
      * @param GoogleRedirectService $redirectService
+     * @param LoggerInterface $logger
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function __construct(
@@ -60,12 +61,14 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
         SchedulerCommandsInterface $commands,
         YouTubeApiService $youTubeApiService,
         KernelInterface $kernel,
-        GoogleRedirectService $redirectService
+        GoogleRedirectService $redirectService,
+        LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->commands = $commands;
         $this->youTubeApiService = $youTubeApiService;
         $this->kernel = $kernel;
+        $this->logger = $logger;
 
         $redirectUri = $redirectService->getOAuthRedirectUrl();
         $this->youTubeApiService->initApiClients($redirectUri);
@@ -92,8 +95,8 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
                 continue;
             }
 
-            if (!$this->hasRunningTestStream($testableEvent, $runningProcesses)) {
-                $this->startTestStream($testableEvent);
+            if (!$this->hasRunningMonitorStream($testableEvent, $runningProcesses)) {
+                $this->startMonitorStream($testableEvent);
             }
 
             $this->transitionState($testableEvent);
@@ -131,7 +134,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * @param RunningBroadcast[] $runningProcesses
      * @return bool
      */
-    protected function hasRunningTestStream(YouTubeEvent $event, $runningProcesses)
+    protected function hasRunningMonitorStream(YouTubeEvent $event, $runningProcesses)
     {
         $broadcast = $event->getBroadcast();
         $channel = $event->getChannel();
@@ -151,14 +154,14 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     }
 
     /**
-     * Start a test stream with a placeholder image
+     * Start a monitor stream with a placeholder image
      *
      * @param YouTubeEvent $event
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    protected function startTestStream(YouTubeEvent $event)
+    protected function startMonitorStream(YouTubeEvent $event)
     {
         $placeholderImage = $this->kernel->locateResource('@LiveBroadcastBundle') . '/Resources/images/placeholder.png';
 
@@ -181,6 +184,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
         );
 
         try {
+            $this->logger->info('YouTube start monitor stream, broadcast id: '. $metadata['broadcast_id']);
             $this->commands->startProcess(
                 $inputService->generateInputCmd(),
                 $outputService->generateOutputCmd(),

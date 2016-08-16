@@ -14,6 +14,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -58,12 +59,18 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
     protected $youTubeApiService;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * YouTubeSwitchMonitorListener constructor.
      * @param SchedulerCommandsInterface $command
      * @param StreamOutputService $outputService
      * @param StreamInputService $inputService
      * @param YouTubeApiService $youTubeApiService
      * @param GoogleRedirectService $redirectService
+     * @param LoggerInterface $logger
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function __construct(
@@ -71,12 +78,14 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
         StreamOutputService $outputService,
         StreamInputService $inputService,
         YouTubeApiService $youTubeApiService,
-        GoogleRedirectService $redirectService
+        GoogleRedirectService $redirectService,
+        LoggerInterface $logger
     ) {
         $this->command = $command;
         $this->outputService = $outputService;
         $this->inputService = $inputService;
         $this->youTubeApiService = $youTubeApiService;
+        $this->logger = $logger;
 
         $redirectUri = $redirectService->getOAuthRedirectUrl();
         $this->youTubeApiService->initApiClients($redirectUri);
@@ -118,6 +127,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
      */
     protected function stopMonitorStream()
     {
+        $this->logger->info('YouTube stop monitor stream, broadcast id: '.$this->monitorBroadcast->getBroadcastId());
         $this->command->stopProcess($this->monitorBroadcast->getProcessId());
     }
 
@@ -137,6 +147,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
 
         $output = $outputService->generateOutputCmd();
 
+        $this->logger->info('YouTube start broadcast, broadcast id: '.$this->plannedBroadcast->getBroadcastId());
         $this->command->startProcess($input, $output, array(
             'broadcast_id' => $this->plannedBroadcast->getBroadcastId(),
             'channel_id' => $this->channel->getChannelId(),

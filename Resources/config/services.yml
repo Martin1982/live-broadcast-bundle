@@ -33,12 +33,12 @@ services:
           - { name: kernel.event_subscriber }
   live.broadcast.youtube_post_broadcastloop_listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\YouTubePostBroadcastLoopListener
-      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.scheduler.commands", "@live.broadcast.youtubeapi.service", "@kernel", "@live.broadcast.googleredirect.service"]
+      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.scheduler.commands", "@live.broadcast.youtubeapi.service", "@kernel", "@live.broadcast.googleredirect.service", "@logger"]
       tags:
           - { name: kernel.event_subscriber }
   live.broadcast.youtube_switch_monitor_listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\YouTubeSwitchMonitorListener
-      arguments: ["@live.broadcast.scheduler.commands", "@live.broadcast.streamoutput.service", "@live.broadcast.streaminput.service", "@live.broadcast.youtubeapi.service", "@live.broadcast.googleredirect.service"]
+      arguments: ["@live.broadcast.scheduler.commands", "@live.broadcast.streamoutput.service", "@live.broadcast.streaminput.service", "@live.broadcast.youtubeapi.service", "@live.broadcast.googleredirect.service", "@logger"]
       tags:
           - { name: kernel.event_subscriber }
 
