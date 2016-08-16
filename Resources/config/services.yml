@@ -86,4 +86,4 @@ services:
       arguments: ["%yt_client_id%", "%yt_client_secret%", "@doctrine.orm.entity_manager", "@logger"]
   live.broadcast.googleredirect.service:
       class: Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService
-      arguments: ["@router", "%%live_broadcast_yt_redirect_route%%"]
+      arguments: ["@router", "%live_broadcast_yt_redirect_route%"]
