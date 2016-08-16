@@ -65,7 +65,7 @@ class ChannelAdmin extends AbstractAdmin
         $configuredSubclasses = array();
         $config = $this->subclassConfigs;
 
-        foreach($subclasses as $classKey => $subclass) {
+        foreach ($subclasses as $classKey => $subclass) {
             if ($subclass::isEntityConfigured($config)) {
                 $configuredSubclasses[$classKey] = $subclass;
             }
