@@ -9,12 +9,12 @@ use Martin1982\LiveBroadcastBundle\Entity\Media\MediaMonitorStream;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
+use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputMonitorStream;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class YouTubePostBroadcastLoopListener
@@ -52,30 +52,22 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * @param SchedulerCommandsInterface $commands
      * @param YouTubeApiService $youTubeApiService
      * @param KernelInterface $kernel
-     * @param RouterInterface $router
-     * @param $redirectRoute
-     * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
-     * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
-     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
+     * @param GoogleRedirectService $redirectService
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function __construct(
         EntityManager $entityManager,
         SchedulerCommandsInterface $commands,
         YouTubeApiService $youTubeApiService,
         KernelInterface $kernel,
-        RouterInterface $router,
-        $redirectRoute
+        GoogleRedirectService $redirectService
     ) {
         $this->entityManager = $entityManager;
         $this->commands = $commands;
         $this->youTubeApiService = $youTubeApiService;
         $this->kernel = $kernel;
 
-        $redirectUri = $router->generate(
-            $redirectRoute,
-            array(),
-            $router::ABSOLUTE_URL
-        );
+        $redirectUri = $redirectService->getOAuthRedirectUrl();
         $this->youTubeApiService->initApiClients($redirectUri);
     }
 

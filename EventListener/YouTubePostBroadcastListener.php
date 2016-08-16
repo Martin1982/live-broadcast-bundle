@@ -5,10 +5,10 @@ namespace Martin1982\LiveBroadcastBundle\EventListener;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
+use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class YouTubePostBroadcastListener
@@ -24,21 +24,14 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
     /**
      * YouTubePostBroadcastListener constructor.
      * @param YouTubeApiService $youTubeApiService
-     * @param RouterInterface $router
-     * @param string $redirectRoute
-     * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
-     * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
-     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
+     * @param GoogleRedirectService $redirectService
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function __construct(YouTubeApiService $youTubeApiService, RouterInterface $router, $redirectRoute)
+    public function __construct(YouTubeApiService $youTubeApiService, GoogleRedirectService $redirectService)
     {
         $this->youTubeApiService = $youTubeApiService;
 
-        $redirectUri = $router->generate(
-            $redirectRoute,
-            array(),
-            $router::ABSOLUTE_URL
-        );
+        $redirectUri = $redirectService->getOAuthRedirectUrl();
         $this->youTubeApiService->initApiClients($redirectUri);
     }
 

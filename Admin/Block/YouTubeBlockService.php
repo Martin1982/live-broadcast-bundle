@@ -2,13 +2,13 @@
 
 namespace Martin1982\LiveBroadcastBundle\Admin\Block;
 
+use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Sonata\BlockBundle\Block\BaseBlockService;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class YouTubeBlockService
@@ -32,26 +32,20 @@ class YouTubeBlockService extends BaseBlockService
      * @param EngineInterface $templating
      * @param YouTubeApiService $youTubeApi
      * @param RequestStack $requestStack
-     * @param RouterInterface $router
-     * @param string $redirectRoute
-     * @throws \Exception
+     * @param GoogleRedirectService $redirectService
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function __construct(
         $name,
         EngineInterface $templating,
         YouTubeApiService $youTubeApi,
         RequestStack $requestStack,
-        RouterInterface $router,
-        $redirectRoute
+        GoogleRedirectService $redirectService
     ) {
         $this->youTubeApi = $youTubeApi;
         $this->requestStack = $requestStack;
 
-        $redirectUri = $router->generate(
-            $redirectRoute,
-            array(),
-            $router::ABSOLUTE_URL
-        );
+        $redirectUri = $redirectService->getOAuthRedirectUrl();
         $this->youTubeApi->initApiClients($redirectUri);
 
         parent::__construct($name, $templating);

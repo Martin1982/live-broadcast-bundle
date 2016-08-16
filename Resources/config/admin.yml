@@ -48,7 +48,6 @@ services:
             - "@templating"
             - "@live.broadcast.youtubeapi.service"
             - "@request_stack"
-            - "@router"
-            - "%live_broadcast_yt_redirect_route%"
+            - "@live.broadcast.googleredirect.service"
         tags:
             - { name: sonata.block }
