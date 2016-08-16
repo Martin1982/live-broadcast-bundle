@@ -89,4 +89,4 @@ services:
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
   live.broadcast.googleredirect.service:
       class: Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService
-      arguments: ["@router", "%live_broadcast_yt_redirect_route%"]
+      arguments: ["@router", "%yt_redirect_route%"]
