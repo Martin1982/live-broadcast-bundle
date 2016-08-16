@@ -73,4 +73,37 @@ class ChannelYouTube extends BaseChannel
     {
         return 'YouTube: '.$this->getChannelName();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function isEntityConfigured($configuration)
+    {
+        if (!array_key_exists('youtube', $configuration)) {
+            return false;
+        }
+
+        $youTubeConfig = $configuration['youtube'];
+
+        if (!array_key_exists('client_id', $youTubeConfig)) {
+            return false;
+        }
+
+        if (!array_key_exists('client_secret', $youTubeConfig)) {
+            return false;
+        }
+
+        if (!array_key_exists('redirect_route', $youTubeConfig)) {
+            return false;
+        }
+
+        if (!$youTubeConfig['client_id'] ||
+            !$youTubeConfig['client_secret'] ||
+            !$youTubeConfig['redirect_route']
+        ) {
+            return false;
+        }
+
+        return true;
+    }
 }

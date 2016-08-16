@@ -25,10 +25,13 @@ class LiveBroadcastExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('fb_app_id', $config['facebook']['application_id']);
-        $container->setParameter('fb_app_secret', $config['facebook']['application_secret']);
-        $container->setParameter('yt_client_id', $config['youtube']['client_id']);
-        $container->setParameter('yt_client_secret', $config['youtube']['client_secret']);
-        $container->setParameter('yt_redirect_route', $config['youtube']['redirect_route']);
+        $container->setParameter('livebroadcast.config', $config);
+
+        $container->setParameter('livebroadcast.fb.appid', $config['facebook']['application_id']);
+        $container->setParameter('livebroadcast.fb.appsecret', $config['facebook']['application_secret']);
+
+        $container->setParameter('livebroadcast.yt.clientid', $config['youtube']['client_id']);
+        $container->setParameter('livebroadcast.yt.clientsecret', $config['youtube']['client_secret']);
+        $container->setParameter('livebroadcast.yt.redirectroute', $config['youtube']['redirect_route']);
     }
 }
