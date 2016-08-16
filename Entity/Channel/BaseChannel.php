@@ -58,4 +58,12 @@ abstract class BaseChannel
 
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public static function isEntityConfigured($configuration)
+    {
+        return true;
+    }
 }

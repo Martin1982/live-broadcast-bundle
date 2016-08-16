@@ -2,6 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
+use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
@@ -24,6 +25,11 @@ class ChannelAdmin extends AbstractAdmin
     protected $baseRoutePattern = 'channel';
 
     /**
+     * @var array
+     */
+    protected $subclassConfigs = array();
+
+    /**
      * {@inheritdoc}
      */
     public function getTemplate($name)
@@ -39,6 +45,33 @@ class ChannelAdmin extends AbstractAdmin
         }
 
         return parent::getTemplate($name);
+    }
+
+    /**
+     * Set configuration for the subclass configs
+     *
+     * @param $configs
+     */
+    public function setSubclassConfigs($configs)
+    {
+        $this->subclassConfigs = $configs;
+    }
+
+    /**
+     * @param BaseChannel[] $subclasses
+     */
+    public function setConfiguredSubclasses($subclasses)
+    {
+        $configuredSubclasses = array();
+        $config = $this->subclassConfigs;
+
+        foreach ($subclasses as $classKey => $subclass) {
+            if ($subclass::isEntityConfigured($config)) {
+                $configuredSubclasses[$classKey] = $subclass;
+            }
+        }
+
+        $this->setSubClasses($configuredSubclasses);
     }
 
     /**

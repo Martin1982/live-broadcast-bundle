@@ -51,7 +51,6 @@ class YouTubeApiService
      * @param string          $clientSecret
      * @param EntityManager   $entityManager
      * @param LoggerInterface $logger
-     * @throws LiveBroadcastOutputException
      */
     public function __construct(
         $clientId,
@@ -59,10 +58,6 @@ class YouTubeApiService
         EntityManager $entityManager,
         LoggerInterface $logger
     ) {
-        if (empty($clientId) || empty($clientSecret)) {
-            throw new LiveBroadcastOutputException('The YouTube oAuth settings are not correct.');
-        }
-
         $this->entityManager = $entityManager;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -73,9 +68,14 @@ class YouTubeApiService
      * Initialize API to Google and YouTube
      *
      * @param string $oAuthRedirectUrl
+     * @throws LiveBroadcastOutputException
      */
     public function initApiClients($oAuthRedirectUrl)
     {
+        if (empty($this->clientId) || empty($this->clientSecret)) {
+            throw new LiveBroadcastOutputException('The YouTube oAuth settings are not correct.');
+        }
+
         $googleApiClient = new \Google_Client();
         $googleApiClient->setLogger($this->logger);
         $googleApiClient->setClientId($this->clientId);

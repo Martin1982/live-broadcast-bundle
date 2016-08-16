@@ -69,7 +69,7 @@ public function registerBundles()
 
 Use doctrine to update your database schema with the broadcasting entities
 
-### Step 4 (Optional): Activate the Sonata Admin module
+### Step 4 (Sonata users only): Activate the Sonata Admin module
 
 To make planning available through an admin interface it is recommended to use the Sonata Admin bundle.
 
@@ -81,7 +81,9 @@ To start a broadcast you can use a console command, you can add this to a cronjo
 $ app/console livebroadcaster:broadcast
 ```
 
-## Facebook Live
+By default Facebook and YouTube are disabled, as they need extra config. To enable either one of these continue reading.
+
+## Enabling Facebook Live
 
 ### Step 1: Create a Facebook App
 Create a Facebook app on https://developers.facebook.com with the following permissions:
@@ -109,7 +111,7 @@ Create a Facebook app on https://developers.facebook.com with the following perm
         globals:
             live_broadcast_facebook_app_id: '%live_broadcast_fb_app_id%'   
 
-## YouTube Live
+## Enabling YouTube Live
 
 ### Step 1: Request API access
 Login to https://console.developers.google.com/ and enable the 'YouTube Data API v3'.
@@ -139,9 +141,9 @@ bundle the redirect URI's path is `<your domain>/admin/channel/youtube/oauthprov
              
 ## Add new output platforms
 
-### Step 1: Create a new Channel Entity in Entity/Channel that extends the BaseChannel (for e.g. ChannelNew)
+### Step 1: Create a new Channel Entity in Entity/Channel that extends the BaseChannel (e.g. ChannelNew)
 
-### Step 2: Create a new StreamOutput service in Service/StreamOutput that implements the OutputInterface (for e.g. OutputNew)
+### Step 2: Create a new StreamOutput service in Service/StreamOutput that implements the OutputInterface (e.g. OutputNew)
 
 ### Step 3: Configure the service with the output tag in Resources/config/services.yml
     live.broadcast.output.new:
@@ -149,7 +151,7 @@ bundle the redirect URI's path is `<your domain>/admin/channel/youtube/oauthprov
         tags:
             - { name: live.broadcast.output, platform: 'New' }
 
-### Step 4: (Optional) Add a new form for the Channel in Admin/ChannelAdmin.php
+### Step 4: (Sonata users only) Add a new form for the Channel in Admin/ChannelAdmin.php
 ``` php
 protected function configureFormFields(FormMapper $formMapper)
 {
@@ -159,7 +161,7 @@ protected function configureFormFields(FormMapper $formMapper)
 }
 ```
 
-### Step 5: (Optional) Add the sub class for the channelAdmin in Resources/config/admin.yml for 
+### Step 5: (Sonata users only) Add the sub class for the channelAdmin in Resources/config/admin.yml for 
     sonata.admin.channel
         calls:
-            - [setSubClasses, [ { "Name": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelNew } ] ]
+            - [setConfiguredSubclasses, [ { "Name": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelNew } ] ]

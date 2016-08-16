@@ -74,4 +74,30 @@ class ChannelFacebook extends BaseChannel
     {
         return 'Facebook: '.$this->getChannelName();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function isEntityConfigured($configuration)
+    {
+        if (!array_key_exists('facebook', $configuration)) {
+            return false;
+        }
+
+        $facebookConfig = $configuration['facebook'];
+
+        if (!array_key_exists('application_id', $facebookConfig)) {
+            return false;
+        }
+
+        if (!array_key_exists('application_secret', $facebookConfig)) {
+            return false;
+        }
+
+        if (!$facebookConfig['application_id'] || !$facebookConfig['application_secret']) {
+            return false;
+        }
+
+        return true;
+    }
 }

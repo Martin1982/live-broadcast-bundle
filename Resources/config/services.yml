@@ -82,11 +82,11 @@ services:
 
   live.broadcast.facebookapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\FacebookApiService
-      arguments: ["%fb_app_id%", "%fb_app_secret%"]
+      arguments: ["%livebroadcast.fb.appid%", "%livebroadcast.fb.appsecret%"]
   live.broadcast.youtubeapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\YouTubeApiService
-      arguments: ["%yt_client_id%", "%yt_client_secret%", "@doctrine.orm.entity_manager", "@logger"]
+      arguments: ["%livebroadcast.yt.clientid%", "%livebroadcast.yt.clientsecret%", "@doctrine.orm.entity_manager", "@logger"]
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
   live.broadcast.googleredirect.service:
       class: Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService
-      arguments: ["@router", "%live_broadcast_yt_redirect_route%"]
+      arguments: ["@router", "%livebroadcast.yt.redirectroute%"]
