@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Live Broadcast Bundle by Martin1982</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Live Broadcast Bundle</h1>
+          <h2>Making live streaming easy, fast and manageable</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/Martin1982/live-broadcast-bundle/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/Martin1982/live-broadcast-bundle/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/Martin1982/live-broadcast-bundle" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a id="live-broadcast-bundle" class="anchor" href="#live-broadcast-bundle" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Live Broadcast Bundle</h1>
+
+<p><em>This project is still in experimental phase and in no way production ready.
+Usage should be limited to development work.</em></p>
+
+<p><a href="https://travis-ci.org/Martin1982/live-broadcast-bundle"><img src="https://travis-ci.org/Martin1982/live-broadcast-bundle.svg?branch=master" alt="Build Status"></a>
+<a href="https://insight.sensiolabs.com/projects/6027a50f-06cf-4989-8267-9f481e838b2a"><img src="https://insight.sensiolabs.com/projects/6027a50f-06cf-4989-8267-9f481e838b2a/mini.png" alt="SensioLabsInsight"></a></p>
+
+<p><a href="https://packagist.org/packages/martin1982/live-broadcast-bundle"><img src="https://poser.pugx.org/martin1982/live-broadcast-bundle/v/stable" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/martin1982/live-broadcast-bundle"><img src="https://poser.pugx.org/martin1982/live-broadcast-bundle/downloads" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/martin1982/live-broadcast-bundle"><img src="https://poser.pugx.org/martin1982/live-broadcast-bundle/v/unstable" alt="Latest Unstable Version"></a>
+<a href="https://packagist.org/packages/martin1982/live-broadcast-bundle"><img src="https://poser.pugx.org/martin1982/live-broadcast-bundle/license" alt="License"></a></p>
+
+<p>The Live Broadcast Bundle will make it possible to plan live streams to
+various channels like Twitch, YouTube and Facebook (referred to as Output or Channels).</p>
+
+<p>The basic "Input" will be a file that can be read. Other inputs will be created thereafter.</p>
+
+<h2>
+<a id="prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prerequisites</h2>
+
+<p>The Broadcaster needs a few commands;</p>
+
+<ul>
+<li><code>ffmpeg</code></li>
+</ul>
+
+<p>On Linux:</p>
+
+<ul>
+<li><code>ps</code></li>
+<li><code>kill</code></li>
+</ul>
+
+<p>On Mac:</p>
+
+<ul>
+<li><code>ps</code></li>
+<li><code>grep</code></li>
+<li><code>kill</code></li>
+</ul>
+
+<p>On Windows:</p>
+
+<ul>
+<li><code>tasklist</code></li>
+<li><code>taskkill</code></li>
+</ul>
+
+<p>To test these prerequisites the Symfony command <code>livebroadcaster:test:shell</code> can be used after the installation described below.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<h3>
+<a id="step-1-download-bundle" class="anchor" href="#step-1-download-bundle" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 1: Download Bundle</h3>
+
+<p>This bundle will be made available on Packagist. You can then install it using Composer:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ composer require martin1982/live-broadcast-bundle</pre></div>
+
+<h3>
+<a id="step-2-enable-the-bundle" class="anchor" href="#step-2-enable-the-bundle" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 2: Enable the bundle</h3>
+
+<p>Next, enable the bundle in the kernel:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">// app/AppKernel.php</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">registerBundles</span>()</span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-smi">$bundles</span> <span class="pl-k">=</span> <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">        <span class="pl-c">// ...</span></span>
+<span class="pl-s1">        <span class="pl-k">new</span> <span class="pl-c1">Martin1982\LiveBroadcastBundle\</span><span class="pl-c1">LiveBroadcastBundle</span>(),</span>
+<span class="pl-s1">    );</span>
+<span class="pl-s1">}</span></pre></div>
+
+<h3>
+<a id="step-3-update-your-database-schema" class="anchor" href="#step-3-update-your-database-schema" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 3: Update your database schema</h3>
+
+<p>Use doctrine to update your database schema with the broadcasting entities</p>
+
+<h3>
+<a id="step-4-optional-activate-the-sonata-admin-module" class="anchor" href="#step-4-optional-activate-the-sonata-admin-module" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 4 (Optional): Activate the Sonata Admin module</h3>
+
+<p>To make planning available through an admin interface it is recommended to use the Sonata Admin bundle.</p>
+
+<h3>
+<a id="step-5-optional-start-the-broadcast" class="anchor" href="#step-5-optional-start-the-broadcast" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 5 (Optional): Start the broadcast!</h3>
+
+<p>To start a broadcast you can use a console command, you can add this to a cronjob to automate your broadcast schedule.</p>
+
+<div class="highlight highlight-source-shell"><pre>$ app/console livebroadcaster:broadcast</pre></div>
+
+<h2>
+<a id="facebook-live" class="anchor" href="#facebook-live" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Facebook Live</h2>
+
+<h3>
+<a id="step-1-create-a-facebook-app" class="anchor" href="#step-1-create-a-facebook-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 1: Create a Facebook App</h3>
+
+<p>Create a Facebook app on <a href="https://developers.facebook.com">https://developers.facebook.com</a> with the following permissions:</p>
+
+<ul>
+<li>user_videos</li>
+<li>user_events</li>
+<li>user_managed_groups</li>
+<li>manage_pages</li>
+<li>publish_actions</li>
+<li>Live-Video API</li>
+</ul>
+
+<h3>
+<a id="step-2-add-your-app-id-and-secret-to-appconfigparametersyml" class="anchor" href="#step-2-add-your-app-id-and-secret-to-appconfigparametersyml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 2: Add your App ID and Secret to app/config/parameters.yml</h3>
+
+<pre><code>parameters:
+    live_broadcast_fb_app_id: '{application_id}'
+    live_broadcast_fb_app_secret: '{application_secret}'
+</code></pre>
+
+<h3>
+<a id="step-3-add-the-facebook-application-id-to-your-configyml" class="anchor" href="#step-3-add-the-facebook-application-id-to-your-configyml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 3: Add the Facebook application id to your config.yml:</h3>
+
+<pre><code>live_broadcast:
+    facebook:
+        application_id: '%live_broadcast_fb_app_id%'
+        application_secret: '%live_broadcast_fb_app_secret%'
+</code></pre>
+
+<h3>
+<a id="step-4-sonata-users-only-load-the-app-id-in-twig" class="anchor" href="#step-4-sonata-users-only-load-the-app-id-in-twig" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 4 (Sonata users only): Load the app ID in Twig</h3>
+
+<pre><code>twig:
+    globals:
+        live_broadcast_facebook_app_id: '%live_broadcast_fb_app_id%'   
+</code></pre>
+
+<h2>
+<a id="youtube-live" class="anchor" href="#youtube-live" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>YouTube Live</h2>
+
+<h3>
+<a id="step-1-request-api-access" class="anchor" href="#step-1-request-api-access" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 1: Request API access</h3>
+
+<p>Login to <a href="https://console.developers.google.com/">https://console.developers.google.com/</a> and enable the 'YouTube Data API v3'.</p>
+
+<p>Setup oAuth Credentials for your server. In case you're using the Sonata Admin from this
+bundle the redirect URI's path is <code>&lt;your domain&gt;/admin/channel/youtube/oauthprovider</code></p>
+
+<h3>
+<a id="step-2-add-your-client-id-and-secret-and-redirect-route-to-appconfigparametersyml" class="anchor" href="#step-2-add-your-client-id-and-secret-and-redirect-route-to-appconfigparametersyml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 2: Add your Client ID and Secret and redirect route to app/config/parameters.yml</h3>
+
+<pre><code>parameters:
+    live_broadcast_yt_client_id: '{application_id}'
+    live_broadcast_yt_client_secret: '{application_secret}'
+    live_broadcast_yt_redirect_route: '{your_oauth_handler_url or admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth}'
+</code></pre>
+
+<h3>
+<a id="step-3-add-the-youtube-api-info-to-your-configyml" class="anchor" href="#step-3-add-the-youtube-api-info-to-your-configyml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 3: Add the YouTube API info to your config.yml:</h3>
+
+<pre><code>live_broadcast:
+    youtube:
+        client_id: '%live_broadcast_yt_client_id%'
+        client_secret: '%live_broadcast_yt_client_secret%'
+        redirect_route: '%live_broadcast_yt_redirect_route%'
+</code></pre>
+
+<h3>
+<a id="step-4-sonata-users-only-add-the-sonata-block-to-your-blocks-config" class="anchor" href="#step-4-sonata-users-only-add-the-sonata-block-to-your-blocks-config" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 4 (Sonata users only): Add the Sonata block to your blocks config:</h3>
+
+<pre><code>sonata_block:
+    blocks:
+    sonata.block.service.youtubeauth:
+        contexts:   [admin]
+</code></pre>
+
+<h2>
+<a id="add-new-output-platforms" class="anchor" href="#add-new-output-platforms" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Add new output platforms</h2>
+
+<h3>
+<a id="step-1-create-a-new-channel-entity-in-entitychannel-that-extends-the-basechannel-for-eg-channelnew" class="anchor" href="#step-1-create-a-new-channel-entity-in-entitychannel-that-extends-the-basechannel-for-eg-channelnew" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 1: Create a new Channel Entity in Entity/Channel that extends the BaseChannel (for e.g. ChannelNew)</h3>
+
+<h3>
+<a id="step-2-create-a-new-streamoutput-service-in-servicestreamoutput-that-implements-the-outputinterface-for-eg-outputnew" class="anchor" href="#step-2-create-a-new-streamoutput-service-in-servicestreamoutput-that-implements-the-outputinterface-for-eg-outputnew" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 2: Create a new StreamOutput service in Service/StreamOutput that implements the OutputInterface (for e.g. OutputNew)</h3>
+
+<h3>
+<a id="step-3-configure-the-service-with-the-output-tag-in-resourcesconfigservicesyml" class="anchor" href="#step-3-configure-the-service-with-the-output-tag-in-resourcesconfigservicesyml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 3: Configure the service with the output tag in Resources/config/services.yml</h3>
+
+<pre><code>live.broadcast.output.new:
+    class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputNew
+    tags:
+        - { name: live.broadcast.output, platform: 'New' }
+</code></pre>
+
+<h3>
+<a id="step-4-optional-add-a-new-form-for-the-channel-in-adminchanneladminphp" class="anchor" href="#step-4-optional-add-a-new-form-for-the-channel-in-adminchanneladminphp" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 4: (Optional) Add a new form for the Channel in Admin/ChannelAdmin.php</h3>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">protected</span> <span class="pl-k">function</span> <span class="pl-en">configureFormFields</span>(<span class="pl-c1">FormMapper</span> <span class="pl-smi">$formMapper</span>)</span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-k">if</span> (<span class="pl-smi">$subject</span> <span class="pl-k">instanceof</span> <span class="pl-c1">ChannelNew</span>) {</span>
+<span class="pl-s1">        <span class="pl-smi">$formMapper</span><span class="pl-k">-&gt;</span>add(<span class="pl-s"><span class="pl-pds">'</span>...<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>text<span class="pl-pds">'</span></span>, <span class="pl-c1">array</span>(<span class="pl-s"><span class="pl-pds">'</span>label<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>...<span class="pl-pds">'</span></span>));</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
+
+<h3>
+<a id="step-5-optional-add-the-sub-class-for-the-channeladmin-in-resourcesconfigadminyml-for" class="anchor" href="#step-5-optional-add-the-sub-class-for-the-channeladmin-in-resourcesconfigadminyml-for" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Step 5: (Optional) Add the sub class for the channelAdmin in Resources/config/admin.yml for</h3>
+
+<pre><code>sonata.admin.channel
+    calls:
+        - [setSubClasses, [ { "Name": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelNew } ] ]
+</code></pre>
+        </section>
+
+        <footer>
+          Live Broadcast Bundle is maintained by <a href="https://github.com/Martin1982">Martin1982</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
