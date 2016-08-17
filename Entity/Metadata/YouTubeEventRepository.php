@@ -44,11 +44,7 @@ class YouTubeEventRepository extends EntityRepository
 
         try {
             return $this->createQueryBuilder('event')
-                ->leftJoin(
-                    'Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast',
-                    'broadcast',
-                    'event.broadcast = broadcast.broadcast'
-                )
+                ->leftJoin('event.broadcast', 'broadcast')
                 ->addCriteria($criteria)
                 ->getQuery()
                 ->getResult();
