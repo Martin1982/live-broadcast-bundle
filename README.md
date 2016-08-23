@@ -95,21 +95,16 @@ Create a Facebook app on https://developers.facebook.com with the following perm
 - publish_actions
 - Live-Video API
 
-### Step 2: Add your App ID and Secret to app/config/parameters.yml
-    parameters:
-        live_broadcast_fb_app_id: '{application_id}'
-        live_broadcast_fb_app_secret: '{application_secret}'
+### Step 2: Edit your `app/config/config.yml` with the following configuration:
+    live_broadcast:
+        facebook:
+            application_id: YourFacebookAppId
+            application_secret: YourFacebookAppSecret
 
-### Step 3: Add the Facebook application id to your config.yml:
-	live_broadcast:
-	    facebook:
-	        application_id: '%live_broadcast_fb_app_id%'
-	        application_secret: '%live_broadcast_fb_app_secret%'
-
-### Step 4 (Sonata users only): Load the app ID in Twig
+### Step 3: Load the app ID in Twig
     twig:
         globals:
-            live_broadcast_facebook_app_id: '%live_broadcast_fb_app_id%'   
+            live_broadcast_facebook_app_id: 'YourFacebookAppId'
 
 ## Enabling YouTube Live
 
@@ -119,21 +114,14 @@ Login to https://console.developers.google.com/ and enable the 'YouTube Data API
 Setup oAuth Credentials for your server. In case you're using the Sonata Admin from this
 bundle the redirect URI's path is `<your domain>/admin/channel/youtube/oauthprovider`
 
-### Step 2: Add your Client ID and Secret and redirect route to app/config/parameters.yml
-    parameters:
-        live_broadcast_yt_client_id: '{application_id}'
-        live_broadcast_yt_client_secret: '{application_secret}'
-        live_broadcast_yt_redirect_route: '{your_oauth_handler_url or admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth}'
+### Step 2: Add the YouTube API info to your config.yml:
+    live_broadcast:
+        youtube:
+            client_id: YourGoogleOauthClientId
+            client_secret: YourGoogleOauthClientSecret
+            redirect_route: admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth
 
-### Step 3: Add the YouTube API info to your config.yml:
-	live_broadcast:
-	    youtube:
-            client_id: '%live_broadcast_yt_client_id%'
-            client_secret: '%live_broadcast_yt_client_secret%'
-            redirect_route: '%live_broadcast_yt_redirect_route%'
-
-### Step 4 (Sonata users only): Add the Sonata block to your blocks config:
-    
+### Step 3 (Sonata users only): Add the Sonata block to your blocks config:
     sonata_block:
         blocks:
         sonata.block.service.youtubeauth:
