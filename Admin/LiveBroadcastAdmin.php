@@ -130,18 +130,13 @@ class LiveBroadcastAdmin extends AbstractAdmin
      */
     protected function getYouTubeService()
     {
-        $service = $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubeapi.service');
+        $youTubeService = $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubeapi.service');
+        $redirectService = $this->getConfigurationPool()->getContainer()->get('live.broadcast.googleredirect.service');
         $router = $this->getConfigurationPool()->getContainer()->get('router');
 
-        $redirectUri = $router->generate(
-            $this->getConfigurationPool()->getContainer()->getParameter('live_broadcast_yt_redirect_route'),
-            array(),
-            $router::ABSOLUTE_URL
-        );
+        $youTubeService->initApiClients($redirectService->getOAuthRedirectUrl());
 
-        $service->initApiClients($redirectUri);
-
-        return $service;
+        return $youTubeService;
     }
 
     /**
