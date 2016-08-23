@@ -48,7 +48,7 @@ class YouTubePreBroadcastListener implements EventSubscriberInterface
         $output = $event->getOutput();
 
         if ($output instanceof OutputYouTube) {
-            $redirectUri = $redirectService->getOAuthRedirectUrl();
+            $redirectUri = $this->redirectService->getOAuthRedirectUrl();
             $this->youTubeApiService->initApiClients($redirectUri);
 
             $streamUrl = $this->youTubeApiService->getStreamUrl($liveBroadcast, $output->getChannel());
