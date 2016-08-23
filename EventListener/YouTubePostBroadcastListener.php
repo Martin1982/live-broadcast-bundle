@@ -22,6 +22,11 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
     private $youTubeApiService;
 
     /**
+     * @var GoogleRedirectService
+     */
+    private $redirectService;
+
+    /**
      * YouTubePostBroadcastListener constructor.
      * @param YouTubeApiService $youTubeApiService
      * @param GoogleRedirectService $redirectService
@@ -30,9 +35,7 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
     public function __construct(YouTubeApiService $youTubeApiService, GoogleRedirectService $redirectService)
     {
         $this->youTubeApiService = $youTubeApiService;
-
-        $redirectUri = $redirectService->getOAuthRedirectUrl();
-        $this->youTubeApiService->initApiClients($redirectUri);
+        $this->redirectService = $redirectService;
     }
 
     /**
@@ -45,6 +48,9 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
         $output = $event->getOutput();
 
         if ($output instanceof OutputYouTube) {
+            $redirectUri = $this->redirectService->getOAuthRedirectUrl();
+            $this->youTubeApiService->initApiClients($redirectUri);
+
             $channel = $output->getChannel();
             $this->youTubeApiService->transitionState($liveBroadcast, $channel, YouTubeEvent::STATE_REMOTE_LIVE);
         }
