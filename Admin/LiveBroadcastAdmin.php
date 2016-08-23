@@ -132,7 +132,6 @@ class LiveBroadcastAdmin extends AbstractAdmin
     {
         $youTubeService = $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubeapi.service');
         $redirectService = $this->getConfigurationPool()->getContainer()->get('live.broadcast.googleredirect.service');
-        $router = $this->getConfigurationPool()->getContainer()->get('router');
 
         $youTubeService->initApiClients($redirectService->getOAuthRedirectUrl());
 
