@@ -16,6 +16,16 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 class FacebookApiService
 {
     /**
+     * @var string
+     */
+    private $applicationId;
+
+    /**
+     * @var string
+     */
+    private $applicationSecret;
+
+    /**
      * @var FacebookSDK
      */
     private $facebookSDK;
@@ -28,18 +38,8 @@ class FacebookApiService
      */
     public function __construct($applicationId, $applicationSecret)
     {
-        if (empty($applicationId) || empty($applicationSecret)) {
-            throw new LiveBroadcastOutputException('The Facebook application settings are not correct.');
-        }
-
-        try {
-            $this->facebookSDK = new FacebookSDK([
-                'app_id' => $applicationId,
-                'app_secret' => $applicationSecret,
-            ]);
-        } catch (FacebookSDKException $ex) {
-            throw new LiveBroadcastOutputException('Facebook SDK Exception: '.$ex->getMessage());
-        }
+        $this->applicationId = $applicationId;
+        $this->applicationSecret = $applicationSecret;
     }
 
     /**
@@ -50,6 +50,10 @@ class FacebookApiService
      */
     public function createFacebookLiveVideo(LiveBroadcast $liveBroadcast, OutputFacebook $outputFacebook)
     {
+        if (!$this->facebookSDK) {
+            $this->initFacebook();
+        }
+
         try {
             $params = array('title' => $liveBroadcast->getName(),
                             'description' => $liveBroadcast->getDescription());
@@ -78,6 +82,10 @@ class FacebookApiService
      */
     public function getLongLivedAccessToken($userAccessToken)
     {
+        if (!$this->facebookSDK) {
+            $this->initFacebook();
+        }
+
         if (!$userAccessToken) {
             return null;
         }
@@ -86,6 +94,25 @@ class FacebookApiService
             return $this->facebookSDK->getOAuth2Client()->getLongLivedAccessToken($userAccessToken);
         } catch (FacebookSDKException $ex) {
             throw new LiveBroadcastOutputException('Facebook SDK exception: '.$ex->getMessage());
+        }
+    }
+
+    /**
+     * @throws LiveBroadcastOutputException
+     */
+    private function initFacebook()
+    {
+        if (empty($this->applicationId) || empty($this->applicationSecret)) {
+            throw new LiveBroadcastOutputException('The Facebook application settings are not correct.');
+        }
+
+        try {
+            $this->facebookSDK = new FacebookSDK([
+                'app_id' => $this->applicationId,
+                'app_secret' => $this->applicationSecret,
+            ]);
+        } catch (FacebookSDKException $ex) {
+            throw new LiveBroadcastOutputException('Facebook SDK Exception: '.$ex->getMessage());
         }
     }
 }
