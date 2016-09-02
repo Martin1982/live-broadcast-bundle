@@ -12,10 +12,16 @@ Usage should be limited to development work.*
 [![Latest Unstable Version](https://poser.pugx.org/martin1982/live-broadcast-bundle/v/unstable)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
 [![License](https://poser.pugx.org/martin1982/live-broadcast-bundle/license)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
 
-The Live Broadcast Bundle will make it possible to plan live streams to
-various channels like Twitch, YouTube and Facebook (referred to as Output or Channels).
+# About
 
-The basic "Input" will be a file that can be read. Other inputs will be created thereafter.
+The Live Broadcast Bundle will make it possible to plan live video streams to
+various channels like Twitch, YouTube Live and Facebook Live (referred to as Output or Channels).
+
+The basic "Input" will be a file or URL that will be streamed. Other inputs will be created thereafter.
+
+For more info you can view the latest recorded presentation below, or read on;
+
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/axutXblArhM/0.jpg)](http://www.youtube.com/watch?v=axutXblArhM "High quality live broadcasting with PHP by @Martin1982 at @PHPamersfoort")
 
 ## Prerequisites
 
