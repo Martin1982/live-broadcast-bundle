@@ -19,7 +19,7 @@ various channels like Twitch, YouTube Live and Facebook Live (referred to as Out
 
 The basic "Input" will be a file or URL that will be streamed. Other inputs will be created thereafter.
 
-For more info you can view the latest recorded presentation below, check the demo project at (https://github.com/Martin1982/live-broadcast-demo "Live Broadcast demo project") or read on;
+For more info you can view the latest recorded presentation below, check the demo project at https://github.com/Martin1982/live-broadcast-demo or read on;
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/axutXblArhM/0.jpg)](http://www.youtube.com/watch?v=axutXblArhM "High quality live broadcasting with PHP by @Martin1982 at @PHPamersfoort")
 
