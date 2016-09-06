@@ -36,10 +36,12 @@ class YouTubeEventRepository extends EntityRepository
     {
         $expr = Criteria::expr();
         $criteria = Criteria::create();
+        $now = new \DateTime();
 
         $criteria->where($expr->andX(
             $expr->lt('event.lastKnownState', YouTubeEvent::STATE_LOCAL_TESTING),
-            $expr->gte('broadcast.endTimestamp', new \DateTime())
+            $expr->gte('broadcast.endTimestamp', new \DateTime()),
+            $expr->lte('broadcast.startTimestamp', $now->add(\DateInterval::createFromDateString('30 minutes')))
         ));
 
         try {
