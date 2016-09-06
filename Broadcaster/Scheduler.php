@@ -231,6 +231,7 @@ class Scheduler
                     'broadcast_name' => $broadcast->getName(),
                     'channel_id' => $channel->getChannelId(),
                     'channel_name' => $channel->getChannelName(),
+                    'input_cmd' => $input->generateInputCmd(),
                     'output_cmd' => $output->generateOutputCmd(),
                     )
             );
