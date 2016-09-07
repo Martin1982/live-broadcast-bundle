@@ -27,7 +27,7 @@ For more info you can view the latest recorded presentation below, check the dem
 
 The Broadcaster needs a few commands;
 
-* `ffmpeg`
+* `ffmpeg 3.x or higher`
 
 On Linux:
 * `ps`
