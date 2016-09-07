@@ -80,7 +80,7 @@ class ShellTestCommand extends ContainerAwareCommand
     protected function testFfmpeg(OutputInterface $output)
     {
         exec('ffmpeg -version', $cmdResult);
-        $this->analyseResult($cmdResult, 'ffmpeg version', $output);
+        $this->analyseResult($cmdResult, 'ffmpeg version 3.', $output);
     }
 
     /**
