@@ -84,7 +84,7 @@ To make planning available through an admin interface it is recommended to use t
 To start a broadcast you can use a console command, you can add this to a cronjob to automate your broadcast schedule.
 
 ```bash
-$ app/console livebroadcaster:broadcast
+$ php app/console livebroadcaster:broadcast
 ```
 
 By default Facebook and YouTube are disabled, as they need extra config. To enable either one of these continue reading.
