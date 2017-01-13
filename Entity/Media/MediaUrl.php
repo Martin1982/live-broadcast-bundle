@@ -20,7 +20,7 @@ class MediaUrl extends BaseMedia
      * @Assert\NotBlank()
      * @Assert\Url()
      *
-     * @ORM\Column(name="url", type="string", length=128, nullable=false)
+     * @ORM\Column(name="url", type="string", nullable=false)
      */
     protected $url;
 

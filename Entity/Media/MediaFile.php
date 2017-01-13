@@ -19,7 +19,7 @@ class MediaFile extends BaseMedia
      *
      * @Assert\NotBlank()
      *
-     * @ORM\Column(name="file_location", type="string", length=128, nullable=false)
+     * @ORM\Column(name="file_location", type="string", nullable=false)
      */
     protected $fileLocation;
 
