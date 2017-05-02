@@ -23,7 +23,7 @@ class OutputLivelyTestTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->channelLively = new ChannelLively();
-        $this->channelLively->setStreamServer('server');
+        $this->channelLively->setStreamServer('rtmp://live.ly.server');
         $this->channelLively->setStreamKey('secret');
     }
 
@@ -68,7 +68,7 @@ class OutputLivelyTestTest extends \PHPUnit_Framework_TestCase
         $lively->setChannel($this->channelLively);
         self::assertEquals(
             $lively->generateOutputCmd(),
-            '-vcodec copy -acodec copy -f flv "rtmp://server/secret"'
+            '-vcodec copy -acodec copy -f flv "rtmp://live.ly.server/secret"'
         );
     }
 
