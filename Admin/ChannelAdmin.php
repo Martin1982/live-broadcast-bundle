@@ -105,7 +105,7 @@ class ChannelAdmin extends AbstractAdmin
                 ));
 
         if ($subject instanceof ChannelTwitch ||
-            $subject instanceof ChannelUstream || 
+            $subject instanceof ChannelUstream ||
             $subject instanceof ChannelLively) {
             $formMapper->add('streamKey', 'text', array('label' => 'Stream key'));
             $formMapper->add('streamServer', 'text', array('label' => 'Stream server'));
