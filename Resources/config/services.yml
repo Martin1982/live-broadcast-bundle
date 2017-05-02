@@ -79,6 +79,10 @@ services:
       class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputUstream
       tags:
           - { name: live.broadcast.output, platform: 'Ustream' }
+  live.broadcast.output.lively:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputLively
+      tags:
+          - { name: live.broadcast.output, platform: 'Live.ly' }
 
   live.broadcast.facebookapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\FacebookApiService

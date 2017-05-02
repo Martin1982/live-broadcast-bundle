@@ -4,6 +4,7 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelLively;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream;
@@ -103,7 +104,7 @@ class ChannelAdmin extends AbstractAdmin
                     'attr' => array('class' => $nameClasses),
                 ));
 
-        if ($subject instanceof ChannelTwitch || $subject instanceof ChannelUstream) {
+        if ($subject instanceof ChannelTwitch || $subject instanceof ChannelUstream || $subject instanceof ChannelLively) {
             $formMapper->add('streamKey', 'text', array('label' => 'Stream key'));
             $formMapper->add('streamServer', 'text', array('label' => 'Stream server'));
         }
