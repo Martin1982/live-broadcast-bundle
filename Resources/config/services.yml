@@ -4,6 +4,7 @@ services:
       factory: [Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsDetector, createSchedulerCommands]
       arguments:
           - "%kernel.environment%"
+          - "%livebroadcast.ffmpeg.logdirectory%"
 
   live.broadcast.scheduler:
       class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler

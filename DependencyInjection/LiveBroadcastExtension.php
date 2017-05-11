@@ -33,5 +33,7 @@ class LiveBroadcastExtension extends Extension
         $container->setParameter('livebroadcast.yt.clientid', $config['youtube']['client_id']);
         $container->setParameter('livebroadcast.yt.clientsecret', $config['youtube']['client_secret']);
         $container->setParameter('livebroadcast.yt.redirectroute', $config['youtube']['redirect_route']);
+
+        $container->setParameter('livebroadcast.ffmpeg.logdirectory', $config['ffmpeg']['log_directory']);
     }
 }

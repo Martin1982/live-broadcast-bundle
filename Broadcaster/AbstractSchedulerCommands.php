@@ -14,6 +14,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     const METADATA_CHANNEL = 'channel_id';
     const METADATA_ENVIRONMENT = 'env';
     const METADATA_MONITOR = 'monitor_stream';
+    const LOG_FILE = '%s_ffmpeg_log.txt';
 
     /**
      * Symfony kernel environment name
@@ -21,6 +22,13 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      * @var string
      */
     protected $kernelEnvironment;
+
+    /**
+     * Directory to store FFMpeg logs
+     *
+     * @var string
+     */
+    protected $logDirectoryFFMpeg = '';
 
     /**
      * SchedulerCommands constructor.
@@ -127,7 +135,14 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      */
     protected function execStreamCommand($input, $output, $meta)
     {
-        return exec(sprintf('ffmpeg %s %s%s >/dev/null 2>&1 &', $input, $output, $meta));
+        $logFile = '/dev/null';
+
+        if (!empty($this->logDirectoryFFMpeg)) {
+            $now = new \DateTime();
+            $logFile = $this->logDirectoryFFMpeg.DIRECTORY_SEPARATOR.sprintf(self::LOG_FILE, $now->format(\DateTime::ISO8601));
+        }
+
+        return exec(sprintf('ffmpeg %s %s%s >%s 2>&1 &', $input, $output, $meta, $logFile));
     }
 
     /**
@@ -166,5 +181,17 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
         }
 
         return;
+    }
+
+    /**
+     * @param string $directory
+     */
+    public function setFFMpegLogDirectory($directory)
+    {
+        if (!is_writable($directory)) {
+            return;
+        }
+
+        $this->logDirectoryFFMpeg = $directory;
     }
 }

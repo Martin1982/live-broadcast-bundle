@@ -36,6 +36,12 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('redirect_route')->defaultNull()->end()
                     ->end()
                 ->end()
+                ->arrayNode('ffmpeg')
+                    ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('log_directory')->defaultNull()->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 
