@@ -67,4 +67,9 @@ interface SchedulerCommandsInterface
      * @return string
      */
     public function getKernelEnvironment();
+
+    /**
+     * @param string $directory
+     */
+    public function setFFMpegLogDirectory($directory);
 }

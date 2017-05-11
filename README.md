@@ -15,7 +15,7 @@ Usage should be limited to development work.*
 # About
 
 The Live Broadcast Bundle will make it possible to plan live video streams to
-various channels like Twitch, YouTube Live and Facebook Live (referred to as Output or Channels).
+various channels like Twitch, YouTube Live, Facebook Live, UStream and Live.Ly (referred to as Output or Channels).
 
 The basic "Input" will be a file or URL that will be streamed. Other inputs will be created thereafter.
 
@@ -111,6 +111,13 @@ Create a Facebook app on https://developers.facebook.com with the following perm
     twig:
         globals:
             live_broadcast_facebook_app_id: 'YourFacebookAppId'
+
+### FFMpeg log directory
+To view the output of FFMpeg you need to configure a log directory in your `app/config/config.yml`.
+ 
+     live_broadcast:
+        ffmpeg:
+            log_directory: '%kernel.logs_dir%'
 
 ## Enabling YouTube Live
 

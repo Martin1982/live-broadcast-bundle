@@ -32,6 +32,26 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test the start process command with a log directory configured
+     */
+    public function testStartProcessWithLogDirectory()
+    {
+        $command = new SchedulerCommands('unittest');
+        $command->setFFMpegLogDirectory('/tmp');
+
+        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'exec');
+        $exec->expects($this->once())->willReturnCallback(
+            function ($command) {
+                $now = new \DateTime();
+                // @codingStandardsIgnoreLine
+                self::assertEquals('ffmpeg input output -metadata broadcast_id=12 -metadata test=unit -metadata env=unittest >/tmp/livebroadcaster-ffmpeg-'.$now->format('Y-m-d_His').'.log 2>&1 &', $command);
+            }
+        );
+
+        $command->startProcess('input', 'output', array('broadcast_id' => 12, 'test' => 'unit'));
+    }
+
+    /**
      * Test the stop process command.
      */
     public function testStopProcess()
