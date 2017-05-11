@@ -14,7 +14,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     const METADATA_CHANNEL = 'channel_id';
     const METADATA_ENVIRONMENT = 'env';
     const METADATA_MONITOR = 'monitor_stream';
-    const LOG_FILE = '%s_ffmpeg_log.txt';
+    const LOG_FILE = 'livebroadcaster-ffmpeg-%s.log';
 
     /**
      * Symfony kernel environment name
@@ -139,7 +139,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 
         if (!empty($this->logDirectoryFFMpeg)) {
             $now = new \DateTime();
-            $logFile = $this->logDirectoryFFMpeg.DIRECTORY_SEPARATOR.sprintf(self::LOG_FILE, $now->format(\DateTime::ISO8601));
+            $logFile = $this->logDirectoryFFMpeg.DIRECTORY_SEPARATOR.sprintf(self::LOG_FILE, $now->format('Y-m-d_His'));
         }
 
         return exec(sprintf('ffmpeg %s %s%s >%s 2>&1 &', $input, $output, $meta, $logFile));
