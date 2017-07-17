@@ -43,6 +43,10 @@ class LiveBroadcastAdmin extends AbstractAdmin
                     'required' => false,
                     'attr' => array('class' => 'form-control', 'rows' => 5),
                 ))
+                ->add('thumbnail', 'file', [
+                    'required' => false,
+                    'label' => 'Thumbnail (1280x720px recommended)',
+                ])
                 ->add('startTimestamp', 'sonata_type_datetime_picker', array(
                     'label' => 'Broadcast start',
                     'dp_side_by_side' => true,

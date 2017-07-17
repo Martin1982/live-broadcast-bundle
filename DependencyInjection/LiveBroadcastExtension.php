@@ -35,5 +35,6 @@ class LiveBroadcastExtension extends Extension
         $container->setParameter('livebroadcast.yt.redirectroute', $config['youtube']['redirect_route']);
 
         $container->setParameter('livebroadcast.ffmpeg.logdirectory', $config['ffmpeg']['log_directory']);
+        $container->setParameter('livebroadcast.thumbnail.uploaddirectory', $config['thumbnail']['upload_directory']);
     }
 }
