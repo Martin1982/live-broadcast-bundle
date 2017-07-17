@@ -33,46 +33,59 @@ class LiveBroadcastAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        $fileFieldOptions = ['required' => false, 'label' => 'Thumbnail (1280x720px recommended)'];
+
+        /** @var LiveBroadcast $broadcast */
+        $broadcast = $this->getSubject();
+
+        if ($broadcast->getThumbnail()) {
+            $container = $this->getConfigurationPool()->getContainer();
+
+            $fullPath = sprintf('%s/%s',
+                $container->getParameter('livebroadcast.thumbnail.web_path'),
+                $broadcast->getThumbnail()->getFilename()
+            );
+
+            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" />';
+        }
+
         $formMapper
             ->with('General', array(
-                    'class' => 'col-md-8',
-                ))
-                ->add('name', 'text', array('label' => 'Name'))
-                ->add('description', 'textarea', array(
-                    'label' => 'Description',
-                    'required' => false,
-                    'attr' => array('class' => 'form-control', 'rows' => 5),
-                ))
-                ->add('thumbnail', 'file', [
-                    'required' => false,
-                    'label' => 'Thumbnail (1280x720px recommended)',
-                ])
-                ->add('startTimestamp', 'sonata_type_datetime_picker', array(
-                    'label' => 'Broadcast start',
-                    'dp_side_by_side' => true,
-                ))
-                ->add('endTimestamp', 'sonata_type_datetime_picker', array(
-                    'label' => 'Broadcast end',
-                    'dp_side_by_side' => true,
-                ))
-                ->add('stopOnEndTimestamp', 'checkbox', array(
-                    'label' => 'Stop on broadcast end timestamp',
-                    'required' => false,
-                ))
+                'class' => 'col-md-8',
+            ))
+            ->add('name', 'text', array('label' => 'Name'))
+            ->add('description', 'textarea', array(
+                'label' => 'Description',
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'rows' => 5),
+            ))
+            ->add('thumbnail', 'file', $fileFieldOptions)
+            ->add('startTimestamp', 'sonata_type_datetime_picker', array(
+                'label' => 'Broadcast start',
+                'dp_side_by_side' => true,
+            ))
+            ->add('endTimestamp', 'sonata_type_datetime_picker', array(
+                'label' => 'Broadcast end',
+                'dp_side_by_side' => true,
+            ))
+            ->add('stopOnEndTimestamp', 'checkbox', array(
+                'label' => 'Stop on broadcast end timestamp',
+                'required' => false,
+            ))
             ->end()
             ->with('Video Input', array(
-                    'class' => 'col-md-4',
-                ))
-                ->add('input', 'sonata_type_model_list', array('btn_list' => false))
+                'class' => 'col-md-4',
+            ))
+            ->add('input', 'sonata_type_model_list', array('btn_list' => false))
             ->end()
             ->with('Channels', array(
-                    'class' => 'col-md-4',
-                ))
-                ->add('outputChannels', 'sonata_type_model', array(
-                    'multiple' => true,
-                    'expanded' => true,
-                ))
-                ->end();
+                'class' => 'col-md-4',
+            ))
+            ->add('outputChannels', 'sonata_type_model', array(
+                'multiple' => true,
+                'expanded' => true,
+            ))
+            ->end();
     }
 
     /**
