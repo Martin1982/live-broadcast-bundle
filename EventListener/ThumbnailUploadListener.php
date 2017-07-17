@@ -42,7 +42,7 @@ class ThumbnailUploadListener
      */
     public function preUpdate(PreUpdateEventArgs $args)
     {
-        $this->uploadFile($args->getEntity());
+        $this->uploadFile($args->getEntity(), $args->getEntityChangeSet());
     }
 
     /**
@@ -67,8 +67,9 @@ class ThumbnailUploadListener
 
     /**
      * @param object $entity
+     * @param array  $entityChangeset
      */
-    private function uploadFile($entity)
+    private function uploadFile($entity, $entityChangeset = [])
     {
         if (!$entity instanceof LiveBroadcast) {
             return;
@@ -77,6 +78,11 @@ class ThumbnailUploadListener
         $file = $entity->getThumbnail();
 
         if (!$file instanceof UploadedFile) {
+            // Keep current value when no new file is uploaded
+            if (array_key_exists('thumbnail', $entityChangeset)) {
+                $entity->setThumbnail($entityChangeset['thumbnail'][0]);
+            }
+
             return;
         }
 
