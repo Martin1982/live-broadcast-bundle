@@ -15,6 +15,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -185,10 +186,15 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      */
     protected function startMonitorStream(YouTubeEvent $event)
     {
-        $placeholderImage = $this->kernel->locateResource('@LiveBroadcastBundle') . '/Resources/images/placeholder.png';
+        $thumbnail = $event->getBroadcast()->getThumbnail();
+        $monitorImage = $this->kernel->locateResource('@LiveBroadcastBundle') . '/Resources/images/placeholder.png';
+
+        if ($thumbnail instanceof File && $thumbnail->isFile()) {
+            $monitorImage = $thumbnail->getFileInfo()->getRealPath();
+        }
 
         $inputMedia = new MediaMonitorStream();
-        $inputMedia->setMonitorImage($placeholderImage);
+        $inputMedia->setMonitorImage($monitorImage);
 
         $inputService = new InputMonitorStream();
         $inputService->setMedia($inputMedia);
