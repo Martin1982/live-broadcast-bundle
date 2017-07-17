@@ -19,7 +19,7 @@ services:
 
   live.broadcast.thumbnail.uploader:
       class: Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService
-      arguments: '%livebroadcast.thumbnail.uploaddirectory%'
+      arguments: ['%livebroadcast.thumbnail.uploaddirectory%']
 
   live.broadcast.thumbnail.listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener

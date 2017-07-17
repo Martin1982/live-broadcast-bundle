@@ -59,7 +59,9 @@ class ThumbnailUploadListener
         $thumbnail = $entity->getThumbnail();
 
         if ($thumbnail !== null) {
-            $entity->setThumbnail(new File($this->uploadService->getTargetDirectory().DIRECTORY_SEPARATOR.$thumbnail, false));
+            $entity->setThumbnail(
+                new File($this->uploadService->getTargetDirectory().DIRECTORY_SEPARATOR.$thumbnail, false)
+            );
         }
     }
 
