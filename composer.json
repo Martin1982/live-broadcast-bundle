@@ -9,11 +9,12 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "^2.8||^3.0",
-        "symfony/console": "^2.8||^3.0",
         "doctrine/orm": "^2.3",
         "facebook/graph-sdk": "^5.3",
-        "google/apiclient": "^2.0"
+        "google/apiclient": "^2.0",
+        "symfony/console": "^2.8||^3.0",
+        "symfony/framework-bundle": "^2.8||^3.0",
+        "symfony/validator": "^3.3"
     },
     "suggest": {
         "sonata-project/doctrine-orm-admin-bundle": "Sonata admin (version 3.x) for easy broadcast planning"

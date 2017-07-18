@@ -8,6 +8,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class LiveBroadcast
@@ -45,6 +46,7 @@ class LiveBroadcast
      * @var UploadedFile|File
      *
      * @ORM\Column(name="thumbnail", type="string", length=255, nullable=true)
+     * @Assert\File(mimeTypes={ "image/*" })
      */
     private $thumbnail;
 
