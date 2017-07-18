@@ -17,6 +17,18 @@ services:
           - "@logger"
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
 
+  live.broadcast.thumbnail.uploader:
+      class: Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService
+      arguments: ['%livebroadcast.thumbnail.uploaddirectory%']
+
+  live.broadcast.thumbnail.listener:
+      class: Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener
+      arguments: ['@live.broadcast.thumbnail.uploader']
+      tags:
+          - { name: doctrine.event_listener, event: prePersist }
+          - { name: doctrine.event_listener, event: preUpdate }
+          - { name: doctrine.event_listener, event: postLoad }
+
   live.broadcast.facebook_pre_broadcast_listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\FacebookPreBroadcastListener
       arguments: ["@live.broadcast.facebookapi.service"]
@@ -90,7 +102,7 @@ services:
       arguments: ["%livebroadcast.fb.appid%", "%livebroadcast.fb.appsecret%"]
   live.broadcast.youtubeapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\YouTubeApiService
-      arguments: ["%livebroadcast.yt.clientid%", "%livebroadcast.yt.clientsecret%", "@doctrine.orm.entity_manager", "@logger"]
+      arguments: ["%livebroadcast.yt.clientid%", "%livebroadcast.yt.clientsecret%", "%router.request_context.scheme%://%router.request_context.host%", "%livebroadcast.thumbnail.web_path%", "@doctrine.orm.entity_manager", "@logger"]
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
   live.broadcast.googleredirect.service:
       class: Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService

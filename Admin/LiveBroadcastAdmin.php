@@ -2,6 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
@@ -33,42 +34,60 @@ class LiveBroadcastAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        $fileFieldOptions = ['required' => false, 'label' => 'Thumbnail (1280x720px recommended)'];
+
+        /** @var LiveBroadcast $broadcast */
+        $broadcast = $this->getSubject();
+
+        if ($broadcast->getThumbnail()) {
+            $container = $this->getConfigurationPool()->getContainer();
+
+            $fullPath = sprintf(
+                '%s/%s',
+                $container->getParameter('livebroadcast.thumbnail.web_path'),
+                $broadcast->getThumbnail()->getFilename()
+            );
+
+            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" />';
+        }
+
         $formMapper
             ->with('General', array(
-                    'class' => 'col-md-8',
-                ))
-                ->add('name', 'text', array('label' => 'Name'))
-                ->add('description', 'textarea', array(
-                    'label' => 'Description',
-                    'required' => false,
-                    'attr' => array('class' => 'form-control', 'rows' => 5),
-                ))
-                ->add('startTimestamp', 'sonata_type_datetime_picker', array(
-                    'label' => 'Broadcast start',
-                    'dp_side_by_side' => true,
-                ))
-                ->add('endTimestamp', 'sonata_type_datetime_picker', array(
-                    'label' => 'Broadcast end',
-                    'dp_side_by_side' => true,
-                ))
-                ->add('stopOnEndTimestamp', 'checkbox', array(
-                    'label' => 'Stop on broadcast end timestamp',
-                    'required' => false,
-                ))
+                'class' => 'col-md-8',
+            ))
+            ->add('name', 'text', array('label' => 'Name'))
+            ->add('description', 'textarea', array(
+                'label' => 'Description',
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'rows' => 5),
+            ))
+            ->add('thumbnail', 'file', $fileFieldOptions)
+            ->add('startTimestamp', 'sonata_type_datetime_picker', array(
+                'label' => 'Broadcast start',
+                'dp_side_by_side' => true,
+            ))
+            ->add('endTimestamp', 'sonata_type_datetime_picker', array(
+                'label' => 'Broadcast end',
+                'dp_side_by_side' => true,
+            ))
+            ->add('stopOnEndTimestamp', 'checkbox', array(
+                'label' => 'Stop on broadcast end timestamp',
+                'required' => false,
+            ))
             ->end()
             ->with('Video Input', array(
-                    'class' => 'col-md-4',
-                ))
-                ->add('input', 'sonata_type_model_list', array('btn_list' => false))
+                'class' => 'col-md-4',
+            ))
+            ->add('input', 'sonata_type_model_list', array('btn_list' => false))
             ->end()
             ->with('Channels', array(
-                    'class' => 'col-md-4',
-                ))
-                ->add('outputChannels', 'sonata_type_model', array(
-                    'multiple' => true,
-                    'expanded' => true,
-                ))
-                ->end();
+                'class' => 'col-md-4',
+            ))
+            ->add('outputChannels', 'sonata_type_model', array(
+                'multiple' => true,
+                'expanded' => true,
+            ))
+            ->end();
     }
 
     /**
@@ -76,6 +95,8 @@ class LiveBroadcastAdmin extends AbstractAdmin
      */
     public function postPersist($broadcast)
     {
+        $this->loadThumbnail($broadcast);
+
         foreach ($broadcast->getOutputChannels() as $channel) {
             if ($channel instanceof ChannelYouTube) {
                 $youTubeService = $this->getYouTubeService();
@@ -89,7 +110,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
     /**
      * @param LiveBroadcast $broadcast
      */
-    public function preUpdate($broadcast)
+    public function postUpdate($broadcast)
     {
         foreach ($broadcast->getOutputChannels() as $channel) {
             if ($channel instanceof ChannelYouTube) {
@@ -98,7 +119,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
             }
         }
 
-        parent::preUpdate($broadcast);
+        parent::postUpdate($broadcast);
     }
 
     /**
@@ -136,6 +157,17 @@ class LiveBroadcastAdmin extends AbstractAdmin
         $youTubeService->initApiClients($redirectService->getOAuthRedirectUrl());
 
         return $youTubeService;
+    }
+
+    /**
+     * @param LiveBroadcast $liveBroadcast
+     */
+    protected function loadThumbnail(LiveBroadcast $liveBroadcast)
+    {
+        $uploadListener = $this->getConfigurationPool()->getContainer()->get('live.broadcast.thumbnail.listener');
+        $objectManager = $this->getConfigurationPool()->getContainer()->get('Doctrine')->getManager();
+        $lifeCycleEvent = new LifecycleEventArgs($liveBroadcast, $objectManager);
+        $uploadListener->postLoad($lifeCycleEvent);
     }
 
     /**

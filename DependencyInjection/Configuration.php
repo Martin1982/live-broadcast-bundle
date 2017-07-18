@@ -42,6 +42,13 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('log_directory')->defaultNull()->end()
                     ->end()
                 ->end()
+                ->arrayNode('thumbnail')
+                    ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('upload_directory')->defaultValue('/tmp')->end()
+                        ->scalarNode('web_path')->defaultValue('/uploads/thumbnails')->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 
