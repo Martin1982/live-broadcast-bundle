@@ -190,7 +190,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
         $monitorImage = $this->kernel->locateResource('@LiveBroadcastBundle') . '/Resources/images/placeholder.png';
 
         if ($thumbnail instanceof File && $thumbnail->isFile()) {
-            $monitorImage = $thumbnail->getFileInfo()->getRealPath();
+            $monitorImage = $thumbnail->getRealPath();
         }
 
         $inputMedia = new MediaMonitorStream();
