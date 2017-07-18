@@ -79,9 +79,6 @@ class YouTubeApiService
         $this->thumbnailDir = $thumbnailDir;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
-
-        var_dump($host);
-        var_dump($thumbnailDir);
     }
 
     /**
