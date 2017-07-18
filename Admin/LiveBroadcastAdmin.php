@@ -2,6 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
@@ -93,6 +94,8 @@ class LiveBroadcastAdmin extends AbstractAdmin
      */
     public function postPersist($broadcast)
     {
+        $this->loadThumbnail($broadcast);
+
         foreach ($broadcast->getOutputChannels() as $channel) {
             if ($channel instanceof ChannelYouTube) {
                 $youTubeService = $this->getYouTubeService();
@@ -106,7 +109,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
     /**
      * @param LiveBroadcast $broadcast
      */
-    public function preUpdate($broadcast)
+    public function postUpdate($broadcast)
     {
         foreach ($broadcast->getOutputChannels() as $channel) {
             if ($channel instanceof ChannelYouTube) {
@@ -115,7 +118,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
             }
         }
 
-        parent::preUpdate($broadcast);
+        parent::postUpdate($broadcast);
     }
 
     /**
@@ -153,6 +156,17 @@ class LiveBroadcastAdmin extends AbstractAdmin
         $youTubeService->initApiClients($redirectService->getOAuthRedirectUrl());
 
         return $youTubeService;
+    }
+
+    /**
+     * @param LiveBroadcast $liveBroadcast
+     */
+    protected function loadThumbnail(LiveBroadcast $liveBroadcast)
+    {
+        $uploadListener = $this->getConfigurationPool()->getContainer()->get('live.broadcast.thumbnail.listener');
+        $objectManager = $this->getConfigurationPool()->getContainer()->get('Doctrine')->getManager();
+        $lifeCycleEvent = new LifecycleEventArgs($liveBroadcast, $objectManager);
+        $uploadListener->postLoad($lifeCycleEvent);
     }
 
     /**

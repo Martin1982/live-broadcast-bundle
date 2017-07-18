@@ -428,6 +428,7 @@ class YouTubeApiService
         $description = $liveBroadcast->getDescription();
         $start = $liveBroadcast->getStartTimestamp();
         $end = $liveBroadcast->getEndTimestamp();
+        $thumbnail = $liveBroadcast->getThumbnail();
 
         if (new \DateTime() > $start) {
             $start = new \DateTime();
@@ -440,7 +441,6 @@ class YouTubeApiService
         $broadcastSnippet->setScheduledStartTime($start->format(\DateTime::ATOM));
         $broadcastSnippet->setScheduledEndTime($end->format(\DateTime::ATOM));
 
-        $thumbnail = $liveBroadcast->getThumbnail();
         if ($thumbnail instanceof File && $thumbnail->isFile()) {
             $defaultThumbnail = new \Google_Service_YouTube_Thumbnail();
             $thumbnailUrl = sprintf('%s%s/%s',
