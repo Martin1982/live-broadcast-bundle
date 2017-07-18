@@ -24,5 +24,5 @@ install:
     - composer update --no-interaction --prefer-source $COMPOSER_FLAGS
 
 script:
-    - phpunit --coverage-text --colors
+    - php ./vendor/bin/phpunit --coverage-text --colors
     - php ./vendor/bin/phpcs --standard=psr2 Admin/ Broadcaster/ Command/ DependencyInjection/ Entity/ Event/ EventListener/ Exception/ Resources/ Service/ Tests/ LiveBroadcastBundle.php
