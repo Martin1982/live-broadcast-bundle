@@ -443,7 +443,8 @@ class YouTubeApiService
 
         if ($thumbnail instanceof File && $thumbnail->isFile()) {
             $defaultThumbnail = new \Google_Service_YouTube_Thumbnail();
-            $thumbnailUrl = sprintf('%s%s/%s',
+            $thumbnailUrl = sprintf(
+                '%s%s/%s',
                 $this->host,
                 $this->thumbnailDir,
                 $thumbnail->getFilename()

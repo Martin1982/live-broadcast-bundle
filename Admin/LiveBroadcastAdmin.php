@@ -42,7 +42,8 @@ class LiveBroadcastAdmin extends AbstractAdmin
         if ($broadcast->getThumbnail()) {
             $container = $this->getConfigurationPool()->getContainer();
 
-            $fullPath = sprintf('%s/%s',
+            $fullPath = sprintf(
+                '%s/%s',
                 $container->getParameter('livebroadcast.thumbnail.web_path'),
                 $broadcast->getThumbnail()->getFilename()
             );
