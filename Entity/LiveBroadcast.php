@@ -46,7 +46,7 @@ class LiveBroadcast
      * @var UploadedFile|File
      *
      * @ORM\Column(name="thumbnail", type="string", length=255, nullable=true)
-     * @Assert\File(mimeTypes={ "image/*" })
+     * @Assert\File(mimeTypes={ "image/*" }, maxSize="800k")
      */
     private $thumbnail;
 
