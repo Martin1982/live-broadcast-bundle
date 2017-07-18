@@ -133,6 +133,8 @@ bundle the redirect URI's path is `<your domain>/admin/channel/youtube/oauthprov
             client_id: YourGoogleOauthClientId
             client_secret: YourGoogleOauthClientSecret
             redirect_route: admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth
+            upload_directory: '%kernel.root_dir%/../web/uploads/thumbnails'
+            web_path: '/uploads/thumbnails'
 
 ### Step 3 (Sonata users only): Add the Sonata block to your blocks config:
     sonata_block:
@@ -140,6 +142,11 @@ bundle the redirect URI's path is `<your domain>/admin/channel/youtube/oauthprov
         sonata.block.service.youtubeauth:
             contexts:   [admin]
              
+### Step 4: Add these lines to your parameters.yml (used for generating a thumbnail URL)
+	parameters:
+	    router.request_context.host: broadcast.com
+	    router.request_context.scheme: https
+	
 ## Add new output platforms
 
 ### Step 1: Create a new Channel Entity in Entity/Channel that extends the BaseChannel (e.g. ChannelNew)
