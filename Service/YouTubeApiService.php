@@ -8,6 +8,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Class YouTubeApiService
@@ -24,6 +25,16 @@ class YouTubeApiService
      * @var string
      */
     protected $clientSecret;
+
+    /**
+     * @var string
+     */
+    protected $host;
+
+    /**
+     * @var string
+     */
+    protected $thumbnailDir;
 
     /**
      * @var LoggerInterface
@@ -49,19 +60,28 @@ class YouTubeApiService
      * YouTubeApiService constructor.
      * @param string          $clientId
      * @param string          $clientSecret
+     * @param string          $host
+     * @param string          $thumbnailDir
      * @param EntityManager   $entityManager
      * @param LoggerInterface $logger
      */
     public function __construct(
         $clientId,
         $clientSecret,
+        $host,
+        $thumbnailDir,
         EntityManager $entityManager,
         LoggerInterface $logger
     ) {
-        $this->entityManager = $entityManager;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
+        $this->host = $host;
+        $this->thumbnailDir = $thumbnailDir;
+        $this->entityManager = $entityManager;
         $this->logger = $logger;
+
+        var_dump($host);
+        var_dump($thumbnailDir);
     }
 
     /**
@@ -422,6 +442,25 @@ class YouTubeApiService
         $broadcastSnippet->setDescription($description);
         $broadcastSnippet->setScheduledStartTime($start->format(\DateTime::ATOM));
         $broadcastSnippet->setScheduledEndTime($end->format(\DateTime::ATOM));
+
+        $thumbnail = $liveBroadcast->getThumbnail();
+        if ($thumbnail instanceof File && $thumbnail->isFile()) {
+            $defaultThumbnail = new \Google_Service_YouTube_Thumbnail();
+            $thumbnailUrl = sprintf('%s%s/%s',
+                $this->host,
+                $this->thumbnailDir,
+                $thumbnail->getFilename()
+            );
+            $defaultThumbnail->setUrl($thumbnailUrl);
+
+            list($width, $height) = getimagesize($thumbnail->getRealPath());
+            $defaultThumbnail->setWidth($width);
+            $defaultThumbnail->setHeight($height);
+
+            $thumbnails = new \Google_Service_YouTube_ThumbnailDetails();
+            $thumbnails->setDefault($defaultThumbnail);
+            $broadcastSnippet->setThumbnails($thumbnails);
+        }
 
         $status = new \Google_Service_YouTube_LiveBroadcastStatus();
         $status->setPrivacyStatus($privacyStatus);
