@@ -34,7 +34,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        $fileFieldOptions = ['required' => false, 'label' => 'Thumbnail (1280x720px recommended)'];
+        $fileFieldOptions = ['required' => false, 'label' => 'Thumbnail (min. 1280x720px, 16:9 ratio)'];
 
         /** @var LiveBroadcast $broadcast */
         $broadcast = $this->getSubject();
@@ -48,7 +48,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
                 $broadcast->getThumbnail()->getFilename()
             );
 
-            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" />';
+            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" height="650" width="1200"/>';
         }
 
         $formMapper
