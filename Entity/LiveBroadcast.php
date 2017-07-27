@@ -46,7 +46,7 @@ class LiveBroadcast
      * @var UploadedFile|File
      *
      * @ORM\Column(name="thumbnail", type="string", length=255, nullable=true)
-     * @Assert\Image(minRatio="1.78", maxRatio="1.78", minWidth="1280", minHeight="720", maxSize="800k")
+     * @Assert\Image(minRatio="1.78", maxRatio="1.78", minWidth="1280", minHeight="720", maxSize="5120k")
      */
     private $thumbnail;
 
