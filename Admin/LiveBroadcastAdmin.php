@@ -48,7 +48,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
                 $broadcast->getThumbnail()->getFilename()
             );
 
-            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" height="650" width="1200"/>';
+            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" style="max-width: 100%;"/>';
         }
 
         $formMapper
