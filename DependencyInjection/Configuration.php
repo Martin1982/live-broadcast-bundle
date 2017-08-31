@@ -49,6 +49,13 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('web_path')->defaultValue('/uploads/thumbnails')->end()
                     ->end()
                 ->end()
+                ->arrayNode('eventloop')
+                    ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('enabled')->defaultFalse()->end()
+                        ->scalarNode('timer')->defaultValue(5)->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

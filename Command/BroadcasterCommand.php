@@ -2,6 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Command;
 
+use React\EventLoop\Factory;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,7 +27,16 @@ class BroadcasterCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $scheduler = $this->getContainer()->get('live.broadcast.scheduler');
-        $scheduler->applySchedule();
+        $container = $this->getContainer();
+        $scheduler = $container->get('live.broadcast.scheduler');
+
+        if (!$container->getParameter('livebroadcast.eventloop.enabled')) {
+            $scheduler->applySchedule();
+
+            return;
+        }
+
+        $eventLoop = Factory::create();
+        $eventLoop->addPeriodicTimer($container->getParameter('livebroadcast.eventloop.timer'), $scheduler->applySchedule());
     }
 }
