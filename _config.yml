@@ -1,0 +1,8 @@
+title: Live Broadcast Bundle
+description: Making live streaming easy, fast and manageable
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
