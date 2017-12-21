@@ -39,7 +39,7 @@ class BroadcasterCommand extends ContainerAwareCommand
         $eventLoop = Factory::create();
         $eventLoop->addPeriodicTimer(
             $container->getParameter('livebroadcast.eventloop.timer'),
-            function() use ($scheduler) {
+            function () use ($scheduler) {
                 $scheduler->applySchedule();
             }
         );
