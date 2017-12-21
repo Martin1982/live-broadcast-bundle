@@ -89,6 +89,14 @@ $ php app/console livebroadcaster:broadcast
 
 By default Facebook and YouTube are disabled, as they need extra config. To enable either one of these continue reading.
 
+## Event loop
+In stead of using cronjobs to trigger broadcasts you can use an event loop by using this configuration:
+
+	livebroadcast:
+        eventloop:
+            enabled: true
+            timer: 5
+
 ## Enabling Facebook Live
 
 ### Step 1: Create a Facebook App
