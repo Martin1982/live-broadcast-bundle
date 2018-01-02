@@ -23,7 +23,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
      */
     public function getRunningProcesses()
     {
-        exec('/bin/ps -C ffmpeg -o pid=,args=', $output);
+        exec('/bin/ps -ww -C ffmpeg -o pid=,args=', $output);
 
         return $output;
     }

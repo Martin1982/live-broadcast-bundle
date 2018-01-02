@@ -78,7 +78,7 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
         $exec->expects($this->once())->willReturnCallback(
             function ($command, &$output) {
-                self::assertEquals('/bin/ps -C ffmpeg -o pid=,args=', $command);
+                self::assertEquals('/bin/ps -ww -C ffmpeg -o pid=,args=', $command);
                 // @codingStandardsIgnoreLine
                 $output = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337';
             }
