@@ -165,7 +165,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
     protected function loadThumbnail(LiveBroadcast $liveBroadcast)
     {
         $uploadListener = $this->getConfigurationPool()->getContainer()->get('live.broadcast.thumbnail.listener');
-        $objectManager = $this->getConfigurationPool()->getContainer()->get('Doctrine')->getManager();
+        $objectManager = $this->getConfigurationPool()->getContainer()->get('doctrine')->getManager();
         $lifeCycleEvent = new LifecycleEventArgs($liveBroadcast, $objectManager);
         $uploadListener->postLoad($lifeCycleEvent);
     }
