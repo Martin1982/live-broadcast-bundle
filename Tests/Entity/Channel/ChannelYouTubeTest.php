@@ -43,27 +43,27 @@ class ChannelYouTubeTest extends \PHPUnit_Framework_TestCase
         $channel = new ChannelYouTube();
         $configuration = array();
 
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['youtube'] = array();
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['youtube']['client_id'] = null;
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['youtube']['client_secret'] = null;
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['youtube']['redirect_route'] = null;
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['youtube']['client_id'] = 'id';
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['youtube']['client_secret'] = 'secret';
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['youtube']['redirect_route'] = 'route';
-        self::assertTrue($channel->isEntityConfigured($configuration));
+        self::assertTrue($channel::isEntityConfigured($configuration));
     }
 }

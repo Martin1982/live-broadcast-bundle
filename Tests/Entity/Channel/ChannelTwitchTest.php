@@ -44,6 +44,6 @@ class ChannelTwitchTest extends \PHPUnit_Framework_TestCase
         $channel = new ChannelTwitch();
         $configuration = array();
 
-        self::assertTrue($channel->isEntityConfigured($configuration));
+        self::assertTrue($channel::isEntityConfigured($configuration));
     }
 }

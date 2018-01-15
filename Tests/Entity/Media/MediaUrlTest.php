@@ -2,7 +2,6 @@
 
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
-use Martin1982\LiveBroadcastBundle\Entity\Media\InputInterface;
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl;
 
 /**

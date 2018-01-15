@@ -33,7 +33,7 @@ class OutputTwitchTest extends \PHPUnit_Framework_TestCase
     public function tesImplementsOutputInterface()
     {
         $implements = class_implements(OutputTwitch::class);
-        self::assertTrue(in_array(OutputInterface::class, $implements));
+        self::assertTrue(in_array(OutputInterface::class, $implements, true));
     }
 
     /**
@@ -61,6 +61,8 @@ class OutputTwitchTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test if the Twitch output class generates the correct output command.
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmd()
     {

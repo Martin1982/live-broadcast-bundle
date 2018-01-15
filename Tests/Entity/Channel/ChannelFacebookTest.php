@@ -8,7 +8,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
  * Class ChannelFacebooKTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Channel
  */
-class ChannelFacebooKTest extends \PHPUnit_Framework_TestCase
+class ChannelFacebookTest extends \PHPUnit_Framework_TestCase
 {
     /*
      * Test the getters and setters
@@ -43,21 +43,21 @@ class ChannelFacebooKTest extends \PHPUnit_Framework_TestCase
         $channel = new ChannelFacebook();
         $configuration = array();
 
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['facebook'] = array();
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['facebook']['application_id'] = null;
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['facebook']['application_secret'] = null;
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['facebook']['application_id'] = 'ID';
-        self::assertFalse($channel->isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['facebook']['application_secret'] = 'SECRET';
-        self::assertTrue($channel->isEntityConfigured($configuration));
+        self::assertTrue($channel::isEntityConfigured($configuration));
     }
 }

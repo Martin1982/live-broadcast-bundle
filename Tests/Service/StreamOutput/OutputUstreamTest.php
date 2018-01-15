@@ -33,7 +33,7 @@ class OutputUstreamTest extends \PHPUnit_Framework_TestCase
     public function tesImplementsOutputInterface()
     {
         $implements = class_implements(OutputUstream::class);
-        self::assertTrue(in_array(OutputInterface::class, $implements));
+        self::assertTrue(in_array(OutputInterface::class, $implements, true));
     }
 
     /**
@@ -48,6 +48,7 @@ class OutputUstreamTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the generate output command with an invalid channel
+     *
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithInvalidChannel()
@@ -61,6 +62,8 @@ class OutputUstreamTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test if the Ustream output class generates the correct output command.
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmd()
     {

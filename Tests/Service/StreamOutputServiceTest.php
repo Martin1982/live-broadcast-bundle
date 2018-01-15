@@ -39,6 +39,8 @@ class StreamOutputServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test if the correct output instance is returned for a given channel
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGetOutputInterface()
     {

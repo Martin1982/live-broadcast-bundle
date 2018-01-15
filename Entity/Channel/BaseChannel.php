@@ -50,7 +50,7 @@ abstract class BaseChannel
     /**
      * @param string $channelName
      *
-     * @return BaseChannel
+     * @return $this
      */
     public function setChannelName($channelName)
     {

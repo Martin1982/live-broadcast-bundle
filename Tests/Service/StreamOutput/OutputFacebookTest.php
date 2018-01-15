@@ -33,7 +33,7 @@ class OutputFacebookTest extends \PHPUnit_Framework_TestCase
     public function tesImplementsOutputInterface()
     {
         $implements = class_implements(OutputFacebook::class);
-        self::assertTrue(in_array(OutputInterface::class, $implements));
+        self::assertTrue(in_array(OutputInterface::class, $implements, true));
     }
 
     /**
@@ -72,6 +72,8 @@ class OutputFacebookTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test if the Facebook output class generates the correct output command.
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testValidGenerateOutputCmd()
     {

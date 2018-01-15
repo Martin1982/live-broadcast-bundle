@@ -10,7 +10,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputLively;
  * Class OutputLivelyTestTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput
  */
-class OutputLivelyTestTest extends \PHPUnit_Framework_TestCase
+class OutputLivelyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ChannelLively
@@ -33,7 +33,7 @@ class OutputLivelyTestTest extends \PHPUnit_Framework_TestCase
     public function tesImplementsOutputInterface()
     {
         $implements = class_implements(OutputLively::class);
-        self::assertTrue(in_array(OutputInterface::class, $implements));
+        self::assertTrue(in_array(OutputInterface::class, $implements, true));
     }
 
     /**
@@ -61,6 +61,8 @@ class OutputLivelyTestTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test if the Live.ly output class generates the correct output command.
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmd()
     {

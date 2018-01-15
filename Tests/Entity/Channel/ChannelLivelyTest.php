@@ -45,6 +45,6 @@ class ChannelLivelyTest extends \PHPUnit_Framework_TestCase
         $channel = new ChannelLively();
         $configuration = array();
 
-        self::assertTrue($channel->isEntityConfigured($configuration));
+        self::assertTrue($channel::isEntityConfigured($configuration));
     }
 }

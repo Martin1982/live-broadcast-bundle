@@ -43,6 +43,6 @@ class ChannelUStreamTest extends \PHPUnit_Framework_TestCase
         $channel = new ChannelUstream();
         $configuration = array();
 
-        self::assertTrue($channel->isEntityConfigured($configuration));
+        self::assertTrue($channel::isEntityConfigured($configuration));
     }
 }

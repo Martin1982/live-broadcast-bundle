@@ -18,7 +18,7 @@ class LiveBroadcastTest extends \PHPUnit_Framework_TestCase
     public function testClass()
     {
         $broadcast = new LiveBroadcast();
-        self::assertInstanceOf('Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast', $broadcast);
+        self::assertInstanceOf(LiveBroadcast::class, $broadcast);
     }
 
     /**
@@ -34,8 +34,8 @@ class LiveBroadcastTest extends \PHPUnit_Framework_TestCase
         $broadcast->setDescription('Description of broadcast');
         $broadcast->setThumbnail(new File('test', false));
 
-        self::assertEquals($now, $broadcast->getStartTimestamp());
-        self::assertEquals($endTime, $broadcast->getEndTimestamp());
+        self::assertEquals($now->format('Y-m-d H:i:s'), $broadcast->getStartTimestamp()->format('Y-m-d H:i:s'));
+        self::assertEquals($endTime->format('Y-m-d H:i:s'), $broadcast->getEndTimestamp()->format('Y-m-d H:i:s'));
         self::assertEquals(new ArrayCollection(), $broadcast->getOutputChannels());
         self::assertEquals('Test', $broadcast->getName());
         self::assertEquals('Description of broadcast', $broadcast->getDescription());
