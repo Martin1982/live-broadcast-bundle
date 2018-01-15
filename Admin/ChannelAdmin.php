@@ -13,6 +13,8 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class ChannelAdmin
@@ -99,7 +101,7 @@ class ChannelAdmin extends AbstractAdmin
 
         $formMapper
             ->with('Channel')
-                ->add('channelName', 'text', array(
+                ->add('channelName', TextType::class, array(
                     'label' => 'Channel name',
                     'attr' => array('class' => $nameClasses),
                 ));
@@ -107,25 +109,25 @@ class ChannelAdmin extends AbstractAdmin
         if ($subject instanceof ChannelTwitch ||
             $subject instanceof ChannelUstream ||
             $subject instanceof ChannelLively) {
-            $formMapper->add('streamKey', 'text', array('label' => 'Stream key'));
-            $formMapper->add('streamServer', 'text', array('label' => 'Stream server'));
+            $formMapper->add('streamKey', TextType::class, array('label' => 'Stream key'));
+            $formMapper->add('streamServer', TextType::class, array('label' => 'Stream server'));
         }
 
         if ($subject instanceof ChannelFacebook) {
-            $formMapper->add('accessToken', 'hidden', array(
+            $formMapper->add('accessToken', HiddenType::class, array(
                 'attr' => array('class' => 'fb-access-token'),
             ));
-            $formMapper->add('fbEntityId', 'hidden', array(
+            $formMapper->add('fbEntityId', HiddenType::class, array(
                 'attr' => array('class' => 'fb-entity-id'),
             ));
         }
 
         if ($subject instanceof ChannelYouTube) {
-            $formMapper->add('youTubeChannelName', 'text', array(
+            $formMapper->add('youTubeChannelName', TextType::class, array(
                 'attr' => array('class' => 'input-yt-channelname', 'readonly' => 'readonly')
             ));
 
-            $formMapper->add('refreshToken', 'text', array(
+            $formMapper->add('refreshToken', TextType::class, array(
                 'attr' => array('class' => 'input-yt-refreshtoken', 'readonly' => 'readonly')
             ));
         }

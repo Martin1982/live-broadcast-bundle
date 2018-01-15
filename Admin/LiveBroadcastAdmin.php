@@ -11,6 +11,13 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\ModelListType;
+use Sonata\AdminBundle\Form\Type\ModelType;
+use Sonata\CoreBundle\Form\Type\DateTimePickerType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class LiveBroadcastAdmin.
@@ -55,22 +62,22 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->with('General', array(
                 'class' => 'col-md-8',
             ))
-            ->add('name', 'text', array('label' => 'Name'))
-            ->add('description', 'textarea', array(
+            ->add('name', TextType::class, array('label' => 'Name'))
+            ->add('description', TextareaType::class, array(
                 'label' => 'Description',
                 'required' => false,
                 'attr' => array('class' => 'form-control', 'rows' => 5),
             ))
-            ->add('thumbnail', 'file', $fileFieldOptions)
-            ->add('startTimestamp', 'sonata_type_datetime_picker', array(
+            ->add('thumbnail', FileType::class, $fileFieldOptions)
+            ->add('startTimestamp', DateTimePickerType::class, array(
                 'label' => 'Broadcast start',
                 'dp_side_by_side' => true,
             ))
-            ->add('endTimestamp', 'sonata_type_datetime_picker', array(
+            ->add('endTimestamp', DateTimePickerType::class, array(
                 'label' => 'Broadcast end',
                 'dp_side_by_side' => true,
             ))
-            ->add('stopOnEndTimestamp', 'checkbox', array(
+            ->add('stopOnEndTimestamp', CheckboxType::class, array(
                 'label' => 'Stop on broadcast end timestamp',
                 'required' => false,
             ))
@@ -78,12 +85,12 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->with('Video Input', array(
                 'class' => 'col-md-4',
             ))
-            ->add('input', 'sonata_type_model_list', array('btn_list' => false))
+            ->add('input', ModelListType::class, array('btn_list' => false))
             ->end()
             ->with('Channels', array(
                 'class' => 'col-md-4',
             ))
-            ->add('outputChannels', 'sonata_type_model', array(
+            ->add('outputChannels', ModelType::class, array(
                 'multiple' => true,
                 'expanded' => true,
             ))
