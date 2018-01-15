@@ -24,7 +24,7 @@ interface InputInterface
     /**
      * Returns the media type
      *
-     * @return BaseMedia
+     * @return string
      */
     public function getMediaType();
 }

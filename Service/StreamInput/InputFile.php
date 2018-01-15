@@ -43,7 +43,7 @@ class InputFile implements InputInterface
     }
 
     /**
-     * @return MediaFile
+     * @return string
      */
     public function getMediaType()
     {

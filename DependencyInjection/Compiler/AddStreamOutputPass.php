@@ -29,6 +29,10 @@ class AddStreamOutputPass implements CompilerPassInterface
         $definition = $container->findDefinition(self::STREAM_OUTPUT_SERVICE);
         $taggedServices = $container->findTaggedServiceIds(self::STREAM_OUTPUT_TAG);
 
+        /**
+         * @var string $id
+         * @var array  $tags
+         */
         foreach ($taggedServices as $id => $tags) {
             foreach ($tags as $attributes) {
                 $definition->addMethodCall(

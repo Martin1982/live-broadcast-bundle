@@ -34,7 +34,6 @@ class FacebookApiService
      * FacebookApiService constructor.
      * @param string $applicationId
      * @param string $applicationSecret
-     * @throws LiveBroadcastOutputException
      */
     public function __construct($applicationId, $applicationSecret)
     {
@@ -43,9 +42,12 @@ class FacebookApiService
     }
 
     /**
-     * @param LiveBroadcast  $liveBroadcast
+     * @param LiveBroadcast $liveBroadcast
      * @param OutputFacebook $outputFacebook
+     *
      * @return null|string
+     *
+     * @throws \InvalidArgumentException
      * @throws LiveBroadcastOutputException
      */
     public function createFacebookLiveVideo(LiveBroadcast $liveBroadcast, OutputFacebook $outputFacebook)

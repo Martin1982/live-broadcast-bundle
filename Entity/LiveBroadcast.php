@@ -80,7 +80,7 @@ class LiveBroadcast
     private $stopOnEndTimestamp = true;
 
     /**
-     * @var BaseChannel
+     * @var BaseChannel[]
      *
      * @ORM\ManyToMany(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel")
      * @ORM\JoinTable(name="broadcasts_channels",
@@ -218,7 +218,7 @@ class LiveBroadcast
     }
 
     /**
-     * @param $channels
+     * @param BaseChannel[] $channels
      *
      * @return $this
      */

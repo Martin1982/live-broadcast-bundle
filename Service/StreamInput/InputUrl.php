@@ -43,7 +43,7 @@ class InputUrl implements InputInterface
     }
 
     /**
-     * @return MediaUrl
+     * @return string
      */
     public function getMediaType()
     {

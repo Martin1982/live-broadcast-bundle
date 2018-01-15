@@ -27,10 +27,10 @@ class YouTubePreBroadcastListener implements EventSubscriberInterface
     private $redirectService;
 
     /**
-     * YouTubePreBroadcastListener constructor.
+     * YouTubePreBroadcastListener constructor
+     *
      * @param YouTubeApiService $youTubeApiService
      * @param GoogleRedirectService $redirectService
-     * @throws LiveBroadcastOutputException
      */
     public function __construct(YouTubeApiService $youTubeApiService, GoogleRedirectService $redirectService)
     {
@@ -40,6 +40,8 @@ class YouTubePreBroadcastListener implements EventSubscriberInterface
 
     /**
      * @param PreBroadcastEvent $event
+     *
+     * @throws LiveBroadcastOutputException
      */
     public function onPreBroadcast(PreBroadcastEvent $event)
     {

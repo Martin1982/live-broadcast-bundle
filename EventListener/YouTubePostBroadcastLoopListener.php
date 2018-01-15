@@ -58,14 +58,14 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     protected $googleRedirectUri;
 
     /**
-     * YouTubePostBroadcastLoopListener constructor.
+     * YouTubePostBroadcastLoopListener constructor
+     *
      * @param EntityManager $entityManager
      * @param SchedulerCommandsInterface $commands
      * @param YouTubeApiService $youTubeApiService
      * @param KernelInterface $kernel
      * @param GoogleRedirectService $redirectService
      * @param LoggerInterface $logger
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function __construct(
         EntityManager $entityManager,
@@ -87,7 +87,13 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * Get planned streams which aren't live yet on the monitor
      *
      * @param PostBroadcastLoopEvent $event
+     *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function onPostBroadcastLoop(PostBroadcastLoopEvent $event)
     {
@@ -138,6 +144,10 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
 
     /**
      * @param YouTubeEvent $testableEvent
+     *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws LiveBroadcastOutputException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function updateEventState(YouTubeEvent $testableEvent)
     {
@@ -180,9 +190,11 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * Start a monitor stream with a placeholder image
      *
      * @param YouTubeEvent $event
+     *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
+     * @throws LiveBroadcastOutputException
      */
     protected function startMonitorStream(YouTubeEvent $event)
     {
@@ -253,6 +265,8 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * Try to transition the state of the stream
      *
      * @param YouTubeEvent $event
+     *
+     * @throws LiveBroadcastOutputException
      */
     protected function transitionState(YouTubeEvent $event)
     {

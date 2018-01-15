@@ -46,7 +46,7 @@ class InputMonitorStream implements InputInterface
     }
 
     /**
-     * @return MediaMonitorStream
+     * @return string
      */
     public function getMediaType()
     {

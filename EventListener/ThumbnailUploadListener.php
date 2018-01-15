@@ -47,6 +47,8 @@ class ThumbnailUploadListener
 
     /**
      * @param LifecycleEventArgs $args
+     *
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException
      */
     public function postLoad(LifecycleEventArgs $args)
     {
@@ -66,10 +68,10 @@ class ThumbnailUploadListener
     }
 
     /**
-     * @param object $entity
-     * @param array  $entityChangeset
+     * @param LiveBroadcast|mixed $entity
+     * @param array               $entityChangeset
      */
-    private function uploadFile($entity, $entityChangeset = [])
+    private function uploadFile($entity, array $entityChangeset = [])
     {
         if (!$entity instanceof LiveBroadcast) {
             return;

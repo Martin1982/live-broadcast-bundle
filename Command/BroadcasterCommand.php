@@ -15,6 +15,8 @@ class BroadcasterCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
      */
     protected function configure()
     {
@@ -24,6 +26,13 @@ class BroadcasterCommand extends ContainerAwareCommand
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws \Doctrine\ORM\Query\QueryException
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \LogicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

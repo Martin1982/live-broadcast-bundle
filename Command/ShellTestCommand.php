@@ -23,6 +23,8 @@ class ShellTestCommand extends ContainerAwareCommand
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
      */
     protected function configure()
     {
@@ -47,6 +49,7 @@ class ShellTestCommand extends ContainerAwareCommand
                 break;
         }
 
+        $output->write(sprintf('Detected OS is \'%s\'', PHP_OS));
         $output->write('Checking \'ffmpeg\' command availability... ');
         $this->testFfmpeg($output);
 

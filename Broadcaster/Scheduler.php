@@ -3,7 +3,6 @@
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\QueryException;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
@@ -90,7 +89,7 @@ class Scheduler
 
     /**
      * Run streams that need to be running.
-     * @throws QueryException
+     *
      * @throws LiveBroadcastException
      */
     public function applySchedule()
@@ -260,7 +259,6 @@ class Scheduler
      *
      * @return LiveBroadcast[]
      *
-     * @throws \Doctrine\ORM\Query\QueryException
      * @throws LiveBroadcastException
      */
     protected function getPlannedBroadcasts()

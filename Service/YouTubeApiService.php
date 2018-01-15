@@ -97,7 +97,7 @@ class YouTubeApiService
         $googleApiClient->setLogger($this->logger);
         $googleApiClient->setClientId($this->clientId);
         $googleApiClient->setClientSecret($this->clientSecret);
-        $googleApiClient->setScopes('https://www.googleapis.com/auth/youtube');
+        $googleApiClient->setScopes(['https://www.googleapis.com/auth/youtube']);
         $googleApiClient->setAccessType('offline');
         $googleApiClient->setRedirectUri($oAuthRedirectUrl);
         $googleApiClient->setApprovalPrompt('force');
@@ -119,7 +119,10 @@ class YouTubeApiService
 
     /**
      * Set the access token
+     *
      * @param string $sessionToken
+     *
+     * @throws \InvalidArgumentException
      */
     public function setAccessToken($sessionToken)
     {
@@ -237,8 +240,11 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast  $broadcast
+     * @param LiveBroadcast $broadcast
      * @param ChannelYouTube $channel
+     *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function createLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
@@ -254,8 +260,11 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast  $broadcast
+     * @param LiveBroadcast $broadcast
      * @param ChannelYouTube $channel
+     *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function updateLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
@@ -263,15 +272,20 @@ class YouTubeApiService
         $youTubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
 
         if (!$youTubeEvent) {
-            return $this->createLiveEvent($broadcast, $channel);
+            $this->createLiveEvent($broadcast, $channel);
+
+            return;
         }
 
         $this->updateLiveStream($youTubeEvent);
     }
 
     /**
-     * @param LiveBroadcast  $broadcast
+     * @param LiveBroadcast $broadcast
      * @param ChannelYouTube $channel
+     *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function removeLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
@@ -286,6 +300,7 @@ class YouTubeApiService
     /**
      * @param LiveBroadcast  $liveBroadcast
      * @param ChannelYouTube $channelYouTube
+     *
      * @return mixed
      */
     public function getBroadcastStatus(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube)
@@ -361,6 +376,9 @@ class YouTubeApiService
      * Edit a planned live event
      *
      * @param YouTubeEvent $event
+     *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function updateLiveStream(YouTubeEvent $event)
     {
@@ -403,6 +421,7 @@ class YouTubeApiService
      * @param LiveBroadcast $liveBroadcast
      * @param string        $privacyStatus
      * @param string|null   $id
+     *
      * @return \Google_Service_YouTube_LiveBroadcast
      */
     protected function updateBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $id = null)
@@ -476,6 +495,7 @@ class YouTubeApiService
 
     /**
      * @param string $title
+     *
      * @return \Google_Service_YouTube_LiveStream
      */
     protected function createStream($title)

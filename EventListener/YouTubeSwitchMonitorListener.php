@@ -93,6 +93,9 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
 
     /**
      * @param SwitchMonitorEvent $event
+     *
+     * @throws LiveBroadcastOutputException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
     public function onSwitchMonitor(SwitchMonitorEvent $event)
     {

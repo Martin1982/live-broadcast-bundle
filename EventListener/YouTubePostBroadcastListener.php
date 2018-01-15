@@ -27,10 +27,10 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
     private $redirectService;
 
     /**
-     * YouTubePostBroadcastListener constructor.
+     * YouTubePostBroadcastListener constructor
+     *
      * @param YouTubeApiService $youTubeApiService
      * @param GoogleRedirectService $redirectService
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function __construct(YouTubeApiService $youTubeApiService, GoogleRedirectService $redirectService)
     {
@@ -40,6 +40,8 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
 
     /**
      * @param PostBroadcastEvent $event
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function onPostBroadcast(PostBroadcastEvent $event)
     {

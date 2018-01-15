@@ -170,17 +170,18 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * @param string $processString
      * @param string $metadataKey
-     * @return mixed|void
+     * @return mixed
      */
     private function getMetadataValue($processString, $metadataKey)
     {
         $metadata = $this->readMetadata($processString);
+        $value = null;
 
         if (array_key_exists($metadataKey, $metadata)) {
-            return $metadata[$metadataKey];
+            $value = $metadata[$metadataKey];
         }
 
-        return;
+        return $value;
     }
 
     /**
