@@ -249,7 +249,7 @@ class Scheduler
                     'broadcast_id' => $broadcast->getBroadcastId(),
                     'broadcast_name' => $broadcast->getName(),
                     'exception' => $ex->getMessage(),
-                    )
+                )
             );
         }
     }

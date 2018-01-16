@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 class YouTubeApiService
 {
+    const STREAM_ACTIVE_STATUS = 'active';
+
     /**
      * @var string
      */
@@ -211,11 +213,27 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast  $liveBroadcast
-     * @param ChannelYouTube $channelYouTube
+     * @param \Google_Service_YouTube_LiveStream $stream
+     *
      * @return string|null
      */
-    public function getStreamUrl(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube)
+    public function getStreamUrl(\Google_Service_YouTube_LiveStream $stream)
+    {
+        $streamAddress = $stream->getCdn()->getIngestionInfo()->getIngestionAddress();
+        $streamName = $stream->getCdn()->getIngestionInfo()->getStreamName();
+
+        return $streamAddress.'/'.$streamName;
+    }
+
+    /**
+     * Retrieve a YouTube stream object
+     *
+     * @param LiveBroadcast  $liveBroadcast
+     * @param ChannelYouTube $channelYouTube
+     *
+     * @return \Google_Service_YouTube_LiveStream|null
+     */
+    public function getStream(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube)
     {
         $this->getAccessToken($channelYouTube->getRefreshToken());
         $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
@@ -231,12 +249,7 @@ class YouTubeApiService
         $youTubeDetails = $youTubeBroadcast->getContentDetails();
         $streamId = $youTubeDetails->getBoundStreamId();
 
-        $streamResponse = $this->getExternalStreamById($streamId);
-
-        $streamAddress = $streamResponse->getCdn()->getIngestionInfo()->getIngestionAddress();
-        $streamName = $streamResponse->getCdn()->getIngestionInfo()->getStreamName();
-
-        return $streamAddress.'/'.$streamName;
+        return $this->getExternalStreamById($streamId);
     }
 
     /**
@@ -324,6 +337,8 @@ class YouTubeApiService
      * @param LiveBroadcast  $liveBroadcast
      * @param ChannelYouTube $channelYouTube
      * @param string $state
+     *
+     * @return boolean
      */
     public function transitionState(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube, $state)
     {
@@ -333,19 +348,42 @@ class YouTubeApiService
         $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYouTube);
 
         $youTubeId = $event->getYouTubeId();
+        $canChangeState = true;
 
-        try {
-            $this->logger->info(
-                'YouTube transition state',
-                array('state' => $state)
-            );
-            $this->youTubeApiClient->liveBroadcasts->transition($state, $youTubeId, 'status');
-        } catch (\Google_Service_Exception $exception) {
-            $this->logger->error(
-                'YouTube transition state',
-                array('exception' => $exception->getMessage())
-            );
+        if ($state === YouTubeEvent::STATE_REMOTE_TESTING || $state === YouTubeEvent::STATE_REMOTE_LIVE) {
+            $stream = $this->getStream($liveBroadcast, $channelYouTube);
+            if (!$stream) {
+                $canChangeState = false;
+                $this->logger->warning(sprintf('Can\'t change state when no stream is present for "%s"', $liveBroadcast));
+            }
+
+            $streamStatus = $stream->getStatus()->getStreamStatus();
+
+            if ($streamStatus !== self::STREAM_ACTIVE_STATUS) {
+                $canChangeState = false;
+                $this->logger->warning(sprintf(
+                    'Stream state must be \'active\' for "%s", current state is \'%s\'',
+                    $liveBroadcast,
+                    $streamStatus
+                ));
+            }
         }
+
+        if ($canChangeState) {
+            $this->logger->info('YouTube transition state', array('state' => $state));
+            try {
+                $this->youTubeApiClient->liveBroadcasts->transition($state, $youTubeId, 'status');
+
+                return true;
+            } catch (\Google_Service_Exception $exception) {
+                $this->logger->error(
+                    'YouTube transition state',
+                    array('exception' => $exception->getMessage())
+                );
+            }
+        }
+
+        return $false;
     }
 
     /**

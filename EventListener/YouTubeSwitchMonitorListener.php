@@ -107,14 +107,16 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
             return;
         }
 
-        $this->youTubeApiService->transitionState(
+        $transitionResult = $this->youTubeApiService->transitionState(
             $this->plannedBroadcast,
             $this->channel,
             YouTubeEvent::STATE_REMOTE_LIVE
         );
 
-        $this->stopMonitorStream();
-        $this->startBroadcast();
+        if ($transitionResult === true) {
+            $this->stopMonitorStream();
+            $this->startBroadcast();
+        }
     }
 
     /**
@@ -149,7 +151,10 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
 
         /** @var OutputYouTube $outputService */
         $outputService = $this->outputService->getOutputInterface($this->channel);
-        $outputService->setStreamUrl($this->youTubeApiService->getStreamUrl($this->plannedBroadcast, $this->channel));
+
+        $stream = $this->youTubeApiService->getStream($this->plannedBroadcast, $this->channel);
+        $streamUrl = $this->youTubeApiService->getStreamUrl($stream);
+        $outputService->setStreamUrl($streamUrl);
 
         $output = $outputService->generateOutputCmd();
 

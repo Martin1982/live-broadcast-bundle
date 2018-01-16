@@ -210,8 +210,10 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
 
         $inputService = new InputMonitorStream();
         $inputService->setMedia($inputMedia);
-
-        $streamUrl = $this->getYouTubeApiService()->getStreamUrl($event->getBroadcast(), $event->getChannel());
+        
+        
+        $stream = $this->getYouTubeApiService()->getStream($event->getBroadcast(), $event->getChannel());
+        $streamUrl = $this->getYouTubeApiService()->getStreamUrl($stream);
 
         $outputService = new OutputYouTube();
         $outputService->setChannel($event->getChannel());
