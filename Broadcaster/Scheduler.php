@@ -232,7 +232,7 @@ class Scheduler
                     'channel_name' => $channel->getChannelName(),
                     'input_cmd' => $input->generateInputCmd(),
                     'output_cmd' => $output->generateOutputCmd(),
-                    )
+                )
             );
 
             $this->schedulerCommands->startProcess($input->generateInputCmd(), $output->generateOutputCmd(), array(

@@ -10,44 +10,7 @@ use Symfony\Component\EventDispatcher\Event;
  * Class PreBroadcastEvent
  * @package Martin1982\LiveBroadcastBundle\Event
  */
-class PreBroadcastEvent extends Event
+class PreBroadcastEvent extends AbstractBroadcastEvent
 {
     const NAME = 'martin1982.livebroadcast.pre_broadcast';
-
-    /**
-     * @var LiveBroadcast
-     */
-    private $liveBroadcast;
-
-    /**
-     * @var OutputInterface
-     */
-    private $output;
-
-    /**
-     * PreBroadcastEvent constructor.
-     * @param LiveBroadcast   $liveBroadcast
-     * @param OutputInterface $output
-     */
-    public function __construct(LiveBroadcast $liveBroadcast, OutputInterface $output)
-    {
-        $this->liveBroadcast = $liveBroadcast;
-        $this->output = $output;
-    }
-
-    /**
-     * @return OutputInterface
-     */
-    public function getOutput()
-    {
-        return $this->output;
-    }
-
-    /**
-     * @return LiveBroadcast
-     */
-    public function getLiveBroadcast()
-    {
-        return $this->liveBroadcast;
-    }
 }
