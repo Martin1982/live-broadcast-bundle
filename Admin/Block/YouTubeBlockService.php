@@ -73,13 +73,15 @@ class YouTubeBlockService extends BaseBlockService
             $session->set('authreferer', $request->getRequestUri());
         }
 
-        return $this->renderResponse('LiveBroadcastBundle:Block:youtube_auth.html.twig', [
-            'isAuthenticated' => $isAuthenticated,
-            'authUrl' => $isAuthenticated ? '#' : $this->youTubeApi->getAuthenticationUrl($state),
-            'youTubeChannelName' => $session->get('youTubeChannelName'),
-            'youTubeRefreshToken' => $session->get('youTubeRefreshToken'),
-            'block' => $blockContext->getBlock(),
-            'settings' => $blockContext->getSettings(),
+        return $this->renderResponse(
+            'LiveBroadcastBundle:Block:youtube_auth.html.twig',
+            [
+                'isAuthenticated' => $isAuthenticated,
+                'authUrl' => $isAuthenticated ? '#' : $this->youTubeApi->getAuthenticationUrl($state),
+                'youTubeChannelName' => $session->get('youTubeChannelName'),
+                'youTubeRefreshToken' => $session->get('youTubeRefreshToken'),
+                'block' => $blockContext->getBlock(),
+                'settings' => $blockContext->getSettings(),
             ],
             $response
         );
