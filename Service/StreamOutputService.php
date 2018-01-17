@@ -15,7 +15,7 @@ class StreamOutputService
     /**
      * @var OutputInterface[]
      */
-    private $streamOutputs = array();
+    private $streamOutputs = [];
 
     /**
      * @param OutputInterface $streamOutput

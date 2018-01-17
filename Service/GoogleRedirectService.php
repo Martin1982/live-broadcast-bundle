@@ -46,7 +46,7 @@ class GoogleRedirectService
         try {
             return $this->router->generate(
                 $this->redirectRoute,
-                array(),
+                [],
                 $router::ABSOLUTE_URL
             );
         } catch (RouteNotFoundException $exception) {

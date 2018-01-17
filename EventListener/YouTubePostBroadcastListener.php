@@ -63,6 +63,6 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(PostBroadcastEvent::NAME => 'onPostBroadcast');
+        return [PostBroadcastEvent::NAME => 'onPostBroadcast'];
     }
 }

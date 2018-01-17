@@ -30,7 +30,7 @@ class ChannelAdmin extends AbstractAdmin
     /**
      * @var array
      */
-    protected $subclassConfigs = array();
+    protected $subclassConfigs = [];
 
     /**
      * {@inheritdoc}
@@ -65,7 +65,7 @@ class ChannelAdmin extends AbstractAdmin
      */
     public function setConfiguredSubclasses($subclasses)
     {
-        $configuredSubclasses = array();
+        $configuredSubclasses = [];
         $config = $this->subclassConfigs;
 
         foreach ($subclasses as $classKey => $subclass) {
@@ -101,35 +101,35 @@ class ChannelAdmin extends AbstractAdmin
 
         $formMapper
             ->with('Channel')
-                ->add('channelName', TextType::class, array(
+                ->add('channelName', TextType::class, [
                     'label' => 'Channel name',
-                    'attr' => array('class' => $nameClasses),
-                ));
+                    'attr' => ['class' => $nameClasses],
+                ]);
 
         if ($subject instanceof ChannelTwitch ||
             $subject instanceof ChannelUstream ||
             $subject instanceof ChannelLively) {
-            $formMapper->add('streamKey', TextType::class, array('label' => 'Stream key'));
-            $formMapper->add('streamServer', TextType::class, array('label' => 'Stream server'));
+            $formMapper->add('streamKey', TextType::class, ['label' => 'Stream key']);
+            $formMapper->add('streamServer', TextType::class, ['label' => 'Stream server']);
         }
 
         if ($subject instanceof ChannelFacebook) {
-            $formMapper->add('accessToken', HiddenType::class, array(
-                'attr' => array('class' => 'fb-access-token'),
-            ));
-            $formMapper->add('fbEntityId', HiddenType::class, array(
-                'attr' => array('class' => 'fb-entity-id'),
-            ));
+            $formMapper->add('accessToken', HiddenType::class, [
+                'attr' => ['class' => 'fb-access-token'],
+            ]);
+            $formMapper->add('fbEntityId', HiddenType::class, [
+                'attr' => ['class' => 'fb-entity-id'],
+            ]);
         }
 
         if ($subject instanceof ChannelYouTube) {
-            $formMapper->add('youTubeChannelName', TextType::class, array(
-                'attr' => array('class' => 'input-yt-channelname', 'readonly' => 'readonly')
-            ));
+            $formMapper->add('youTubeChannelName', TextType::class, [
+                'attr' => ['class' => 'input-yt-channelname', 'readonly' => 'readonly']
+            ]);
 
-            $formMapper->add('refreshToken', TextType::class, array(
-                'attr' => array('class' => 'input-yt-refreshtoken', 'readonly' => 'readonly')
-            ));
+            $formMapper->add('refreshToken', TextType::class, [
+                'attr' => ['class' => 'input-yt-refreshtoken', 'readonly' => 'readonly']
+            ]);
         }
 
         $formMapper->end();
@@ -153,11 +153,11 @@ class ChannelAdmin extends AbstractAdmin
     {
         $listMapper
             ->add('channelName')
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'edit' => array(),
-                    'delete' => array(),
-                ),
-            ));
+            ->add('_action', 'actions', [
+                'actions' => [
+                    'edit' => [],
+                    'delete' => [],
+                ],
+            ]);
     }
 }

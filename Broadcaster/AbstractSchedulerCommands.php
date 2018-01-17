@@ -154,7 +154,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      */
     protected function readMetadata($processString)
     {
-        $processMetadata = array();
+        $processMetadata = [];
         $metadataRegex = '/-metadata ([a-z_]+)=([[:alnum:]]+)/';
         preg_match_all($metadataRegex, $processString, $metadata);
 

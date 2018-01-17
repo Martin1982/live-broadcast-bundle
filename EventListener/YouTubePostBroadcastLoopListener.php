@@ -125,7 +125,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(PostBroadcastLoopEvent::NAME => 'onPostBroadcastLoop');
+        return [PostBroadcastLoopEvent::NAME => 'onPostBroadcastLoop'];
     }
 
     /**
@@ -219,16 +219,16 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
         $outputService->setChannel($event->getChannel());
         $outputService->setStreamUrl($streamUrl);
 
-        $metadata = array(
+        $metadata = [
             'broadcast_id' => $event->getBroadcast()->getBroadcastId(),
             'channel_id' => $event->getChannel()->getChannelId(),
             'monitor_stream' => 'yes',
-        );
+        ];
 
         try {
             $this->logger->info(
                 'YouTube start monitor stream',
-                array('broadcast_id' => $metadata['broadcast_id'])
+                ['broadcast_id' => $metadata['broadcast_id']]
             );
             $this->commands->startProcess(
                 $inputService->generateInputCmd(),

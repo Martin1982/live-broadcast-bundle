@@ -48,6 +48,6 @@ class FacebookPreBroadcastListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(PreBroadcastEvent::NAME => 'onPreBroadcast');
+        return [PreBroadcastEvent::NAME => 'onPreBroadcast'];
     }
 }

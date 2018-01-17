@@ -195,7 +195,7 @@ class YouTubeApiService
     public function getChannelName()
     {
         $parts = 'id,brandingSettings';
-        $opts = array('mine' => true);
+        $opts = ['mine' => true];
 
         $channels = $this->youTubeApiClient->channels->listChannels($parts, $opts);
 
@@ -371,7 +371,7 @@ class YouTubeApiService
         }
 
         if ($canChangeState) {
-            $this->logger->info('YouTube transition state', array('state' => $state));
+            $this->logger->info('YouTube transition state', ['state' => $state]);
             try {
                 $this->youTubeApiClient->liveBroadcasts->transition($state, $youTubeId, 'status');
 
@@ -379,12 +379,12 @@ class YouTubeApiService
             } catch (\Google_Service_Exception $exception) {
                 $this->logger->error(
                     'YouTube transition state',
-                    array('exception' => $exception->getMessage())
+                    ['exception' => $exception->getMessage()]
                 );
             }
         }
 
-        return $false;
+        return false;
     }
 
     /**
@@ -405,7 +405,7 @@ class YouTubeApiService
         $bindBroadcastResponse = $this->youTubeApiClient->liveBroadcasts->bind(
             $broadcastResponse->getId(),
             'id,contentDetails',
-            array('streamId' => $streamsResponse->getId())
+            ['streamId' => $streamsResponse->getId()]
         );
 
         return $bindBroadcastResponse;
@@ -447,11 +447,11 @@ class YouTubeApiService
         } catch (\Google_Service_Exception $exception) {
             $this->logger->error(
                 'YouTube remove live stream',
-                array(
+                [
                     'broadcast_id' => $event->getBroadcast()->getBroadcastId(),
                     'broadcast_name' => $event->getBroadcast()->getName(),
                     'exception' => $exception->getMessage(),
-                    )
+                ]
             );
         }
     }
@@ -560,9 +560,9 @@ class YouTubeApiService
      */
     protected function getExternalBroadcastById($youTubeId)
     {
-        $broadcasts = $this->youTubeApiClient->liveBroadcasts->listLiveBroadcasts('status,contentDetails', array(
+        $broadcasts = $this->youTubeApiClient->liveBroadcasts->listLiveBroadcasts('status,contentDetails', [
             'id' => $youTubeId,
-        ))->getItems();
+        ])->getItems();
 
         if (!count($broadcasts)) {
             return null;
@@ -577,9 +577,9 @@ class YouTubeApiService
      */
     protected function getExternalStreamById($streamId)
     {
-        $streamItems = $this->youTubeApiClient->liveStreams->listLiveStreams('snippet,cdn,status', array(
+        $streamItems = $this->youTubeApiClient->liveStreams->listLiveStreams('snippet,cdn,status', [
             'id' => $streamId,
-        ))->getItems();
+        ])->getItems();
 
         if (!count($streamItems)) {
             return null;

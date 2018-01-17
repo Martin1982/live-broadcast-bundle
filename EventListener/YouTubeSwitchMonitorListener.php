@@ -124,7 +124,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(SwitchMonitorEvent::NAME => 'onSwitchMonitor');
+        return [SwitchMonitorEvent::NAME => 'onSwitchMonitor'];
     }
 
     /**
@@ -134,7 +134,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
     {
         $this->logger->info(
             'YouTube stop monitor stream',
-            array('broadcast_id' => $this->monitorBroadcast->getBroadcastId())
+            ['broadcast_id' => $this->monitorBroadcast->getBroadcastId()]
         );
         $this->command->stopProcess($this->monitorBroadcast->getProcessId());
     }
@@ -160,11 +160,11 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
 
         $this->logger->info(
             'YouTube start broadcast',
-            array('broadcast_id' => $this->plannedBroadcast->getBroadcastId())
+            ['broadcast_id' => $this->plannedBroadcast->getBroadcastId()]
         );
-        $this->command->startProcess($input, $output, array(
+        $this->command->startProcess($input, $output, [
             'broadcast_id' => $this->plannedBroadcast->getBroadcastId(),
             'channel_id' => $this->channel->getChannelId(),
-        ));
+        ]);
     }
 }

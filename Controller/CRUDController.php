@@ -29,7 +29,7 @@ class CRUDController extends Controller
         $accessToken = $facebookService->getLongLivedAccessToken($request->get('userAccessToken', null));
 
         if ($accessToken instanceof AccessToken) {
-            return new JsonResponse(array('accessToken' => $accessToken->getValue()));
+            return new JsonResponse(['accessToken' => $accessToken->getValue()]);
         }
 
         return new JsonResponse(null, 500);
@@ -45,7 +45,7 @@ class CRUDController extends Controller
         $router = $this->get('router');
         $redirectUri = $router->generate(
             'admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth',
-            array(),
+            [],
             $router::ABSOLUTE_URL
         );
         $youTubeService->initApiClients($redirectUri);
