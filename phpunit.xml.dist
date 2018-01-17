@@ -19,6 +19,7 @@
                 <directory>./vendor</directory>
                 <directory>./sahi</directory>
                 <directory>./Features</directory>
+                <directory>./Admin</directory>
             </exclude>
         </whitelist>
     </filter>
