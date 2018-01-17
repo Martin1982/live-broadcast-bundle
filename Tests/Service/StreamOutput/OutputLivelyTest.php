@@ -5,12 +5,13 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelLively;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputLively;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class OutputLivelyTestTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput
  */
-class OutputLivelyTest extends \PHPUnit_Framework_TestCase
+class OutputLivelyTest extends TestCase
 {
     /**
      * @var ChannelLively

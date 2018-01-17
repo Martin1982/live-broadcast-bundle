@@ -5,12 +5,13 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RunningBroadcastTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster
  */
-class RunningBroadcastTest extends \PHPUnit_Framework_TestCase
+class RunningBroadcastTest extends TestCase
 {
     /**
      * Test get method.

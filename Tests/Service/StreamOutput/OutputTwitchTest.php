@@ -5,12 +5,13 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class OutputTwitchTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput
  */
-class OutputTwitchTest extends \PHPUnit_Framework_TestCase
+class OutputTwitchTest extends TestCase
 {
     /**
      * @var ChannelTwitch

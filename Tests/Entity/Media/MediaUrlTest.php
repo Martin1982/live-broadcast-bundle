@@ -3,12 +3,13 @@
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class MediaUrlTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Media
  */
-class MediaUrlTest extends \PHPUnit_Framework_TestCase
+class MediaUrlTest extends TestCase
 {
     /**
      * Test the getUrl method

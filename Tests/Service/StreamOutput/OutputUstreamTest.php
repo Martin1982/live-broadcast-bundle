@@ -5,12 +5,13 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputUstream;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class OutputUstreamTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput
  */
-class OutputUstreamTest extends \PHPUnit_Framework_TestCase
+class OutputUstreamTest extends TestCase
 {
     /**
      * @var ChannelUstream

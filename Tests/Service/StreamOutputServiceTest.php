@@ -7,12 +7,13 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class StreamOutputServiceTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Service
  */
-class StreamOutputServiceTest extends \PHPUnit_Framework_TestCase
+class StreamOutputServiceTest extends TestCase
 {
     /**
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException

@@ -3,14 +3,14 @@
 namespace Martin1982\LiveBroadcastBundle\Tests\Event;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Event\AbstractBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class AbstractBroadcastEventTest
  */
-class AbstractBroadcastEventTest extends \PHPUnit_Framework_TestCase
+class AbstractBroadcastEventTest extends TestCase
 {
     /**
      * Test getting properties

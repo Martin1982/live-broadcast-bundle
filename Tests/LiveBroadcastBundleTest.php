@@ -3,12 +3,13 @@
 namespace Martin1982\LiveBroadcastBundle\Tests;
 
 use Martin1982\LiveBroadcastBundle\LiveBroadcastBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Class LiveBroadcastBundleTest
  */
-class LiveBroadcastBundleTest extends \PHPUnit_Framework_TestCase
+class LiveBroadcastBundleTest extends TestCase
 {
     /**
      * Test building the bundle

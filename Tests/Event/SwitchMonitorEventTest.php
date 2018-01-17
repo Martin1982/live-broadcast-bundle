@@ -6,11 +6,12 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\SwitchMonitorEvent;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SwitchMonitorEventTest
  */
-class SwitchMonitorEventTest extends \PHPUnit_Framework_TestCase
+class SwitchMonitorEventTest extends TestCase
 {
     /**
      * Test getting the class properties

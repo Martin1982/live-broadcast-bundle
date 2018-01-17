@@ -2,11 +2,13 @@
 
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class SchedulerTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster
  */
-class SchedulerTest extends \PHPUnit_Framework_TestCase
+class SchedulerTest extends TestCase
 {
     /**
      * Test absolutely nothing

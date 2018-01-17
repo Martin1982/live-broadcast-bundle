@@ -3,12 +3,13 @@
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Channel;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelLively;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ChannelLivelyTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Channel
  */
-class ChannelLivelyTest extends \PHPUnit_Framework_TestCase
+class ChannelLivelyTest extends TestCase
 {
     /*
      * Test the getters and setters

@@ -4,12 +4,13 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands;
 use phpmock\phpunit\PHPMock;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SchedulerCommandsTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster
  */
-class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
+class SchedulerCommandsTest extends TestCase
 {
     use PHPMock;
 

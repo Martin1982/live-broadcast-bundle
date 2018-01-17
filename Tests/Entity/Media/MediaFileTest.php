@@ -3,13 +3,17 @@
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class MediaFileTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Media
  */
-class MediaFileTest extends \PHPUnit_Framework_TestCase
+class MediaFileTest extends TestCase
 {
+    /**
+     *
+     */
     public function testBaseMediaProperties()
     {
         $input = new MediaFile();

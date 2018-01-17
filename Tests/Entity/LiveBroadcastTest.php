@@ -2,17 +2,17 @@
 
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Class LiveBroadcastTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Entity
  */
-class LiveBroadcastTest extends \PHPUnit_Framework_TestCase
+class LiveBroadcastTest extends TestCase
 {
     /**
      * Test class instance.

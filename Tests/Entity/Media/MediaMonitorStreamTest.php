@@ -3,11 +3,12 @@
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaMonitorStream;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class MediaMonitorStreamTest
  */
-class MediaMonitorStreamTest extends \PHPUnit_Framework_TestCase
+class MediaMonitorStreamTest extends TestCase
 {
     /**
      * Test monitor stream properties

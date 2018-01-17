@@ -9,6 +9,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener;
 use Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -16,7 +17,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * Class ThumbnailUploadListenerTest
  * @package Martin1982\LiveBroadcastBundle\Tests\EventListener
  */
-class ThumbnailUploadListenerTest extends \PHPUnit_Framework_TestCase
+class ThumbnailUploadListenerTest extends TestCase
 {
     /**
      * @var ThumbnailUploadService|\PHPUnit_Framework_MockObject_MockObject

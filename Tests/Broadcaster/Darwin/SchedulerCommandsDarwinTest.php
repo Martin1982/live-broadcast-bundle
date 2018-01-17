@@ -4,12 +4,13 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Darwin;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Darwin\SchedulerCommands;
 use phpmock\phpunit\PHPMock;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SchedulerCommandsDarwinTest
  * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Darwin
  */
-class SchedulerCommandsDarwinTest extends \PHPUnit_Framework_TestCase
+class SchedulerCommandsDarwinTest extends TestCase
 {
     use PHPMock;
 
