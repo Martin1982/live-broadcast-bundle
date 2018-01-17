@@ -354,7 +354,8 @@ class YouTubeApiService
             $stream = $this->getStream($liveBroadcast, $channelYouTube);
             if (!$stream) {
                 $canChangeState = false;
-                $this->logger->warning(sprintf('Can\'t change state when no stream is present for "%s"', $liveBroadcast));
+                $warning = sprintf('Can\'t change state when no stream is present for "%s"', $liveBroadcast);
+                $this->logger->warning($warning);
             }
 
             $streamStatus = $stream->getStatus()->getStreamStatus();
