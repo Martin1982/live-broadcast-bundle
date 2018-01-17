@@ -22,10 +22,10 @@ class YouTubeEventRepository extends EntityRepository
      */
     public function findBroadcastingToChannel(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
-        return $this->findOneBy(array(
+        return $this->findOneBy([
             'broadcast' => $broadcast,
             'channel'   => $channel,
-        ));
+        ]);
     }
 
     /**

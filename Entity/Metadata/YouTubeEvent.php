@@ -44,7 +44,7 @@ class YouTubeEvent
      *
      * @var array
      */
-    private $stateMapping = array(
+    private $stateMapping = [
         self::STATE_LOCAL_CREATED => self::STATE_REMOTE_CREATED,
         self::STATE_LOCAL_READY => self::STATE_REMOTE_READY,
         self::STATE_LOCAL_TEST_STARTING => self::STATE_REMOTE_TEST_STARTING,
@@ -55,7 +55,7 @@ class YouTubeEvent
         self::STATE_LOCAL_LIVE => self::STATE_REMOTE_LIVE,
         self::STATE_LOCAL_RECLAIMED => self::STATE_REMOTE_RECLAIMED,
         self::STATE_LOCAL_COMPLETE => self::STATE_REMOTE_COMPLETE,
-    );
+    ];
 
     /**
      * @var int
