@@ -95,4 +95,46 @@ class OutputFacebookTest extends TestCase
         $facebook = new OutputFacebook();
         self::assertEquals(ChannelFacebook::class, $facebook->getChannelType());
     }
+
+    /**
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testAccessTokenException()
+    {
+        $facebook = new OutputFacebook();
+        $facebook->getAccessToken();
+    }
+
+    /**
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testAccessToken()
+    {
+        $facebook = new OutputFacebook();
+        $facebook->setChannel($this->facebookChannel);
+        self::assertEquals('token', $facebook->getAccessToken());
+    }
+
+    /**
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testEntityIdException()
+    {
+        $facebook = new OutputFacebook();
+        $facebook->getEntityId();
+    }
+
+    /**
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testEntityId()
+    {
+        $facebook = new OutputFacebook();
+        $facebook->setChannel($this->facebookChannel);
+        self::assertEquals('id', $facebook->getEntityId());
+    }
 }

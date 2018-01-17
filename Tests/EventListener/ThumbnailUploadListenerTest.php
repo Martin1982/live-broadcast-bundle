@@ -86,6 +86,42 @@ class ThumbnailUploadListenerTest extends TestCase
     }
 
     /**
+     * preUpdate
+     */
+    public function testPreUpdateInvalidEntity()
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+
+        $this->uploadService->expects($this->never())
+            ->method('upload');
+
+        $changeSet = [];
+        $args = new PreUpdateEventArgs(new \stdClass(), $entityManager, $changeSet);
+        $this->eventListener->preUpdate($args);
+    }
+
+    /**
+     * preUpdate
+     */
+    public function testPreUpdateNoChange()
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $liveBroadcast = new LiveBroadcast();
+
+        $this->uploadService->expects($this->never())
+            ->method('upload');
+
+        $changeSet = ['thumbnail' => ['old_value']];
+        $args = new PreUpdateEventArgs($liveBroadcast, $entityManager, $changeSet);
+        $this->eventListener->preUpdate($args);
+
+        self::assertEquals('old_value', $liveBroadcast->getThumbnail());
+    }
+
+
+    /**
      * postLoad
      */
     public function testPostLoad()
@@ -108,5 +144,19 @@ class ThumbnailUploadListenerTest extends TestCase
         self::assertInstanceOf(File::class, $file);
         self::assertEquals('thumbnail.jpg', $file->getFilename());
         self::assertEquals('/tmp/dir', $file->getPath());
+    }
+
+    /**
+     * postLoad
+     */
+    public function testPostLoadInvalidEntity()
+    {
+        /** @var ObjectManager $objectManager */
+        $objectManager = $this->createMock(ObjectManager::class);
+        $this->uploadService->expects($this->never())
+            ->method('getTargetDirectory');
+
+        $args = new LifecycleEventArgs(new \stdClass(), $objectManager);
+        $this->eventListener->postLoad($args);
     }
 }
