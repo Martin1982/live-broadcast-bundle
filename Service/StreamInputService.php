@@ -15,7 +15,7 @@ class StreamInputService
     /**
      * @var InputInterface[]
      */
-    private $streamInputs = array();
+    private $streamInputs = [];
 
     /**
      * @param InputInterface $streamInput

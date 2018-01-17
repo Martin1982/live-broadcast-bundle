@@ -41,11 +41,11 @@ class ChannelYouTubeTest extends \PHPUnit_Framework_TestCase
     public function testIsEntityConfigured()
     {
         $channel = new ChannelYouTube();
-        $configuration = array();
+        $configuration = [];
 
         self::assertFalse($channel::isEntityConfigured($configuration));
 
-        $configuration['youtube'] = array();
+        $configuration['youtube'] = [];
         self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['youtube']['client_id'] = null;

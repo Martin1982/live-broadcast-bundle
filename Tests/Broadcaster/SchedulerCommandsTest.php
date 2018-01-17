@@ -28,7 +28,7 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $command->startProcess('input', 'output', array('broadcast_id' => 4, 'unit' => 'test'));
+        $command->startProcess('input', 'output', ['broadcast_id' => 4, 'unit' => 'test']);
     }
 
     /**
@@ -48,7 +48,7 @@ class SchedulerCommandsTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $command->startProcess('input', 'output', array('broadcast_id' => 12, 'test' => 'unit'));
+        $command->startProcess('input', 'output', ['broadcast_id' => 12, 'test' => 'unit']);
     }
 
     /**

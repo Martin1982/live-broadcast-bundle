@@ -29,11 +29,11 @@ class LiveBroadcastAdmin extends AbstractAdmin
     /**
      * @var array
      */
-    protected $datagridValues = array(
+    protected $datagridValues = [
         '_page' => 1,
         '_sort_order' => 'DESC',
         '_sort_by' => 'startTimestamp',
-    );
+    ];
 
     /**
      * {@inheritdoc}
@@ -59,41 +59,41 @@ class LiveBroadcastAdmin extends AbstractAdmin
         }
 
         $formMapper
-            ->with('General', array(
+            ->with('General', [
                 'class' => 'col-md-8',
-            ))
-            ->add('name', TextType::class, array('label' => 'Name'))
-            ->add('description', TextareaType::class, array(
+            ])
+            ->add('name', TextType::class, ['label' => 'Name'])
+            ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'required' => false,
-                'attr' => array('class' => 'form-control', 'rows' => 5),
-            ))
+                'attr' => ['class' => 'form-control', 'rows' => 5],
+            ])
             ->add('thumbnail', FileType::class, $fileFieldOptions)
-            ->add('startTimestamp', DateTimePickerType::class, array(
+            ->add('startTimestamp', DateTimePickerType::class, [
                 'label' => 'Broadcast start',
                 'dp_side_by_side' => true,
-            ))
-            ->add('endTimestamp', DateTimePickerType::class, array(
+            ])
+            ->add('endTimestamp', DateTimePickerType::class, [
                 'label' => 'Broadcast end',
                 'dp_side_by_side' => true,
-            ))
-            ->add('stopOnEndTimestamp', CheckboxType::class, array(
+            ])
+            ->add('stopOnEndTimestamp', CheckboxType::class, [
                 'label' => 'Stop on broadcast end timestamp',
                 'required' => false,
-            ))
+            ])
             ->end()
-            ->with('Video Input', array(
+            ->with('Video Input', [
                 'class' => 'col-md-4',
-            ))
-            ->add('input', ModelListType::class, array('btn_list' => false))
+            ])
+            ->add('input', ModelListType::class, ['btn_list' => false])
             ->end()
-            ->with('Channels', array(
+            ->with('Channels', [
                 'class' => 'col-md-4',
-            ))
-            ->add('outputChannels', ModelType::class, array(
+            ])
+            ->add('outputChannels', ModelType::class, [
                 'multiple' => true,
                 'expanded' => true,
-            ))
+            ])
             ->end();
     }
 
@@ -197,15 +197,15 @@ class LiveBroadcastAdmin extends AbstractAdmin
     {
         $listMapper
             ->add('name')
-            ->add('outputChannels', 'sonata_type_model', array('label' => 'Channel(s)'))
-            ->add('startTimestamp', 'datetime', array('label' => 'Start time'))
-            ->add('endTimestamp', 'datetime', array('label' => 'End time'))
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'edit' => array(),
-                    'delete' => array(),
-                ),
-            ))
+            ->add('outputChannels', 'sonata_type_model', ['label' => 'Channel(s)'])
+            ->add('startTimestamp', 'datetime', ['label' => 'Start time'])
+            ->add('endTimestamp', 'datetime', ['label' => 'End time'])
+            ->add('_action', 'actions', [
+                'actions' => [
+                    'edit' => [],
+                    'delete' => [],
+                ],
+            ])
         ;
     }
 }

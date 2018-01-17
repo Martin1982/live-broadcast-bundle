@@ -41,11 +41,11 @@ class ChannelFacebookTest extends \PHPUnit_Framework_TestCase
     public function testIsEntityConfigured()
     {
         $channel = new ChannelFacebook();
-        $configuration = array();
+        $configuration = [];
 
         self::assertFalse($channel::isEntityConfigured($configuration));
 
-        $configuration['facebook'] = array();
+        $configuration['facebook'] = [];
         self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['facebook']['application_id'] = null;

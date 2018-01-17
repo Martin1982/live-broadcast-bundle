@@ -30,11 +30,11 @@ class InputAdmin extends AbstractAdmin
             ->with('General');
 
         if ($subject instanceof MediaFile) {
-            $formMapper->add('fileLocation', TextType::class, array('label' => 'File location on server'));
+            $formMapper->add('fileLocation', TextType::class, ['label' => 'File location on server']);
         }
 
         if ($subject instanceof MediaUrl) {
-            $formMapper->add('url', TextType::class, array('label' => 'URL to videofile'));
+            $formMapper->add('url', TextType::class, ['label' => 'URL to videofile']);
         }
 
         $formMapper->end()
@@ -47,6 +47,6 @@ class InputAdmin extends AbstractAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
-        $listMapper->add('__toString', 'string', array('label' => 'Input'));
+        $listMapper->add('__toString', 'string', ['label' => 'Input']);
     }
 }

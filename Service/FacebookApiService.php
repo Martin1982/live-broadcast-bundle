@@ -57,8 +57,10 @@ class FacebookApiService
         }
 
         try {
-            $params = array('title' => $liveBroadcast->getName(),
-                            'description' => $liveBroadcast->getDescription());
+            $params = [
+                'title' => $liveBroadcast->getName(),
+                'description' => $liveBroadcast->getDescription(),
+            ];
 
             $this->facebookSDK->setDefaultAccessToken($outputFacebook->getAccessToken());
             $response = $this->facebookSDK->post($outputFacebook->getEntityId().'/live_videos', $params);
