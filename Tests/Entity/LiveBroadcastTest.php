@@ -44,7 +44,7 @@ class LiveBroadcastTest extends \PHPUnit_Framework_TestCase
         $broadcast->setDescription('Description of broadcast');
         $broadcast->setThumbnail(new File('test', false));
         $broadcast->setOutputChannels($baseChannels);
-        $broadcast->setInput(BaseMedia::class);
+        $broadcast->setInput($this->createMock(BaseMedia::class));
 
         self::assertEquals('-', (string) $broadcast);
         self::assertNull($broadcast->getBroadcastId());
