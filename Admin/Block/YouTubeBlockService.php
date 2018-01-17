@@ -82,7 +82,7 @@ class YouTubeBlockService extends BaseBlockService
                 'youTubeRefreshToken' => $session->get('youTubeRefreshToken'),
                 'block' => $blockContext->getBlock(),
                 'settings' => $blockContext->getSettings(),
-            ],
+                ],
             $response
         );
     }
