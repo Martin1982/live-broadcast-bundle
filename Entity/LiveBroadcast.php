@@ -252,13 +252,13 @@ class LiveBroadcast
      */
     public function removeOutputChannel(BaseChannel $channel)
     {
-        $this->outputChannels->remove($channel);
+        $this->outputChannels->removeElement($channel);
 
         return $this;
     }
 
     /**
-     * @return BaseChannel[]
+     * @return ArrayCollection|BaseChannel[]
      */
     public function getOutputChannels()
     {

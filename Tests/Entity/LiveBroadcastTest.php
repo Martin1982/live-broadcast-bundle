@@ -50,7 +50,7 @@ class LiveBroadcastTest extends \PHPUnit_Framework_TestCase
         self::assertNull($broadcast->getBroadcastId());
         self::assertEquals($now->format('Y-m-d H:i:s'), $broadcast->getStartTimestamp()->format('Y-m-d H:i:s'));
         self::assertEquals($endTime->format('Y-m-d H:i:s'), $broadcast->getEndTimestamp()->format('Y-m-d H:i:s'));
-        self::assertEquals(new ArrayCollection(), $broadcast->getOutputChannels());
+        self::assertCount(2, $broadcast->getOutputChannels());
         self::assertEquals('Test', $broadcast->getName());
         self::assertEquals('Description of broadcast', $broadcast->getDescription());
         self::assertInstanceOf(File::class, $broadcast->getThumbnail());
