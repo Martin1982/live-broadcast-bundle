@@ -102,6 +102,14 @@ class FacebookApiService
     }
 
     /**
+     * @return string
+     */
+    public function getAppId()
+    {
+        return $this->applicationId;
+    }
+
+    /**
      * @throws LiveBroadcastOutputException
      */
     private function initFacebook()

@@ -115,10 +115,13 @@ Create a Facebook app on https://developers.facebook.com with the following perm
             application_id: YourFacebookAppId
             application_secret: YourFacebookAppSecret
 
-### Step 3: Load the app ID in Twig
-    twig:
-        globals:
-            live_broadcast_facebook_app_id: 'YourFacebookAppId'
+### Step 3 (Sonata users only): Sonata config update 
+Add the Sonata block to your blocks config:
+
+    sonata_block:
+        blocks:
+        sonata.block.service.facebookauth:
+            contexts:   [admin]
 
 ### FFMpeg log directory
 To view the output of FFMpeg you need to configure a log directory in your `app/config/config.yml`.
