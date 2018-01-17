@@ -52,3 +52,13 @@ services:
             - "@live.broadcast.googleredirect.service"
         tags:
             - { name: sonata.block }
+
+    sonata.block.service.facebookauth:
+        class: Martin1982\LiveBroadcastBundle\Admin\Block\FacebookBlockService
+        arguments:
+            - sonata.block.service.facebookauth
+            - "@templating"
+            - "@live.broadcast.facebookapi.service"
+            - "@sonata.admin.channel"
+        tags:
+            - { name: sonata.block }
