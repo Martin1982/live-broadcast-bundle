@@ -2,8 +2,9 @@
 
 namespace Martin1982\LiveBroadcastBundle\Command;
 
+use Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler;
 use React\EventLoop\Factory;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -11,8 +12,42 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Class BroadcasterCommand
  * @package Martin1982\LiveBroadcastBundle\Command
  */
-class BroadcasterCommand extends ContainerAwareCommand
+class BroadcasterCommand extends Command
 {
+    /**
+     * @var Scheduler
+     */
+    private $scheduler;
+
+    /**
+     * @var bool
+     */
+    private $eventLoopEnabled;
+
+    /**
+     * @var int
+     */
+    private $eventLoopTimer;
+
+    /**
+     * @var string
+     */
+    protected static $defaultName = 'livebroadcaster:broadcast';
+
+    /**
+     * @param Scheduler $scheduler
+     * @param bool      $eventLoopEnabled
+     * @param int       $eventLoopTimer
+     */
+    public function __construct(Scheduler $scheduler, $eventLoopEnabled = false, $eventLoopTimer = 10)
+    {
+        $this->scheduler = $scheduler;
+        $this->eventLoopEnabled = $eventLoopEnabled;
+        $this->eventLoopTimer = $eventLoopTimer;
+
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -20,8 +55,7 @@ class BroadcasterCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('livebroadcaster:broadcast')
-            ->setDescription('Run any broadcasts that haven\'t started yet and which are planned');
+        $this->setDescription('Run any broadcasts that haven\'t started yet and which are planned');
     }
 
     /**
@@ -36,10 +70,9 @@ class BroadcasterCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-        $scheduler = $container->get('live.broadcast.scheduler');
+        $scheduler = $this->scheduler;
 
-        if (!$container->getParameter('livebroadcast.eventloop.enabled')) {
+        if (!$this->eventLoopEnabled) {
             $scheduler->applySchedule();
 
             return;
@@ -47,7 +80,7 @@ class BroadcasterCommand extends ContainerAwareCommand
 
         $eventLoop = Factory::create();
         $eventLoop->addPeriodicTimer(
-            $container->getParameter('livebroadcast.eventloop.timer'),
+            $this->eventLoopTimer,
             function () use ($scheduler) {
                 $scheduler->applySchedule();
             }
