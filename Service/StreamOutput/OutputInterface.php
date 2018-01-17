@@ -26,7 +26,7 @@ interface OutputInterface
     /**
      * Returns the channel type
      *
-     * @return BaseChannel
+     * @return string
      */
     public function getChannelType();
 }

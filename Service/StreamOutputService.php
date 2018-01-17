@@ -34,7 +34,9 @@ class StreamOutputService
     public function getOutputInterface(BaseChannel $channel)
     {
         foreach ($this->streamOutputs as $streamOutput) {
-            if ($streamOutput->getChannelType() === get_class($channel)) {
+            $channelType = $streamOutput->getChannelType();
+
+            if ($channel instanceof $channelType) {
                 $streamOutput->setChannel($channel);
 
                 return $streamOutput;
