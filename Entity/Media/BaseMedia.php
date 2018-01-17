@@ -27,6 +27,14 @@ abstract class BaseMedia
     /**
      * @return int
      */
+    public function getId()
+    {
+        return $this->getInputId();
+    }
+
+    /**
+     * @return int
+     */
     public function getInputId()
     {
         return $this->inputId;
