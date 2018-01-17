@@ -10,6 +10,13 @@ use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
  */
 class MediaFileTest extends \PHPUnit_Framework_TestCase
 {
+    public function testBaseMediaProperties()
+    {
+        $input = new MediaFile();
+        self::assertNull($input->getId());
+        self::assertEquals('', (string) $input);
+    }
+
     /**
      * Test the getFileLocation method
      */
