@@ -1,4 +1,15 @@
 services:
+  live.broadcast.command.broadcast:
+    class: Martin1982\LiveBroadcastBundle\Command\BroadcasterCommand
+    arguments: ["@live.broadcast.scheduler", "%livebroadcast.eventloop.enabled%", "%livebroadcast.eventloop.timer%"]
+    tags:
+        - { name: 'console.command' }
+
+  live.broadcast.command.shelltest:
+    class: Martin1982\LiveBroadcastBundle\Command\ShellTestCommand
+    tags:
+        - { name: 'console.command' }
+
   live.broadcast.scheduler.commands:
       class: Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands
       factory: [Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsDetector, createSchedulerCommands]

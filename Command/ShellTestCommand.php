@@ -2,7 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -10,16 +10,27 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Class ShellTestCommand
  * @package Martin1982\LiveBroadcastBundle\Command
  */
-class ShellTestCommand extends ContainerAwareCommand
+class ShellTestCommand extends Command
 {
-    /** @var bool $isWindows */
+    /**
+     * @var bool
+     */
     private $isWindows = false;
 
-    /** @var bool $isMac */
+    /**
+     * @var bool
+     */
     private $isMac = false;
 
-    /** @var bool $isLinux */
+    /**
+     * @var bool
+     */
     private $isLinux = false;
+
+    /**
+     * @var string
+     */
+    protected static $defaultName = 'livebroadcaster:test:shell';
 
     /**
      * {@inheritdoc}
@@ -28,8 +39,7 @@ class ShellTestCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('livebroadcaster:test:shell')
-            ->setDescription('Test if the environment supports the right commands');
+        $this->setDescription('Test if the environment supports the right commands');
     }
 
     /**
