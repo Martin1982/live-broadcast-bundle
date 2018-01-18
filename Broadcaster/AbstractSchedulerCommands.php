@@ -132,9 +132,9 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     }
 
     /**
-     * @param $input
-     * @param $output
-     * @param $meta
+     * @param string $input
+     * @param string $output
+     * @param string $meta
      *
      * @return string
      */
@@ -149,10 +149,10 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
         }
 
         if ($this->isLoopable()) {
-            $loop = '-stream_loop -1';
+            $loop = '-stream_loop -1 ';
         }
 
-        return exec(sprintf('ffmpeg %s %s %s%s >%s 2>&1 &', $loop, $input, $output, $meta, $logFile));
+        return exec(sprintf('ffmpeg %s%s %s%s >%s 2>&1 &', $loop, $input, $output, $meta, $logFile));
     }
 
     /**

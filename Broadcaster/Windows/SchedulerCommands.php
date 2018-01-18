@@ -42,9 +42,9 @@ class SchedulerCommands extends AbstractSchedulerCommands
         $loop = '';
 
         if ($this->isLoopable()) {
-            $loop = '-stream_loop -1';
+            $loop = '-stream_loop -1 ';
         }
 
-        return exec(sprintf('ffmpeg %s %s %s%s >nul 2>nul &', $loop, $input, $output, $meta));
+        return exec(sprintf('ffmpeg %s%s %s%s >nul 2>nul &', $loop, $input, $output, $meta));
     }
 }
