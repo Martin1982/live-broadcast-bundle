@@ -9,9 +9,9 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 interface SchedulerCommandsInterface
 {
     /**
-     * @param string $input
-     * @param string $output
-     * @param array  $metadata
+     * @param string  $input
+     * @param string  $output
+     * @param array   $metadata
      *
      * @return string
      */
@@ -72,4 +72,9 @@ interface SchedulerCommandsInterface
      * @param string $directory
      */
     public function setFFMpegLogDirectory($directory);
+
+    /**
+     * @param $loopable
+     */
+    public function setIsLoopable($loopable);
 }

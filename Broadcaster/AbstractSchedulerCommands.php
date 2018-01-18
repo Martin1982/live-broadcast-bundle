@@ -31,6 +31,11 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     protected $logDirectoryFFMpeg = '';
 
     /**
+     * @var bool Can the input be looped
+     */
+    protected $loopable = false;
+
+    /**
      * SchedulerCommands constructor.
      *
      * @param string $kernelEnvironment
@@ -136,13 +141,18 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     protected function execStreamCommand($input, $output, $meta)
     {
         $logFile = '/dev/null';
+        $loop = '';
 
         if (!empty($this->logDirectoryFFMpeg)) {
             $now = new \DateTime();
             $logFile = $this->logDirectoryFFMpeg.DIRECTORY_SEPARATOR.sprintf(self::LOG_FILE, $now->format('Y-m-d_His'));
         }
 
-        return exec(sprintf('ffmpeg %s %s%s >%s 2>&1 &', $input, $output, $meta, $logFile));
+        if ($this->isLoopable()) {
+            $loop = '-stream_loop -1';
+        }
+
+        return exec(sprintf('ffmpeg %s %s %s%s >%s 2>&1 &', $loop, $input, $output, $meta, $logFile));
     }
 
     /**
@@ -194,5 +204,21 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
         }
 
         $this->logDirectoryFFMpeg = $directory;
+    }
+
+    /**
+     * @param boolean $loopable
+     */
+    public function setIsLoopable($loopable)
+    {
+        $this->loopable = (boolean) $loopable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLoopable()
+    {
+        return $this->loopable;
     }
 }

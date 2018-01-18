@@ -235,6 +235,7 @@ class Scheduler
                 ]
             );
 
+            $this->schedulerCommands->setIsLoopable($broadcast->isStopOnEndTimestamp());
             $this->schedulerCommands->startProcess($input->generateInputCmd(), $output->generateOutputCmd(), [
                 'broadcast_id' => $broadcast->getBroadcastId(),
                 'channel_id' => $channel->getChannelId(),

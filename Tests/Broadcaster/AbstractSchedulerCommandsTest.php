@@ -17,7 +17,7 @@ class AbstractSchedulerCommandsTest extends TestCase
     private $schedulerCommands;
 
     /**
-     *
+     * Setup a basic test object
      */
     public function setUp()
     {
@@ -25,6 +25,8 @@ class AbstractSchedulerCommandsTest extends TestCase
     }
 
     /**
+     * Test stopping the process throws exception
+     *
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
@@ -35,6 +37,8 @@ class AbstractSchedulerCommandsTest extends TestCase
     }
 
     /**
+     * Test getting the running process throws an exception
+     *
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
@@ -45,7 +49,7 @@ class AbstractSchedulerCommandsTest extends TestCase
     }
 
     /**
-     *
+     * Test checking for a monitor stream
      */
     public function testMonitorStream()
     {
@@ -69,7 +73,7 @@ class AbstractSchedulerCommandsTest extends TestCase
     }
 
     /**
-     *
+     * Test the FFMPEG log directory setter
      */
     public function testFFMpegLogDirectory()
     {
@@ -82,5 +86,15 @@ class AbstractSchedulerCommandsTest extends TestCase
 
         // Second setFFMpegLogDirectory() should be ignored
         self::assertEquals(__DIR__, $property->getValue($this->schedulerCommands));
+    }
+
+    /**
+     * Test a stream can be loopable
+     */
+    public function testLoopable()
+    {
+        $this->schedulerCommands->setIsLoopable(true);
+
+        self::assertTrue($this->schedulerCommands->isLoopable());
     }
 }
