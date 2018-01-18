@@ -48,7 +48,6 @@ class LiveBroadcastExtensionTest extends TestCase
         $extension = new LiveBroadcastExtension();
         $extension->load($config, $container);
 
-        self::assertCount(2, $container->getResources());
         self::assertEquals('fb_id', $container->getParameter('livebroadcast.fb.appid'));
         self::assertEquals('fb_secret', $container->getParameter('livebroadcast.fb.appsecret'));
 
