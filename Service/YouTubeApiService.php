@@ -350,11 +350,11 @@ class YouTubeApiService
     /**
      * @param LiveBroadcast  $liveBroadcast
      * @param ChannelYouTube $channelYouTube
-     * @param string $state
+     * @param string $broadcastState
      *
      * @return boolean
      */
-    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube, $state)
+    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube, $broadcastState)
     {
         $this->getAccessToken($channelYouTube->getRefreshToken());
 
@@ -368,7 +368,7 @@ class YouTubeApiService
         $youTubeId = $event->getYouTubeId();
         $canChangeState = true;
 
-        if ($state === YouTubeEvent::STATE_REMOTE_TESTING || $state === YouTubeEvent::STATE_REMOTE_LIVE) {
+        if ($broadcastState === YouTubeEvent::STATE_REMOTE_TESTING || $broadcastState === YouTubeEvent::STATE_REMOTE_LIVE) {
             $stream = $this->getStream($liveBroadcast, $channelYouTube);
             if (!$stream) {
                 $canChangeState = false;
@@ -389,9 +389,9 @@ class YouTubeApiService
         }
 
         if ($canChangeState) {
-            $this->logger->info('YouTube transition state', ['state' => $state]);
+            $this->logger->info('YouTube transition state', ['state' => $broadcastState]);
             try {
-                $this->youTubeApiClient->liveBroadcasts->transition($state, $youTubeId, 'status');
+                $this->youTubeApiClient->liveBroadcasts->transition($broadcastState, $youTubeId, 'status');
 
                 return true;
             } catch (\Google_Service_Exception $exception) {
