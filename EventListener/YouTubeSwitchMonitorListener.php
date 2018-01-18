@@ -8,6 +8,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\SwitchMonitorEvent;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
@@ -141,6 +142,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
 
     /**
      * Start the actual broadcast
+     *
      * @throws LiveBroadcastOutputException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
@@ -153,6 +155,9 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
         $outputService = $this->outputService->getOutputInterface($this->channel);
 
         $stream = $this->youTubeApiService->getStream($this->plannedBroadcast, $this->channel);
+        if (!$stream) {
+            throw new LiveBroadcastInputException('No stream available');
+        }
         $streamUrl = $this->youTubeApiService->getStreamUrl($stream);
         $outputService->setStreamUrl($streamUrl);
 

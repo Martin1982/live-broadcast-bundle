@@ -16,7 +16,8 @@ class ThumbnailUploadService
     private $targetDirectory;
 
     /**
-     * ThumbnailUploader constructor.
+     * ThumbnailUploader constructor
+     *
      * @param string $targetDirectory
      */
     public function __construct($targetDirectory)

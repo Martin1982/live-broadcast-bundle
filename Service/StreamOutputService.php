@@ -28,7 +28,9 @@ class StreamOutputService
 
     /**
      * @param BaseChannel $channel
+     *
      * @return OutputInterface
+     *
      * @throws LiveBroadcastOutputException
      */
     public function getOutputInterface(BaseChannel $channel)

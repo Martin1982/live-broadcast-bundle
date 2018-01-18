@@ -37,7 +37,10 @@ class CRUDController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return RedirectResponse
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function youTubeOAuthAction(Request $request)
     {

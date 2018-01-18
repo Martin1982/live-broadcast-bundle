@@ -29,6 +29,7 @@ class InputUrl implements InputInterface
 
     /**
      * @return string
+     *
      * @throws LiveBroadcastInputException
      */
     public function generateInputCmd()

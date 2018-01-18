@@ -28,7 +28,9 @@ class StreamInputService
 
     /**
      * @param BaseMedia $media
+     *
      * @return InputInterface
+     *
      * @throws LiveBroadcastInputException
      */
     public function getInputInterface(BaseMedia $media)

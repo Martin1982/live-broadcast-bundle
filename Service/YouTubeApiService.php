@@ -59,7 +59,8 @@ class YouTubeApiService
     protected $entityManager;
 
     /**
-     * YouTubeApiService constructor.
+     * YouTubeApiService constructor
+     *
      * @param string          $clientId
      * @param string          $clientSecret
      * @param string          $host
@@ -87,6 +88,7 @@ class YouTubeApiService
      * Initialize API to Google and YouTube
      *
      * @param string $oAuthRedirectUrl
+     *
      * @throws LiveBroadcastOutputException
      */
     public function initApiClients($oAuthRedirectUrl)
@@ -110,6 +112,7 @@ class YouTubeApiService
 
     /**
      * @param string $refreshToken
+     *
      * @return array
      */
     public function getAccessToken($refreshToken)
@@ -145,6 +148,7 @@ class YouTubeApiService
      * @param string $requestCode
      * @param string $requestState
      * @param string $sessionState
+     *
      * @return array|null
      */
     public function authenticate($requestCode, $requestState, $sessionState)
@@ -180,6 +184,7 @@ class YouTubeApiService
      * Get the authentication URL for the googleclient
      *
      * @param string $state
+     *
      * @return string
      */
     public function getAuthenticationUrl($state)
@@ -239,6 +244,10 @@ class YouTubeApiService
         $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
         $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYouTube);
 
+        if (!$event) {
+            return null;
+        }
+
         $youTubeId = $event->getYouTubeId();
         $youTubeBroadcast = $this->getExternalBroadcastById($youTubeId);
 
@@ -257,7 +266,6 @@ class YouTubeApiService
      * @param ChannelYouTube $channel
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function createLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
@@ -298,16 +306,17 @@ class YouTubeApiService
      * @param ChannelYouTube $channel
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function removeLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
     {
         $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
         $youTubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
 
-        $this->removeLivestream($youTubeEvent);
-        $this->entityManager->remove($youTubeEvent);
-        $this->entityManager->flush();
+        if ($youTubeEvent) {
+            $this->removeLivestream($youTubeEvent);
+            $this->entityManager->remove($youTubeEvent);
+            $this->entityManager->flush();
+        }
     }
 
     /**
@@ -318,19 +327,24 @@ class YouTubeApiService
      */
     public function getBroadcastStatus(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube)
     {
+        $lifeCycleStatus = null;
         $this->getAccessToken($channelYouTube->getRefreshToken());
 
         $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
         $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYouTube);
 
-        $youTubeId = $event->getYouTubeId();
+        if ($event) {
+            $youTubeId = $event->getYouTubeId();
+            $youTubeBroadcast = $this->getExternalBroadcastById($youTubeId);
 
-        $youTubeBroadcast = $this->getExternalBroadcastById($youTubeId);
+            if ($youTubeBroadcast) {
+                /** @var \Google_Service_YouTube_LiveBroadcastStatus $youTubeStatus */
+                $youTubeStatus = $youTubeBroadcast->getStatus();
+                $lifeCycleStatus = $youTubeStatus->getLifeCycleStatus();
+            }
+        }
 
-        /** @var \Google_Service_YouTube_LiveBroadcastStatus $youTubeStatus */
-        $youTubeStatus = $youTubeBroadcast->getStatus();
-
-        return $youTubeStatus->getLifeCycleStatus();
+        return $lifeCycleStatus;
     }
 
     /**
@@ -346,6 +360,10 @@ class YouTubeApiService
 
         $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
         $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYouTube);
+
+        if (!$event) {
+            return false;
+        }
 
         $youTubeId = $event->getYouTubeId();
         $canChangeState = true;
@@ -417,7 +435,6 @@ class YouTubeApiService
      * @param YouTubeEvent $event
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function updateLiveStream(YouTubeEvent $event)
     {
@@ -462,6 +479,8 @@ class YouTubeApiService
      * @param string|null   $id
      *
      * @return \Google_Service_YouTube_LiveBroadcast
+     *
+     * @throws \Exception
      */
     protected function updateBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $id = null)
     {
@@ -476,9 +495,12 @@ class YouTubeApiService
 
     /**
      * @param LiveBroadcast $liveBroadcast
-     * @param string        $privacyStatus
-     * @param string|null   $id
+     * @param string $privacyStatus
+     * @param string|null $id
+     *
      * @return \Google_Service_YouTube_LiveBroadcast
+     *
+     * @throws \Exception
      */
     protected function setupBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $id = null)
     {
@@ -556,6 +578,7 @@ class YouTubeApiService
 
     /**
      * @param string $youTubeId
+     *
      * @return \Google_Service_YouTube_LiveBroadcast|null
      */
     protected function getExternalBroadcastById($youTubeId)
@@ -573,10 +596,12 @@ class YouTubeApiService
 
     /**
      * @param string $streamId
+     *
      * @return \Google_Service_YouTube_LiveStream|null
      */
     protected function getExternalStreamById($streamId)
     {
+        /** @var \Google_Service_YouTube_LiveStream[] $streamItems */
         $streamItems = $this->youTubeApiClient->liveStreams->listLiveStreams('snippet,cdn,status', [
             'id' => $streamId,
         ])->getItems();
