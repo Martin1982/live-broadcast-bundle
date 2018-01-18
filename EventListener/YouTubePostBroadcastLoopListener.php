@@ -114,7 +114,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
                 $this->startMonitorStream($testableEvent);
             }
 
-            $this->transitionState($testableEvent);
+            $this->transitionStateToRemoteTesting($testableEvent);
         }
 
         $this->cleanMonitorStreams();
@@ -155,8 +155,10 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
             $testableEvent->getBroadcast(),
             $testableEvent->getChannel()
         );
+
         $convertedState = $testableEvent->getLocalStateByRemoteState($remoteState);
         $testableEvent->setLastKnownState($convertedState);
+        $this->logger->info('updateEventState', ['remoteState' => $remoteState, 'convertedState' => $convertedState]);
 
         $this->entityManager->persist($testableEvent);
         $this->entityManager->flush();
@@ -210,8 +212,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
 
         $inputService = new InputMonitorStream();
         $inputService->setMedia($inputMedia);
-        
-        
+
         $stream = $this->getYouTubeApiService()->getStream($event->getBroadcast(), $event->getChannel());
         $streamUrl = $this->getYouTubeApiService()->getStreamUrl($stream);
 
@@ -246,7 +247,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     protected function cleanMonitorStreams()
     {
         $runningStreams = $this->commands->getRunningProcesses();
-        
+
         foreach ($runningStreams as $streamCmd) {
             $process = $this->createRunningProcess($streamCmd);
 
@@ -264,15 +265,20 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     }
 
     /**
-     * Try to transition the state of the stream
+     * Try to transition the state of the stream to STATE_REMOTE_TESTING
      *
      * @param YouTubeEvent $event
      *
      * @throws LiveBroadcastOutputException
      */
-    protected function transitionState(YouTubeEvent $event)
+    protected function transitionStateToRemoteTesting(YouTubeEvent $event)
     {
         $liveService = $this->getYouTubeApiService();
+
+        if ($event->getLastKnownState() === YouTubeEvent::STATE_LOCAL_TEST_STARTING) {
+            return;
+        }
+
         $liveService->transitionState($event->getBroadcast(), $event->getChannel(), YouTubeEvent::STATE_REMOTE_TESTING);
     }
 
