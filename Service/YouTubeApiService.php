@@ -368,7 +368,10 @@ class YouTubeApiService
         $youTubeId = $event->getYouTubeId();
         $canChangeState = true;
 
-        if ($broadcastState === YouTubeEvent::STATE_REMOTE_TESTING || $broadcastState === YouTubeEvent::STATE_REMOTE_LIVE) {
+        $stateRemoteTesting = YouTubeEvent::STATE_REMOTE_TESTING;
+        $stateRemoteLive = YouTubeEvent::STATE_REMOTE_LIVE;
+
+        if ($broadcastState === $stateRemoteTesting || $broadcastState === $stateRemoteLive) {
             $stream = $this->getStream($liveBroadcast, $channelYouTube);
             if (!$stream) {
                 $canChangeState = false;
