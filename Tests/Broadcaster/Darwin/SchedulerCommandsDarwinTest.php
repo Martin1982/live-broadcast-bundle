@@ -15,23 +15,6 @@ class SchedulerCommandsDarwinTest extends TestCase
     use PHPMock;
 
     /**
-     * Test the stop process command.
-     */
-    public function testStopProcess()
-    {
-        $command = new SchedulerCommands('unittest');
-
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Darwin', 'exec');
-        $exec->expects($this->once())->willReturnCallback(
-            function ($command) {
-                self::assertEquals('kill 1337', $command);
-            }
-        );
-
-        $command->stopProcess(1337);
-    }
-
-    /**
      * Test the running processes command.
      */
     public function testGetRunningProcesses()

@@ -109,10 +109,10 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
             $runningBroadcastId = $this->getBroadcastId($processes);
             $runningChannelId = $this->getChannelId($processes);
 
-            if (
-                (string) $runningBroadcastId === (string) $broadcastId &&
-                (string) $runningChannelId === (string) $channelId
-            ) {
+            $isBroadcast = (string) $runningBroadcastId === (string) $broadcastId;
+            $isChannel = (string) $runningChannelId === (string) $channelId;
+
+            if ($isBroadcast && $isChannel) {
                 return $this->getProcessId($process);
             }
         }
