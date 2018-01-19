@@ -5,6 +5,12 @@ services:
     tags:
         - { name: 'console.command' }
 
+  live.broadcast.command.broadcastend:
+    class: Martin1982\LiveBroadcastBundle\Command\BroadcastEndCommand
+    arguments: ["@live.broadcast.broadcastmanager"]
+    tags:
+        - { name: 'console.command' }
+
   live.broadcast.command.shelltest:
     class: Martin1982\LiveBroadcastBundle\Command\ShellTestCommand
     tags:
@@ -16,6 +22,14 @@ services:
       arguments:
           - "%kernel.environment%"
           - "%livebroadcast.ffmpeg.logdirectory%"
+
+  live.broadcast.broadcastmanager:
+      class: Martin1982\LiveBroadcastBundle\Service\BroadcastManager
+      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.streammanager"]
+
+  live.broadcast.streammanager:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamManager
+      arguments: ["@event_dispatcher", "@live.broadcast.scheduler.commands"]
 
   live.broadcast.scheduler:
       class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler

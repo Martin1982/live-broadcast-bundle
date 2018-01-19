@@ -92,6 +92,35 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     }
 
     /**
+     * Get the process id for a given stream
+     *
+     * @param int $broadcastId
+     * @param int $channelId
+     *
+     * @return string|null
+     *
+     * @throws LiveBroadcastException
+     */
+    public function getProcessIdForStream($broadcastId, $channelId)
+    {
+        $processes = $this->getRunningProcesses();
+
+        foreach ($processes as $process) {
+            $runningBroadcastId = $this->getBroadcastId($processes);
+            $runningChannelId = $this->getChannelId($processes);
+
+            if (
+                (string) $runningBroadcastId === (string) $broadcastId &&
+                (string) $runningChannelId === (string) $channelId
+            ) {
+                return $this->getProcessId($process);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function isMonitorStream($processString)
