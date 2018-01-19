@@ -3,6 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Class AbstractSchedulerCommands
@@ -36,12 +37,19 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     protected $loopable = false;
 
     /**
+     * @var string
+     */
+    protected $rootDir;
+
+    /**
      * SchedulerCommands constructor.
      *
+     * @param string $rootDir
      * @param string $kernelEnvironment
      */
-    public function __construct($kernelEnvironment)
+    public function __construct($rootDir, $kernelEnvironment)
     {
+        $this->rootDir = $rootDir;
         $this->kernelEnvironment = $kernelEnvironment;
     }
 
@@ -181,7 +189,20 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
             $loop = '-stream_loop -1 ';
         }
 
-        return exec(sprintf('ffmpeg %s%s %s%s >%s 2>&1 &', $loop, $input, $output, $meta, $logFile));
+        $streamStart = sprintf('ffmpeg %s%s %s%s >%s 2>&1 &;', $loop, $input, $output, $meta, $logFile);
+        $streamEndCommand = '';
+
+        $broadcastId = $this->getBroadcastId($streamStart);
+        $channelId = $this->getChannelId($streamStart);
+
+        $consolePath = Kernel::VERSION_ID > 30000 ? 'bin/console' : 'app/console';
+        $consolePath = dirname($this->rootDir.'/../').$consolePath;
+
+        if (file_exists($consolePath)) {
+            $streamEndCommand = sprintf('%s %s %s;', $consolePath, $broadcastId, $channelId);
+        }
+
+        return exec($streamStart.$streamEndCommand);
     }
 
     /**

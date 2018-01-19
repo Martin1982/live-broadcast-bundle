@@ -21,7 +21,8 @@ class AbstractSchedulerCommandsTest extends TestCase
      */
     public function setUp()
     {
-        $this->schedulerCommands = $this->getMockForAbstractClass(AbstractSchedulerCommands::class, ['test']);
+        $arguments = ['/some/directory', 'test'];
+        $this->schedulerCommands = $this->getMockForAbstractClass(AbstractSchedulerCommands::class, $arguments);
     }
 
     /**

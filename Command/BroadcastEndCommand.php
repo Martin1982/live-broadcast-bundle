@@ -2,6 +2,7 @@
 
 namespace Martin1982\LiveBroadcastBundle\Command;
 
+use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Symfony\Component\Console\Command\Command;
@@ -43,6 +44,7 @@ class BroadcastEndCommand extends Command
     {
         $this->setDescription('Stop a broadcast and handle completion on it\'s channels');
         $this->addArgument('broadcast', InputArgument::REQUIRED, 'Broadcast id');
+        $this->addArgument('channel', InputArgument::REQUIRED, 'Channel id');
     }
 
     /**
@@ -53,10 +55,38 @@ class BroadcastEndCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $broadcastId = $input->getArgument('broadcast');
+        $channelId = $input->getArgument('channel');
+        $channels = null;
+
         $broadcast = $this->broadcastManager->getBroadcastByid($broadcastId);
 
         if ($broadcast instanceof LiveBroadcast) {
-            $this->broadcastManager->handleBroadcastEnd($broadcast);
+            $channel = $this->getChannel($broadcast, $channelId);
+            $this->broadcastManager->handleBroadcastEnd($broadcast, $channel);
         }
+    }
+
+    /**
+     * @param LiveBroadcast    $broadcast
+     * @param null|string      $channelId
+     * @return BaseChannel|null
+     */
+    protected function getChannel(LiveBroadcast $broadcast, $channelId = null)
+    {
+        $channel = null;
+
+        if ($channelId) {
+            $channels = $broadcast->getOutputChannels();
+        }
+
+        if ($channels) {
+            foreach ($channels as $baseChannel) {
+                if ((string) $baseChannel->getChannelId() === (string) $channelId) {
+                    $channel = $baseChannel;
+                }
+            }
+        }
+
+        return $channel;
     }
 }

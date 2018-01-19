@@ -3,6 +3,8 @@
 namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Grpc\Channel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
@@ -49,12 +51,19 @@ class BroadcastManager
      * End a broadcast on all channels
      *
      * @param LiveBroadcast $broadcast
+     * @param BaseChannel   $channelToEnd
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
-    public function handleBroadcastEnd(LiveBroadcast $broadcast)
+    public function handleBroadcastEnd(LiveBroadcast $broadcast, BaseChannel $channelToEnd = null)
     {
         $channels = $broadcast->getOutputChannels();
+
+        if ($channelToEnd) {
+            $this->streamManager->endStream($broadcast, $channelToEnd);
+
+            return;
+        }
 
         foreach ($channels as $channel) {
             $this->streamManager->endStream($broadcast, $channel);

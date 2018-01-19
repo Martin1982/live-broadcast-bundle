@@ -19,7 +19,7 @@ class SchedulerCommandsDarwinTest extends TestCase
      */
     public function testGetRunningProcesses()
     {
-        $command = new SchedulerCommands('unittest');
+        $command = new SchedulerCommands('/some/directory', 'unittest');
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Darwin', 'exec');
         $exec->expects($this->once())->willReturnCallback(
