@@ -36,7 +36,9 @@ class StreamInputService
     public function getInputInterface(BaseMedia $media)
     {
         foreach ($this->streamInputs as $streamInput) {
-            if ($streamInput->getMediaType() === get_class($media)) {
+            $mediaType = $streamInput->getMediaType();
+
+            if ($media instanceof $mediaType) {
                 $streamInput->setMedia($media);
 
                 return $streamInput;

@@ -37,7 +37,7 @@ class AddStreamOutputPass implements CompilerPassInterface
             foreach ($tags as $attributes) {
                 $definition->addMethodCall(
                     'addStreamOutput',
-                    array(new Reference($id), $attributes['platform'])
+                    [new Reference($id), $attributes['platform']]
                 );
             }
         }

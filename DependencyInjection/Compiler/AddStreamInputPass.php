@@ -35,7 +35,7 @@ class AddStreamInputPass implements CompilerPassInterface
             foreach ($tags as $attributes) {
                 $definition->addMethodCall(
                     'addStreamInput',
-                    array(new Reference($id), $attributes['inputtype'])
+                    [new Reference($id), $attributes['inputtype']]
                 );
             }
         }
