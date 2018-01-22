@@ -98,6 +98,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->add('outputChannels', ModelType::class, [
                 'multiple' => true,
                 'expanded' => true,
+                'translation_domain' => false,
             ])
             ->end();
     }

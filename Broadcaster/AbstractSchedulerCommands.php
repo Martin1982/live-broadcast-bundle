@@ -114,8 +114,8 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
         $processes = $this->getRunningProcesses();
 
         foreach ($processes as $process) {
-            $runningBroadcastId = $this->getBroadcastId($processes);
-            $runningChannelId = $this->getChannelId($processes);
+            $runningBroadcastId = $this->getBroadcastId($process);
+            $runningChannelId = $this->getChannelId($process);
 
             $isBroadcast = (string) $runningBroadcastId === (string) $broadcastId;
             $isChannel = (string) $runningChannelId === (string) $channelId;
@@ -169,6 +169,8 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     }
 
     /**
+     * Execute the command to start the stream
+     *
      * @param string $input
      * @param string $output
      * @param string $meta
@@ -189,26 +191,26 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
             $loop = '-stream_loop -1 ';
         }
 
-        $streamStart = sprintf('ffmpeg %s%s %s%s >%s 2>&1 &;', $loop, $input, $output, $meta, $logFile);
+        $streamStart = sprintf('ffmpeg %s%s %s%s >%s 2>&1;', $loop, $input, $output, $meta, $logFile);
         $streamEndCommand = '';
 
         $broadcastId = $this->getBroadcastId($streamStart);
         $channelId = $this->getChannelId($streamStart);
 
         $consolePath = Kernel::VERSION_ID > 30000 ? 'bin/console' : 'app/console';
-        $consolePath = dirname($this->rootDir.'/../').$consolePath;
+        $consolePath = $this->rootDir.'/../'.$consolePath;
 
         if (file_exists($consolePath)) {
-            $streamEndCommand = sprintf('%s %s %s;', $consolePath, $broadcastId, $channelId);
+            $streamEndCommand = sprintf('%s livebroadcaster:broadcast:end %s %s', $consolePath, $broadcastId, $channelId);
         }
 
-        return exec($streamStart.$streamEndCommand);
+        return exec('('.$streamStart.$streamEndCommand.') &');
     }
 
     /**
      * Read metadata from a process string.
      *
-     * @param $processString
+     * @param string $processString
      *
      * @return array
      */
@@ -230,6 +232,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * @param string $processString
      * @param string $metadataKey
+     *
      * @return mixed
      */
     private function getMetadataValue($processString, $metadataKey)
