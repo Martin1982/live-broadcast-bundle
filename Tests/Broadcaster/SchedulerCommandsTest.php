@@ -25,7 +25,7 @@ class SchedulerCommandsTest extends TestCase
         $exec->expects($this->once())->willReturnCallback(
             function ($command) {
                 // @codingStandardsIgnoreLine
-                self::assertEquals('ffmpeg input output -metadata broadcast_id=4 -metadata unit=test -metadata env=unittest >/dev/null 2>&1 &;', $command);
+                self::assertEquals('(ffmpeg input output -metadata broadcast_id=4 -metadata unit=test -metadata env=unittest >/dev/null 2>&1;) &', $command);
             }
         );
 
@@ -45,7 +45,7 @@ class SchedulerCommandsTest extends TestCase
             function ($command) {
                 $now = new \DateTime();
                 // @codingStandardsIgnoreLine
-                self::assertEquals('ffmpeg input output -metadata broadcast_id=12 -metadata test=unit -metadata env=unittest >/tmp/livebroadcaster-ffmpeg-'.$now->format('Y-m-d_His').'.log 2>&1 &;', $command);
+                self::assertEquals('(ffmpeg input output -metadata broadcast_id=12 -metadata test=unit -metadata env=unittest >/tmp/livebroadcaster-ffmpeg-'.$now->format('Y-m-d_His').'.log 2>&1;) &', $command);
             }
         );
 

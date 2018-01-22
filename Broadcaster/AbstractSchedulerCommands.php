@@ -201,7 +201,12 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
         $consolePath = $this->rootDir.'/../'.$consolePath;
 
         if (file_exists($consolePath)) {
-            $streamEndCommand = sprintf('%s livebroadcaster:broadcast:end %s %s', $consolePath, $broadcastId, $channelId);
+            $streamEndCommand = sprintf(
+                '%s livebroadcaster:broadcast:end %s %s',
+                $consolePath,
+                $broadcastId,
+                $channelId
+            );
         }
 
         return exec('('.$streamStart.$streamEndCommand.') &');
