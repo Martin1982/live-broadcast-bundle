@@ -93,7 +93,6 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * @throws \InvalidArgumentException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function onPostBroadcastLoop(PostBroadcastLoopEvent $event)
     {
@@ -147,7 +146,6 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws LiveBroadcastOutputException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function updateEventState(YouTubeEvent $testableEvent)
     {
