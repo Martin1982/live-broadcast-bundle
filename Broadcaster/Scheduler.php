@@ -181,7 +181,7 @@ class Scheduler
     }
 
     /**
-     * Retrieve what is broadcasting.
+     * Retrieve what is broadcasting from the process list
      *
      * @return RunningBroadcast[]
      */

@@ -51,4 +51,19 @@ class SchedulerCommandsWindowsTest extends TestCase
         // @codingStandardsIgnoreLine
         self::assertEquals('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337', $running);
     }
+
+    /**
+     * Test running the stream command
+     */
+    public function testExecStreamCommand()
+    {
+        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Windows', 'exec');
+        $exec->expects($this->once())
+            ->with('ffmpeg -stream_loop -1 input output -metadata x=y -metadata a=b -metadata env=unittest >nul 2>nul &')
+            ->willReturn(true);
+
+        $command = new SchedulerCommands('/some/directory', 'unittest');
+        $command->setIsLoopable(true);
+        $command->startProcess('input', 'output', [ 'x' => 'y', 'a' => 'b']);
+    }
 }

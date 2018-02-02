@@ -9,7 +9,8 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**
  * Class LiveBroadcastRepository
- * @package Martin1982\LiveBroadcastBundle\Entity
+ *
+ * @codeCoverageIgnore
  */
 class LiveBroadcastRepository extends EntityRepository
 {

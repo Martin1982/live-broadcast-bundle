@@ -11,7 +11,8 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Class YouTubeEventRepository
- * @package Martin1982\LiveBroadcastBundle\Entity\Metadata
+ *
+ * @codeCoverageIgnore
  */
 class YouTubeEventRepository extends EntityRepository
 {

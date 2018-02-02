@@ -12,6 +12,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class BroadcastEndCommand
+ *
+ * @codeCoverageIgnore
  */
 class BroadcastEndCommand extends Command
 {

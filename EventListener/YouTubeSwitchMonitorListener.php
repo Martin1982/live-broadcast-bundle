@@ -104,19 +104,17 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
         $this->plannedBroadcast = $event->getPlannedBroadcast();
         $this->channel = $event->getChannel();
 
-        if (!$this->channel instanceof ChannelYouTube) {
-            return;
-        }
+        if ($this->channel instanceof ChannelYouTube) {
+            $transitionResult = $this->youTubeApiService->transitionState(
+                $this->plannedBroadcast,
+                $this->channel,
+                YouTubeEvent::STATE_REMOTE_LIVE
+            );
 
-        $transitionResult = $this->youTubeApiService->transitionState(
-            $this->plannedBroadcast,
-            $this->channel,
-            YouTubeEvent::STATE_REMOTE_LIVE
-        );
-
-        if ($transitionResult === true) {
-            $this->stopMonitorStream();
-            $this->startBroadcast();
+            if ($transitionResult === true) {
+                $this->stopMonitorStream();
+                $this->startBroadcast();
+            }
         }
     }
 
