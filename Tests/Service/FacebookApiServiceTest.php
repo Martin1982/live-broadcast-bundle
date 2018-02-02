@@ -3,11 +3,12 @@
 namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Martin1982\LiveBroadcastBundle\Service\FacebookApiService;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class FacebookApiServiceTest
  */
-class FacebookApiServiceTest extends \PHPUnit_Framework_TestCase
+class FacebookApiServiceTest extends TestCase
 {
     /**
      * @var FacebookApiService

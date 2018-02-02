@@ -9,11 +9,12 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\StreamManager;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class BroadcastManagerTest
  */
-class BroadcastManagerTest extends \PHPUnit_Framework_TestCase
+class BroadcastManagerTest extends TestCase
 {
     /**
      * @var EntityManager|\PHPUnit_Framework_MockObject_MockObject
@@ -71,6 +72,7 @@ class BroadcastManagerTest extends \PHPUnit_Framework_TestCase
         $broadcast = new BroadcastManager($this->entityManager, $this->streamManager);
         $broadcast->handleBroadcastEnd($broadcastEntity);
         $broadcast->handleBroadcastEnd($broadcastEntity, $channel);
+        $this->addToAssertionCount(1);
     }
 
     /**

@@ -5,11 +5,12 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputFile;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class StreamInputServiceTest
  */
-class StreamInputServiceTest extends \PHPUnit_Framework_TestCase
+class StreamInputServiceTest extends TestCase
 {
     /**
      * Test getting the input interface class

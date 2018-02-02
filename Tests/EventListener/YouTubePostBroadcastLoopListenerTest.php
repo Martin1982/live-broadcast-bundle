@@ -14,12 +14,13 @@ use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use PHPUnit\Framework\TestCase;
 use phpmock\phpunit\PHPMock;
 
 /**
  * Class YouTubePostBroadcastLoopListenerTest
  */
-class YouTubePostBroadcastLoopListenerTest extends \PHPUnit_Framework_TestCase
+class YouTubePostBroadcastLoopListenerTest extends TestCase
 {
     use PHPMock;
 
@@ -116,6 +117,7 @@ class YouTubePostBroadcastLoopListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener = new YouTubePostBroadcastLoopListener($entityManager, $commands, $api, $kernel, $redirect, $logger);
         $listener->onPostBroadcastLoop($event);
+        $this->addToAssertionCount(1);
     }
 
     /**

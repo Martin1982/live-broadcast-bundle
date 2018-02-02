@@ -94,6 +94,10 @@ services:
       class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputUrl
       tags:
           - { name: live.broadcast.input, inputtype: 'Url' }
+  live.broadcast.input.rtmp:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputRtmp
+      tags:
+          - { name: live.broadcast.input, inputtype: 'Rtmp' }
   live.broadcast.input.monitor:
       class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputMonitorStream
       tags:

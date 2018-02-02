@@ -90,6 +90,7 @@ class SchedulerTest extends TestCase
         );
 
         $scheduler->applySchedule();
+        $this->addToAssertionCount(1);
     }
 
     /**

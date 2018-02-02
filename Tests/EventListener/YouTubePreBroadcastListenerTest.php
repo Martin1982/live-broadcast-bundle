@@ -60,6 +60,7 @@ class YouTubePreBroadcastListenerTest extends TestCase
 
         $listener = new YouTubePreBroadcastListener($api, $redirect);
         $listener->onPreBroadcast($event);
+        $this->addToAssertionCount(1);
     }
 
     /**

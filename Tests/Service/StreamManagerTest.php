@@ -6,12 +6,13 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Service\StreamManager;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class StreamManagerTest
  */
-class StreamManagerTest extends \PHPUnit_Framework_TestCase
+class StreamManagerTest extends TestCase
 {
     /**
      * Test ending of stream
@@ -36,5 +37,6 @@ class StreamManagerTest extends \PHPUnit_Framework_TestCase
 
         $manager = new StreamManager($dispatcher, $commands);
         $manager->endStream($broadcast, $channel);
+        $this->addToAssertionCount(1);
     }
 }

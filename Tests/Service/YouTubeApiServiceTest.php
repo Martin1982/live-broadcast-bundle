@@ -8,12 +8,13 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEventRepository;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 /**
  * Class YouTubeApiServiceTest
  */
-class YouTubeApiServiceTest extends \PHPUnit_Framework_TestCase
+class YouTubeApiServiceTest extends TestCase
 {
     /**
      * @var string
@@ -122,6 +123,7 @@ class YouTubeApiServiceTest extends \PHPUnit_Framework_TestCase
         $api->setGoogleApiClient($googleClient);
         $api->setYouTubeApiClient($youtubeClient);
         $api->transitionState($broadcast, $channel, $state);
+        $this->addToAssertionCount(1);
     }
 
     /**
