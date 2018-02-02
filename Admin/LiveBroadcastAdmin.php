@@ -90,7 +90,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->with('Video Input', [
                 'class' => 'col-md-4',
             ])
-            ->add('input', ModelListType::class, ['btn_list' => false])
+            ->add('input', ModelListType::class)
             ->end()
             ->with('Channels', [
                 'class' => 'col-md-4',
@@ -107,6 +107,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
      * @param LiveBroadcast $broadcast
      *
      * @throws \Doctrine\ORM\OptimisticLockException
+     *
      * @throws \Exception
      */
     public function postPersist($broadcast)

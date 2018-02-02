@@ -40,6 +40,12 @@ class YouTubePostBroadcastLoopListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturnOnConsecutiveCalls(
                 YouTubeEvent::STATE_REMOTE_CREATED,
                 YouTubeEvent::STATE_REMOTE_TESTING,
+                YouTubeEvent::STATE_REMOTE_LIVE,
+                YouTubeEvent::STATE_REMOTE_CREATED,
+                YouTubeEvent::STATE_REMOTE_TESTING,
+                YouTubeEvent::STATE_REMOTE_LIVE,
+                YouTubeEvent::STATE_REMOTE_CREATED,
+                YouTubeEvent::STATE_REMOTE_TESTING,
                 YouTubeEvent::STATE_REMOTE_LIVE
             );
         $api->expects($this->any())

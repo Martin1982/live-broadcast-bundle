@@ -96,16 +96,16 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      */
     public function onPostBroadcastLoop(PostBroadcastLoopEvent $event)
     {
+        $runningProcesses = $this->commands->getRunningProcesses();
+
         $entityManager = $this->entityManager;
         $eventRepository = $entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
-
-        $runningProcesses = $this->commands->getRunningProcesses();
         $testableEvents = $eventRepository->getTestableEvents();
 
         foreach ($testableEvents as $testableEvent) {
             $this->updateEventState($testableEvent);
 
-            if ($testableEvent->getLastKnownState() >= YouTubeEvent::STATE_LOCAL_TESTING) {
+            if ($testableEvent->getLastKnownState() >= YouTubeEvent::STATE_LOCAL_TEST_STARTING) {
                 continue;
             }
 
@@ -241,6 +241,8 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
 
     /**
      * Clean up running monitor streams
+     *
+     * @throws LiveBroadcastOutputException
      */
     protected function cleanMonitorStreams()
     {
@@ -256,8 +258,12 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
             $eventRepository = $this->entityManager->getRepository('LiveBroadcastBundle:Metadata\YouTubeEvent');
             $event = $eventRepository->find($process->getBroadcastId());
 
-            if ($event && $event->getLastKnownState() >= YouTubeEvent::STATE_LOCAL_COMPLETE) {
-                $this->commands->stopProcess($process->getProcessId());
+            if ($event) {
+                $this->updateEventState($event);
+
+                if ($event->getLastKnownState() >= YouTubeEvent::STATE_LOCAL_LIVE_STARTING) {
+                    $this->commands->stopProcess($process->getProcessId());
+                }
             }
         }
     }
@@ -273,11 +279,12 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     {
         $liveService = $this->getYouTubeApiService();
 
-        if ($event->getLastKnownState() === YouTubeEvent::STATE_LOCAL_TEST_STARTING) {
+        if ($event->getLastKnownState() >= YouTubeEvent::STATE_LOCAL_TEST_STARTING) {
             return;
         }
 
         $liveService->transitionState($event->getBroadcast(), $event->getChannel(), YouTubeEvent::STATE_REMOTE_TESTING);
+        $this->updateEventState($event);
     }
 
     /**
