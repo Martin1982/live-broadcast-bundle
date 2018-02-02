@@ -40,7 +40,7 @@ services:
             - Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia
             - ~
         calls:
-            - [setSubClasses, [ { "File": Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile, "URL": Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl } ] ]
+            - [setSubClasses, [ { "File": Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile, "URL": Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl, "RTMP": Martin1982\LiveBroadcastBundle\Entity\Media\MediaRtmp } ] ]
 
     sonata.block.service.youtubeauth:
         class: Martin1982\LiveBroadcastBundle\Admin\Block\YouTubeBlockService

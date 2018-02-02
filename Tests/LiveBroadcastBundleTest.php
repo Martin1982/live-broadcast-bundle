@@ -24,5 +24,6 @@ class LiveBroadcastBundleTest extends TestCase
         $bundle = new LiveBroadcastBundle();
 
         $bundle->build($container);
+        $this->addToAssertionCount(1);
     }
 }

@@ -7,11 +7,12 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\StreamEndEvent;
 use Martin1982\LiveBroadcastBundle\EventListener\YouTubeStreamEndListener;
 use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class YouTubeStreamEndListenerTest
  */
-class YouTubeStreamEndListenerTest extends \PHPUnit_Framework_TestCase
+class YouTubeStreamEndListenerTest extends TestCase
 {
     /**
      * Test handling a stream end
@@ -36,6 +37,7 @@ class YouTubeStreamEndListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener = new YouTubeStreamEndListener($api);
         $listener->onStreamEnd($event);
+        $this->addToAssertionCount(1);
     }
 
     /**

@@ -204,6 +204,7 @@ class YouTubeSwitchMonitorListenerTest extends TestCase
 
         $listener = new YouTubeSwitchMonitorListener($commandsInterface, $output, $input, $api, $redirect, $logger);
         $listener->onSwitchMonitor($event);
+        $this->addToAssertionCount(1);
     }
 
     /**

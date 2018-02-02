@@ -145,7 +145,6 @@ class LiveBroadcastAdmin extends AbstractAdmin
     /**
      * @param LiveBroadcast $broadcast
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Exception
      */
     public function preRemove($broadcast)

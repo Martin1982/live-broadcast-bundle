@@ -3,6 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
+use Martin1982\LiveBroadcastBundle\Entity\Media\MediaRtmp;
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -31,6 +32,10 @@ class InputAdmin extends AbstractAdmin
 
         if ($subject instanceof MediaFile) {
             $formMapper->add('fileLocation', TextType::class, ['label' => 'File location on server']);
+        }
+
+        if ($subject instanceof MediaRtmp) {
+            $formMapper->add('rtmpAddress', TextType::class, ['label' => 'Address of the RTMP stream to repeat']);
         }
 
         if ($subject instanceof MediaUrl) {

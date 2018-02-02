@@ -58,6 +58,7 @@ class YouTubePostBroadcastListenerTest extends TestCase
 
         $listener = new YouTubePostBroadcastListener($this->api, $this->redirect);
         $listener->onPostBroadcast($event);
+        $this->addToAssertionCount(1);
     }
 
     /**
