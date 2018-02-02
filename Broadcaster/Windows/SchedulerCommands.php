@@ -39,6 +39,12 @@ class SchedulerCommands extends AbstractSchedulerCommands
      */
     protected function execStreamCommand($input, $output, $meta)
     {
-        return exec(sprintf('ffmpeg %s %s%s >nul 2>nul &', $input, $output, $meta));
+        $loop = '';
+
+        if ($this->isLoopable()) {
+            $loop = '-stream_loop -1 ';
+        }
+
+        return exec(sprintf('ffmpeg %s%s %s%s >nul 2>nul &', $loop, $input, $output, $meta));
     }
 }

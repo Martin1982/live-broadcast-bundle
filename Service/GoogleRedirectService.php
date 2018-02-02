@@ -25,9 +25,10 @@ class GoogleRedirectService
     protected $redirectRoute;
 
     /**
-     * GoogleRedirectService constructor.
+     * GoogleRedirectService constructor
+     *
      * @param RouterInterface $router
-     * @param $redirectRoute
+     * @param string          $redirectRoute
      */
     public function __construct(RouterInterface $router, $redirectRoute)
     {
@@ -37,6 +38,7 @@ class GoogleRedirectService
 
     /**
      * @return string
+     *
      * @throws LiveBroadcastOutputException
      */
     public function getOAuthRedirectUrl()

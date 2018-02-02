@@ -4,7 +4,6 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
-use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 use PHPUnit\Framework\TestCase;
 
 /**

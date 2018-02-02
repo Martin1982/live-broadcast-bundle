@@ -2,22 +2,14 @@
 
 namespace Martin1982\LiveBroadcastBundle\Broadcaster\Darwin;
 
-use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
+use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands as LinuxCommands;
 
 /**
  * Class SchedulerCommands
  * @package Martin1982\LiveBroadcastBundle\Broadcaster\Darwin
  */
-class SchedulerCommands extends AbstractSchedulerCommands
+class SchedulerCommands extends LinuxCommands
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function stopProcess($pid)
-    {
-        return exec(sprintf('kill %d', $pid));
-    }
-
     /**
      * {@inheritdoc}
      */

@@ -10,7 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class BroadcasterCommand
- * @package Martin1982\LiveBroadcastBundle\Command
+ *
+ * @codeCoverageIgnore
  */
 class BroadcasterCommand extends Command
 {

@@ -8,7 +8,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class ShellTestCommand
- * @package Martin1982\LiveBroadcastBundle\Command
+ *
+ * @codeCoverageIgnore
  */
 class ShellTestCommand extends Command
 {

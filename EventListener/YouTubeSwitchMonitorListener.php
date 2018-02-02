@@ -8,6 +8,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\SwitchMonitorEvent;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
@@ -103,19 +104,17 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
         $this->plannedBroadcast = $event->getPlannedBroadcast();
         $this->channel = $event->getChannel();
 
-        if (!$this->channel instanceof ChannelYouTube) {
-            return;
-        }
+        if ($this->channel instanceof ChannelYouTube) {
+            $transitionResult = $this->youTubeApiService->transitionState(
+                $this->plannedBroadcast,
+                $this->channel,
+                YouTubeEvent::STATE_REMOTE_LIVE
+            );
 
-        $transitionResult = $this->youTubeApiService->transitionState(
-            $this->plannedBroadcast,
-            $this->channel,
-            YouTubeEvent::STATE_REMOTE_LIVE
-        );
-
-        if ($transitionResult === true) {
-            $this->stopMonitorStream();
-            $this->startBroadcast();
+            if ($transitionResult === true) {
+                $this->stopMonitorStream();
+                $this->startBroadcast();
+            }
         }
     }
 
@@ -141,6 +140,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
 
     /**
      * Start the actual broadcast
+     *
      * @throws LiveBroadcastOutputException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
@@ -153,6 +153,9 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
         $outputService = $this->outputService->getOutputInterface($this->channel);
 
         $stream = $this->youTubeApiService->getStream($this->plannedBroadcast, $this->channel);
+        if (!$stream) {
+            throw new LiveBroadcastInputException('No stream available');
+        }
         $streamUrl = $this->youTubeApiService->getStreamUrl($stream);
         $outputService->setStreamUrl($streamUrl);
 

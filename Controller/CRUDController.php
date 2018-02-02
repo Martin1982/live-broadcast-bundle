@@ -13,7 +13,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class CRUDController
- * @package Martin1982\LiveBroadcastBundle\Controller
+ *
+ * @codeCoverageIgnore
  */
 class CRUDController extends Controller
 {
@@ -37,7 +38,10 @@ class CRUDController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return RedirectResponse
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function youTubeOAuthAction(Request $request)
     {

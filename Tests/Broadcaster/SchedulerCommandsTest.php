@@ -19,13 +19,13 @@ class SchedulerCommandsTest extends TestCase
      */
     public function testStartProcess()
     {
-        $command = new SchedulerCommands('unittest');
+        $command = $this->getSchedulerCommands();
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'exec');
         $exec->expects($this->once())->willReturnCallback(
             function ($command) {
                 // @codingStandardsIgnoreLine
-                self::assertEquals('ffmpeg input output -metadata broadcast_id=4 -metadata unit=test -metadata env=unittest >/dev/null 2>&1 &', $command);
+                self::assertEquals('(ffmpeg input output -metadata broadcast_id=4 -metadata unit=test -metadata env=unittest >/dev/null 2>&1;) &', $command);
             }
         );
 
@@ -37,7 +37,7 @@ class SchedulerCommandsTest extends TestCase
      */
     public function testStartProcessWithLogDirectory()
     {
-        $command = new SchedulerCommands('unittest');
+        $command = $this->getSchedulerCommands();
         $command->setFFMpegLogDirectory('/tmp');
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'exec');
@@ -45,7 +45,7 @@ class SchedulerCommandsTest extends TestCase
             function ($command) {
                 $now = new \DateTime();
                 // @codingStandardsIgnoreLine
-                self::assertEquals('ffmpeg input output -metadata broadcast_id=12 -metadata test=unit -metadata env=unittest >/tmp/livebroadcaster-ffmpeg-'.$now->format('Y-m-d_His').'.log 2>&1 &', $command);
+                self::assertEquals('(ffmpeg input output -metadata broadcast_id=12 -metadata test=unit -metadata env=unittest >/tmp/livebroadcaster-ffmpeg-'.$now->format('Y-m-d_His').'.log 2>&1;) &', $command);
             }
         );
 
@@ -57,7 +57,7 @@ class SchedulerCommandsTest extends TestCase
      */
     public function testStopProcess()
     {
-        $command = new SchedulerCommands('unittest');
+        $command = $this->getSchedulerCommands();
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
         $exec->expects($this->once())->willReturnCallback(
@@ -74,7 +74,7 @@ class SchedulerCommandsTest extends TestCase
      */
     public function testGetRunningProcesses()
     {
-        $command = new SchedulerCommands('unittest');
+        $command = $this->getSchedulerCommands();
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
         $exec->expects($this->once())->willReturnCallback(
@@ -95,7 +95,7 @@ class SchedulerCommandsTest extends TestCase
      */
     public function testGetBroadcastId()
     {
-        $command = new SchedulerCommands('unittest');
+        $command = $this->getSchedulerCommands();
         // @codingStandardsIgnoreLine
         $id = $command->getBroadcastId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337');
         self::assertEquals(1337, $id);
@@ -116,7 +116,7 @@ class SchedulerCommandsTest extends TestCase
      */
     public function testGetProcessId()
     {
-        $command = new SchedulerCommands('unittest');
+        $command = $this->getSchedulerCommands();
         self::assertEquals(0, $command->getProcessId(''));
 
         // @codingStandardsIgnoreLine
@@ -135,7 +135,7 @@ class SchedulerCommandsTest extends TestCase
      */
     public function testGetChannelId()
     {
-        $command = new SchedulerCommands('unittest');
+        $command = $this->getSchedulerCommands();
         self::assertNull($command->getChannelId(''));
         self::assertNull($command->getChannelId('channelid=12'));
 
@@ -149,7 +149,7 @@ class SchedulerCommandsTest extends TestCase
      */
     public function testGetEnvironment()
     {
-        $command = new SchedulerCommands('');
+        $command = new SchedulerCommands('/some/directory', '');
         self::assertNull($command->getEnvironment(''));
 
         // @codingStandardsIgnoreLine
@@ -163,5 +163,13 @@ class SchedulerCommandsTest extends TestCase
         // @codingStandardsIgnoreLine
         $env = $command->getEnvironment('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata broadcast_id=1337');
         self::assertNull($env);
+    }
+
+    /**
+     * @return SchedulerCommands
+     */
+    protected function getSchedulerCommands()
+    {
+        return new SchedulerCommands('/some/directory', 'unittest');
     }
 }

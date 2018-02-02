@@ -29,6 +29,7 @@ class InputMonitorStream implements InputInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws LiveBroadcastInputException
      */
     public function generateInputCmd()

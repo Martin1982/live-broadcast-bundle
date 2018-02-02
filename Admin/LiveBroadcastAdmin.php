@@ -24,6 +24,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 class LiveBroadcastAdmin extends AbstractAdmin
 {
+    /**
+     * @var string
+     */
     protected $baseRoutePattern = 'broadcast';
 
     /**
@@ -47,15 +50,17 @@ class LiveBroadcastAdmin extends AbstractAdmin
         $broadcast = $this->getSubject();
 
         if ($broadcast->getThumbnail()) {
-            $container = $this->getConfigurationPool()->getContainer();
+            $container = $this->getContainer();
 
-            $fullPath = sprintf(
-                '%s/%s',
-                $container->getParameter('livebroadcast.thumbnail.web_path'),
-                $broadcast->getThumbnail()->getFilename()
-            );
+            if ($container) {
+                $fullPath = sprintf(
+                    '%s/%s',
+                    $container->getParameter('livebroadcast.thumbnail.web_path'),
+                    $broadcast->getThumbnail()->getFilename()
+                );
 
-            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" style="max-width: 100%;"/>';
+                $fileFieldOptions['help'] = '<img src="'.$fullPath.'" style="max-width: 100%;"/>';
+            }
         }
 
         $formMapper
@@ -85,7 +90,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->with('Video Input', [
                 'class' => 'col-md-4',
             ])
-            ->add('input', ModelListType::class, ['btn_list' => false])
+            ->add('input', ModelListType::class)
             ->end()
             ->with('Channels', [
                 'class' => 'col-md-4',
@@ -93,12 +98,17 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->add('outputChannels', ModelType::class, [
                 'multiple' => true,
                 'expanded' => true,
+                'translation_domain' => false,
             ])
             ->end();
     }
 
     /**
      * @param LiveBroadcast $broadcast
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @throws \Exception
      */
     public function postPersist($broadcast)
     {
@@ -116,6 +126,9 @@ class LiveBroadcastAdmin extends AbstractAdmin
 
     /**
      * @param LiveBroadcast $broadcast
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function postUpdate($broadcast)
     {
@@ -131,6 +144,9 @@ class LiveBroadcastAdmin extends AbstractAdmin
 
     /**
      * @param LiveBroadcast $broadcast
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function preRemove($broadcast)
     {
@@ -141,8 +157,10 @@ class LiveBroadcastAdmin extends AbstractAdmin
                     $youTubeService->removeLiveEvent($broadcast, $channel);
                 } catch (\Google_Service_Exception $ex) {
                     /** @var LoggerInterface $logger */
-                    $logger = $this->getConfigurationPool()->getContainer()->get('logger');
-                    $logger->warning($ex->getMessage());
+                    $container = $this->getContainer();
+                    if ($container) {
+                        $container->get('logger')->warning($ex->getMessage());
+                    }
                 }
             }
         }
@@ -154,12 +172,19 @@ class LiveBroadcastAdmin extends AbstractAdmin
      * Get the YouTube Live service
      *
      * @return YouTubeApiService
+     *
      * @throws \Exception
      */
     protected function getYouTubeService()
     {
-        $youTubeService = $this->getConfigurationPool()->getContainer()->get('live.broadcast.youtubeapi.service');
-        $redirectService = $this->getConfigurationPool()->getContainer()->get('live.broadcast.googleredirect.service');
+        $container = $this->getContainer();
+
+        if (!$container) {
+            throw new \Exception('No service container found');
+        }
+
+        $youTubeService = $container->get('live.broadcast.youtubeapi.service');
+        $redirectService = $container->get('live.broadcast.googleredirect.service');
 
         $youTubeService->initApiClients($redirectService->getOAuthRedirectUrl());
 
@@ -168,17 +193,26 @@ class LiveBroadcastAdmin extends AbstractAdmin
 
     /**
      * @param LiveBroadcast $liveBroadcast
+     *
+     * @throws \InvalidArgumentException
      */
     protected function loadThumbnail(LiveBroadcast $liveBroadcast)
     {
-        $uploadListener = $this->getConfigurationPool()->getContainer()->get('live.broadcast.thumbnail.listener');
-        $objectManager = $this->getConfigurationPool()->getContainer()->get('doctrine')->getManager();
+        $container = $this->getContainer();
+
+        if (!$container) {
+            return;
+        }
+
+        $uploadListener = $container->get('live.broadcast.thumbnail.listener');
+        $objectManager = $container->get('doctrine')->getManager();
         $lifeCycleEvent = new LifecycleEventArgs($liveBroadcast, $objectManager);
         $uploadListener->postLoad($lifeCycleEvent);
     }
 
     /**
      * {@inheritdoc}
+     *
      * @throws \RuntimeException
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
@@ -207,5 +241,13 @@ class LiveBroadcastAdmin extends AbstractAdmin
                 ],
             ])
         ;
+    }
+
+    /**
+     * @return null|\Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    private function getContainer()
+    {
+        return $this->getConfigurationPool()->getContainer();
     }
 }

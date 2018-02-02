@@ -41,7 +41,7 @@ class OutputTwitch implements OutputInterface
 
         return sprintf(
             '-vcodec copy -acodec copy -f flv "rtmp://%s/app/%s"',
-            $this->channel->getStreamServer(),
+            str_replace('rtmp://', '', $this->channel->getStreamServer()),
             $this->channel->getStreamKey()
         );
     }

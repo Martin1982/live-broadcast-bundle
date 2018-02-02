@@ -3,6 +3,7 @@
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Class AbstractSchedulerCommands
@@ -31,12 +32,24 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     protected $logDirectoryFFMpeg = '';
 
     /**
+     * @var bool Can the input be looped
+     */
+    protected $loopable = false;
+
+    /**
+     * @var string
+     */
+    protected $rootDir;
+
+    /**
      * SchedulerCommands constructor.
      *
+     * @param string $rootDir
      * @param string $kernelEnvironment
      */
-    public function __construct($kernelEnvironment)
+    public function __construct($rootDir, $kernelEnvironment)
     {
+        $this->rootDir = $rootDir;
         $this->kernelEnvironment = $kernelEnvironment;
     }
 
@@ -87,6 +100,35 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     }
 
     /**
+     * Get the process id for a given stream
+     *
+     * @param int $broadcastId
+     * @param int $channelId
+     *
+     * @return string|null
+     *
+     * @throws LiveBroadcastException
+     */
+    public function getProcessIdForStream($broadcastId, $channelId)
+    {
+        $processes = $this->getRunningProcesses();
+
+        foreach ($processes as $process) {
+            $runningBroadcastId = $this->getBroadcastId($process);
+            $runningChannelId = $this->getChannelId($process);
+
+            $isBroadcast = (string) $runningBroadcastId === (string) $broadcastId;
+            $isChannel = (string) $runningChannelId === (string) $channelId;
+
+            if ($isBroadcast && $isChannel) {
+                return $this->getProcessId($process);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function isMonitorStream($processString)
@@ -127,28 +169,53 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     }
 
     /**
-     * @param $input
-     * @param $output
-     * @param $meta
+     * Execute the command to start the stream
+     *
+     * @param string $input
+     * @param string $output
+     * @param string $meta
      *
      * @return string
      */
     protected function execStreamCommand($input, $output, $meta)
     {
         $logFile = '/dev/null';
+        $loop = '';
 
         if (!empty($this->logDirectoryFFMpeg)) {
             $now = new \DateTime();
             $logFile = $this->logDirectoryFFMpeg.DIRECTORY_SEPARATOR.sprintf(self::LOG_FILE, $now->format('Y-m-d_His'));
         }
 
-        return exec(sprintf('ffmpeg %s %s%s >%s 2>&1 &', $input, $output, $meta, $logFile));
+        if ($this->isLoopable()) {
+            $loop = '-stream_loop -1 ';
+        }
+
+        $streamStart = sprintf('ffmpeg %s%s %s%s >%s 2>&1;', $loop, $input, $output, $meta, $logFile);
+        $streamEndCommand = '';
+
+        $broadcastId = $this->getBroadcastId($streamStart);
+        $channelId = $this->getChannelId($streamStart);
+
+        $consolePath = Kernel::VERSION_ID > 30000 ? 'bin/console' : 'app/console';
+        $consolePath = $this->rootDir.'/../'.$consolePath;
+
+        if (file_exists($consolePath)) {
+            $streamEndCommand = sprintf(
+                '%s livebroadcaster:broadcast:end %s %s',
+                $consolePath,
+                $broadcastId,
+                $channelId
+            );
+        }
+
+        return exec('('.$streamStart.$streamEndCommand.') &');
     }
 
     /**
      * Read metadata from a process string.
      *
-     * @param $processString
+     * @param string $processString
      *
      * @return array
      */
@@ -170,6 +237,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * @param string $processString
      * @param string $metadataKey
+     *
      * @return mixed
      */
     private function getMetadataValue($processString, $metadataKey)
@@ -194,5 +262,21 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
         }
 
         $this->logDirectoryFFMpeg = $directory;
+    }
+
+    /**
+     * @param boolean $loopable
+     */
+    public function setIsLoopable($loopable)
+    {
+        $this->loopable = (boolean) $loopable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLoopable()
+    {
+        return $this->loopable;
     }
 }

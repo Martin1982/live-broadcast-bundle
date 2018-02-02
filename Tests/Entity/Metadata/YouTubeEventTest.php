@@ -13,10 +13,13 @@ use PHPUnit\Framework\TestCase;
  */
 class YouTubeEventTest extends TestCase
 {
+    /**
+     * @var YouTubeEvent
+     */
     private $youTubeEvent;
 
     /**
-     *
+     * Setup default test object
      */
     public function setUp()
     {
@@ -33,7 +36,7 @@ class YouTubeEventTest extends TestCase
     }
 
     /**
-     *
+     * Test retrieving the event id
      */
     public function testEventId()
     {

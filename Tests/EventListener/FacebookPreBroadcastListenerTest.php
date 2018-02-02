@@ -58,9 +58,12 @@ class FacebookPreBroadcastListenerTest extends TestCase
         self::assertEquals('facebook.stream.url', $property->getValue($output));
     }
 
+    /**
+     * Test subscribed events
+     */
     public function testSubscribedEvents()
     {
-        $events = $this->eventListener->getSubscribedEvents();
+        $events = FacebookPreBroadcastListener::getSubscribedEvents();
         self::assertCount(1, $events);
         self::assertArrayHasKey(PreBroadcastEvent::NAME, $events);
     }

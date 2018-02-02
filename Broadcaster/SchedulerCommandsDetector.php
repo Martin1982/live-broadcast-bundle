@@ -15,24 +15,25 @@ class SchedulerCommandsDetector
     /**
      * Create the class required for scheduler commands.
      *
+     * @param string $rootDir
      * @param string $environment
      * @param string $ffmpegLogDirectory
      *
      * @return SchedulerCommandsInterface
      */
-    public static function createSchedulerCommands($environment, $ffmpegLogDirectory)
+    public static function createSchedulerCommands($rootDir, $environment, $ffmpegLogDirectory)
     {
         $osCode = strtoupper(substr(PHP_OS, 0, 3));
 
         switch ($osCode) {
             case 'WIN':
-                $schedulerCommands = new WindowsCommands($environment);
+                $schedulerCommands = new WindowsCommands($rootDir, $environment);
                 break;
             case 'DAR':
-                $schedulerCommands = new MacCommands($environment);
+                $schedulerCommands = new MacCommands($rootDir, $environment);
                 break;
             default:
-                $schedulerCommands = new LinuxCommands($environment);
+                $schedulerCommands = new LinuxCommands($rootDir, $environment);
                 break;
         }
 

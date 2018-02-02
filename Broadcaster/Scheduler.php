@@ -181,7 +181,7 @@ class Scheduler
     }
 
     /**
-     * Retrieve what is broadcasting.
+     * Retrieve what is broadcasting from the process list
      *
      * @return RunningBroadcast[]
      */
@@ -235,6 +235,7 @@ class Scheduler
                 ]
             );
 
+            $this->schedulerCommands->setIsLoopable($broadcast->isStopOnEndTimestamp());
             $this->schedulerCommands->startProcess($input->generateInputCmd(), $output->generateOutputCmd(), [
                 'broadcast_id' => $broadcast->getBroadcastId(),
                 'channel_id' => $channel->getChannelId(),
