@@ -25,8 +25,11 @@ class SchedulerCommandsDetectorTest extends TestCase
         $strtoupper->expects($this->any())
             ->willReturnOnConsecutiveCalls('WIN', 'DAR', 'LIN');
 
-        $this->assertInstanceOf(WindowsCommands::class, SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.'));
-        $this->assertInstanceOf(DarwinCommands::class, SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.'));
-        $this->assertInstanceOf(LinuxCommands::class, SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.'));
+        $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
+        $this->assertInstanceOf(WindowsCommands::class, $commands);
+        $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
+        $this->assertInstanceOf(DarwinCommands::class, $commands);
+        $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
+        $this->assertInstanceOf(LinuxCommands::class, $commands);
     }
 }

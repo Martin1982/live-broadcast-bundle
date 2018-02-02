@@ -73,7 +73,14 @@ class YouTubeApiServiceTest extends \PHPUnit_Framework_TestCase
             ->method('getCdn')
             ->willReturn($cdn);
 
-        $api = new YouTubeApiService($this->clientId, $this->clientSecret, $this->host, $this->thumbDir, $this->entityManager, $this->logger);
+        $api = new YouTubeApiService(
+            $this->clientId,
+            $this->clientSecret,
+            $this->host,
+            $this->thumbDir,
+            $this->entityManager,
+            $this->logger
+        );
         $url = $api->getStreamUrl($liveStream);
 
         self::assertEquals('rtmp://some.server/abcstream', $url);
@@ -103,7 +110,14 @@ class YouTubeApiServiceTest extends \PHPUnit_Framework_TestCase
 
         $state = YouTubeEvent::STATE_LOCAL_READY;
 
-        $api = new YouTubeApiService($this->clientId, $this->clientSecret, $this->host, $this->thumbDir, $this->entityManager, $this->logger);
+        $api = new YouTubeApiService(
+            $this->clientId,
+            $this->clientSecret,
+            $this->host,
+            $this->thumbDir,
+            $this->entityManager,
+            $this->logger
+        );
         $api->initApiClients('http://some.url.to');
         $api->setGoogleApiClient($googleClient);
         $api->setYouTubeApiClient($youtubeClient);

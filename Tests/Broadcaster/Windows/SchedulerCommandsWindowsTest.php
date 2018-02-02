@@ -59,6 +59,7 @@ class SchedulerCommandsWindowsTest extends TestCase
     {
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Windows', 'exec');
         $exec->expects($this->once())
+            // @codingStandardsIgnoreLine
             ->with('ffmpeg -stream_loop -1 input output -metadata x=y -metadata a=b -metadata env=unittest >nul 2>nul &')
             ->willReturn(true);
 

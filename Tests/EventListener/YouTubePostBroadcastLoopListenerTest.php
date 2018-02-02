@@ -58,7 +58,9 @@ class YouTubePostBroadcastLoopListenerTest extends \PHPUnit_Framework_TestCase
         $commands->expects($this->any())
             ->method('getRunningProcesses')
             ->willReturn([
+                // @codingStandardsIgnoreLine
                 'someuser   44558   ffmpeg /somedir/somefile.mp4 rtmp://youtu.be/streamurl -metadata broadcast_id=1 -metadata channel_id=2 -metadata env=test -metadata monitor_stream=yes /dev/null',
+                // @codingStandardsIgnoreLine
                 'someuser   44559   ffmpeg /somedir/somefile.mp4 rtmp://youtu.be/streamurl -metadata broadcast_id=4 -metadata channel_id=2 -metadata env=test -metadata monitor_stream=yes /dev/null',
             ]);
 
