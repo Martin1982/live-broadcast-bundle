@@ -36,7 +36,7 @@ class RunningBroadcast
     private $environment;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     private $isMonitor;
 
@@ -54,7 +54,7 @@ class RunningBroadcast
         $this->broadcastId = (int) $broadcastId;
         $this->processId = (int) $processId;
         $this->channelId = (int) $channelId;
-        $this->environment = $environment || '';
+        $this->environment = (string) $environment;
         $this->isMonitor = $isMonitor;
     }
 
@@ -95,7 +95,7 @@ class RunningBroadcast
      */
     public function isMonitor(): bool
     {
-        return $this->isMonitor;
+        return (bool) $this->isMonitor;
     }
 
     /**
