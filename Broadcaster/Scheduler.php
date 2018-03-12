@@ -74,9 +74,18 @@ class Scheduler
      * @param StreamInputService         $inputService
      * @param EventDispatcherInterface   $dispatcher
      * @param LoggerInterface            $logger
+     *
+     * phpcs:disable Symfony.Functions.Arguments.Invalid
      */
-    public function __construct(EntityManager $entityManager, SchedulerCommandsInterface $schedulerCommands, StreamOutputService $outputService, StreamInputService $inputService, EventDispatcherInterface $dispatcher, LoggerInterface $logger)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        SchedulerCommandsInterface $schedulerCommands,
+        StreamOutputService $outputService,
+        StreamInputService $inputService,
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger
+    ) {
+        // phpcs:enable Symfony.Functions.Arguments.Invalid
         $this->entityManager = $entityManager;
         $this->schedulerCommands = $schedulerCommands;
         $this->outputService = $outputService;
