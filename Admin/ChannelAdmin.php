@@ -1,8 +1,13 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelLively;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
@@ -18,7 +23,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class ChannelAdmin
- * @package Martin1982\LiveBroadcastBundle\Admin
  */
 class ChannelAdmin extends AbstractAdmin
 {
@@ -35,15 +39,15 @@ class ChannelAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    public function getTemplate($name)
+    public function getTemplate($name): string
     {
         $subject = $this->getSubject();
 
-        if ($subject instanceof ChannelFacebook && $name === 'edit') {
+        if ($subject instanceof ChannelFacebook && 'edit' === $name) {
             return 'LiveBroadcastBundle:CRUD:channel_facebook_edit.html.twig';
         }
 
-        if ($subject instanceof ChannelYouTube && $name ==='edit') {
+        if ($subject instanceof ChannelYouTube && 'edit' === $name) {
             return 'LiveBroadcastBundle:CRUD:channel_youtube_edit.html.twig';
         }
 
@@ -53,17 +57,17 @@ class ChannelAdmin extends AbstractAdmin
     /**
      * Set configuration for the subclass configs
      *
-     * @param $configs
+     * @param array $configs
      */
-    public function setSubclassConfigs($configs)
+    public function setSubclassConfigs($configs): void
     {
         $this->subclassConfigs = $configs;
     }
 
     /**
-     * @param BaseChannel[] $subclasses
+     * @param AbstractChannel[] $subclasses
      */
-    public function setConfiguredSubclasses($subclasses)
+    public function setConfiguredSubclasses($subclasses): void
     {
         $configuredSubclasses = [];
         $config = $this->subclassConfigs;
@@ -80,7 +84,7 @@ class ChannelAdmin extends AbstractAdmin
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollection $collection)
+    protected function configureRoutes(RouteCollection $collection): void
     {
         $collection->add('longLivedAccessToken', 'facebook/accesstoken');
         $collection->add('youtubeoauth', 'youtube/oauthprovider');
@@ -88,9 +92,10 @@ class ChannelAdmin extends AbstractAdmin
 
     /**
      * {@inheritdoc}
+     *
      * @throws \RuntimeException
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
         $subject = $this->getSubject();
 
@@ -137,9 +142,10 @@ class ChannelAdmin extends AbstractAdmin
 
     /**
      * {@inheritdoc}
+     *
      * @throws \RuntimeException
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add('channelName');
@@ -147,9 +153,10 @@ class ChannelAdmin extends AbstractAdmin
 
     /**
      * {@inheritdoc}
+     *
      * @throws \RuntimeException
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
             ->add('channelName')

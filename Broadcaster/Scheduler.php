@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Doctrine\ORM\EntityManager;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
@@ -17,7 +22,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class Scheduler
- * @package Martin1982\LiveBroadcastBundle\Broadcaster
  */
 class Scheduler
 {
@@ -62,23 +66,17 @@ class Scheduler
     protected $plannedBroadcasts = [];
 
     /**
-     * Scheduler constructor.
+     * Scheduler constructor
      *
-     * @param EntityManager $entityManager
+     * @param EntityManager              $entityManager
      * @param SchedulerCommandsInterface $schedulerCommands
-     * @param StreamOutputService $outputService
-     * @param StreamInputService $inputService
-     * @param EventDispatcherInterface $dispatcher
-     * @param LoggerInterface $logger
+     * @param StreamOutputService        $outputService
+     * @param StreamInputService         $inputService
+     * @param EventDispatcherInterface   $dispatcher
+     * @param LoggerInterface            $logger
      */
-    public function __construct(
-        EntityManager $entityManager,
-        SchedulerCommandsInterface $schedulerCommands,
-        StreamOutputService $outputService,
-        StreamInputService $inputService,
-        EventDispatcherInterface $dispatcher,
-        LoggerInterface $logger
-    ) {
+    public function __construct(EntityManager $entityManager, SchedulerCommandsInterface $schedulerCommands, StreamOutputService $outputService, StreamInputService $inputService, EventDispatcherInterface $dispatcher, LoggerInterface $logger)
+    {
         $this->entityManager = $entityManager;
         $this->schedulerCommands = $schedulerCommands;
         $this->outputService = $outputService;
@@ -92,21 +90,21 @@ class Scheduler
      *
      * @throws LiveBroadcastException
      */
-    public function applySchedule()
+    public function applySchedule(): void
     {
         $this->updateRunningBroadcasts();
         $this->stopExpiredBroadcasts();
         $this->getPlannedBroadcasts();
         $this->startPlannedBroadcasts();
 
-        $postBroadcastLoopEvent = new PostBroadcastLoopEvent();
-        $this->dispatcher->dispatch(PostBroadcastLoopEvent::NAME, $postBroadcastLoopEvent);
+        $postLoopEvent = new PostBroadcastLoopEvent();
+        $this->dispatcher->dispatch(PostBroadcastLoopEvent::NAME, $postLoopEvent);
     }
 
     /**
      * Start planned broadcasts if not already running.
      */
-    protected function startPlannedBroadcasts()
+    protected function startPlannedBroadcasts(): void
     {
         foreach ($this->plannedBroadcasts as $plannedBroadcast) {
             $this->startBroadcastOnChannels($plannedBroadcast);
@@ -118,16 +116,16 @@ class Scheduler
     /**
      * @param LiveBroadcast $plannedBroadcast
      */
-    protected function startBroadcastOnChannels(LiveBroadcast $plannedBroadcast)
+    protected function startBroadcastOnChannels(LiveBroadcast $plannedBroadcast): void
     {
         $channels = $plannedBroadcast->getOutputChannels();
 
         foreach ($channels as $channel) {
-            $isChannelBroadcasting = false;
+            $isBroadcasting = false;
 
             foreach ($this->runningBroadcasts as $runningBroadcast) {
                 if ($runningBroadcast->isBroadcasting($plannedBroadcast, $channel)) {
-                    $isChannelBroadcasting = true;
+                    $isBroadcasting = true;
                 }
 
                 if ($runningBroadcast->isMonitor()) {
@@ -136,7 +134,7 @@ class Scheduler
                 }
             }
 
-            if (!$isChannelBroadcasting) {
+            if (!$isBroadcasting) {
                 $this->startBroadcast($plannedBroadcast, $channel);
             }
         }
@@ -145,7 +143,7 @@ class Scheduler
     /**
      * Stop running broadcasts that have expired.
      */
-    protected function stopExpiredBroadcasts()
+    protected function stopExpiredBroadcasts(): void
     {
         $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
 
@@ -185,7 +183,7 @@ class Scheduler
      *
      * @return RunningBroadcast[]
      */
-    protected function updateRunningBroadcasts()
+    protected function updateRunningBroadcasts(): array
     {
         $this->runningBroadcasts = [];
         $this->logger->debug('Retrieve running broadcasts');
@@ -211,38 +209,14 @@ class Scheduler
     /**
      * Initiate a new broadcast.
      *
-     * @param LiveBroadcast $broadcast
-     * @param BaseChannel   $channel
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
      */
-    protected function startBroadcast(LiveBroadcast $broadcast, BaseChannel $channel)
+    protected function startBroadcast(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
         try {
             $input = $this->inputService->getInputInterface($broadcast->getInput());
             $output = $this->outputService->getOutputInterface($channel);
-
-            $preBroadcastEvent = new PreBroadcastEvent($broadcast, $output);
-            $this->dispatcher->dispatch(PreBroadcastEvent::NAME, $preBroadcastEvent);
-
-            $this->logger->info(
-                'Start broadcast',
-                [
-                    'broadcast_id' => $broadcast->getBroadcastId(),
-                    'broadcast_name' => $broadcast->getName(),
-                    'channel_id' => $channel->getChannelId(),
-                    'channel_name' => $channel->getChannelName(),
-                    'input_cmd' => $input->generateInputCmd(),
-                    'output_cmd' => $output->generateOutputCmd(),
-                ]
-            );
-
-            $this->schedulerCommands->setIsLoopable($broadcast->isStopOnEndTimestamp());
-            $this->schedulerCommands->startProcess($input->generateInputCmd(), $output->generateOutputCmd(), [
-                'broadcast_id' => $broadcast->getBroadcastId(),
-                'channel_id' => $channel->getChannelId(),
-            ]);
-
-            $postBroadcastEvent = new PostBroadcastEvent($broadcast, $output);
-            $this->dispatcher->dispatch(PostBroadcastEvent::NAME, $postBroadcastEvent);
         } catch (LiveBroadcastException $ex) {
             $this->logger->error(
                 'Could not start broadcast',
@@ -252,7 +226,33 @@ class Scheduler
                     'exception' => $ex->getMessage(),
                 ]
             );
+
+            return;
         }
+
+        $preBroadcastEvent = new PreBroadcastEvent($broadcast, $output);
+        $this->dispatcher->dispatch(PreBroadcastEvent::NAME, $preBroadcastEvent);
+
+        $this->logger->info(
+            'Start broadcast',
+            [
+                'broadcast_id' => $broadcast->getBroadcastId(),
+                'broadcast_name' => $broadcast->getName(),
+                'channel_id' => $channel->getChannelId(),
+                'channel_name' => $channel->getChannelName(),
+                'input_cmd' => $input->generateInputCmd(),
+                'output_cmd' => $output->generateOutputCmd(),
+            ]
+        );
+
+        $this->schedulerCommands->setIsLoopable($broadcast->isStopOnEndTimestamp());
+        $this->schedulerCommands->startProcess($input->generateInputCmd(), $output->generateOutputCmd(), [
+            'broadcast_id' => $broadcast->getBroadcastId(),
+            'channel_id' => $channel->getChannelId(),
+        ]);
+
+        $postBroadcastEvent = new PostBroadcastEvent($broadcast, $output);
+        $this->dispatcher->dispatch(PostBroadcastEvent::NAME, $postBroadcastEvent);
     }
 
     /**
@@ -262,7 +262,7 @@ class Scheduler
      *
      * @throws LiveBroadcastException
      */
-    protected function getPlannedBroadcasts()
+    protected function getPlannedBroadcasts(): array
     {
         $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
         $this->logger->debug('Get planned broadcasts');

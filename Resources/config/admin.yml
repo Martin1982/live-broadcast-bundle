@@ -22,7 +22,7 @@ services:
               label: "Channels"
         arguments:
             - ~
-            - Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel
+            - Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel
             - LiveBroadcastBundle:CRUD
         calls:
             - [setSubclassConfigs, ["%livebroadcast.config%"]]

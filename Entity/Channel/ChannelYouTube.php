@@ -1,36 +1,48 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class ChannelYouTube
- * @package Martin1982\LiveBroadcastBundle\Entity\Channel
  *
  * @ORM\Table(name="channel_youtube", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class ChannelYouTube extends BaseChannel
+class ChannelYouTube extends AbstractChannel
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="refresh_token", type="string", length=255, nullable=false)
      */
     protected $refreshToken;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="youtube_channel_name", type="string", length=255, nullable=false)
      */
     protected $youTubeChannelName;
 
     /**
-     * @return string
+     * ChannelYouTube constructor
      */
-    public function getRefreshToken()
+    public function __construct()
+    {
+        $this->hasMonitor = true;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRefreshToken(): ?string
     {
         return $this->refreshToken;
     }
@@ -40,7 +52,7 @@ class ChannelYouTube extends BaseChannel
      *
      * @return ChannelYouTube
      */
-    public function setRefreshToken($refreshToken)
+    public function setRefreshToken($refreshToken): ChannelYouTube
     {
         $this->refreshToken = $refreshToken;
 
@@ -48,18 +60,19 @@ class ChannelYouTube extends BaseChannel
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getYouTubeChannelName()
+    public function getYouTubeChannelName(): ?string
     {
         return $this->youTubeChannelName;
     }
 
     /**
      * @param string $youTubeChannelName
+     *
      * @return ChannelYouTube
      */
-    public function setYouTubeChannelName($youTubeChannelName)
+    public function setYouTubeChannelName($youTubeChannelName): ChannelYouTube
     {
         $this->youTubeChannelName = $youTubeChannelName;
 
@@ -77,7 +90,7 @@ class ChannelYouTube extends BaseChannel
     /**
      * {@inheritdoc}
      */
-    public static function isEntityConfigured($configuration)
+    public static function isEntityConfigured($configuration): bool
     {
         if (!array_key_exists('youtube', $configuration)) {
             return false;

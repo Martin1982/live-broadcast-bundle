@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Controller;
 
 use Facebook\Authentication\AccessToken;
@@ -9,7 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class CRUDController
@@ -20,10 +25,12 @@ class CRUDController extends Controller
 {
     /**
      * @param Request $request
+     *
      * @return JsonResponse
+     *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function longLivedAccessTokenAction(Request $request)
+    public function longLivedAccessTokenAction(Request $request): JsonResponse
     {
         /** @var FacebookApiService $facebookService */
         $facebookService = $this->get('live.broadcast.facebookapi.service');
@@ -41,26 +48,30 @@ class CRUDController extends Controller
      *
      * @return RedirectResponse
      *
+     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
+     * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+     * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function youTubeOAuthAction(Request $request)
+    public function youTubeOAuthAction(Request $request): RedirectResponse
     {
         $youTubeService = $this->get('live.broadcast.youtubeapi.service');
         $router = $this->get('router');
+        /** @noinspection PhpRouteMissingInspection */
         $redirectUri = $router->generate(
-            'admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth',
+            'admin_martin1982_livebroadcast_channel_abstractchannel_youtubeoauth',
             [],
             $router::ABSOLUTE_URL
         );
         $youTubeService->initApiClients($redirectUri);
         $session = $request->getSession();
 
-        if ($request->get('cleartoken')) {
+        if ($session && $request->get('cleartoken')) {
             $this->clearToken($session, $youTubeService);
         }
 
         $requestCode = $request->get('code');
-        if ($requestCode) {
+        if ($requestCode && $session) {
             $this->checkRequestCode($request, $session, $youTubeService);
         }
 
@@ -68,31 +79,31 @@ class CRUDController extends Controller
     }
 
     /**
-     * @param Session $session
+     * @param SessionInterface  $session
      * @param YouTubeApiService $youTubeService
      */
-    protected function clearToken(Session $session, YouTubeApiService $youTubeService)
+    protected function clearToken(SessionInterface $session, YouTubeApiService $youTubeService): void
     {
         $session->remove('youTubeRefreshToken');
         $youTubeService->clearToken();
     }
 
     /**
-     * @param Request $request
-     * @param Session $session
-     * @param YouTubeApiService $youTubeService
+     * @param Request           $request
+     * @param SessionInterface  $session
+     * @param YouTubeApiService $youtube
      */
-    protected function checkRequestCode(Request $request, Session $session, YouTubeApiService $youTubeService)
+    protected function checkRequestCode(Request $request, SessionInterface $session, YouTubeApiService $youtube): void
     {
         $requestCode = $request->get('code');
         $requestState = $request->get('state');
         $sessionState = $session->get('state');
 
-        $youTubeService->authenticate($requestCode, $requestState, $sessionState);
-        $refreshToken = $youTubeService->getRefreshToken();
+        $youtube->authenticate($requestCode, $requestState, $sessionState);
+        $refreshToken = $youtube->getRefreshToken();
 
         if ($refreshToken) {
-            $session->set('youTubeChannelName', $youTubeService->getChannelName());
+            $session->set('youTubeChannelName', $youtube->getChannelName());
             $session->set('youTubeRefreshToken', $refreshToken);
         }
     }

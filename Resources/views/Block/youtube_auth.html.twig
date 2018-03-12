@@ -20,7 +20,7 @@
         $(document).ready(function(){
             $('.broadcast-youtube-switch').on('click', function(e){
                 e.preventDefault();
-                window.location.href = '{{ path('admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth', {'cleartoken': '1'}) }}';
+                window.location.href = '{{ path('admin_martin1982_livebroadcast_channel_abstractchannel_youtubeoauth', {'cleartoken': '1'}) }}';
             });
 
             $('.broadcast-youtube-attach').on('click', function(e){

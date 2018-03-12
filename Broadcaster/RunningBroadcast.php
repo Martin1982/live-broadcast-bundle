@@ -1,8 +1,13 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
@@ -38,25 +43,25 @@ class RunningBroadcast
     /**
      * RunningBroadcast constructor.
      *
-     * @param int $broadcastId
-     * @param int $processId
-     * @param int $channelId
+     * @param int    $broadcastId
+     * @param int    $processId
+     * @param int    $channelId
      * @param string $environment
-     * @param bool $isMonitor
+     * @param bool   $isMonitor
      */
     public function __construct($broadcastId, $processId, $channelId, $environment, $isMonitor = false)
     {
         $this->broadcastId = (int) $broadcastId;
         $this->processId = (int) $processId;
         $this->channelId = (int) $channelId;
-        $this->environment = $environment;
+        $this->environment = $environment || '';
         $this->isMonitor = $isMonitor;
     }
 
     /**
      * @return int
      */
-    public function getBroadcastId()
+    public function getBroadcastId(): int
     {
         return $this->broadcastId;
     }
@@ -64,7 +69,7 @@ class RunningBroadcast
     /**
      * @return int
      */
-    public function getProcessId()
+    public function getProcessId(): int
     {
         return $this->processId;
     }
@@ -72,7 +77,7 @@ class RunningBroadcast
     /**
      * @return int
      */
-    public function getChannelId()
+    public function getChannelId(): int
     {
         return $this->channelId;
     }
@@ -80,7 +85,7 @@ class RunningBroadcast
     /**
      * @return string
      */
-    public function getEnvironment()
+    public function getEnvironment(): string
     {
         return $this->environment;
     }
@@ -88,17 +93,18 @@ class RunningBroadcast
     /**
      * @return bool
      */
-    public function isMonitor()
+    public function isMonitor(): bool
     {
         return $this->isMonitor;
     }
 
     /**
-     * @param $broadcast
-     * @param $channel
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     *
      * @return bool
      */
-    public function isBroadcasting(LiveBroadcast $broadcast, BaseChannel $channel)
+    public function isBroadcasting(LiveBroadcast $broadcast, AbstractChannel $channel): bool
     {
         return ($this->broadcastId === $broadcast->getBroadcastId()) && ($this->channelId === $channel->getChannelId());
     }
@@ -108,7 +114,7 @@ class RunningBroadcast
      *
      * @return bool
      */
-    public function isValid($kernelEnvironment)
+    public function isValid($kernelEnvironment): bool
     {
         return ($kernelEnvironment === $this->getEnvironment()) &&
             ($this->getProcessId() !== 0) &&

@@ -1,32 +1,37 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 
 /**
  * Interface OutputInterface
- * @package Martin1982\LiveBroadcastBundle\Service\StreamOutput
  */
 interface OutputInterface
 {
     /**
-     * @param BaseChannel $channel
+     * @param AbstractChannel $channel
+     *
      * @return OutputInterface
      */
-    public function setChannel(BaseChannel $channel);
+    public function setChannel(AbstractChannel $channel): OutputInterface;
 
     /**
      * Give the cmd string to start the stream.
      *
      * @return string
      */
-    public function generateOutputCmd();
+    public function generateOutputCmd(): string;
 
     /**
      * Returns the channel type
      *
      * @return string
      */
-    public function getChannelType();
+    public function getChannelType(): string;
 }

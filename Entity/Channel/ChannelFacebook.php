@@ -1,36 +1,40 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class ChannelFacebook
- * @package Martin1982\LiveBroadcastBundle\Entity\Channel
  *
  * @ORM\Table(name="channel_facebook", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class ChannelFacebook extends BaseChannel
+class ChannelFacebook extends AbstractChannel
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="access_token", type="string", length=255, nullable=false)
      */
     protected $accessToken;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="fb_entity_id", type="string", length=128, nullable=false)
      */
     protected $fbEntityId;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAccessToken()
+    public function getAccessToken(): ?string
     {
         return $this->accessToken;
     }
@@ -40,7 +44,7 @@ class ChannelFacebook extends BaseChannel
      *
      * @return ChannelFacebook
      */
-    public function setAccessToken($accessToken)
+    public function setAccessToken($accessToken): ChannelFacebook
     {
         $this->accessToken = $accessToken;
 
@@ -48,9 +52,9 @@ class ChannelFacebook extends BaseChannel
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFbEntityId()
+    public function getFbEntityId(): ?string
     {
         return $this->fbEntityId;
     }
@@ -60,7 +64,7 @@ class ChannelFacebook extends BaseChannel
      *
      * @return ChannelFacebook
      */
-    public function setFbEntityId($fbEntityId)
+    public function setFbEntityId($fbEntityId): ChannelFacebook
     {
         $this->fbEntityId = $fbEntityId;
 
@@ -77,8 +81,10 @@ class ChannelFacebook extends BaseChannel
 
     /**
      * {@inheritdoc}
+     *
+     * @return bool
      */
-    public static function isEntityConfigured($configuration)
+    public static function isEntityConfigured($configuration): bool
     {
         if (!array_key_exists('facebook', $configuration)) {
             return false;

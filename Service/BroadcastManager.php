@@ -1,10 +1,14 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Doctrine\ORM\EntityManager;
-use Grpc\Channel;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
@@ -26,6 +30,7 @@ class BroadcastManager
      * BroadcastManager constructor
      *
      * @param EntityManager $entityManager
+     * @param StreamManager $streamManager
      */
     public function __construct(EntityManager $entityManager, StreamManager $streamManager)
     {
@@ -38,7 +43,7 @@ class BroadcastManager
      *
      * @param string $broadcastId
      *
-     * @return LiveBroadcast|null|object
+     * @return LiveBroadcast|null|Object
      */
     public function getBroadcastByid($broadcastId)
     {
@@ -50,12 +55,12 @@ class BroadcastManager
     /**
      * End a broadcast on all channels
      *
-     * @param LiveBroadcast $broadcast
-     * @param BaseChannel   $channelToEnd
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channelToEnd
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
-    public function handleBroadcastEnd(LiveBroadcast $broadcast, BaseChannel $channelToEnd = null)
+    public function handleBroadcastEnd(LiveBroadcast $broadcast, AbstractChannel $channelToEnd = null): void
     {
         $channels = $broadcast->getOutputChannels();
 

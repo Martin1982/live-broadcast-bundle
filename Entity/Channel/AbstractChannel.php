@@ -1,22 +1,26 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class BaseChannel
- * @package Martin1982\LiveBroadcastBundle\Entity\Channel
+ * Class AbstractChannel
  *
  * @ORM\Entity()
  * @ORM\Table(name="channel", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  */
-abstract class BaseChannel
+abstract class AbstractChannel
 {
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -25,24 +29,29 @@ abstract class BaseChannel
     protected $channelId;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="name", type="string", length=128, nullable=false)
      */
     protected $channelName;
 
     /**
-     * @return int
+     * @var bool
      */
-    public function getChannelId()
+    protected $hasMonitor = false;
+
+    /**
+     * @return int|null
+     */
+    public function getChannelId(): ?int
     {
         return $this->channelId;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getChannelName()
+    public function getChannelName(): ?string
     {
         return $this->channelName;
     }
@@ -52,7 +61,7 @@ abstract class BaseChannel
      *
      * @return $this
      */
-    public function setChannelName($channelName)
+    public function setChannelName($channelName): self
     {
         $this->channelName = $channelName;
 
@@ -60,10 +69,24 @@ abstract class BaseChannel
     }
 
     /**
+     * @param mixed $configuration
+     *
      * @return bool
      */
-    public static function isEntityConfigured($configuration)
+    public static function isEntityConfigured($configuration): bool
     {
+        if ($configuration) {
+            return true;
+        }
+
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMonitorStream(): bool
+    {
+        return $this->hasMonitor;
     }
 }

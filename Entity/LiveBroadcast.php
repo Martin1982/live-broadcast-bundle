@@ -1,10 +1,15 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -12,7 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class LiveBroadcast
- * @package Martin1982\LiveBroadcastBundle\Entity
  *
  * @ORM\Table(name="live_broadcast", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity(repositoryClass="Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository")
@@ -20,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class LiveBroadcast
 {
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -29,29 +33,30 @@ class LiveBroadcast
     private $broadcastId;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="name", type="string", length=128, nullable=false)
      */
     private $name;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="description", type="text", length=65535, nullable=true)
      */
     private $description;
 
     /**
-     * @var UploadedFile|File
+     * @var UploadedFile|File|null
      *
      * @ORM\Column(name="thumbnail", type="string", length=255, nullable=true)
+     *
      * @Assert\Image(minRatio="1.78", maxRatio="1.78", minWidth="1280", minHeight="720", maxSize="5120k")
      */
     private $thumbnail;
 
     /**
-     * @var BaseMedia
+     * @var BaseMedia|null
      *
      * @ORM\OneToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia")
      * @ORM\JoinColumn(name="input_id", referencedColumnName="id")
@@ -73,16 +78,16 @@ class LiveBroadcast
     private $endTimestamp;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="stop_on_end_timestamp", type="boolean", nullable=false)
      */
     private $stopOnEndTimestamp = true;
 
     /**
-     * @var BaseChannel[]
+     * @var AbstractChannel[]
      *
-     * @ORM\ManyToMany(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel")
+     * @ORM\ManyToMany(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel")
      * @ORM\JoinTable(name="broadcasts_channels",
      *      joinColumns={@ORM\JoinColumn(name="broadcast_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="channel_id", referencedColumnName="id")}
@@ -91,7 +96,7 @@ class LiveBroadcast
     private $outputChannels;
 
     /**
-     * LiveBroadcast constructor.
+     * LiveBroadcast constructor
      */
     public function __construct()
     {
@@ -107,21 +112,21 @@ class LiveBroadcast
      */
     public function __toString()
     {
-        return $this->getBroadcastId() === null ? '-' : $this->getName();
+        return $this->getBroadcastId() === null ? '-' : (string) $this->getName();
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getBroadcastId()
+    public function getBroadcastId(): ?int
     {
         return $this->broadcastId;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -131,7 +136,7 @@ class LiveBroadcast
      *
      * @return LiveBroadcast
      */
-    public function setName($name)
+    public function setName($name): LiveBroadcast
     {
         $this->name = $name;
 
@@ -139,9 +144,9 @@ class LiveBroadcast
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -151,7 +156,7 @@ class LiveBroadcast
      *
      * @return LiveBroadcast
      */
-    public function setDescription($description)
+    public function setDescription($description): LiveBroadcast
     {
         $this->description = $description;
 
@@ -159,7 +164,7 @@ class LiveBroadcast
     }
 
     /**
-     * @return UploadedFile|File
+     * @return UploadedFile|File|null
      */
     public function getThumbnail()
     {
@@ -168,9 +173,10 @@ class LiveBroadcast
 
     /**
      * @param string|UploadedFile|File $thumbnail
+     *
      * @return LiveBroadcast
      */
-    public function setThumbnail($thumbnail)
+    public function setThumbnail($thumbnail): LiveBroadcast
     {
         $this->thumbnail = $thumbnail;
 
@@ -180,7 +186,7 @@ class LiveBroadcast
     /**
      * @return \DateTime
      */
-    public function getStartTimestamp()
+    public function getStartTimestamp(): \DateTime
     {
         return $this->startTimestamp;
     }
@@ -190,7 +196,7 @@ class LiveBroadcast
      *
      * @return LiveBroadcast
      */
-    public function setStartTimestamp($startTimestamp)
+    public function setStartTimestamp($startTimestamp): LiveBroadcast
     {
         $this->startTimestamp = $startTimestamp;
 
@@ -200,7 +206,7 @@ class LiveBroadcast
     /**
      * @return \DateTime
      */
-    public function getEndTimestamp()
+    public function getEndTimestamp(): \DateTime
     {
         return $this->endTimestamp;
     }
@@ -210,7 +216,7 @@ class LiveBroadcast
      *
      * @return LiveBroadcast
      */
-    public function setEndTimestamp($endTimestamp)
+    public function setEndTimestamp($endTimestamp): LiveBroadcast
     {
         $this->endTimestamp = $endTimestamp;
 
@@ -218,11 +224,11 @@ class LiveBroadcast
     }
 
     /**
-     * @param BaseChannel[] $channels
+     * @param AbstractChannel[] $channels
      *
-     * @return $this
+     * @return LiveBroadcast
      */
-    public function setOutputChannels($channels)
+    public function setOutputChannels($channels): self
     {
         if (count($channels) > 0) {
             foreach ($channels as $channel) {
@@ -234,11 +240,11 @@ class LiveBroadcast
     }
 
     /**
-     * @param BaseChannel $channel
+     * @param AbstractChannel $channel
      *
-     * @return $this
+     * @return LiveBroadcast
      */
-    public function addOutputChannel(BaseChannel $channel)
+    public function addOutputChannel(AbstractChannel $channel): LiveBroadcast
     {
         $this->outputChannels->add($channel);
 
@@ -246,11 +252,11 @@ class LiveBroadcast
     }
 
     /**
-     * @param BaseChannel $channel
+     * @param AbstractChannel $channel
      *
-     * @return $this
+     * @return LiveBroadcast
      */
-    public function removeOutputChannel(BaseChannel $channel)
+    public function removeOutputChannel(AbstractChannel $channel): LiveBroadcast
     {
         $this->outputChannels->removeElement($channel);
 
@@ -258,7 +264,7 @@ class LiveBroadcast
     }
 
     /**
-     * @return ArrayCollection|BaseChannel[]
+     * @return ArrayCollection|AbstractChannel[]
      */
     public function getOutputChannels()
     {
@@ -266,9 +272,9 @@ class LiveBroadcast
     }
 
     /**
-     * @return BaseMedia
+     * @return BaseMedia|null
      */
-    public function getInput()
+    public function getInput(): ?BaseMedia
     {
         return $this->input;
     }
@@ -278,7 +284,7 @@ class LiveBroadcast
      *
      * @return LiveBroadcast
      */
-    public function setInput(BaseMedia $input)
+    public function setInput(BaseMedia $input): LiveBroadcast
     {
         $this->input = $input;
 
@@ -288,7 +294,7 @@ class LiveBroadcast
     /**
      * @return boolean
      */
-    public function isStopOnEndTimestamp()
+    public function isStopOnEndTimestamp(): bool
     {
         return $this->stopOnEndTimestamp;
     }
@@ -298,7 +304,7 @@ class LiveBroadcast
      *
      * @return LiveBroadcast
      */
-    public function setStopOnEndTimestamp($stopOnEndTimestamp)
+    public function setStopOnEndTimestamp($stopOnEndTimestamp): LiveBroadcast
     {
         $this->stopOnEndTimestamp = $stopOnEndTimestamp;
 

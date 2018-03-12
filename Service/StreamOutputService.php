@@ -1,14 +1,18 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Service;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 
 /**
  * Class StreamOutputService
- * @package Martin1982\LiveBroadcastBundle\Service
  */
 class StreamOutputService
 {
@@ -21,19 +25,19 @@ class StreamOutputService
      * @param OutputInterface $streamOutput
      * @param string          $platform
      */
-    public function addStreamOutput(OutputInterface $streamOutput, $platform)
+    public function addStreamOutput(OutputInterface $streamOutput, $platform): void
     {
         $this->streamOutputs[$platform] = $streamOutput;
     }
 
     /**
-     * @param BaseChannel $channel
+     * @param AbstractChannel $channel
      *
      * @return OutputInterface
      *
      * @throws LiveBroadcastOutputException
      */
-    public function getOutputInterface(BaseChannel $channel)
+    public function getOutputInterface(AbstractChannel $channel): OutputInterface
     {
         foreach ($this->streamOutputs as $streamOutput) {
             $channelType = $streamOutput->getChannelType();
@@ -45,6 +49,7 @@ class StreamOutputService
             }
         }
 
-        throw new LiveBroadcastOutputException('No OutputInterface configured for channel '.$channel->getChannelName());
+        $error = sprintf('No OutputInterface configured for channel %s', $channel->getChannelName());
+        throw new LiveBroadcastOutputException($error);
     }
 }

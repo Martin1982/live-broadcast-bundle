@@ -1,8 +1,13 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Command;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Symfony\Component\Console\Command\Command;
@@ -31,6 +36,8 @@ class BroadcastEndCommand extends Command
      * BroadcastEndCommand constructor
      *
      * @param BroadcastManager $broadcastManager
+     *
+     * @throws \Symfony\Component\Console\Exception\LogicException
      */
     public function __construct(BroadcastManager $broadcastManager)
     {
@@ -42,7 +49,7 @@ class BroadcastEndCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Stop a broadcast and handle completion on it\'s channels');
         $this->addArgument('broadcast', InputArgument::REQUIRED, 'Broadcast id');
@@ -52,13 +59,13 @@ class BroadcastEndCommand extends Command
     /**
      * {@inheritdoc}
      *
+     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $broadcastId = $input->getArgument('broadcast');
         $channelId = $input->getArgument('channel');
-        $channels = null;
 
         $broadcast = $this->broadcastManager->getBroadcastByid($broadcastId);
 
@@ -69,26 +76,28 @@ class BroadcastEndCommand extends Command
     }
 
     /**
-     * @param LiveBroadcast    $broadcast
-     * @param null|string      $channelId
-     * @return BaseChannel|null
+     * @param LiveBroadcast $broadcast
+     * @param null|string   $channelId
+     *
+     * @return AbstractChannel|null
      */
-    protected function getChannel(LiveBroadcast $broadcast, $channelId = null)
+    protected function getChannel(LiveBroadcast $broadcast, $channelId = null): ?AbstractChannel
     {
-        $channel = null;
+        $channels = null;
+        $selectedChannel = null;
 
         if ($channelId) {
             $channels = $broadcast->getOutputChannels();
         }
 
         if ($channels) {
-            foreach ($channels as $baseChannel) {
-                if ((string) $baseChannel->getChannelId() === (string) $channelId) {
-                    $channel = $baseChannel;
+            foreach ($channels as $channel) {
+                if ((string) $channel->getChannelId() === (string) $channelId) {
+                    $selectedChannel = $channel;
                 }
             }
         }
 
-        return $channel;
+        return $selectedChannel;
     }
 }

@@ -145,7 +145,7 @@ Add the YouTube API info to your config.yml:
         youtube:
             client_id: YourGoogleOauthClientId
             client_secret: YourGoogleOauthClientSecret
-            redirect_route: admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth
+            redirect_route: admin_martin1982_livebroadcast_channel_abstractchannel_youtubeoauth
             upload_directory: '%kernel.root_dir%/../web/uploads/thumbnails'
             web_path: '/uploads/thumbnails'
 
@@ -167,7 +167,7 @@ Add these lines to your parameters.yml (used for generating a thumbnail URL)
 ## Add new output platforms
 
 ### Step 1: Create channel entity 
-Create a new Channel Entity in Entity/Channel that extends the BaseChannel (e.g. ChannelNew)
+Create a new Channel Entity in Entity/Channel that extends the AbstractChannel (e.g. ChannelNew)
 
 ### Step 2: Create streamoutput service 
 Create a new StreamOutput service in Service/StreamOutput that implements the OutputInterface (e.g. OutputNew)
