@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle;
 
 use Martin1982\LiveBroadcastBundle\DependencyInjection\Compiler\AddStreamInputPass;
@@ -9,7 +14,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Class LiveBroadcastBundle
- * @package Martin1982\LiveBroadcastBundle
  */
 class LiveBroadcastBundle extends Bundle
 {

@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="channel_youtube", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class ChannelYouTube extends AbstractChannel
+class ChannelYouTube extends AbstractChannel implements PlanableChannelInterface
 {
     /**
      * @var string|null

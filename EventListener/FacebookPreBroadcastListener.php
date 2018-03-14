@@ -1,15 +1,19 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
-use Martin1982\LiveBroadcastBundle\Service\FacebookApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class FacebookPreBroadcastListener
- * @package Martin1982\LiveBroadcastBundle\EventListener
  */
 class FacebookPreBroadcastListener implements EventSubscriberInterface
 {
@@ -30,9 +34,10 @@ class FacebookPreBroadcastListener implements EventSubscriberInterface
     /**
      * @param PreBroadcastEvent $event
      *
+     * @throws \InvalidArgumentException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function onPreBroadcast(PreBroadcastEvent $event)
+    public function onPreBroadcast(PreBroadcastEvent $event): void
     {
         $liveBroadcast = $event->getLiveBroadcast();
         $output = $event->getOutput();
@@ -46,7 +51,7 @@ class FacebookPreBroadcastListener implements EventSubscriberInterface
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [PreBroadcastEvent::NAME => 'onPreBroadcast'];
     }

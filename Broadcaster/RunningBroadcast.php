@@ -11,7 +11,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
- * Class RunningBroadcast.
+ * Class RunningBroadcast
  */
 class RunningBroadcast
 {

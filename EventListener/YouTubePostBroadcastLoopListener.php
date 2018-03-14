@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
@@ -12,7 +17,7 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputMonitorStream;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -20,7 +25,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class YouTubePostBroadcastLoopListener
- * @package Martin1982\LiveBroadcastBundle\EventListener
  */
 class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
 {
@@ -60,21 +64,15 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     /**
      * YouTubePostBroadcastLoopListener constructor
      *
-     * @param EntityManager $entityManager
+     * @param EntityManager              $entityManager
      * @param SchedulerCommandsInterface $commands
-     * @param YouTubeApiService $youTubeApiService
-     * @param KernelInterface $kernel
-     * @param GoogleRedirectService $redirectService
-     * @param LoggerInterface $logger
+     * @param YouTubeApiService          $youTubeApiService
+     * @param KernelInterface            $kernel
+     * @param GoogleRedirectService      $redirectService
+     * @param LoggerInterface            $logger
      */
-    public function __construct(
-        EntityManager $entityManager,
-        SchedulerCommandsInterface $commands,
-        YouTubeApiService $youTubeApiService,
-        KernelInterface $kernel,
-        GoogleRedirectService $redirectService,
-        LoggerInterface $logger
-    ) {
+    public function __construct(EntityManager $entityManager, SchedulerCommandsInterface $commands, YouTubeApiService $youTubeApiService, KernelInterface $kernel, GoogleRedirectService $redirectService, LoggerInterface $logger)
+    {
         $this->entityManager = $entityManager;
         $this->commands = $commands;
         $this->youTubeApiService = $youTubeApiService;
@@ -88,13 +86,15 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      *
      * @param PostBroadcastLoopEvent $event
      *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    public function onPostBroadcastLoop(PostBroadcastLoopEvent $event)
+    public function onPostBroadcastLoop(PostBroadcastLoopEvent $event): void
     {
         $runningProcesses = $this->commands->getRunningProcesses();
 
@@ -122,16 +122,17 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [PostBroadcastLoopEvent::NAME => 'onPostBroadcastLoop'];
     }
 
     /**
      * @return YouTubeApiService
+     *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    protected function getYouTubeApiService()
+    protected function getYouTubeApiService(): YouTubeApiService
     {
         if (!$this->googleRedirectUri) {
             $this->googleRedirectUri = $this->redirectService->getOAuthRedirectUrl();
@@ -146,8 +147,10 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws LiveBroadcastOutputException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    protected function updateEventState(YouTubeEvent $testableEvent)
+    protected function updateEventState(YouTubeEvent $testableEvent): void
     {
         $remoteState = $this->getYouTubeApiService()->getBroadcastStatus(
             $testableEvent->getBroadcast(),
@@ -163,11 +166,12 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     }
 
     /**
-     * @param YouTubeEvent $event
+     * @param YouTubeEvent       $event
      * @param RunningBroadcast[] $runningProcesses
+     *
      * @return bool
      */
-    protected function hasRunningMonitorStream(YouTubeEvent $event, $runningProcesses)
+    protected function hasRunningMonitorStream(YouTubeEvent $event, $runningProcesses): bool
     {
         $broadcast = $event->getBroadcast();
         $channel = $event->getChannel();
@@ -196,10 +200,10 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      * @throws LiveBroadcastOutputException
      */
-    protected function startMonitorStream(YouTubeEvent $event)
+    protected function startMonitorStream(YouTubeEvent $event): void
     {
         $thumbnail = $event->getBroadcast()->getThumbnail();
-        $monitorImage = $this->kernel->locateResource('@LiveBroadcastBundle') . '/Resources/images/placeholder.png';
+        $monitorImage = $this->kernel->locateResource('@LiveBroadcastBundle').'/Resources/images/placeholder.png';
 
         if ($thumbnail instanceof File && $thumbnail->isFile()) {
             $monitorImage = $thumbnail->getRealPath();
@@ -234,7 +238,7 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
                 $outputService->generateOutputCmd(),
                 $metadata
             );
-        } catch (LiveBroadcastOutputException $e) {
+        } catch (LiveBroadcastOutputException $exception) {
             return;
         }
     }
@@ -242,9 +246,12 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
     /**
      * Clean up running monitor streams
      *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws LiveBroadcastOutputException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    protected function cleanMonitorStreams()
+    protected function cleanMonitorStreams(): void
     {
         $runningStreams = $this->commands->getRunningProcesses();
 
@@ -273,9 +280,12 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
      *
      * @param YouTubeEvent $event
      *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws LiveBroadcastOutputException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    protected function transitionStateToRemoteTesting(YouTubeEvent $event)
+    protected function transitionStateToRemoteTesting(YouTubeEvent $event): void
     {
         $liveService = $this->getYouTubeApiService();
 
@@ -289,9 +299,10 @@ class YouTubePostBroadcastLoopListener implements EventSubscriberInterface
 
     /**
      * @param string $processString
+     *
      * @return RunningBroadcast
      */
-    protected function createRunningProcess($processString)
+    protected function createRunningProcess($processString): RunningBroadcast
     {
         return new RunningBroadcast(
             $this->commands->getBroadcastId($processString),

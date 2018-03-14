@@ -12,6 +12,7 @@ services:
             - ~
         calls:
             - [ setTranslationDomain, [LiveBroadcastBundle]]
+            - [ setApiStack, ["@live.broadcast.channelapi.stack"]]
 
     sonata.admin.channel:
         class: Martin1982\LiveBroadcastBundle\Admin\ChannelAdmin
@@ -37,7 +38,7 @@ services:
               label: "Inputs"
         arguments:
             - ~
-            - Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia
+            - Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia
             - ~
         calls:
             - [setSubClasses, [ { "File": Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile, "URL": Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl, "RTMP": Martin1982\LiveBroadcastBundle\Entity\Media\MediaRtmp } ] ]

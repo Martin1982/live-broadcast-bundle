@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -105,8 +110,7 @@ class ShellTestCommand extends Command
     protected function testPs(OutputInterface $output)
     {
         exec('/bin/ps -o pid', $cmdResult);
-
-        return $this->analyseResult($cmdResult, 'PID', $output);
+        $this->analyseResult($cmdResult, 'PID', $output);
     }
 
     /**
@@ -117,8 +121,7 @@ class ShellTestCommand extends Command
     protected function testTasklist(OutputInterface $output)
     {
         exec('tasklist /?', $cmdResult);
-
-        return $this->analyseResult($cmdResult, 'currently running processes', $output);
+        $this->analyseResult($cmdResult, 'currently running processes', $output);
     }
 
     /**
@@ -129,8 +132,7 @@ class ShellTestCommand extends Command
     protected function testGrep(OutputInterface $output)
     {
         exec('echo "got grep" | grep "got grep"', $cmdResult);
-
-        return $this->analyseResult($cmdResult, 'got grep', $output);
+        $this->analyseResult($cmdResult, 'got grep', $output);
     }
 
     /**
@@ -141,8 +143,7 @@ class ShellTestCommand extends Command
     protected function testTaskkill(OutputInterface $output)
     {
         exec('taskkill /?', $cmdResult);
-
-        return $this->analyseResult($cmdResult, 'terminate tasks by process id', $output);
+        $this->analyseResult($cmdResult, 'terminate tasks by process id', $output);
     }
 
     /**
@@ -153,8 +154,7 @@ class ShellTestCommand extends Command
     protected function testKill(OutputInterface $output)
     {
         exec('kill -l', $cmdResult);
-
-        return $this->analyseResult($cmdResult, 'QUIT', $output);
+        $this->analyseResult($cmdResult, 'QUIT', $output);
     }
 
     /**

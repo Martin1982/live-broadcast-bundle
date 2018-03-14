@@ -1,19 +1,25 @@
 <?php
+declare(strict_types=1);
 
-namespace Martin1982\LiveBroadcastBundle\Service;
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
+namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi;
 
+use Facebook\Authentication\AccessToken;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook as FacebookSDK;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 
 /**
  * Class FacebookApiService
- * @package Martin1982\LiveBroadcastBundle\Service
  */
-class FacebookApiService
+class FacebookApiService implements ChannelApiInterface
 {
     /**
      * @var string
@@ -42,7 +48,34 @@ class FacebookApiService
     }
 
     /**
-     * @param LiveBroadcast $liveBroadcast
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     */
+    public function createLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel)
+    {
+        // TODO: Implement createLiveEvent() method.
+    }
+
+    /**
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     */
+    public function updateLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel)
+    {
+        // TODO: Implement updateLiveEvent() method.
+    }
+
+    /**
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     */
+    public function removeLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel)
+    {
+        // TODO: Implement removeLiveEvent() method.
+    }
+
+    /**
+     * @param LiveBroadcast  $liveBroadcast
      * @param OutputFacebook $outputFacebook
      *
      * @return null|string
@@ -50,7 +83,7 @@ class FacebookApiService
      * @throws \InvalidArgumentException
      * @throws LiveBroadcastOutputException
      */
-    public function createFacebookLiveVideo(LiveBroadcast $liveBroadcast, OutputFacebook $outputFacebook)
+    public function createFacebookLiveVideo(LiveBroadcast $liveBroadcast, OutputFacebook $outputFacebook): ?string
     {
         if (!$this->facebookSDK) {
             $this->initFacebook();
@@ -65,9 +98,9 @@ class FacebookApiService
             $this->facebookSDK->setDefaultAccessToken($outputFacebook->getAccessToken());
             $response = $this->facebookSDK->post($outputFacebook->getEntityId().'/live_videos', $params);
         } catch (FacebookResponseException $ex) {
-            throw new LiveBroadcastOutputException('Facebook exception: '.$ex->getMessage());
+            throw new LiveBroadcastOutputException(sprintf('Facebook exception: %s', $ex->getMessage()));
         } catch (FacebookSDKException $ex) {
-            throw new LiveBroadcastOutputException('Facebook SDK exception: '.$ex->getMessage());
+            throw new LiveBroadcastOutputException(sprintf('Facebook SDK exception: %s', $ex->getMessage()));
         }
 
         $body = $response->getDecodedBody();
@@ -81,10 +114,12 @@ class FacebookApiService
 
     /**
      * @param string $userAccessToken
-     * @return \Facebook\Authentication\AccessToken|null
+     *
+     * @return AccessToken|null
+     *
      * @throws LiveBroadcastOutputException
      */
-    public function getLongLivedAccessToken($userAccessToken)
+    public function getLongLivedAccessToken($userAccessToken): ?AccessToken
     {
         if (!$this->facebookSDK) {
             $this->initFacebook();
@@ -97,14 +132,14 @@ class FacebookApiService
         try {
             return $this->facebookSDK->getOAuth2Client()->getLongLivedAccessToken($userAccessToken);
         } catch (FacebookSDKException $ex) {
-            throw new LiveBroadcastOutputException('Facebook SDK exception: '.$ex->getMessage());
+            throw new LiveBroadcastOutputException(sprintf('Facebook SDK exception: %s', $ex->getMessage()));
         }
     }
 
     /**
      * @return string
      */
-    public function getAppId()
+    public function getAppId(): string
     {
         return $this->applicationId;
     }
@@ -112,7 +147,7 @@ class FacebookApiService
     /**
      * @throws LiveBroadcastOutputException
      */
-    private function initFacebook()
+    private function initFacebook(): void
     {
         if (empty($this->applicationId) || empty($this->applicationSecret)) {
             throw new LiveBroadcastOutputException('The Facebook application settings are not correct.');
@@ -124,7 +159,7 @@ class FacebookApiService
                 'app_secret' => $this->applicationSecret,
             ]);
         } catch (FacebookSDKException $ex) {
-            throw new LiveBroadcastOutputException('Facebook SDK Exception: '.$ex->getMessage());
+            throw new LiveBroadcastOutputException(sprintf('Facebook SDK Exception: %s', $ex->getMessage()));
         }
     }
 }

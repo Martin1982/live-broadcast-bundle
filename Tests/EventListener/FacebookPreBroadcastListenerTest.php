@@ -1,17 +1,21 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\EventListener\FacebookPreBroadcastListener;
-use Martin1982\LiveBroadcastBundle\Service\FacebookApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class FacebookPreBroadcastListenerTest
- * @package Martin1982\LiveBroadcastBundle\Tests\EventListener
  */
 class FacebookPreBroadcastListenerTest extends TestCase
 {
@@ -36,8 +40,9 @@ class FacebookPreBroadcastListenerTest extends TestCase
 
     /**
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws \ReflectionException
      */
-    public function testOnPreBroadcast()
+    public function testOnPreBroadcast(): void
     {
         $broadcast = new LiveBroadcast();
         $output = new OutputFacebook();
@@ -61,7 +66,7 @@ class FacebookPreBroadcastListenerTest extends TestCase
     /**
      * Test subscribed events
      */
-    public function testSubscribedEvents()
+    public function testSubscribedEvents(): void
     {
         $events = FacebookPreBroadcastListener::getSubscribedEvents();
         self::assertCount(1, $events);

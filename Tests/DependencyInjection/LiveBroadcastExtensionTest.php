@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\DependencyInjection\Compiler;
 
 use Martin1982\LiveBroadcastBundle\DependencyInjection\LiveBroadcastExtension;
@@ -8,7 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Class LiveBroadcastExtensionTest
- * @package Martin1982\LiveBroadcastBundle\Tests\DependencyInjection
  */
 class LiveBroadcastExtensionTest extends TestCase
 {
@@ -36,7 +40,7 @@ class LiveBroadcastExtensionTest extends TestCase
                 ],
                 'thumbnail' => [
                     'web_path' => 'thumb_web',
-                    'upload_directory' => 'thumb_upload'
+                    'upload_directory' => 'thumb_upload',
                 ],
                 'eventloop' => [
                     'enabled' => true,

@@ -1,22 +1,26 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
-use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
+use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class BaseMediaTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Media
+ * Class AbstractMediaTest
  */
-class BaseMediaTest extends TestCase
+class AbstractMediaTest extends TestCase
 {
     /**
      *
      */
     public function testToString()
     {
-        $media = $this->getMockForAbstractClass(BaseMedia::class);
+        $media = $this->getMockForAbstractClass(AbstractMedia::class);
         self::assertEmpty((string) $media);
 
         $reflection = new \ReflectionClass($media);

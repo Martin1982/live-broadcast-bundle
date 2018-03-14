@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Entity\Metadata;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -9,7 +14,6 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Class YouTubeEvent
- * @package Martin1982\LiveBroadcastBundle\Entity\Metadata
  *
  * @ORM\Table(name="live_broadcast_youtube_event", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity(repositoryClass="Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEventRepository")
@@ -27,7 +31,7 @@ class YouTubeEvent
     const STATE_LOCAL_LIVE = 7;
     const STATE_LOCAL_RECLAIMED = 8;
     const STATE_LOCAL_COMPLETE = 9;
-    
+
     const STATE_REMOTE_CREATED = 'created';
     const STATE_REMOTE_READY = 'ready';
     const STATE_REMOTE_TEST_STARTING = 'testStarting';
@@ -114,6 +118,7 @@ class YouTubeEvent
 
     /**
      * @param mixed $broadcast
+     *
      * @return YouTubeEvent
      */
     public function setBroadcast($broadcast)
@@ -133,6 +138,7 @@ class YouTubeEvent
 
     /**
      * @param mixed $channel
+     *
      * @return YouTubeEvent
      */
     public function setChannel($channel)
@@ -152,6 +158,7 @@ class YouTubeEvent
 
     /**
      * @param mixed $youTubeId
+     *
      * @return YouTubeEvent
      */
     public function setYouTubeId($youTubeId)
@@ -171,6 +178,7 @@ class YouTubeEvent
 
     /**
      * @param string $lastKnownState
+     *
      * @return YouTubeEvent
      */
     public function setLastKnownState($lastKnownState)
@@ -181,8 +189,10 @@ class YouTubeEvent
     }
 
     /**
-     * @param $remoteState
+     * @param string $remoteState
+     *
      * @return mixed
+     *
      * @throws LiveBroadcastOutputException
      */
     public function getLocalStateByRemoteState($remoteState)
@@ -195,8 +205,10 @@ class YouTubeEvent
     }
 
     /**
-     * @param $localState
+     * @param string $localState
+     *
      * @return mixed
+     *
      * @throws LiveBroadcastOutputException
      */
     public function getRemoteStateByLocalState($localState)

@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Admin\Block;
 
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -12,7 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 /**
  * Class YouTubeBlockService
- * @package Martin1982\LiveBroadcastBundle\Admin\Block
  */
 class YouTubeBlockService extends AbstractBlockService
 {
@@ -29,21 +33,16 @@ class YouTubeBlockService extends AbstractBlockService
     /**
      * YouTubeBlockService constructor
      *
-     * @param string $name
-     * @param EngineInterface $templating
-     * @param YouTubeApiService $youTubeApi
-     * @param RequestStack $requestStack
+     * @param string                $name
+     * @param EngineInterface       $templating
+     * @param YouTubeApiService     $youTubeApi
+     * @param RequestStack          $requestStack
      * @param GoogleRedirectService $redirectService
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function __construct(
-        $name,
-        EngineInterface $templating,
-        YouTubeApiService $youTubeApi,
-        RequestStack $requestStack,
-        GoogleRedirectService $redirectService
-    ) {
+    public function __construct($name, EngineInterface $templating, YouTubeApiService $youTubeApi, RequestStack $requestStack, GoogleRedirectService $redirectService)
+    {
         $this->youTubeApi = $youTubeApi;
         $this->requestStack = $requestStack;
 
@@ -55,7 +54,7 @@ class YouTubeBlockService extends AbstractBlockService
 
     /**
      * @param BlockContextInterface $blockContext
-     * @param Response|null $response
+     * @param Response|null         $response
      *
      * @return Response
      */

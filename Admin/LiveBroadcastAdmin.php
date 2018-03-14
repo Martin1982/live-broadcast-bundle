@@ -1,12 +1,16 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
-use Psr\Log\LoggerInterface;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -14,6 +18,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\CoreBundle\Form\Type\DateTimePickerType;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -25,21 +30,98 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class LiveBroadcastAdmin extends AbstractAdmin
 {
     /**
-     * @var string
+     * @var ChannelApiStack|null
      */
-    protected $baseRoutePattern = 'broadcast';
-
-    /**
-     * @var array
-     */
-    protected $datagridValues = [
-        '_page' => 1,
-        '_sort_order' => 'DESC',
-        '_sort_by' => 'startTimestamp',
-    ];
+    protected $apiStack;
 
     /**
      * {@inheritdoc}
+     */
+    public function __construct(string $code, string $class, string $baseControllerName)
+    {
+        $this->baseRoutePattern = 'broadcast';
+        $this->datagridValues = [
+            '_page' => 1,
+            '_sort_order' => 'DESC',
+            '_sort_by' => 'startTimestamp',
+        ];
+
+        parent::__construct($code, $class, $baseControllerName);
+    }
+
+    /**
+     * @param ChannelApiStack $stack
+     */
+    public function setApiStack(ChannelApiStack $stack): void
+    {
+        $this->apiStack = $stack;
+    }
+
+    /**
+     * @param LiveBroadcast $broadcast
+     *
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \InvalidArgumentException
+     */
+    public function postPersist($broadcast)
+    {
+        $this->loadThumbnail($broadcast);
+
+        foreach ($broadcast->getOutputChannels() as $channel) {
+            if ($channel instanceof PlanableChannelInterface) {
+                $api = $this->apiStack->getApiForChannel($channel);
+
+                if ($api) {
+                    $api->createLiveEvent($broadcast, $channel);
+                }
+            }
+        }
+
+        parent::postPersist($broadcast);
+    }
+
+    /**
+     * @param LiveBroadcast $broadcast
+     */
+    public function postUpdate($broadcast)
+    {
+        foreach ($broadcast->getOutputChannels() as $channel) {
+            if ($channel instanceof PlanableChannelInterface) {
+                $api = $this->apiStack->getApiForChannel($channel);
+
+                if ($api) {
+                    $api->updateLiveEvent($broadcast, $channel);
+                }
+            }
+        }
+
+        parent::postUpdate($broadcast);
+    }
+
+    /**
+     * @param LiveBroadcast $broadcast
+     */
+    public function preRemove($broadcast)
+    {
+        foreach ($broadcast->getOutputChannels() as $channel) {
+            if ($channel instanceof PlanableChannelInterface) {
+                $api = $this->apiStack->getApiForChannel($channel);
+
+                if ($api) {
+                    $api->removeLiveEvent($broadcast, $channel);
+                }
+            }
+        }
+
+        parent::preRemove($broadcast);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \RuntimeException
      */
     protected function configureFormFields(FormMapper $formMapper)
@@ -104,98 +186,14 @@ class LiveBroadcastAdmin extends AbstractAdmin
     }
 
     /**
-     * @param LiveBroadcast $broadcast
-     *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
-     * @throws \Exception
-     */
-    public function postPersist($broadcast)
-    {
-        $this->loadThumbnail($broadcast);
-
-        foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof ChannelYouTube) {
-                $youTubeService = $this->getYouTubeService();
-                $youTubeService->createLiveEvent($broadcast, $channel);
-            }
-        }
-
-        parent::postPersist($broadcast);
-    }
-
-    /**
-     * @param LiveBroadcast $broadcast
-     *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Exception
-     */
-    public function postUpdate($broadcast)
-    {
-        foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof ChannelYouTube) {
-                $youTubeService = $this->getYouTubeService();
-                $youTubeService->updateLiveEvent($broadcast, $channel);
-            }
-        }
-
-        parent::postUpdate($broadcast);
-    }
-
-    /**
-     * @param LiveBroadcast $broadcast
-     *
-     * @throws \Exception
-     */
-    public function preRemove($broadcast)
-    {
-        foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof ChannelYouTube) {
-                $youTubeService = $this->getYouTubeService();
-                try {
-                    $youTubeService->removeLiveEvent($broadcast, $channel);
-                } catch (\Google_Service_Exception $ex) {
-                    /** @var LoggerInterface $logger */
-                    $container = $this->getContainer();
-                    if ($container) {
-                        $container->get('logger')->warning($ex->getMessage());
-                    }
-                }
-            }
-        }
-
-        parent::preRemove($broadcast);
-    }
-
-    /**
-     * Get the YouTube Live service
-     *
-     * @return YouTubeApiService
-     *
-     * @throws \Exception
-     */
-    protected function getYouTubeService()
-    {
-        $container = $this->getContainer();
-
-        if (!$container) {
-            throw new \Exception('No service container found');
-        }
-
-        $youTubeService = $container->get('live.broadcast.youtubeapi.service');
-        $redirectService = $container->get('live.broadcast.googleredirect.service');
-
-        $youTubeService->initApiClients($redirectService->getOAuthRedirectUrl());
-
-        return $youTubeService;
-    }
-
-    /**
      * @param LiveBroadcast $liveBroadcast
      *
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException
      * @throws \InvalidArgumentException
      */
-    protected function loadThumbnail(LiveBroadcast $liveBroadcast)
+    protected function loadThumbnail(LiveBroadcast $liveBroadcast): void
     {
         $container = $this->getContainer();
 
@@ -224,6 +222,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
 
     /**
      * {@inheritdoc}
+     *
      * @throws \RuntimeException
      */
     protected function configureListFields(ListMapper $listMapper)
@@ -243,9 +242,9 @@ class LiveBroadcastAdmin extends AbstractAdmin
     }
 
     /**
-     * @return null|\Symfony\Component\DependencyInjection\ContainerInterface
+     * @return null|ContainerInterface
      */
-    private function getContainer()
+    private function getContainer(): ?ContainerInterface
     {
         return $this->getConfigurationPool()->getContainer();
     }

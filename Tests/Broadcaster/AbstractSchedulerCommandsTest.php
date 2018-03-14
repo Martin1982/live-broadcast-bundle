@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
@@ -7,7 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class AbstractSchedulerCommandsTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster
  */
 class AbstractSchedulerCommandsTest extends TestCase
 {

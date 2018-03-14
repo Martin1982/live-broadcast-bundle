@@ -1,22 +1,29 @@
 <?php
+declare(strict_types=1);
 
-namespace Martin1982\LiveBroadcastBundle\Service;
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
+namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi;
 
 use Doctrine\ORM\EntityManager;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEventRepository;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
+use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Class YouTubeApiService
- * @package Martin1982\LiveBroadcastBundle\Service
  */
-class YouTubeApiService
+class YouTubeApiService implements ChannelApiInterface
 {
-    const STREAM_ACTIVE_STATUS = 'active';
+    public const STREAM_ACTIVE_STATUS = 'active';
 
     /**
      * @var string
@@ -61,27 +68,26 @@ class YouTubeApiService
     /**
      * YouTubeApiService constructor
      *
-     * @param string          $clientId
-     * @param string          $clientSecret
-     * @param string          $host
-     * @param string          $thumbnailDir
-     * @param EntityManager   $entityManager
-     * @param LoggerInterface $logger
+     * @param string                $clientId
+     * @param string                $clientSecret
+     * @param string                $host
+     * @param string                $thumbnailDir
+     * @param EntityManager         $entityManager
+     * @param LoggerInterface       $logger
+     * @param GoogleRedirectService $redirectService
+     *
+     * @throws LiveBroadcastOutputException
      */
-    public function __construct(
-        $clientId,
-        $clientSecret,
-        $host,
-        $thumbnailDir,
-        EntityManager $entityManager,
-        LoggerInterface $logger
-    ) {
+    public function __construct($clientId, $clientSecret, $host, $thumbnailDir, EntityManager $entityManager, LoggerInterface $logger, GoogleRedirectService $redirectService)
+    {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->host = $host;
         $this->thumbnailDir = $thumbnailDir;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
+
+        $this->initApiClients($redirectService->getOAuthRedirectUrl());
     }
 
     /**
@@ -91,7 +97,7 @@ class YouTubeApiService
      *
      * @throws LiveBroadcastOutputException
      */
-    public function initApiClients($oAuthRedirectUrl)
+    public function initApiClients($oAuthRedirectUrl): void
     {
         if (empty($this->clientId) || empty($this->clientSecret)) {
             throw new LiveBroadcastOutputException('The YouTube oAuth settings are not correct.');
@@ -112,7 +118,7 @@ class YouTubeApiService
     /**
      * @param \Google_Client $client
      */
-    public function setGoogleApiClient(\Google_Client $client)
+    public function setGoogleApiClient(\Google_Client $client): void
     {
         $this->googleApiClient = $client;
     }
@@ -120,7 +126,7 @@ class YouTubeApiService
     /**
      * @param \Google_Service_YouTube $youtubeClient
      */
-    public function setYouTubeApiClient(\Google_Service_YouTube $youtubeClient)
+    public function setYouTubeApiClient(\Google_Service_YouTube $youtubeClient): void
     {
         $this->youTubeApiClient = $youtubeClient;
     }
@@ -128,9 +134,9 @@ class YouTubeApiService
     /**
      * @param string $refreshToken
      *
-     * @return array
+     * @return array|null
      */
-    public function getAccessToken($refreshToken)
+    public function getAccessToken($refreshToken): ?array
     {
         $this->googleApiClient->fetchAccessTokenWithRefreshToken($refreshToken);
 
@@ -144,7 +150,7 @@ class YouTubeApiService
      *
      * @throws \InvalidArgumentException
      */
-    public function setAccessToken($sessionToken)
+    public function setAccessToken($sessionToken): void
     {
         $this->googleApiClient->setAccessToken($sessionToken);
     }
@@ -154,7 +160,7 @@ class YouTubeApiService
      *
      * @return bool
      */
-    public function isAuthenticated()
+    public function isAuthenticated(): bool
     {
         return (bool) $this->googleApiClient->getAccessToken();
     }
@@ -166,9 +172,11 @@ class YouTubeApiService
      *
      * @return array|null
      */
-    public function authenticate($requestCode, $requestState, $sessionState)
+    public function authenticate($requestCode, $requestState, $sessionState): ?array
     {
-        if ((string) $sessionState !== (string) $requestState) {
+        $sessionState = (string) $sessionState;
+        $requestState = (string) $requestState;
+        if ($sessionState !== $requestState) {
             return null;
         }
 
@@ -180,7 +188,7 @@ class YouTubeApiService
     /**
      * Clear auth token
      */
-    public function clearToken()
+    public function clearToken(): void
     {
         $this->googleApiClient->revokeToken();
     }
@@ -202,7 +210,7 @@ class YouTubeApiService
      *
      * @return string
      */
-    public function getAuthenticationUrl($state)
+    public function getAuthenticationUrl($state): string
     {
         $this->googleApiClient->setState($state);
 
@@ -212,7 +220,7 @@ class YouTubeApiService
     /**
      * @return string|null
      */
-    public function getChannelName()
+    public function getChannelName(): ?string
     {
         $parts = 'id,brandingSettings';
         $opts = ['mine' => true];
@@ -237,7 +245,7 @@ class YouTubeApiService
      *
      * @return string|null
      */
-    public function getStreamUrl(\Google_Service_YouTube_LiveStream $stream)
+    public function getStreamUrl(\Google_Service_YouTube_LiveStream $stream): ?string
     {
         $streamAddress = $stream->getCdn()->getIngestionInfo()->getIngestionAddress();
         $streamName = $stream->getCdn()->getIngestionInfo()->getStreamName();
@@ -253,7 +261,7 @@ class YouTubeApiService
      *
      * @return \Google_Service_YouTube_LiveStream|null
      */
-    public function getStream(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube)
+    public function getStream(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube): ?\Google_Service_YouTube_LiveStream
     {
         $this->getAccessToken($channelYouTube->getRefreshToken());
         $eventRepository = $this->getEventRepository();
@@ -277,12 +285,15 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast $broadcast
-     * @param ChannelYouTube $channel
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
      *
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Exception
      */
-    public function createLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
+    public function createLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
         $youTubeData = $this->setupLivestream($broadcast, $channel);
 
@@ -296,13 +307,15 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast $broadcast
-     * @param ChannelYouTube $channel
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Exception
      */
-    public function updateLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
+    public function updateLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
         $eventRepository = $this->getEventRepository();
         $youTubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
@@ -317,12 +330,14 @@ class YouTubeApiService
     }
 
     /**
-     * @param LiveBroadcast $broadcast
-     * @param ChannelYouTube $channel
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
      *
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function removeLiveEvent(LiveBroadcast $broadcast, ChannelYouTube $channel)
+    public function removeLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
         $eventRepository = $this->getEventRepository();
         $youTubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
@@ -365,11 +380,11 @@ class YouTubeApiService
     /**
      * @param LiveBroadcast  $liveBroadcast
      * @param ChannelYouTube $channelYouTube
-     * @param string $broadcastState
+     * @param string         $broadcastState
      *
      * @return boolean
      */
-    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube, $broadcastState)
+    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube, $broadcastState): bool
     {
         $this->getAccessToken($channelYouTube->getRefreshToken());
 
@@ -396,7 +411,7 @@ class YouTubeApiService
 
             $streamStatus = $stream->getStatus()->getStreamStatus();
 
-            if ($streamStatus !== self::STREAM_ACTIVE_STATUS) {
+            if (self::STREAM_ACTIVE_STATUS !== $streamStatus) {
                 $canChangeState = false;
                 $this->logger->warning(sprintf(
                     'Stream state must be \'active\' for "%s", current state is \'%s\'',
@@ -426,11 +441,13 @@ class YouTubeApiService
     /**
      * @param LiveBroadcast  $liveBroadcast
      * @param ChannelYouTube $channel
-     * @param string $status
+     * @param string         $status
      *
      * @return \Google_Service_YouTube_LiveBroadcast
+     *
+     * @throws \Exception
      */
-    protected function setupLivestream(LiveBroadcast $liveBroadcast, ChannelYouTube $channel, $status = 'public')
+    protected function setupLivestream(LiveBroadcast $liveBroadcast, ChannelYouTube $channel, $status = 'public'): \Google_Service_YouTube_LiveBroadcast
     {
         $this->getAccessToken($channel->getRefreshToken());
 
@@ -438,13 +455,13 @@ class YouTubeApiService
         $streamsResponse = $this->createStream($liveBroadcast->getName());
 
         // Bind Broadcast and Stream
-        $bindBroadcastResponse = $this->youTubeApiClient->liveBroadcasts->bind(
+        $bindedResponse = $this->youTubeApiClient->liveBroadcasts->bind(
             $broadcastResponse->getId(),
             'id,contentDetails',
             ['streamId' => $streamsResponse->getId()]
         );
 
-        return $bindBroadcastResponse;
+        return $bindedResponse;
     }
 
     /**
@@ -453,8 +470,11 @@ class YouTubeApiService
      * @param YouTubeEvent $event
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
-    protected function updateLiveStream(YouTubeEvent $event)
+    protected function updateLiveStream(YouTubeEvent $event): void
     {
         $channel = $event->getChannel();
         $this->getAccessToken($channel->getRefreshToken());
@@ -472,7 +492,7 @@ class YouTubeApiService
      *
      * @param YouTubeEvent $event
      */
-    protected function removeLivestream(YouTubeEvent $event)
+    protected function removeLivestream(YouTubeEvent $event): void
     {
         $channel = $event->getChannel();
         $this->getAccessToken($channel->getRefreshToken());
@@ -494,17 +514,17 @@ class YouTubeApiService
     /**
      * @param LiveBroadcast $liveBroadcast
      * @param string        $privacyStatus
-     * @param string|null   $id
+     * @param string|null   $broadcastId
      *
      * @return \Google_Service_YouTube_LiveBroadcast
      *
      * @throws \Exception
      */
-    protected function updateBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $id = null)
+    protected function updateBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $broadcastId = null): \Google_Service_YouTube_LiveBroadcast
     {
-        $externalBroadcast = $this->setupBroadcast($liveBroadcast, $privacyStatus, $id);
+        $externalBroadcast = $this->setupBroadcast($liveBroadcast, $privacyStatus, $broadcastId);
 
-        if ($id !== null) {
+        if (null !== $broadcastId) {
             return $this->youTubeApiClient->liveBroadcasts->update('snippet,status', $externalBroadcast);
         }
 
@@ -513,14 +533,14 @@ class YouTubeApiService
 
     /**
      * @param LiveBroadcast $liveBroadcast
-     * @param string $privacyStatus
-     * @param string|null $id
+     * @param string        $privacyStatus
+     * @param string|null   $broadcastId
      *
      * @return \Google_Service_YouTube_LiveBroadcast
      *
      * @throws \Exception
      */
-    protected function setupBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $id = null)
+    protected function setupBroadcast(LiveBroadcast $liveBroadcast, $privacyStatus = 'public', $broadcastId = null): \Google_Service_YouTube_LiveBroadcast
     {
         $title = $liveBroadcast->getName();
         $description = $liveBroadcast->getDescription();
@@ -549,7 +569,7 @@ class YouTubeApiService
             );
             $defaultThumbnail->setUrl($thumbnailUrl);
 
-            list($width, $height) = getimagesize($thumbnail->getRealPath());
+            [$width, $height] = getimagesize($thumbnail->getRealPath());
             $defaultThumbnail->setWidth($width);
             $defaultThumbnail->setHeight($height);
 
@@ -562,8 +582,8 @@ class YouTubeApiService
         $status->setPrivacyStatus($privacyStatus);
 
         $broadcastInsert = new \Google_Service_YouTube_LiveBroadcast();
-        if ($id !== null) {
-            $broadcastInsert->setId($id);
+        if (null !== $broadcastId) {
+            $broadcastInsert->setId($broadcastId);
         }
         $broadcastInsert->setSnippet($broadcastSnippet);
         $broadcastInsert->setStatus($status);
@@ -577,7 +597,7 @@ class YouTubeApiService
      *
      * @return \Google_Service_YouTube_LiveStream
      */
-    protected function createStream($title)
+    protected function createStream($title): \Google_Service_YouTube_LiveStream
     {
         $streamSnippet = new \Google_Service_YouTube_LiveStreamSnippet();
         $streamSnippet->setTitle($title);
@@ -599,7 +619,7 @@ class YouTubeApiService
      *
      * @return \Google_Service_YouTube_LiveBroadcast|null
      */
-    protected function getExternalBroadcastById($youTubeId)
+    protected function getExternalBroadcastById($youTubeId): ?\Google_Service_YouTube_LiveBroadcast
     {
         $broadcasts = $this->youTubeApiClient->liveBroadcasts->listLiveBroadcasts('status,contentDetails', [
             'id' => $youTubeId,
@@ -617,7 +637,7 @@ class YouTubeApiService
      *
      * @return \Google_Service_YouTube_LiveStream|null
      */
-    protected function getExternalStreamById($streamId)
+    protected function getExternalStreamById($streamId): ?\Google_Service_YouTube_LiveStream
     {
         /** @var \Google_Service_YouTube_LiveStream[] $streamItems */
         $streamItems = $this->youTubeApiClient->liveStreams->listLiveStreams('snippet,cdn,status', [
@@ -634,9 +654,9 @@ class YouTubeApiService
     /**
      * Get the YouTube Event repository
      *
-     * @return \Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEventRepository
+     * @return YouTubeEventRepository
      */
-    private function getEventRepository()
+    private function getEventRepository(): YouTubeEventRepository
     {
         return $this->entityManager->getRepository(YouTubeEvent::class);
     }

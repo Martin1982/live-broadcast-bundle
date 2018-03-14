@@ -9,7 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Entity;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
+use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -48,7 +48,7 @@ class LiveBroadcastTest extends TestCase
         $broadcast->setDescription('Description of broadcast');
         $broadcast->setThumbnail(new File('test', false));
         $broadcast->setOutputChannels($channels);
-        $broadcast->setInput($this->createMock(BaseMedia::class));
+        $broadcast->setInput($this->createMock(AbstractMedia::class));
 
         self::assertEquals('-', (string) $broadcast);
         self::assertNull($broadcast->getBroadcastId());
@@ -61,7 +61,7 @@ class LiveBroadcastTest extends TestCase
         self::assertInstanceOf(AbstractChannel::class, $broadcast->getOutputChannels()[0]);
         $broadcast->removeOutputChannel($channelTwo);
         self::assertCount(1, $broadcast->getOutputChannels());
-        self::assertInstanceOf(BaseMedia::class, $broadcast->getInput());
+        self::assertInstanceOf(AbstractMedia::class, $broadcast->getInput());
 
         /* Check default value */
         self::assertTrue($broadcast->isStopOnEndTimestamp());

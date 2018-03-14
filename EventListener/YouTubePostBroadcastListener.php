@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -7,12 +12,11 @@ use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class YouTubePostBroadcastListener
- * @package Martin1982\LiveBroadcastBundle\EventListener
  */
 class YouTubePostBroadcastListener implements EventSubscriberInterface
 {
@@ -29,7 +33,7 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
     /**
      * YouTubePostBroadcastListener constructor
      *
-     * @param YouTubeApiService $youTubeApiService
+     * @param YouTubeApiService     $youTubeApiService
      * @param GoogleRedirectService $redirectService
      */
     public function __construct(YouTubeApiService $youTubeApiService, GoogleRedirectService $redirectService)
@@ -43,7 +47,7 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function onPostBroadcast(PostBroadcastEvent $event)
+    public function onPostBroadcast(PostBroadcastEvent $event): void
     {
         /** @var LiveBroadcast $liveBroadcast */
         $liveBroadcast = $event->getLiveBroadcast();
@@ -61,7 +65,7 @@ class YouTubePostBroadcastListener implements EventSubscriberInterface
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [PostBroadcastEvent::NAME => 'onPostBroadcast'];
     }

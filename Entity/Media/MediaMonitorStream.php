@@ -1,12 +1,16 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Entity\Media;
 
 /**
  * Class MediaMonitorStream
- * @package Martin1982\LiveBroadcastBundle\Entity\Media
  */
-class MediaMonitorStream extends BaseMedia
+class MediaMonitorStream extends AbstractMedia
 {
     /**
      * @var string
@@ -23,6 +27,7 @@ class MediaMonitorStream extends BaseMedia
 
     /**
      * @param string $monitorImage
+     *
      * @return MediaMonitorStream
      */
     public function setMonitorImage($monitorImage)
@@ -32,6 +37,9 @@ class MediaMonitorStream extends BaseMedia
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getMonitorImage();

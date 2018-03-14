@@ -1,14 +1,18 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamInput;
 
-use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
+use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaMonitorStream;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 
 /**
  * Class InputMonitorStream
- * @package Martin1982\LiveBroadcastBundle\Service\StreamInput
  */
 class InputMonitorStream implements InputInterface
 {
@@ -20,7 +24,7 @@ class InputMonitorStream implements InputInterface
     /**
      * {@inheritdoc}
      */
-    public function setMedia(BaseMedia $media)
+    public function setMedia(AbstractMedia $media)
     {
         $this->media = $media;
 

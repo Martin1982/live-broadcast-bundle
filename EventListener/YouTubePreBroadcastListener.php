@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -7,12 +12,11 @@ use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class YouTubePreBroadcastListener
- * @package Martin1982\LiveBroadcastBundle\EventListener
  */
 class YouTubePreBroadcastListener implements EventSubscriberInterface
 {
@@ -29,7 +33,7 @@ class YouTubePreBroadcastListener implements EventSubscriberInterface
     /**
      * YouTubePreBroadcastListener constructor
      *
-     * @param YouTubeApiService $youTubeApiService
+     * @param YouTubeApiService     $youTubeApiService
      * @param GoogleRedirectService $redirectService
      */
     public function __construct(YouTubeApiService $youTubeApiService, GoogleRedirectService $redirectService)
@@ -43,7 +47,7 @@ class YouTubePreBroadcastListener implements EventSubscriberInterface
      *
      * @throws LiveBroadcastOutputException
      */
-    public function onPreBroadcast(PreBroadcastEvent $event)
+    public function onPreBroadcast(PreBroadcastEvent $event): void
     {
         /** @var LiveBroadcast $liveBroadcast */
         $liveBroadcast = $event->getLiveBroadcast();
@@ -66,7 +70,7 @@ class YouTubePreBroadcastListener implements EventSubscriberInterface
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [PreBroadcastEvent::NAME => 'onPreBroadcast'];
     }

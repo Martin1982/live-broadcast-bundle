@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
@@ -14,13 +19,12 @@ use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class YouTubeSwitchMonitorListener
- * @package Martin1982\LiveBroadcastBundle\EventListener
  */
 class YouTubeSwitchMonitorListener implements EventSubscriberInterface
 {
@@ -67,21 +71,16 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
     /**
      * YouTubeSwitchMonitorListener constructor.
      * @param SchedulerCommandsInterface $command
-     * @param StreamOutputService $outputService
-     * @param StreamInputService $inputService
-     * @param YouTubeApiService $youTubeApiService
-     * @param GoogleRedirectService $redirectService
-     * @param LoggerInterface $logger
+     * @param StreamOutputService        $outputService
+     * @param StreamInputService         $inputService
+     * @param YouTubeApiService          $youTubeApiService
+     * @param GoogleRedirectService      $redirectService
+     * @param LoggerInterface            $logger
+     *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function __construct(
-        SchedulerCommandsInterface $command,
-        StreamOutputService $outputService,
-        StreamInputService $inputService,
-        YouTubeApiService $youTubeApiService,
-        GoogleRedirectService $redirectService,
-        LoggerInterface $logger
-    ) {
+    public function __construct(SchedulerCommandsInterface $command, StreamOutputService $outputService, StreamInputService $inputService, YouTubeApiService $youTubeApiService, GoogleRedirectService $redirectService, LoggerInterface $logger)
+    {
         $this->command = $command;
         $this->outputService = $outputService;
         $this->inputService = $inputService;
@@ -98,7 +97,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
      * @throws LiveBroadcastOutputException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    public function onSwitchMonitor(SwitchMonitorEvent $event)
+    public function onSwitchMonitor(SwitchMonitorEvent $event): void
     {
         $this->monitorBroadcast = $event->getMonitorBroadcast();
         $this->plannedBroadcast = $event->getPlannedBroadcast();
@@ -111,7 +110,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
                 YouTubeEvent::STATE_REMOTE_LIVE
             );
 
-            if ($transitionResult === true) {
+            if (true === $transitionResult) {
                 $this->stopMonitorStream();
                 $this->startBroadcast();
             }
@@ -121,7 +120,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [SwitchMonitorEvent::NAME => 'onSwitchMonitor'];
     }
@@ -129,7 +128,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
     /**
      * Stop a monitor stream
      */
-    protected function stopMonitorStream()
+    protected function stopMonitorStream(): void
     {
         $this->logger->info(
             'YouTube stop monitor stream',
@@ -144,7 +143,7 @@ class YouTubeSwitchMonitorListener implements EventSubscriberInterface
      * @throws LiveBroadcastOutputException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    protected function startBroadcast()
+    protected function startBroadcast(): void
     {
         $media = $this->plannedBroadcast->getInput();
         $input = $this->inputService->getInputInterface($media)->generateInputCmd();

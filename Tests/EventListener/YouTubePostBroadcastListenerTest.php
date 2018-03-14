@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
@@ -8,7 +13,7 @@ use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\EventListener\YouTubePostBroadcastListener;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,17 +31,22 @@ class YouTubePostBroadcastListenerTest extends TestCase
      */
     protected $redirect;
 
-    public function testOnPostBroadcast()
+    /**
+     * Test the onPostBroadcast method
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testOnPostBroadcast(): void
     {
-        $this->redirect->expects($this->any())
+        $this->redirect->expects(static::any())
             ->method('getOAuthRedirectUrl')
             ->willReturn('http://some.url');
 
-        $this->api->expects($this->any())
+        $this->api->expects(static::any())
             ->method('initApiClients')
             ->willReturn(true);
 
-        $this->api->expects($this->any())
+        $this->api->expects(static::any())
             ->method('transitionState')
             ->willReturn(true);
 
@@ -44,15 +54,15 @@ class YouTubePostBroadcastListenerTest extends TestCase
         $output = $this->createMock(OutputYouTube::class);
         $channel = $this->createMock(ChannelYouTube::class);
 
-        $output->expects($this->any())
+        $output->expects(static::any())
             ->method('getChannel')
             ->willReturn($channel);
 
         $event = $this->createMock(PostBroadcastEvent::class);
-        $event->expects($this->any())
+        $event->expects(static::any())
             ->method('getLiveBroadCast')
             ->willReturn($broadcast);
-        $event->expects($this->any())
+        $event->expects(static::any())
             ->method('getOutput')
             ->willReturn($output);
 
@@ -64,7 +74,7 @@ class YouTubePostBroadcastListenerTest extends TestCase
     /**
      * Test that subscribed events are registered
      */
-    public function testGetSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         $events = YouTubePostBroadcastListener::getSubscribedEvents();
         self::assertArrayHasKey(PostBroadcastEvent::NAME, $events);

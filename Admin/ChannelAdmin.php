@@ -129,11 +129,11 @@ class ChannelAdmin extends AbstractAdmin
 
         if ($subject instanceof ChannelYouTube) {
             $formMapper->add('youTubeChannelName', TextType::class, [
-                'attr' => ['class' => 'input-yt-channelname', 'readonly' => 'readonly']
+                'attr' => ['class' => 'input-yt-channelname', 'readonly' => 'readonly'],
             ]);
 
             $formMapper->add('refreshToken', TextType::class, [
-                'attr' => ['class' => 'input-yt-refreshtoken', 'readonly' => 'readonly']
+                'attr' => ['class' => 'input-yt-refreshtoken', 'readonly' => 'readonly'],
             ]);
         }
 

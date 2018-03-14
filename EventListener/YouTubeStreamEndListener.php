@@ -1,11 +1,16 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\StreamEndEvent;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -31,7 +36,7 @@ class YouTubeStreamEndListener implements EventSubscriberInterface
     /**
      * @param StreamEndEvent $event
      */
-    public function onStreamEnd(StreamEndEvent $event)
+    public function onStreamEnd(StreamEndEvent $event): void
     {
         $broadcast = $event->getBroadcast();
         $channel = $event->getChannel();
@@ -44,7 +49,7 @@ class YouTubeStreamEndListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [StreamEndEvent::NAME => 'onStreamEnd'];
     }

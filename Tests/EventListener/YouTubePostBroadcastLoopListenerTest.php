@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\EventListener;
 
 use Doctrine\ORM\EntityManager;
@@ -11,7 +16,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEventRepository;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
 use Martin1982\LiveBroadcastBundle\EventListener\YouTubePostBroadcastLoopListener;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use PHPUnit\Framework\TestCase;
@@ -26,8 +31,13 @@ class YouTubePostBroadcastLoopListenerTest extends TestCase
 
     /**
      * Test event when a broadcast loop has ended
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testOnPostBroadcastLoop()
+    public function testOnPostBroadcastLoop(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
         $redirect = $this->createMock(GoogleRedirectService::class);
@@ -36,7 +46,7 @@ class YouTubePostBroadcastLoopListenerTest extends TestCase
         $stream = $this->createMock(\Google_Service_YouTube_LiveStream::class);
 
         $api = $this->createMock(YouTubeApiService::class);
-        $api->expects($this->any())
+        $api->expects(static::any())
             ->method('getBroadcastStatus')
             ->willReturnOnConsecutiveCalls(
                 YouTubeEvent::STATE_REMOTE_CREATED,
@@ -49,20 +59,20 @@ class YouTubePostBroadcastLoopListenerTest extends TestCase
                 YouTubeEvent::STATE_REMOTE_TESTING,
                 YouTubeEvent::STATE_REMOTE_LIVE
             );
-        $api->expects($this->any())
+        $api->expects(static::any())
             ->method('getStream')
             ->willReturn($stream);
-        $api->expects($this->any())
+        $api->expects(static::any())
             ->method('getStreamUrl')
             ->willReturn('rtmp://stream.to.me');
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->any())
+        $logger->expects(static::any())
             ->method('info')
             ->willReturn(true);
 
         $commands = $this->createMock(SchedulerCommandsInterface::class);
-        $commands->expects($this->any())
+        $commands->expects(static::any())
             ->method('getRunningProcesses')
             ->willReturn([
                 // @codingStandardsIgnoreLine
@@ -96,23 +106,23 @@ class YouTubePostBroadcastLoopListenerTest extends TestCase
         ];
 
         $eventRepository = $this->createMock(YouTubeEventRepository::class);
-        $eventRepository->expects($this->any())
+        $eventRepository->expects(static::any())
             ->method('getTestableEvents')
             ->willReturn($testableEvents);
 
         $entityManager = $this->createMock(EntityManager::class);
-        $entityManager->expects($this->any())
+        $entityManager->expects(static::any())
             ->method('getRepository')
             ->willReturn($eventRepository);
-        $entityManager->expects($this->any())
+        $entityManager->expects(static::any())
             ->method('persist')
             ->willReturn(true);
-        $entityManager->expects($this->any())
+        $entityManager->expects(static::any())
             ->method('flush')
             ->willReturn(true);
 
         $fileExists = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\StreamInput', 'file_exists');
-        $fileExists->expects($this->any())
+        $fileExists->expects(static::any())
             ->willReturn(true);
 
         $listener = new YouTubePostBroadcastLoopListener($entityManager, $commands, $api, $kernel, $redirect, $logger);
@@ -123,7 +133,7 @@ class YouTubePostBroadcastLoopListenerTest extends TestCase
     /**
      * Test event availability
      */
-    public function testGetSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         $events = YouTubePostBroadcastLoopListener::getSubscribedEvents();
         self::assertArrayHasKey(PostBroadcastLoopEvent::NAME, $events);

@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -11,7 +16,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class ThumbnailUploadListener
- * @package Martin1982\LiveBroadcastBundle\EventListener
  */
 class ThumbnailUploadListener
 {
@@ -60,7 +64,7 @@ class ThumbnailUploadListener
 
         $thumbnail = $entity->getThumbnail();
 
-        if ($thumbnail !== null) {
+        if (null !== $thumbnail) {
             $entity->setThumbnail(
                 new File($this->uploadService->getTargetDirectory().DIRECTORY_SEPARATOR.$thumbnail, false)
             );

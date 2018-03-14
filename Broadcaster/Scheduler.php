@@ -130,23 +130,66 @@ class Scheduler
         $channels = $plannedBroadcast->getOutputChannels();
 
         foreach ($channels as $channel) {
-            $isBroadcasting = false;
+            $isReady = $this->isReadyToStart($plannedBroadcast, $channel);
+            $isBroadcasting = $this->isBroadcasting($plannedBroadcast, $channel);
 
-            foreach ($this->runningBroadcasts as $runningBroadcast) {
-                if ($runningBroadcast->isBroadcasting($plannedBroadcast, $channel)) {
-                    $isBroadcasting = true;
-                }
-
-                if ($runningBroadcast->isMonitor()) {
-                    $switchMonitorEvent = new SwitchMonitorEvent($runningBroadcast, $plannedBroadcast, $channel);
-                    $this->dispatcher->dispatch(SwitchMonitorEvent::NAME, $switchMonitorEvent);
-                }
-            }
-
-            if (!$isBroadcasting) {
+            // Run broadcasts which need to start
+            if ($isReady && !$isBroadcasting) {
                 $this->startBroadcast($plannedBroadcast, $channel);
             }
+
+            // Run changes to remote state
+            if ($isBroadcasting && $channel->hasMonitorStream()) {
+                $this->updateStreamState($plannedBroadcast, $channel);
+            }
         }
+    }
+
+    /**
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     */
+    protected function updateStreamState(LiveBroadcast $broadcast, AbstractChannel $channel): void
+    {
+    }
+
+    /**
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     *
+     * @return bool
+     */
+    protected function isReadyToStart(LiveBroadcast $broadcast, AbstractChannel $channel): bool
+    {
+        $timeParam = 'now';
+
+        if ($channel->hasMonitorStream()) {
+            $timeParam = '+30 minutes';
+        }
+
+        return $broadcast->getStartTimestamp() > new \DateTime($timeParam);
+    }
+
+    /**
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     *
+     * @return bool
+     */
+    protected function isBroadcasting(LiveBroadcast $broadcast, AbstractChannel $channel): bool
+    {
+        $isBroadcasting = false;
+
+        foreach ($this->runningBroadcasts as $runningBroadcast) {
+            $sameChannel = $runningBroadcast->getChannelId() === $channel->getChannelId();
+            $sameBroadcast = $runningBroadcast->getBroadcastId() === $broadcast->getBroadcastId();
+
+            if ($sameBroadcast && $sameChannel) {
+                $isBroadcasting = true;
+            }
+        }
+
+        return $isBroadcasting;
     }
 
     /**

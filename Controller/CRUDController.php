@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Controller;
 
 use Facebook\Authentication\AccessToken;
-use Martin1982\LiveBroadcastBundle\Service\FacebookApiService;
-use Martin1982\LiveBroadcastBundle\Service\YouTubeApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;

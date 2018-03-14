@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
@@ -7,7 +12,6 @@ use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Class AbstractSchedulerCommands
- * @package Martin1982\LiveBroadcastBundle\Broadcaster
  */
 abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 {
@@ -169,6 +173,34 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     }
 
     /**
+     * @param string $directory
+     */
+    public function setFFMpegLogDirectory($directory)
+    {
+        if (!is_writable($directory)) {
+            return;
+        }
+
+        $this->logDirectoryFFMpeg = $directory;
+    }
+
+    /**
+     * @param bool $loopable
+     */
+    public function setIsLoopable($loopable)
+    {
+        $this->loopable = (bool) $loopable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLoopable()
+    {
+        return $this->loopable;
+    }
+
+    /**
      * Execute the command to start the stream
      *
      * @param string $input
@@ -250,33 +282,5 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
         }
 
         return $value;
-    }
-
-    /**
-     * @param string $directory
-     */
-    public function setFFMpegLogDirectory($directory)
-    {
-        if (!is_writable($directory)) {
-            return;
-        }
-
-        $this->logDirectoryFFMpeg = $directory;
-    }
-
-    /**
-     * @param boolean $loopable
-     */
-    public function setIsLoopable($loopable)
-    {
-        $this->loopable = (boolean) $loopable;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isLoopable()
-    {
-        return $this->loopable;
     }
 }

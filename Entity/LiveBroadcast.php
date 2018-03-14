@@ -10,7 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
-use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
+use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -56,9 +56,9 @@ class LiveBroadcast
     private $thumbnail;
 
     /**
-     * @var BaseMedia|null
+     * @var AbstractMedia|null
      *
-     * @ORM\OneToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia")
+     * @ORM\OneToOne(targetEntity="AbstractMedia")
      * @ORM\JoinColumn(name="input_id", referencedColumnName="id")
      */
     private $input;
@@ -272,19 +272,19 @@ class LiveBroadcast
     }
 
     /**
-     * @return BaseMedia|null
+     * @return AbstractMedia|null
      */
-    public function getInput(): ?BaseMedia
+    public function getInput(): ?AbstractMedia
     {
         return $this->input;
     }
 
     /**
-     * @param BaseMedia $input
+     * @param AbstractMedia $input
      *
      * @return LiveBroadcast
      */
-    public function setInput(BaseMedia $input): LiveBroadcast
+    public function setInput(AbstractMedia $input): LiveBroadcast
     {
         $this->input = $input;
 

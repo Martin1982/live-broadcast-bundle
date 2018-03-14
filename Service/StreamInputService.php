@@ -1,14 +1,18 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Service;
 
-use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
+use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputInterface;
 
 /**
  * Class StreamInputService
- * @package Martin1982\LiveBroadcastBundle\Service
  */
 class StreamInputService
 {
@@ -19,7 +23,7 @@ class StreamInputService
 
     /**
      * @param InputInterface $streamInput
-     * @param string $media
+     * @param string         $media
      */
     public function addStreamInput(InputInterface $streamInput, $media)
     {
@@ -27,13 +31,13 @@ class StreamInputService
     }
 
     /**
-     * @param BaseMedia $media
+     * @param AbstractMedia $media
      *
      * @return InputInterface
      *
      * @throws LiveBroadcastInputException
      */
-    public function getInputInterface(BaseMedia $media)
+    public function getInputInterface(AbstractMedia $media)
     {
         foreach ($this->streamInputs as $streamInput) {
             $mediaType = $streamInput->getMediaType();
@@ -45,6 +49,6 @@ class StreamInputService
             }
         }
 
-        throw new LiveBroadcastInputException('No InputInterface configured for media '.$media);
+        throw new LiveBroadcastInputException(sprintf('No InputInterface configured for media %s', $media));
     }
 }
