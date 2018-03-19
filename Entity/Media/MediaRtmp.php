@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MediaRtmp extends AbstractMedia
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank()
      *
@@ -28,9 +28,9 @@ class MediaRtmp extends AbstractMedia
     protected $rtmpAddress;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getRtmpAddress()
+    public function getRtmpAddress(): ?string
     {
         return $this->rtmpAddress;
     }
@@ -40,7 +40,7 @@ class MediaRtmp extends AbstractMedia
      *
      * @return MediaRtmp
      */
-    public function setRtmpAddress($rtmpAddress)
+    public function setRtmpAddress($rtmpAddress): MediaRtmp
     {
         $this->rtmpAddress = str_replace('rtmp://', '', $rtmpAddress);
 

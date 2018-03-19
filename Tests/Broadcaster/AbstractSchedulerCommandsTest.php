@@ -54,30 +54,6 @@ class AbstractSchedulerCommandsTest extends TestCase
     }
 
     /**
-     * Test checking for a monitor stream
-     */
-    public function testMonitorStream()
-    {
-        self::assertFalse(
-            $this->schedulerCommands->isMonitorStream(
-                '1234 ffmpeg -re -i -metadata env=prod -metadata broadcast_id=1337'
-            )
-        );
-
-        self::assertFalse(
-            $this->schedulerCommands->isMonitorStream(
-                '1234 ffmpeg -re -i -metadata env=prod -metadata monitor_stream=no'
-            )
-        );
-
-        self::assertTrue(
-            $this->schedulerCommands->isMonitorStream(
-                '1234 ffmpeg -re -i -metadata env=prod -metadata monitor_stream=yes'
-            )
-        );
-    }
-
-    /**
      * Test the FFMPEG log directory setter
      */
     public function testFFMpegLogDirectory()

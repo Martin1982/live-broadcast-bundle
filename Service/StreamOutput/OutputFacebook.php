@@ -9,12 +9,14 @@ namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
+use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 
 /**
  * Class OutputFacebook
  */
-class OutputFacebook implements OutputInterface
+class OutputFacebook implements OutputInterface, DynamicStreamUrlInterface
 {
     /**
      * @var string
@@ -25,6 +27,26 @@ class OutputFacebook implements OutputInterface
      * @var ChannelFacebook
      */
     private $channel;
+
+    /**
+     * @var FacebookApiService
+     */
+    private $api;
+
+    /**
+     * @var LiveBroadcast|null
+     */
+    private $broadcast;
+
+    /**
+     * OutputFacebook constructor
+     *
+     * @param FacebookApiService $api
+     */
+    public function __construct(FacebookApiService $api)
+    {
+        $this->api = $api;
+    }
 
     /**
      * {@inheritdoc}
@@ -96,5 +118,21 @@ class OutputFacebook implements OutputInterface
     public function setStreamUrl($streamUrl): void
     {
         $this->streamUrl = $streamUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreamUrl(): string
+    {
+        return $this->streamUrl;
+    }
+
+    /**
+     * @param LiveBroadcast $broadcast
+     */
+    public function setBroadcast(LiveBroadcast $broadcast): void
+    {
+        $this->broadcast = $broadcast;
     }
 }

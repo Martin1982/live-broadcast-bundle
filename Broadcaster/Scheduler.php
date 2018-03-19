@@ -10,12 +10,10 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Event\PostBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
-use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
-use Martin1982\LiveBroadcastBundle\Event\SwitchMonitorEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
+use Martin1982\LiveBroadcastBundle\Service\StreamOutput\DynamicStreamUrlInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -130,44 +128,13 @@ class Scheduler
         $channels = $plannedBroadcast->getOutputChannels();
 
         foreach ($channels as $channel) {
-            $isReady = $this->isReadyToStart($plannedBroadcast, $channel);
             $isBroadcasting = $this->isBroadcasting($plannedBroadcast, $channel);
 
             // Run broadcasts which need to start
-            if ($isReady && !$isBroadcasting) {
+            if (!$isBroadcasting) {
                 $this->startBroadcast($plannedBroadcast, $channel);
             }
-
-            // Run changes to remote state
-            if ($isBroadcasting && $channel->hasMonitorStream()) {
-                $this->updateStreamState($plannedBroadcast, $channel);
-            }
         }
-    }
-
-    /**
-     * @param LiveBroadcast   $broadcast
-     * @param AbstractChannel $channel
-     */
-    protected function updateStreamState(LiveBroadcast $broadcast, AbstractChannel $channel): void
-    {
-    }
-
-    /**
-     * @param LiveBroadcast   $broadcast
-     * @param AbstractChannel $channel
-     *
-     * @return bool
-     */
-    protected function isReadyToStart(LiveBroadcast $broadcast, AbstractChannel $channel): bool
-    {
-        $timeParam = 'now';
-
-        if ($channel->hasMonitorStream()) {
-            $timeParam = '+30 minutes';
-        }
-
-        return $broadcast->getStartTimestamp() > new \DateTime($timeParam);
     }
 
     /**
@@ -213,8 +180,8 @@ class Scheduler
                 continue;
             }
 
-            if ($broadcast->isStopOnEndTimestamp() &&
-                $broadcast->getEndTimestamp() < new \DateTime()) {
+            $isPastEndTime = $broadcast->getEndTimestamp() < new \DateTime();
+            if ($isPastEndTime && $broadcast->isStopOnEndTimestamp()) {
                 $this->logger->info(
                     'Stop broadcast',
                     [
@@ -246,8 +213,7 @@ class Scheduler
                 $this->schedulerCommands->getBroadcastId($processString),
                 $this->schedulerCommands->getProcessId($processString),
                 $this->schedulerCommands->getChannelId($processString),
-                $this->schedulerCommands->getEnvironment($processString),
-                $this->schedulerCommands->isMonitorStream($processString)
+                $this->schedulerCommands->getEnvironment($processString)
             );
 
             if ($runningItem->isValid($this->schedulerCommands->getKernelEnvironment())) {
@@ -269,21 +235,22 @@ class Scheduler
         try {
             $input = $this->inputService->getInputInterface($broadcast->getInput());
             $output = $this->outputService->getOutputInterface($channel);
-        } catch (LiveBroadcastException $ex) {
+        } catch (LiveBroadcastException $exception) {
             $this->logger->error(
                 'Could not start broadcast',
                 [
                     'broadcast_id' => $broadcast->getBroadcastId(),
                     'broadcast_name' => $broadcast->getName(),
-                    'exception' => $ex->getMessage(),
+                    'exception' => $exception->getMessage(),
                 ]
             );
 
             return;
         }
 
-        $preBroadcastEvent = new PreBroadcastEvent($broadcast, $output);
-        $this->dispatcher->dispatch(PreBroadcastEvent::NAME, $preBroadcastEvent);
+        if ($output instanceof DynamicStreamUrlInterface) {
+            $output->setBroadcast($broadcast);
+        }
 
         $this->logger->info(
             'Start broadcast',
@@ -302,9 +269,6 @@ class Scheduler
             'broadcast_id' => $broadcast->getBroadcastId(),
             'channel_id' => $channel->getChannelId(),
         ]);
-
-        $postBroadcastEvent = new PostBroadcastEvent($broadcast, $output);
-        $this->dispatcher->dispatch(PostBroadcastEvent::NAME, $postBroadcastEvent);
     }
 
     /**

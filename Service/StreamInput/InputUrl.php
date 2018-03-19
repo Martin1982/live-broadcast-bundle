@@ -36,7 +36,7 @@ class InputUrl implements InputInterface
      *
      * @throws LiveBroadcastInputException
      */
-    public function generateInputCmd()
+    public function generateInputCmd(): string
     {
         $inputUrl = $this->media->getUrl();
 
@@ -50,7 +50,7 @@ class InputUrl implements InputInterface
     /**
      * @return string
      */
-    public function getMediaType()
+    public function getMediaType(): string
     {
         return MediaUrl::class;
     }

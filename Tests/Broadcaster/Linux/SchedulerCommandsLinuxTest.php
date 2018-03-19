@@ -26,9 +26,11 @@ class SchedulerCommandsLinuxTest extends TestCase
         $command = new SchedulerCommands('/some/directory', 'unittest');
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
-        $exec->expects($this->once())->willReturnCallback(
+        $exec->expects(static::once())->willReturnCallback(
             function ($command) {
                 self::assertEquals('kill 1337', $command);
+
+                return '';
             }
         );
 
@@ -38,21 +40,21 @@ class SchedulerCommandsLinuxTest extends TestCase
     /**
      * Test the running processes command.
      */
-    public function testGetRunningProcesses()
+    public function testGetRunningProcesses(): void
     {
         $command = new SchedulerCommands('/some/directory', 'unittest');
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
-        $exec->expects($this->once())->willReturnCallback(
+        $exec->expects(static::once())->willReturnCallback(
             function ($command, &$output) {
                 self::assertEquals('/bin/ps -ww -C ffmpeg -o pid=,args=', $command);
                 // @codingStandardsIgnoreLine
-                $output = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337';
+                $output[] = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337';
             }
         );
 
         $running = $command->getRunningProcesses();
         // @codingStandardsIgnoreLine
-        self::assertEquals('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337', $running);
+        self::assertEquals('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337', $running[0]);
     }
 }

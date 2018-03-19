@@ -17,7 +17,7 @@ class SchedulerCommands extends LinuxCommands
     /**
      * {@inheritdoc}
      */
-    public function getRunningProcesses()
+    public function getRunningProcesses(): array
     {
         exec('ps -ww -o pid=,args= | grep ffmpeg | grep -v grep', $output);
 

@@ -25,7 +25,7 @@ class StreamInputService
      * @param InputInterface $streamInput
      * @param string         $media
      */
-    public function addStreamInput(InputInterface $streamInput, $media)
+    public function addStreamInput(InputInterface $streamInput, $media): void
     {
         $this->streamInputs[$media] = $streamInput;
     }
@@ -37,7 +37,7 @@ class StreamInputService
      *
      * @throws LiveBroadcastInputException
      */
-    public function getInputInterface(AbstractMedia $media)
+    public function getInputInterface(AbstractMedia $media): InputInterface
     {
         foreach ($this->streamInputs as $streamInput) {
             $mediaType = $streamInput->getMediaType();

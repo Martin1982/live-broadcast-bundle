@@ -36,11 +36,6 @@ abstract class AbstractChannel
     protected $channelName;
 
     /**
-     * @var bool
-     */
-    protected $hasMonitor = false;
-
-    /**
      * @return int|null
      */
     public function getChannelId(): ?int
@@ -80,13 +75,5 @@ abstract class AbstractChannel
         }
 
         return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasMonitorStream(): bool
-    {
-        return $this->hasMonitor;
     }
 }

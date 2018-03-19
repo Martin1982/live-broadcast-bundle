@@ -29,7 +29,7 @@ class StreamManager
     protected $commands;
 
     /**
-     * StreamManager constructor.
+     * StreamManager constructor
      *
      * @param EventDispatcherInterface  $dispatcher
      * @param AbstractSchedulerCommands $commands

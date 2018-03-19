@@ -45,7 +45,7 @@ class FacebookPreBroadcastListenerTest extends TestCase
     public function testOnPreBroadcast(): void
     {
         $broadcast = new LiveBroadcast();
-        $output = new OutputFacebook();
+        $output = new OutputFacebook($this->facebookService);
 
         $this->facebookService->expects(self::once())
             ->method('createFacebookLiveVideo')

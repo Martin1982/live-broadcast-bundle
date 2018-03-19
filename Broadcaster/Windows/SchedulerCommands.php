@@ -17,7 +17,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
     /**
      * {@inheritdoc}
      */
-    public function stopProcess($pid)
+    public function stopProcess($pid): string
     {
         return exec(sprintf('TASKKILL /PID %d /T', $pid));
     }
@@ -25,7 +25,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
     /**
      * {@inheritdoc}
      */
-    public function getRunningProcesses()
+    public function getRunningProcesses(): array
     {
         exec('TASKLIST /FI "IMAGENAME eq ffmpeg.exe" /FO CSV', $output);
 
@@ -41,7 +41,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
      *
      * @return string
      */
-    protected function execStreamCommand($input, $output, $meta)
+    protected function execStreamCommand($input, $output, $meta): string
     {
         $loop = '';
 

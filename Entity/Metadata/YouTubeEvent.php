@@ -10,7 +10,6 @@ namespace Martin1982\LiveBroadcastBundle\Entity\Metadata;
 use Doctrine\ORM\Mapping as ORM;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Class YouTubeEvent
@@ -20,49 +19,8 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
  */
 class YouTubeEvent
 {
-
-    const STATE_LOCAL_CREATED = 0;
-    const STATE_LOCAL_READY = 1;
-    const STATE_LOCAL_TEST_STARTING = 2;
-    const STATE_LOCAL_TESTING = 3;
-    const STATE_LOCAL_REVOKED = 4;
-    const STATE_LOCAL_ABANDONED = 5;
-    const STATE_LOCAL_LIVE_STARTING = 6;
-    const STATE_LOCAL_LIVE = 7;
-    const STATE_LOCAL_RECLAIMED = 8;
-    const STATE_LOCAL_COMPLETE = 9;
-
-    const STATE_REMOTE_CREATED = 'created';
-    const STATE_REMOTE_READY = 'ready';
-    const STATE_REMOTE_TEST_STARTING = 'testStarting';
-    const STATE_REMOTE_TESTING = 'testing';
-    const STATE_REMOTE_REVOKED = 'revoked';
-    const STATE_REMOTE_ABANDONED = 'abandoned';
-    const STATE_REMOTE_LIVE_STARTING = 'liveStarting';
-    const STATE_REMOTE_LIVE = 'live';
-    const STATE_REMOTE_RECLAIMED = 'reclaimed';
-    const STATE_REMOTE_COMPLETE = 'complete';
-
     /**
-     * Remote / local state mapping
-     *
-     * @var array
-     */
-    private $stateMapping = [
-        self::STATE_LOCAL_CREATED => self::STATE_REMOTE_CREATED,
-        self::STATE_LOCAL_READY => self::STATE_REMOTE_READY,
-        self::STATE_LOCAL_TEST_STARTING => self::STATE_REMOTE_TEST_STARTING,
-        self::STATE_LOCAL_TESTING => self::STATE_REMOTE_TESTING,
-        self::STATE_LOCAL_REVOKED => self::STATE_REMOTE_REVOKED,
-        self::STATE_LOCAL_ABANDONED => self::STATE_REMOTE_ABANDONED,
-        self::STATE_LOCAL_LIVE_STARTING => self::STATE_REMOTE_LIVE_STARTING,
-        self::STATE_LOCAL_LIVE => self::STATE_REMOTE_LIVE,
-        self::STATE_LOCAL_RECLAIMED => self::STATE_REMOTE_RECLAIMED,
-        self::STATE_LOCAL_COMPLETE => self::STATE_REMOTE_COMPLETE,
-    ];
-
-    /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -71,7 +29,7 @@ class YouTubeEvent
     private $eventId;
 
     /**
-     * @var LiveBroadcast
+     * @var LiveBroadcast|null
      *
      * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast")
      * @ORM\JoinColumn(name="broadcast_id", referencedColumnName="id", unique=false)
@@ -79,7 +37,7 @@ class YouTubeEvent
     protected $broadcast;
 
     /**
-     * @var ChannelYouTube
+     * @var ChannelYouTube|null
      *
      * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube")
      * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", unique=false)
@@ -87,41 +45,34 @@ class YouTubeEvent
     protected $channel;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="youtube_id", type="string", length=128, nullable=false)
      */
     protected $youTubeId;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="last_known_state", type="integer", nullable=true)
+     * @return int|null
      */
-    protected $lastKnownState = 0;
-
-    /**
-     * @return int
-     */
-    public function getEventId()
+    public function getEventId(): ?int
     {
         return $this->eventId;
     }
 
     /**
-     * @return LiveBroadcast
+     * @return LiveBroadcast|null
      */
-    public function getBroadcast()
+    public function getBroadcast(): ?LiveBroadcast
     {
         return $this->broadcast;
     }
 
     /**
-     * @param mixed $broadcast
+     * @param LiveBroadcast $broadcast
      *
      * @return YouTubeEvent
      */
-    public function setBroadcast($broadcast)
+    public function setBroadcast(LiveBroadcast $broadcast): YouTubeEvent
     {
         $this->broadcast = $broadcast;
 
@@ -129,19 +80,19 @@ class YouTubeEvent
     }
 
     /**
-     * @return ChannelYouTube
+     * @return ChannelYouTube|null
      */
-    public function getChannel()
+    public function getChannel(): ?ChannelYouTube
     {
         return $this->channel;
     }
 
     /**
-     * @param mixed $channel
+     * @param ChannelYouTube $channel
      *
      * @return YouTubeEvent
      */
-    public function setChannel($channel)
+    public function setChannel(ChannelYouTube $channel): YouTubeEvent
     {
         $this->channel = $channel;
 
@@ -149,74 +100,22 @@ class YouTubeEvent
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getYouTubeId()
+    public function getYouTubeId(): ?string
     {
         return $this->youTubeId;
     }
 
     /**
-     * @param mixed $youTubeId
+     * @param string $youTubeId
      *
      * @return YouTubeEvent
      */
-    public function setYouTubeId($youTubeId)
+    public function setYouTubeId($youTubeId): YouTubeEvent
     {
         $this->youTubeId = $youTubeId;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLastKnownState()
-    {
-        return $this->lastKnownState;
-    }
-
-    /**
-     * @param string $lastKnownState
-     *
-     * @return YouTubeEvent
-     */
-    public function setLastKnownState($lastKnownState)
-    {
-        $this->lastKnownState = $lastKnownState;
-
-        return $this;
-    }
-
-    /**
-     * @param string $remoteState
-     *
-     * @return mixed
-     *
-     * @throws LiveBroadcastOutputException
-     */
-    public function getLocalStateByRemoteState($remoteState)
-    {
-        if (!in_array($remoteState, $this->stateMapping, true)) {
-            throw new LiveBroadcastOutputException(sprintf('Invalid remote state \'%s\'', $remoteState));
-        }
-
-        return array_search($remoteState, $this->stateMapping, true);
-    }
-
-    /**
-     * @param string $localState
-     *
-     * @return mixed
-     *
-     * @throws LiveBroadcastOutputException
-     */
-    public function getRemoteStateByLocalState($localState)
-    {
-        if (!array_key_exists($localState, $this->stateMapping)) {
-            throw new LiveBroadcastOutputException(sprintf('Invalid local state \'%s\'', $localState));
-        }
-
-        return $this->stateMapping[$localState];
     }
 }

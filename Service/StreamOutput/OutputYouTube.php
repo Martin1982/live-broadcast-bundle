@@ -9,22 +9,39 @@ namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
+use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 
 /**
  * Class OutputYouTube
  */
-class OutputYouTube implements OutputInterface
+class OutputYouTube implements OutputInterface, DynamicStreamUrlInterface
 {
-    /**
-     * @var string
-     */
-    private $streamUrl;
-
     /**
      * @var ChannelYouTube
      */
     private $channel;
+
+    /**
+     * @var YouTubeApiService
+     */
+    private $api;
+
+    /**
+     * @var LiveBroadcast|null
+     */
+    private $broadcast;
+
+    /**
+     * OutputYouTube constructor
+     *
+     * @param YouTubeApiService $api
+     */
+    public function __construct(YouTubeApiService $api)
+    {
+        $this->api = $api;
+    }
 
     /**
      * {@inheritdoc}
@@ -55,16 +72,12 @@ class OutputYouTube implements OutputInterface
      */
     public function generateOutputCmd(): string
     {
-        if (empty($this->streamUrl)) {
-            throw new LiveBroadcastOutputException('The YouTube stream url must be set');
-        }
-
         $params = '-vf scale=-1:720 -c:v libx264 -pix_fmt yuv420p ';
         $params .= '-preset veryfast -r 30 -g 60 -b:v 4000k -c:a aac -f flv "%s"';
 
         return sprintf(
             $params,
-            $this->streamUrl
+            $this->getStreamUrl()
         );
     }
 
@@ -77,10 +90,28 @@ class OutputYouTube implements OutputInterface
     }
 
     /**
-     * @param string $streamUrl
+     * @param LiveBroadcast $broadcast
      */
-    public function setStreamUrl($streamUrl): void
+    public function setBroadcast(LiveBroadcast $broadcast): void
     {
-        $this->streamUrl = $streamUrl;
+        $this->broadcast = $broadcast;
+    }
+
+    /**
+     * @return string
+     *
+     * @throws LiveBroadcastOutputException
+     */
+    public function getStreamUrl(): string
+    {
+        if (!$this->broadcast) {
+            throw new LiveBroadcastOutputException('No broadcast set');
+        }
+
+        if (!$this->channel) {
+            throw new LiveBroadcastOutputException('No channel set');
+        }
+
+        return $this->api->getStreamUrl($this->broadcast, $this->channel);
     }
 }

@@ -50,6 +50,8 @@ class FacebookBlockService extends AbstractBlockService
      * @param Response|null         $response
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter('blockContext'))
      */
     public function execute(BlockContextInterface $blockContext, Response $response = null): Response
     {

@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MediaFile extends AbstractMedia
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank()
      *
@@ -28,9 +28,9 @@ class MediaFile extends AbstractMedia
     protected $fileLocation;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFileLocation()
+    public function getFileLocation(): ?string
     {
         return $this->fileLocation;
     }
@@ -40,7 +40,7 @@ class MediaFile extends AbstractMedia
      *
      * @return MediaFile
      */
-    public function setFileLocation($fileLocation)
+    public function setFileLocation($fileLocation): MediaFile
     {
         $this->fileLocation = $fileLocation;
 

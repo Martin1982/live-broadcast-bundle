@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MediaUrl extends AbstractMedia
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank()
      * @Assert\Url()
@@ -29,9 +29,9 @@ class MediaUrl extends AbstractMedia
     protected $url;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
@@ -41,7 +41,7 @@ class MediaUrl extends AbstractMedia
      *
      * @return MediaUrl
      */
-    public function setUrl($url)
+    public function setUrl($url): MediaUrl
     {
         $this->url = $url;
 

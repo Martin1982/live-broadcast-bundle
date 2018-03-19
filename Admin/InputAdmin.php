@@ -20,7 +20,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 class InputAdmin extends AbstractAdmin
 {
-    protected $baseRoutePattern = 'broadcast-input';
+    /**
+     * InputAdmin constructor
+     *
+     * @param string $code
+     * @param string $class
+     * @param string $baseControllerName
+     */
+    public function __construct(string $code, string $class, string $baseControllerName)
+    {
+        $this->baseRoutePattern = 'broadcast-input';
+        parent::__construct($code, $class, $baseControllerName);
+    }
 
     /**
      * {@inheritdoc}

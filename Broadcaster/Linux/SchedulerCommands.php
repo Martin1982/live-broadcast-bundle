@@ -17,7 +17,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
     /**
      * {@inheritdoc}
      */
-    public function stopProcess($pid)
+    public function stopProcess($pid): string
     {
         return exec(sprintf('kill %d', $pid));
     }
@@ -25,7 +25,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
     /**
      * {@inheritdoc}
      */
-    public function getRunningProcesses()
+    public function getRunningProcesses(): array
     {
         exec('/bin/ps -ww -C ffmpeg -o pid=,args=', $output);
 

@@ -26,9 +26,11 @@ class SchedulerCommandsWindowsTest extends TestCase
         $command = new SchedulerCommands('/some/directory', 'unittest');
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Windows', 'exec');
-        $exec->expects($this->once())->willReturnCallback(
+        $exec->expects(static::once())->willReturnCallback(
             function ($command) {
                 self::assertEquals('TASKKILL /PID 1337 /T', $command);
+
+                return 'killed';
             }
         );
 
@@ -38,34 +40,34 @@ class SchedulerCommandsWindowsTest extends TestCase
     /**
      * Test the running processes command.
      */
-    public function testGetRunningProcesses()
+    public function testGetRunningProcesses(): void
     {
         $command = new SchedulerCommands('/some/directory', 'unittest');
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Windows', 'exec');
-        $exec->expects($this->once())->willReturnCallback(
+        $exec->expects(static::once())->willReturnCallback(
             function ($command, &$output) {
                 self::assertEquals('TASKLIST /FI "IMAGENAME eq ffmpeg.exe" /FO CSV', $command);
                 // @codingStandardsIgnoreLine
-                $output = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337';
+                $output[] = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337';
             }
         );
 
         $running = $command->getRunningProcesses();
         // @codingStandardsIgnoreLine
-        self::assertEquals('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337', $running);
+        self::assertEquals('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unittest -metadata broadcast_id=1337', $running[0]);
     }
 
     /**
      * Test running the stream command
      */
-    public function testExecStreamCommand()
+    public function testExecStreamCommand(): void
     {
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Windows', 'exec');
-        $exec->expects($this->once())
+        $exec->expects(static::once())
             // @codingStandardsIgnoreLine
             ->with('ffmpeg -stream_loop -1 input output -metadata x=y -metadata a=b -metadata env=unittest >nul 2>nul &')
-            ->willReturn(true);
+            ->willReturn('Streaming...');
 
         $command = new SchedulerCommands('/some/directory', 'unittest');
         $command->setIsLoopable(true);

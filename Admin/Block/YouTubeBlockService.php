@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Admin\Block;
 
+use http\Env\Request;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Sonata\BlockBundle\Block\BlockContextInterface;
@@ -14,6 +15,7 @@ use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class YouTubeBlockService
@@ -40,6 +42,8 @@ class YouTubeBlockService extends AbstractBlockService
      * @param GoogleRedirectService $redirectService
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     *
+     * @todo Get authentication flow
      */
     public function __construct($name, EngineInterface $templating, YouTubeApiService $youTubeApi, RequestStack $requestStack, GoogleRedirectService $redirectService)
     {
@@ -58,12 +62,20 @@ class YouTubeBlockService extends AbstractBlockService
      *
      * @return Response
      */
-    public function execute(BlockContextInterface $blockContext, Response $response = null)
+    public function execute(BlockContextInterface $blockContext, Response $response = null): Response
     {
         $request = $this->requestStack->getCurrentRequest();
-        $session = $request->getSession();
+        if (!$request) {
+            $request = new Request();
+        }
 
-        if ($refreshToken = $session->get('youTubeRefreshToken')) {
+        $session = $request->getSession();
+        if (!$session) {
+            $request->setSession(new Session());
+        }
+
+        $refreshToken = $session->get('youTubeRefreshToken');
+        if ($refreshToken) {
             $this->youTubeApi->getAccessToken($refreshToken);
         }
 

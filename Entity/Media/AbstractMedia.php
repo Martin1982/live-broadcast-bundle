@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class AbstractMedia
 {
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -29,17 +29,17 @@ abstract class AbstractMedia
     protected $inputId;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->getInputId();
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getInputId()
+    public function getInputId(): ?int
     {
         return $this->inputId;
     }

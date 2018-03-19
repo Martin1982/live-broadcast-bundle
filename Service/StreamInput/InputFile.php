@@ -36,7 +36,7 @@ class InputFile implements InputInterface
      *
      * @throws LiveBroadcastInputException
      */
-    public function generateInputCmd()
+    public function generateInputCmd(): string
     {
         $inputFilename = $this->media->getFileLocation();
 
@@ -50,7 +50,7 @@ class InputFile implements InputInterface
     /**
      * @return string
      */
-    public function getMediaType()
+    public function getMediaType(): string
     {
         return MediaFile::class;
     }

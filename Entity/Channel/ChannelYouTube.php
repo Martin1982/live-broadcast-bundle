@@ -32,14 +32,6 @@ class ChannelYouTube extends AbstractChannel implements PlanableChannelInterface
     protected $youTubeChannelName;
 
     /**
-     * ChannelYouTube constructor
-     */
-    public function __construct()
-    {
-        $this->hasMonitor = true;
-    }
-
-    /**
      * @return string|null
      */
     public function getRefreshToken(): ?string

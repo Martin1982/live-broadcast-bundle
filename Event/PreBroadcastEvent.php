@@ -12,5 +12,5 @@ namespace Martin1982\LiveBroadcastBundle\Event;
  */
 class PreBroadcastEvent extends AbstractBroadcastEvent
 {
-    const NAME = 'martin1982.livebroadcast.pre_broadcast';
+    public const NAME = 'martin1982.livebroadcast.pre_broadcast';
 }

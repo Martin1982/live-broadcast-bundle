@@ -26,7 +26,7 @@ class InputRtmp implements InputInterface
      *
      * @throws LiveBroadcastInputException
      */
-    public function generateInputCmd()
+    public function generateInputCmd(): string
     {
         $inputStream = $this->media->getRtmpAddress();
         $host = parse_url('http://'.$inputStream, PHP_URL_HOST);
@@ -43,7 +43,7 @@ class InputRtmp implements InputInterface
      *
      * @return InputRtmp
      */
-    public function setMedia(AbstractMedia $media)
+    public function setMedia(AbstractMedia $media): InputRtmp
     {
         $this->media = $media;
 
@@ -55,7 +55,7 @@ class InputRtmp implements InputInterface
      *
      * @return string
      */
-    public function getMediaType()
+    public function getMediaType(): string
     {
         return MediaRtmp::class;
     }

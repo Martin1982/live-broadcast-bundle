@@ -41,7 +41,7 @@ abstract class AbstractBroadcastEvent extends Event
     /**
      * @return OutputInterface
      */
-    public function getOutput()
+    public function getOutput(): OutputInterface
     {
         return $this->output;
     }
@@ -49,7 +49,7 @@ abstract class AbstractBroadcastEvent extends Event
     /**
      * @return LiveBroadcast
      */
-    public function getLiveBroadcast()
+    public function getLiveBroadcast(): LiveBroadcast
     {
         return $this->liveBroadcast;
     }

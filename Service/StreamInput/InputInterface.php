@@ -17,7 +17,7 @@ interface InputInterface
     /**
      * @return string
      */
-    public function generateInputCmd();
+    public function generateInputCmd(): string;
 
     /**
      * @param AbstractMedia $media
@@ -31,5 +31,5 @@ interface InputInterface
      *
      * @return string
      */
-    public function getMediaType();
+    public function getMediaType(): string;
 }

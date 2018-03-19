@@ -7,8 +7,6 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
-use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
 use Martin1982\LiveBroadcastBundle\Event\StreamEndEvent;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -35,15 +33,17 @@ class YouTubeStreamEndListener implements EventSubscriberInterface
 
     /**
      * @param StreamEndEvent $event
+     *
+     * @todo signal to end a stream
      */
     public function onStreamEnd(StreamEndEvent $event): void
     {
-        $broadcast = $event->getBroadcast();
-        $channel = $event->getChannel();
-
-        if ($channel instanceof ChannelYouTube) {
-            $this->youTubeApi->transitionState($broadcast, $channel, YouTubeEvent::STATE_REMOTE_COMPLETE);
-        }
+//        $broadcast = $event->getBroadcast();
+//        $channel = $event->getChannel();
+//
+//        if ($channel instanceof ChannelYouTube) {
+//            $this->youTubeApi->transitionState($broadcast, $channel, YouTubeEvent::STATE_REMOTE_COMPLETE);
+//        }
     }
 
     /**

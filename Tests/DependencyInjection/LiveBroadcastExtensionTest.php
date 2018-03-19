@@ -43,7 +43,6 @@ class LiveBroadcastExtensionTest extends TestCase
                     'upload_directory' => 'thumb_upload',
                 ],
                 'eventloop' => [
-                    'enabled' => true,
                     'timer' => 3,
                 ],
             ],
@@ -64,7 +63,6 @@ class LiveBroadcastExtensionTest extends TestCase
         self::assertEquals('thumb_web', $container->getParameter('livebroadcast.thumbnail.web_path'));
         self::assertEquals('thumb_upload', $container->getParameter('livebroadcast.thumbnail.uploaddirectory'));
 
-        self::assertTrue($container->getParameter('livebroadcast.eventloop.enabled'));
         self::assertEquals(3, $container->getParameter('livebroadcast.eventloop.timer'));
     }
 }

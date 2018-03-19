@@ -20,7 +20,7 @@ class AddChannelApiPass implements CompilerPassInterface
     public const API_SERVICE_TAG = 'live.broadcast.api';
 
     /**
-     * You can modify the container here before it is dumped to PHP code.
+     * {@inheritdoc}
      *
      * @param ContainerBuilder $container
      *

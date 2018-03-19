@@ -51,7 +51,6 @@ class CRUDController extends Controller
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
      * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function youTubeOAuthAction(Request $request): RedirectResponse
     {
@@ -81,6 +80,8 @@ class CRUDController extends Controller
     /**
      * @param SessionInterface  $session
      * @param YouTubeApiService $youTubeService
+     *
+     * @todo no cleartoken method in service
      */
     protected function clearToken(SessionInterface $session, YouTubeApiService $youTubeService): void
     {
@@ -92,6 +93,8 @@ class CRUDController extends Controller
      * @param Request           $request
      * @param SessionInterface  $session
      * @param YouTubeApiService $youtube
+     *
+     * @todo no authenticate method in service
      */
     protected function checkRequestCode(Request $request, SessionInterface $session, YouTubeApiService $youtube): void
     {

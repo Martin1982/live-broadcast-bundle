@@ -14,5 +14,5 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class PostBroadcastLoopEvent extends Event
 {
-    const NAME = 'martin1982.livebroadcast.post_broadcastloop';
+    public const NAME = 'martin1982.livebroadcast.post_broadcastloop';
 }

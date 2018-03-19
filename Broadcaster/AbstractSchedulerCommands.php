@@ -8,23 +8,21 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
-use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Class AbstractSchedulerCommands
  */
 abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 {
-    const METADATA_BROADCAST = 'broadcast_id';
-    const METADATA_CHANNEL = 'channel_id';
-    const METADATA_ENVIRONMENT = 'env';
-    const METADATA_MONITOR = 'monitor_stream';
-    const LOG_FILE = 'livebroadcaster-ffmpeg-%s.log';
+    public const METADATA_BROADCAST = 'broadcast_id';
+    public const METADATA_CHANNEL = 'channel_id';
+    public const METADATA_ENVIRONMENT = 'env';
+    public const LOG_FILE = 'livebroadcaster-ffmpeg-%s.log';
 
     /**
      * Symfony kernel environment name
      *
-     * @var string
+     * @var string|null
      */
     protected $kernelEnvironment;
 
@@ -60,7 +58,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function startProcess($input, $output, $metadata)
+    public function startProcess($input, $output, $metadata): string
     {
         $meta = '';
         $metadata['env'] = $this->getKernelEnvironment();
@@ -69,14 +67,14 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
             $meta .= ' -metadata '.$key.'='.$value;
         }
 
-        $this->execStreamCommand($input, $output, $meta);
+        return $this->execStreamCommand($input, $output, $meta);
     }
 
     /**
      * {@inheritdoc}
      * @throws LiveBroadcastException
      */
-    public function stopProcess($pid)
+    public function stopProcess($pid): string
     {
         throw new LiveBroadcastException('stopProcess Cannot be called on the abstract class');
     }
@@ -85,7 +83,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      * {@inheritdoc}
      * @throws LiveBroadcastException
      */
-    public function getRunningProcesses()
+    public function getRunningProcesses(): array
     {
         throw new LiveBroadcastException('getRunningProcesses Cannot be called on the abstract class');
     }
@@ -93,7 +91,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function getProcessId($processString)
+    public function getProcessId($processString): ?int
     {
         preg_match('/^\s*([\d]+)/', $processString, $pid);
         if (count($pid) && is_numeric($pid[0])) {
@@ -113,7 +111,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      *
      * @throws LiveBroadcastException
      */
-    public function getProcessIdForStream($broadcastId, $channelId)
+    public function getProcessIdForStream($broadcastId, $channelId): ?string
     {
         $processes = $this->getRunningProcesses();
 
@@ -135,31 +133,27 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function isMonitorStream($processString)
+    public function getBroadcastId($processString): ?int
     {
-        return ($this->getMetadataValue($processString, self::METADATA_MONITOR) === 'yes');
+        $value = $this->getMetadataValue($processString, self::METADATA_BROADCAST);
+
+        return $value ? (int) $value: null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getBroadcastId($processString)
+    public function getChannelId($processString): ?int
     {
-        return $this->getMetadataValue($processString, self::METADATA_BROADCAST);
+        $value = $this->getMetadataValue($processString, self::METADATA_CHANNEL);
+
+        return $value ? (int) $value: null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getChannelId($processString)
-    {
-        return $this->getMetadataValue($processString, self::METADATA_CHANNEL);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getEnvironment($processString)
+    public function getEnvironment($processString): ?string
     {
         return $this->getMetadataValue($processString, self::METADATA_ENVIRONMENT);
     }
@@ -167,7 +161,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function getKernelEnvironment()
+    public function getKernelEnvironment(): ?string
     {
         return $this->kernelEnvironment;
     }
@@ -175,7 +169,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * @param string $directory
      */
-    public function setFFMpegLogDirectory($directory)
+    public function setFFMpegLogDirectory($directory): void
     {
         if (!is_writable($directory)) {
             return;
@@ -187,7 +181,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * @param bool $loopable
      */
-    public function setIsLoopable($loopable)
+    public function setIsLoopable($loopable): void
     {
         $this->loopable = (bool) $loopable;
     }
@@ -195,7 +189,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * @return bool
      */
-    public function isLoopable()
+    public function isLoopable(): bool
     {
         return $this->loopable;
     }
@@ -209,7 +203,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      *
      * @return string
      */
-    protected function execStreamCommand($input, $output, $meta)
+    protected function execStreamCommand($input, $output, $meta): string
     {
         $logFile = '/dev/null';
         $loop = '';
@@ -224,24 +218,8 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
         }
 
         $streamStart = sprintf('ffmpeg %s%s %s%s >%s 2>&1;', $loop, $input, $output, $meta, $logFile);
-        $streamEndCommand = '';
 
-        $broadcastId = $this->getBroadcastId($streamStart);
-        $channelId = $this->getChannelId($streamStart);
-
-        $consolePath = Kernel::VERSION_ID > 30000 ? 'bin/console' : 'app/console';
-        $consolePath = $this->rootDir.'/../'.$consolePath;
-
-        if (file_exists($consolePath)) {
-            $streamEndCommand = sprintf(
-                '%s livebroadcaster:broadcast:end %s %s',
-                $consolePath,
-                $broadcastId,
-                $channelId
-            );
-        }
-
-        return exec('('.$streamStart.$streamEndCommand.') &');
+        return exec($streamStart);
     }
 
     /**
@@ -251,13 +229,13 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      *
      * @return array
      */
-    protected function readMetadata($processString)
+    protected function readMetadata($processString): array
     {
         $processMetadata = [];
         $metadataRegex = '/-metadata ([a-z_]+)=([[:alnum:]]+)/';
         preg_match_all($metadataRegex, $processString, $metadata);
 
-        if (count($metadata) === 3 && is_array($metadata[1]) && is_array($metadata[2])) {
+        if (count($metadata) === 3 && \is_array($metadata[1]) && \is_array($metadata[2])) {
             foreach ($metadata[1] as $metadataIndex => $metadataKey) {
                 $processMetadata[$metadataKey] = $metadata[2][$metadataIndex];
             }

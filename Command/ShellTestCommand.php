@@ -43,7 +43,7 @@ class ShellTestCommand extends Command
      *
      * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Test if the environment supports the right commands');
     }
@@ -96,7 +96,7 @@ class ShellTestCommand extends Command
      *
      * @param OutputInterface $output
      */
-    protected function testFfmpeg(OutputInterface $output)
+    protected function testFfmpeg(OutputInterface $output): void
     {
         exec('ffmpeg -version', $cmdResult);
         $this->analyseResult($cmdResult, 'ffmpeg version 3.', $output);
@@ -107,7 +107,7 @@ class ShellTestCommand extends Command
      *
      * @param OutputInterface $output
      */
-    protected function testPs(OutputInterface $output)
+    protected function testPs(OutputInterface $output): void
     {
         exec('/bin/ps -o pid', $cmdResult);
         $this->analyseResult($cmdResult, 'PID', $output);
@@ -118,7 +118,7 @@ class ShellTestCommand extends Command
      *
      * @param OutputInterface $output
      */
-    protected function testTasklist(OutputInterface $output)
+    protected function testTasklist(OutputInterface $output): void
     {
         exec('tasklist /?', $cmdResult);
         $this->analyseResult($cmdResult, 'currently running processes', $output);
@@ -129,7 +129,7 @@ class ShellTestCommand extends Command
      *
      * @param OutputInterface $output
      */
-    protected function testGrep(OutputInterface $output)
+    protected function testGrep(OutputInterface $output): void
     {
         exec('echo "got grep" | grep "got grep"', $cmdResult);
         $this->analyseResult($cmdResult, 'got grep', $output);
@@ -140,7 +140,7 @@ class ShellTestCommand extends Command
      *
      * @param OutputInterface $output
      */
-    protected function testTaskkill(OutputInterface $output)
+    protected function testTaskkill(OutputInterface $output): void
     {
         exec('taskkill /?', $cmdResult);
         $this->analyseResult($cmdResult, 'terminate tasks by process id', $output);
@@ -151,7 +151,7 @@ class ShellTestCommand extends Command
      *
      * @param OutputInterface $output
      */
-    protected function testKill(OutputInterface $output)
+    protected function testKill(OutputInterface $output): void
     {
         exec('kill -l', $cmdResult);
         $this->analyseResult($cmdResult, 'QUIT', $output);
@@ -164,7 +164,7 @@ class ShellTestCommand extends Command
      * @param string          $testable
      * @param OutputInterface $output
      */
-    protected function analyseResult($cmdResult, $testable, OutputInterface $output)
+    protected function analyseResult($cmdResult, $testable, OutputInterface $output): void
     {
         if (count($cmdResult) && false !== strpos(implode($cmdResult), $testable)) {
             $output->writeln('<info>[OK]</info>');

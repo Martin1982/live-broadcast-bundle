@@ -36,7 +36,7 @@ class ThumbnailUploadService
      *
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    public function upload(UploadedFile $file)
+    public function upload(UploadedFile $file): string
     {
         $fileName = md5(uniqid('', true)).'.'.$file->guessExtension();
         $file->move($this->getTargetDirectory(), $fileName);
@@ -47,7 +47,7 @@ class ThumbnailUploadService
     /**
      * @return string
      */
-    public function getTargetDirectory()
+    public function getTargetDirectory(): string
     {
         return $this->targetDirectory;
     }

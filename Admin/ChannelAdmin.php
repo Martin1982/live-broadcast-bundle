@@ -9,10 +9,8 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelLively;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -27,14 +25,22 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class ChannelAdmin extends AbstractAdmin
 {
     /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'channel';
-
-    /**
      * @var array
      */
     protected $subclassConfigs = [];
+
+    /**
+     * ChannelAdmin constructor
+     *
+     * @param string $code
+     * @param string $class
+     * @param string $baseControllerName
+     */
+    public function __construct(string $code, string $class, string $baseControllerName)
+    {
+        $this->baseRoutePattern = 'channel';
+        parent::__construct($code, $class, $baseControllerName);
+    }
 
     /**
      * {@inheritdoc}
@@ -111,9 +117,7 @@ class ChannelAdmin extends AbstractAdmin
                     'attr' => ['class' => $nameClasses],
                 ]);
 
-        if ($subject instanceof ChannelTwitch ||
-            $subject instanceof ChannelUstream ||
-            $subject instanceof ChannelLively) {
+        if (!$subject instanceof PlanableChannelInterface) {
             $formMapper->add('streamKey', TextType::class, ['label' => 'Stream key']);
             $formMapper->add('streamServer', TextType::class, ['label' => 'Stream server']);
         }

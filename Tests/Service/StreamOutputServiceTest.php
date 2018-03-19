@@ -9,6 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
@@ -22,7 +23,7 @@ class StreamOutputServiceTest extends TestCase
     /**
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGetOutputInterfaceWithoutChannels()
+    public function testGetOutputInterfaceWithoutChannels(): void
     {
         $channel = new ChannelFacebook();
         $service = new StreamOutputService();
@@ -32,9 +33,11 @@ class StreamOutputServiceTest extends TestCase
     /**
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGetOutputInterfaceWithNotConfiguredChannel()
+    public function testGetOutputInterfaceWithNotConfiguredChannel(): void
     {
-        $outputFacebook = new OutputFacebook();
+        $apiService = $this->createMock(FacebookApiService::class);
+
+        $outputFacebook = new OutputFacebook($apiService);
         $channelTwitch = new ChannelTwitch();
 
         $service = new StreamOutputService();
@@ -47,9 +50,11 @@ class StreamOutputServiceTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGetOutputInterface()
+    public function testGetOutputInterface(): void
     {
-        $outputFacebook = new OutputFacebook();
+        $apiService = $this->createMock(FacebookApiService::class);
+
+        $outputFacebook = new OutputFacebook($apiService);
         $outputTwitch = new OutputTwitch();
 
         $channelTwitch = new ChannelTwitch();

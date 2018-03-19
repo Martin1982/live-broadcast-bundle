@@ -43,7 +43,6 @@ class LiveBroadcastExtension extends Extension
         $container->setParameter('livebroadcast.thumbnail.web_path', $config['thumbnail']['web_path']);
         $container->setParameter('livebroadcast.thumbnail.uploaddirectory', $config['thumbnail']['upload_directory']);
 
-        $container->setParameter('livebroadcast.eventloop.enabled', $config['eventloop']['enabled']);
         $container->setParameter('livebroadcast.eventloop.timer', $config['eventloop']['timer']);
     }
 }

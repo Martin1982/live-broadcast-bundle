@@ -24,13 +24,14 @@ class YouTubeEventTest extends TestCase
 
     /**
      * Setup default test object
+     *
+     * @throws \ReflectionException
      */
     public function setUp()
     {
         $this->youTubeEvent = new YouTubeEvent();
         $this->youTubeEvent->setBroadcast(new LiveBroadcast());
         $this->youTubeEvent->setChannel(new ChannelYouTube());
-        $this->youTubeEvent->setLastKnownState('testing');
         $this->youTubeEvent->setYouTubeId('youtube.id');
 
         $reflection = new \ReflectionClass($this->youTubeEvent);
@@ -42,7 +43,7 @@ class YouTubeEventTest extends TestCase
     /**
      * Test retrieving the event id
      */
-    public function testEventId()
+    public function testEventId(): void
     {
         self::assertEquals(1, $this->youTubeEvent->getEventId());
     }
@@ -50,7 +51,7 @@ class YouTubeEventTest extends TestCase
     /**
      *
      */
-    public function testBroadcast()
+    public function testBroadcast(): void
     {
         self::assertInstanceOf(LiveBroadcast::class, $this->youTubeEvent->getBroadcast());
     }
@@ -58,7 +59,7 @@ class YouTubeEventTest extends TestCase
     /**
      *
      */
-    public function testChannel()
+    public function testChannel(): void
     {
         self::assertInstanceOf(ChannelYouTube::class, $this->youTubeEvent->getChannel());
     }
@@ -66,58 +67,8 @@ class YouTubeEventTest extends TestCase
     /**
      *
      */
-    public function testLastKnownState()
-    {
-        self::assertEquals(YouTubeEvent::STATE_REMOTE_TESTING, $this->youTubeEvent->getLastKnownState());
-    }
-
-    /**
-     *
-     */
-    public function testYouTubeId()
+    public function testYouTubeId(): void
     {
         self::assertEquals('youtube.id', $this->youTubeEvent->getYouTubeId());
-    }
-
-    /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     */
-    public function testLocalStateByRemoteStateException()
-    {
-        $this->youTubeEvent->getLocalStateByRemoteState('does-not-exist');
-    }
-
-    /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     */
-    public function testLocalStateByRemoteState()
-    {
-        self::assertEquals(
-            YouTubeEvent::STATE_LOCAL_TESTING,
-            $this->youTubeEvent->getLocalStateByRemoteState('testing')
-        );
-    }
-
-    /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     */
-    public function testRemoteStateByLocalStateException()
-    {
-        $this->youTubeEvent->getRemoteStateByLocalState('??');
-    }
-
-    /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     */
-    public function testRemoteStateByLocalState()
-    {
-        self::assertEquals(
-            YouTubeEvent::STATE_REMOTE_TESTING,
-            $this->youTubeEvent->getRemoteStateByLocalState(YouTubeEvent::STATE_LOCAL_TESTING)
-        );
     }
 }

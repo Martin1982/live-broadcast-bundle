@@ -45,7 +45,7 @@ class GoogleRedirectService
      *
      * @throws LiveBroadcastOutputException
      */
-    public function getOAuthRedirectUrl()
+    public function getOAuthRedirectUrl(): string
     {
         $router = $this->router;
 

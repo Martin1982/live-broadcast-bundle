@@ -27,7 +27,6 @@ class RunningBroadcastTest extends TestCase
         self::assertEquals(2, $running->getProcessId());
         self::assertEquals(44, $running->getChannelId());
         self::assertEquals('test', $running->getEnvironment());
-        self::assertFalse($running->isMonitor());
     }
 
     /**
