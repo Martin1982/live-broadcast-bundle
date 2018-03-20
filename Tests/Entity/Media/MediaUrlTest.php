@@ -18,7 +18,7 @@ class MediaUrlTest extends TestCase
     /**
      * Test the getUrl method
      */
-    public function testGetUrl()
+    public function testGetUrl(): void
     {
         $input = new MediaUrl();
         self::assertEquals('', $input->getUrl());
@@ -30,7 +30,7 @@ class MediaUrlTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $input = new MediaUrl();
         self::assertEquals('', (string) $input);

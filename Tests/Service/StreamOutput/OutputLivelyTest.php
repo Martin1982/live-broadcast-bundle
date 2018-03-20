@@ -35,17 +35,17 @@ class OutputLivelyTest extends TestCase
     /**
      * Test if the class implements the OutputInterface
      */
-    public function tesImplementsOutputInterface()
+    public function tesImplementsOutputInterface(): void
     {
         $implements = class_implements(OutputLively::class);
-        self::assertTrue(in_array(OutputInterface::class, $implements, true));
+        self::assertTrue(\in_array(OutputInterface::class, $implements, true));
     }
 
     /**
      * Test the generate output command without a channel
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmdWithoutChannel()
+    public function testGenerateOutputCmdWithoutChannel(): void
     {
         $lively = new OutputLively();
         $lively->generateOutputCmd();
@@ -55,7 +55,7 @@ class OutputLivelyTest extends TestCase
      * Test the generate output command with an invalid channel
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmdWithInvalidChannel()
+    public function testGenerateOutputCmdWithInvalidChannel(): void
     {
         $lively = new OutputLively();
         $channel = new ChannelLively();
@@ -69,7 +69,7 @@ class OutputLivelyTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmd()
+    public function testGenerateOutputCmd(): void
     {
         $lively = new OutputLively();
         $lively->setChannel($this->channelLively);
@@ -82,7 +82,7 @@ class OutputLivelyTest extends TestCase
     /**
      * Test if the channelType is correct for this output
      */
-    public function testGetChannelType()
+    public function testGetChannelType(): void
     {
         $lively = new OutputLively();
         self::assertEquals(ChannelLively::class, $lively->getChannelType());

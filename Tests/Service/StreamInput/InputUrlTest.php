@@ -38,7 +38,7 @@ class InputUrlTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    public function testGenerateInputCmdInvalidUrl()
+    public function testGenerateInputCmdInvalidUrl(): void
     {
         $media = new MediaUrl();
         $media->setUrl('invalid_url');
@@ -51,7 +51,7 @@ class InputUrlTest extends TestCase
     /**
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    public function testGenerateInputCmd()
+    public function testGenerateInputCmd(): void
     {
         self::assertEquals('-re -i \'http://live.broadcast.com\'', $this->inputUrl->generateInputCmd());
     }
@@ -59,7 +59,7 @@ class InputUrlTest extends TestCase
     /**
      *
      */
-    public function testMediaType()
+    public function testMediaType(): void
     {
         self::assertEquals(MediaUrl::class, $this->inputUrl->getMediaType());
     }

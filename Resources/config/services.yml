@@ -30,7 +30,7 @@ services:
 
   live.broadcast.broadcastmanager:
       class: Martin1982\LiveBroadcastBundle\Service\BroadcastManager
-      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.streammanager"]
+      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.streammanager", "@live.broadcast.channelapi.stack"]
 
   live.broadcast.streammanager:
       class: Martin1982\LiveBroadcastBundle\Service\StreamManager

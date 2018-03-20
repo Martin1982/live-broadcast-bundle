@@ -21,7 +21,7 @@ class LiveBroadcastExtensionTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testConfigLoad()
+    public function testConfigLoad(): void
     {
         $container = new ContainerBuilder();
         $config = [

@@ -13,6 +13,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
 use Martin1982\LiveBroadcastBundle\Service\StreamManager;
 use PHPUnit\Framework\TestCase;
 
@@ -32,6 +33,11 @@ class BroadcastManagerTest extends TestCase
     protected $streamManager;
 
     /**
+     * @var ChannelApiStack|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $stack;
+
+    /**
      * Test getting a broadcast entity by id
      */
     public function testGetBroadcastByid(): void
@@ -48,7 +54,7 @@ class BroadcastManagerTest extends TestCase
             ->method('getRepository')
             ->willReturn($broadcastRepository);
 
-        $broadcast = new BroadcastManager($this->entityManager, $this->streamManager);
+        $broadcast = new BroadcastManager($this->entityManager, $this->streamManager, $this->stack);
         $result = $broadcast->getBroadcastByid('10');
 
         self::assertInstanceOf(LiveBroadcast::class, $result);
@@ -74,7 +80,7 @@ class BroadcastManagerTest extends TestCase
 
         $channel = $this->createMock(AbstractChannel::class);
 
-        $broadcast = new BroadcastManager($this->entityManager, $this->streamManager);
+        $broadcast = new BroadcastManager($this->entityManager, $this->streamManager, $this->stack);
         $broadcast->handleBroadcastEnd($broadcastEntity);
         $broadcast->handleBroadcastEnd($broadcastEntity, $channel);
         $this->addToAssertionCount(1);
@@ -87,5 +93,6 @@ class BroadcastManagerTest extends TestCase
     {
         $this->entityManager = $this->createMock(EntityManager::class);
         $this->streamManager = $this->createMock(StreamManager::class);
+        $this->stack = $this->createMock(ChannelApiStack::class);
     }
 }

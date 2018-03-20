@@ -18,7 +18,7 @@ class ChannelYouTubeTest extends TestCase
     /**
      * Test the getters and setters
      */
-    public function testGetMethods()
+    public function testGetMethods(): void
     {
         $channel = new ChannelYouTube();
         $channel->setChannelName('YouTube')->setRefreshToken('refresh')->setYouTubeChannelName('YT-Name');
@@ -31,7 +31,7 @@ class ChannelYouTubeTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $channel = new ChannelYouTube();
         self::assertEquals('YouTube: ', (string) $channel);
@@ -43,7 +43,7 @@ class ChannelYouTubeTest extends TestCase
     /**
      * Test the isEntityConfigured method
      */
-    public function testIsEntityConfigured()
+    public function testIsEntityConfigured(): void
     {
         $channel = new ChannelYouTube();
         $configuration = [];

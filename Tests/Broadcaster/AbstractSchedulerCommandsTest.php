@@ -36,7 +36,7 @@ class AbstractSchedulerCommandsTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
-    public function testStopProcess()
+    public function testStopProcess(): void
     {
         $this->schedulerCommands->stopProcess(5);
     }
@@ -48,7 +48,7 @@ class AbstractSchedulerCommandsTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
-    public function testGetRunningProcesses()
+    public function testGetRunningProcesses(): void
     {
         $this->schedulerCommands->getRunningProcesses();
     }
@@ -56,7 +56,7 @@ class AbstractSchedulerCommandsTest extends TestCase
     /**
      * Test the FFMPEG log directory setter
      */
-    public function testFFMpegLogDirectory()
+    public function testFFMpegLogDirectory(): void
     {
         $this->schedulerCommands->setFFMpegLogDirectory(__DIR__);
         $this->schedulerCommands->setFFMpegLogDirectory('/does/not/exist');
@@ -72,7 +72,7 @@ class AbstractSchedulerCommandsTest extends TestCase
     /**
      * Test a stream can be loopable
      */
-    public function testLoopable()
+    public function testLoopable(): void
     {
         $this->schedulerCommands->setIsLoopable(true);
 

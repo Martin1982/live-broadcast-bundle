@@ -18,7 +18,7 @@ class ChannelUStreamTest extends TestCase
     /**
      * Test the getters and setters
      */
-    public function testGetMethods()
+    public function testGetMethods(): void
     {
         $channel = new ChannelUstream();
         $channel->setChannelName('UStream')->setStreamKey('key')->setStreamServer('server');
@@ -31,7 +31,7 @@ class ChannelUStreamTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $channel = new ChannelUstream();
         self::assertEquals('Ustream: ', (string) $channel);
@@ -43,7 +43,7 @@ class ChannelUStreamTest extends TestCase
     /**
      * Test the isEntityConfigured method
      */
-    public function testIsEntityConfigured()
+    public function testIsEntityConfigured(): void
     {
         $channel = new ChannelUstream();
         $configuration = [];

@@ -34,7 +34,7 @@ class AddStreamOutputPassTest extends TestCase
     /**
      * Test that no processing takes place when the service isn't named correctly
      */
-    public function testNoProcessingServices()
+    public function testNoProcessingServices(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
         $container->expects(static::never())
@@ -51,7 +51,7 @@ class AddStreamOutputPassTest extends TestCase
     /**
      * Test processing tagged services
      */
-    public function testProcessServices()
+    public function testProcessServices(): void
     {
         $definition = $this->createMock(Definition::class);
         $container = $this->createMock(ContainerBuilder::class);

@@ -18,7 +18,7 @@ class MediaFileTest extends TestCase
     /**
      *
      */
-    public function testAbstractMediaProperties()
+    public function testAbstractMediaProperties(): void
     {
         $input = new MediaFile();
         self::assertNull($input->getId());
@@ -28,7 +28,7 @@ class MediaFileTest extends TestCase
     /**
      * Test the getFileLocation method
      */
-    public function testFileLocation()
+    public function testFileLocation(): void
     {
         $input = new MediaFile();
         self::assertEquals('', $input->getFileLocation());
@@ -43,7 +43,7 @@ class MediaFileTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $input = new MediaFile();
         self::assertEquals('', (string) $input);

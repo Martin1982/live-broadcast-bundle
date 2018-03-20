@@ -18,7 +18,7 @@ class ChannelLivelyTest extends TestCase
     /**
      * Test the getters and setters
      */
-    public function testGetMethods()
+    public function testGetMethods(): void
     {
         $channel = new ChannelLively();
         $channel->setChannelName('Live.ly');
@@ -33,7 +33,7 @@ class ChannelLivelyTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $channel = new ChannelLively();
         self::assertEquals('Live.ly: ', (string) $channel);
@@ -45,7 +45,7 @@ class ChannelLivelyTest extends TestCase
     /**
      * Test the isEntityConfigured method
      */
-    public function testIsEntityConfigured()
+    public function testIsEntityConfigured(): void
     {
         $channel = new ChannelLively();
         $configuration = [];

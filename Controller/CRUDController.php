@@ -9,7 +9,6 @@ namespace Martin1982\LiveBroadcastBundle\Controller;
 
 use Facebook\Authentication\AccessToken;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
-use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
@@ -51,63 +50,86 @@ class CRUDController extends Controller
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
      * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function youTubeOAuthAction(Request $request): RedirectResponse
     {
-        $youTubeService = $this->get('live.broadcast.youtubeapi.service');
-        $router = $this->get('router');
-        /** @noinspection PhpRouteMissingInspection */
-        $redirectUri = $router->generate(
-            'admin_martin1982_livebroadcast_channel_abstractchannel_youtubeoauth',
-            [],
-            $router::ABSOLUTE_URL
-        );
-        $youTubeService->initApiClients($redirectUri);
         $session = $request->getSession();
 
         if ($session && $request->get('cleartoken')) {
-            $this->clearToken($session, $youTubeService);
+            $this->clearToken($session);
         }
 
         $requestCode = $request->get('code');
         if ($requestCode && $session) {
-            $this->checkRequestCode($request, $session, $youTubeService);
+            $this->checkRequestCode($request, $session);
         }
 
         return $this->redirect($session->get('authreferer', '/'));
     }
 
     /**
-     * @param SessionInterface  $session
-     * @param YouTubeApiService $youTubeService
+     * @param SessionInterface $session
      *
-     * @todo no cleartoken method in service
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    protected function clearToken(SessionInterface $session, YouTubeApiService $youTubeService): void
+    protected function clearToken(SessionInterface $session): void
     {
         $session->remove('youTubeRefreshToken');
-        $youTubeService->clearToken();
+
+        $googleClient = $this->getGoogleClient();
+        $googleClient->revokeToken();
     }
 
     /**
-     * @param Request           $request
-     * @param SessionInterface  $session
-     * @param YouTubeApiService $youtube
+     * @param Request          $request
+     * @param SessionInterface $session
      *
-     * @todo no authenticate method in service
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    protected function checkRequestCode(Request $request, SessionInterface $session, YouTubeApiService $youtube): void
+    protected function checkRequestCode(Request $request, SessionInterface $session): void
     {
         $requestCode = $request->get('code');
-        $requestState = $request->get('state');
-        $sessionState = $session->get('state');
+        $requestState = $request->get('state', 'norequeststate');
+        $sessionState = $session->get('state', 'nosessionstate');
 
-        $youtube->authenticate($requestCode, $requestState, $sessionState);
-        $refreshToken = $youtube->getRefreshToken();
+        $googleClient = $this->getGoogleClient();
+
+        if ($sessionState !== $requestState) {
+            $googleClient->fetchAccessTokenWithAuthCode($requestCode);
+            $googleClient->getAccessToken();
+        }
+        $refreshToken = $googleClient->getRefreshToken();
 
         if ($refreshToken) {
-            $session->set('youTubeChannelName', $youtube->getChannelName());
-            $session->set('youTubeRefreshToken', $refreshToken);
+            $youtubeClient = new \Google_Service_YouTube($googleClient);
+            $channels = $youtubeClient->channels->listChannels('id,brandingSettings', [ 'mine' => true ]);
+
+            $hasChannels = $channels->count() > 0;
+
+            if ($hasChannels) {
+                /** @var \Google_Service_YouTube_Channel $channel */
+                $channel = $channels->current();
+
+                /** @var \Google_Service_YouTube_ChannelBrandingSettings $branding */
+                $branding = $channel->getBrandingSettings();
+                $title = $branding->getChannel()->title;
+
+                $session->set('youTubeChannelName', $title);
+                $session->set('youTubeRefreshToken', $refreshToken);
+            }
         }
+    }
+
+    /**
+     * @return \Google_Client
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    private function getGoogleClient(): \Google_Client
+    {
+        $clientService = $this->container->get('live.broadcast.channelapi.client.google');
+
+        return $clientService->getClient();
     }
 }

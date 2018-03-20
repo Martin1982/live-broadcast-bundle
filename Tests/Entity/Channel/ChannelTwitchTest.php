@@ -18,7 +18,7 @@ class ChannelTwitchTest extends TestCase
     /**
      * Test the getters and setters
      */
-    public function testGetMethods()
+    public function testGetMethods(): void
     {
         $channel = new ChannelTwitch();
         self::assertEquals('live.twitch.tv', $channel->getStreamServer());
@@ -32,7 +32,7 @@ class ChannelTwitchTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $channel = new ChannelTwitch();
         self::assertEquals('Twitch: ', (string) $channel);
@@ -44,7 +44,7 @@ class ChannelTwitchTest extends TestCase
     /**
      * Test the isEntityConfigured method
      */
-    public function testIsEntityConfigured()
+    public function testIsEntityConfigured(): void
     {
         $channel = new ChannelTwitch();
         $configuration = [];

@@ -20,7 +20,7 @@ class AbstractBroadcastEventTest extends TestCase
     /**
      * Test getting properties
      */
-    public function testProperties()
+    public function testProperties(): void
     {
         $broadcast = $this->createMock(LiveBroadcast::class);
         $output = $this->createMock(OutputInterface::class);

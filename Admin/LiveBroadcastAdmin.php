@@ -8,9 +8,8 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
+use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -30,9 +29,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class LiveBroadcastAdmin extends AbstractAdmin
 {
     /**
-     * @var ChannelApiStack|null
+     * @var BroadcastManager
      */
-    protected $apiStack;
+    protected $broadcastManager;
 
     /**
      * {@inheritdoc}
@@ -50,11 +49,11 @@ class LiveBroadcastAdmin extends AbstractAdmin
     }
 
     /**
-     * @param ChannelApiStack $stack
+     * @param BroadcastManager $manager
      */
-    public function setApiStack(ChannelApiStack $stack): void
+    public function setBroadcastManager(BroadcastManager $manager): void
     {
-        $this->apiStack = $stack;
+        $this->broadcastManager = $manager;
     }
 
     /**
@@ -68,16 +67,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
     public function postPersist($broadcast)
     {
         $this->loadThumbnail($broadcast);
-
-        foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof PlanableChannelInterface) {
-                $api = $this->apiStack->getApiForChannel($channel);
-
-                if ($api) {
-                    $api->createLiveEvent($broadcast, $channel);
-                }
-            }
-        }
+        $this->broadcastManager->preInsert($broadcast);
 
         parent::postPersist($broadcast);
     }
@@ -87,16 +77,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
      */
     public function postUpdate($broadcast)
     {
-        foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof PlanableChannelInterface) {
-                $api = $this->apiStack->getApiForChannel($channel);
-
-                if ($api) {
-                    $api->updateLiveEvent($broadcast, $channel);
-                }
-            }
-        }
-
+        $this->broadcastManager->preUpdate($broadcast);
         parent::postUpdate($broadcast);
     }
 
@@ -105,16 +86,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
      */
     public function preRemove($broadcast)
     {
-        foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof PlanableChannelInterface) {
-                $api = $this->apiStack->getApiForChannel($channel);
-
-                if ($api) {
-                    $api->removeLiveEvent($broadcast, $channel);
-                }
-            }
-        }
-
+        $this->broadcastManager->preDelete($broadcast);
         parent::preRemove($broadcast);
     }
 

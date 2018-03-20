@@ -22,12 +22,12 @@ class StreamInputServiceTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    public function testGetInputInterface()
+    public function testGetInputInterface(): void
     {
         $inputFile = $this->createMock(InputFile::class);
-        $inputFile->expects($this->any())
+        $inputFile->expects(static::any())
             ->method('getMediaType')
-            ->willReturn('\Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile');
+            ->willReturn(MediaFile::class);
 
         $media = $this->createMock(MediaFile::class);
 
@@ -43,7 +43,7 @@ class StreamInputServiceTest extends TestCase
      *
      * @expectedException  \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    public function testNoInputInterfaceFound()
+    public function testNoInputInterfaceFound(): void
     {
         $input = new StreamInputService();
         $media = $this->createMock(MediaFile::class);

@@ -18,7 +18,7 @@ class MediaRtmpTest extends TestCase
     /**
      * Test the basic properties
      */
-    public function testAbstractMediaProperties()
+    public function testAbstractMediaProperties(): void
     {
         $input = new MediaRtmp();
         self::assertNull($input->getId());
@@ -28,7 +28,7 @@ class MediaRtmpTest extends TestCase
     /**
      * Test the getRtmpAddress method
      */
-    public function testFileLocation()
+    public function testFileLocation(): void
     {
         $input = new MediaRtmp();
         self::assertEquals('', $input->getRtmpAddress());
@@ -43,7 +43,7 @@ class MediaRtmpTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $input = new MediaRtmp();
         self::assertEquals('', (string) $input);

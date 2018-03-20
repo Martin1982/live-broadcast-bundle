@@ -24,17 +24,17 @@ class SchedulerCommandsDetectorTest extends TestCase
     /**
      * Test scheduler command class detector
      */
-    public function testCreateSchedulerCommands()
+    public function testCreateSchedulerCommands(): void
     {
         $strtoupper = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'strtoupper');
-        $strtoupper->expects($this->any())
+        $strtoupper->expects(static::any())
             ->willReturnOnConsecutiveCalls('WIN', 'DAR', 'LIN');
 
         $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
-        $this->assertInstanceOf(WindowsCommands::class, $commands);
+        static::assertInstanceOf(WindowsCommands::class, $commands);
         $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
-        $this->assertInstanceOf(DarwinCommands::class, $commands);
+        static::assertInstanceOf(DarwinCommands::class, $commands);
         $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
-        $this->assertInstanceOf(LinuxCommands::class, $commands);
+        static::assertInstanceOf(LinuxCommands::class, $commands);
     }
 }

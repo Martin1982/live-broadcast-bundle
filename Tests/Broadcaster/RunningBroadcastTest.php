@@ -20,7 +20,7 @@ class RunningBroadcastTest extends TestCase
     /**
      * Test get method.
      */
-    public function testGetMethods()
+    public function testGetMethods(): void
     {
         $running = new RunningBroadcast(1, 2, 44, 'test');
         self::assertEquals(1, $running->getBroadcastId());
@@ -32,7 +32,7 @@ class RunningBroadcastTest extends TestCase
     /**
      * Test the isValid method.
      */
-    public function testIsValid()
+    public function testIsValid(): void
     {
         $running = new RunningBroadcast(null, null, null, null);
         self::assertFalse($running->isValid(''));
@@ -59,7 +59,7 @@ class RunningBroadcastTest extends TestCase
     /**
      * Test the isBroadcasting method
      */
-    public function testIsBroadcasting()
+    public function testIsBroadcasting(): void
     {
         /* Create a running broadcast with string values as id's */
         $running = new RunningBroadcast('5', '2', '6', 'test');
@@ -84,8 +84,10 @@ class RunningBroadcastTest extends TestCase
      * @param int $id
      *
      * @return ChannelTwitch
+     *
+     * @throws \ReflectionException
      */
-    private function getChannelTwitch($id)
+    private function getChannelTwitch($id): ChannelTwitch
     {
         $channel = new ChannelTwitch();
         $reflection = new \ReflectionClass($channel);
@@ -100,8 +102,10 @@ class RunningBroadcastTest extends TestCase
      * @param int $id
      *
      * @return LiveBroadcast
+     *
+     * @throws \ReflectionException
      */
-    private function getLiveBroadcast($id)
+    private function getLiveBroadcast($id): LiveBroadcast
     {
         $liveBroadcast = new LiveBroadcast();
         $reflection = new \ReflectionClass($liveBroadcast);

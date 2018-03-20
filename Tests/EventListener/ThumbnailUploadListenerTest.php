@@ -45,7 +45,7 @@ class ThumbnailUploadListenerTest extends TestCase
     /**
      * prePersist
      */
-    public function testPrePersist()
+    public function testPrePersist(): void
     {
         /** @var ObjectManager $objectManager */
         $objectManager = $this->createMock(ObjectManager::class);
@@ -54,7 +54,7 @@ class ThumbnailUploadListenerTest extends TestCase
         $uploadedFile = new UploadedFile('/tmp', 'filename', null, null, UPLOAD_ERR_NO_FILE);
         $liveBroadcast->setThumbnail($uploadedFile);
 
-        $this->uploadService->expects($this->once())
+        $this->uploadService->expects(static::once())
             ->method('upload')
             ->with($uploadedFile)
             ->willReturn('new-filename');
@@ -68,7 +68,7 @@ class ThumbnailUploadListenerTest extends TestCase
     /**
      * preUpdate
      */
-    public function testPreUpdate()
+    public function testPreUpdate(): void
     {
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->createMock(EntityManagerInterface::class);
@@ -77,7 +77,7 @@ class ThumbnailUploadListenerTest extends TestCase
         $uploadedFile = new UploadedFile('/tmp', 'thumbnail', null, null, UPLOAD_ERR_NO_FILE);
         $liveBroadcast->setThumbnail($uploadedFile);
 
-        $this->uploadService->expects($this->once())
+        $this->uploadService->expects(static::once())
             ->method('upload')
             ->with($uploadedFile)
             ->willReturn('new-thumbnail');
@@ -92,12 +92,12 @@ class ThumbnailUploadListenerTest extends TestCase
     /**
      * preUpdate
      */
-    public function testPreUpdateInvalidEntity()
+    public function testPreUpdateInvalidEntity(): void
     {
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
-        $this->uploadService->expects($this->never())
+        $this->uploadService->expects(static::never())
             ->method('upload');
 
         $changeSet = [];
@@ -108,13 +108,13 @@ class ThumbnailUploadListenerTest extends TestCase
     /**
      * preUpdate
      */
-    public function testPreUpdateNoChange()
+    public function testPreUpdateNoChange(): void
     {
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $liveBroadcast = new LiveBroadcast();
 
-        $this->uploadService->expects($this->never())
+        $this->uploadService->expects(static::never())
             ->method('upload');
 
         $changeSet = ['thumbnail' => ['old_value']];
@@ -128,7 +128,7 @@ class ThumbnailUploadListenerTest extends TestCase
     /**
      * postLoad
      */
-    public function testPostLoad()
+    public function testPostLoad(): void
     {
         /** @var ObjectManager $objectManager */
         $objectManager = $this->createMock(ObjectManager::class);
@@ -136,7 +136,7 @@ class ThumbnailUploadListenerTest extends TestCase
 
         $liveBroadcast->setThumbnail('thumbnail.jpg');
 
-        $this->uploadService->expects($this->once())
+        $this->uploadService->expects(static::once())
             ->method('getTargetDirectory')
             ->willReturn('/tmp/dir');
 
@@ -153,11 +153,11 @@ class ThumbnailUploadListenerTest extends TestCase
     /**
      * postLoad
      */
-    public function testPostLoadInvalidEntity()
+    public function testPostLoadInvalidEntity(): void
     {
         /** @var ObjectManager $objectManager */
         $objectManager = $this->createMock(ObjectManager::class);
-        $this->uploadService->expects($this->never())
+        $this->uploadService->expects(static::never())
             ->method('getTargetDirectory');
 
         $args = new LifecycleEventArgs(new \stdClass(), $objectManager);

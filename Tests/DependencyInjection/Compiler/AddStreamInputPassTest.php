@@ -34,7 +34,7 @@ class AddStreamInputPassTest extends TestCase
     /**
      * Test that no processing takes place when the service isn't named correctly
      */
-    public function testNoProcessing()
+    public function testNoProcessing(): void
     {
         /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
         $container = $this->createMock(ContainerBuilder::class);
@@ -52,7 +52,7 @@ class AddStreamInputPassTest extends TestCase
     /**
      * Test processing tagged services
      */
-    public function testProcess()
+    public function testProcess(): void
     {
         /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
         $container = $this->createMock(ContainerBuilder::class);

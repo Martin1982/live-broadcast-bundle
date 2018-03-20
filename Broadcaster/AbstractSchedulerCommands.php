@@ -11,6 +11,7 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 
 /**
  * Class AbstractSchedulerCommands
+ * @todo send signal when stream stops
  */
 abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 {

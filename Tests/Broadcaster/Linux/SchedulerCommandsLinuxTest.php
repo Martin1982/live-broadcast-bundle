@@ -21,7 +21,7 @@ class SchedulerCommandsLinuxTest extends TestCase
     /**
      * Test the stop process command.
      */
-    public function testStopProcess()
+    public function testStopProcess(): void
     {
         $command = new SchedulerCommands('/some/directory', 'unittest');
 

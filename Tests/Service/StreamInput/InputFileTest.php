@@ -39,7 +39,7 @@ class InputFileTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    public function testGenerateInputCmdInvalidFile()
+    public function testGenerateInputCmdInvalidFile(): void
     {
         $this->file->generateInputCmd();
     }
@@ -48,7 +48,7 @@ class InputFileTest extends TestCase
     /**
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    public function testGenerateInputCmd()
+    public function testGenerateInputCmd(): void
     {
         $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'inputTest';
         file_put_contents($file, 'data');
@@ -64,7 +64,7 @@ class InputFileTest extends TestCase
     /**
      *
      */
-    public function testMediaType()
+    public function testMediaType(): void
     {
         self::assertEquals(MediaFile::class, $this->file->getMediaType());
     }

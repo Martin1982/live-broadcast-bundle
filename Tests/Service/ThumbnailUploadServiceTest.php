@@ -19,13 +19,13 @@ class ThumbnailUploadServiceTest extends TestCase
     /**
      * Test uploading a file
      */
-    public function testUpload()
+    public function testUpload(): void
     {
         $file = $this->createMock(UploadedFile::class);
-        $file->expects($this->once())
+        $file->expects(static::once())
             ->method('guessExtension')
             ->willReturn('png');
-        $file->expects($this->once())
+        $file->expects(static::once())
             ->method('move')
             ->willReturn(true);
 
@@ -38,7 +38,7 @@ class ThumbnailUploadServiceTest extends TestCase
     /**
      * Test retrieving the target directory
      */
-    public function testGetTargetDirectory()
+    public function testGetTargetDirectory(): void
     {
         $uploader = new ThumbnailUploadService('/some/dir');
 

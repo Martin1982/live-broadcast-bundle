@@ -18,7 +18,7 @@ class AbstractMediaTest extends TestCase
     /**
      *
      */
-    public function testToString()
+    public function testToString(): void
     {
         $media = $this->getMockForAbstractClass(AbstractMedia::class);
         self::assertEmpty((string) $media);

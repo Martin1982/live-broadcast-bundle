@@ -55,32 +55,32 @@ class SchedulerTest extends TestCase
     /**
      * Test applying a schedule
      */
-    public function testApplySchedule()
+    public function testApplySchedule(): void
     {
         $broadcastRepository = $this->createMock(LiveBroadcastRepository::class);
-        $broadcastRepository->expects($this->any())
+        $broadcastRepository->expects(static::any())
             ->method('getPlannedBroadcasts')
             ->willReturn([]);
 
-        $this->entityManager->expects($this->any())
+        $this->entityManager->expects(static::any())
             ->method('getRepository')
             ->willReturn($broadcastRepository);
 
-        $this->dispatcher->expects($this->any())
+        $this->dispatcher->expects(static::any())
             ->method('dispatch')
             ->willReturn(true);
 
-        $this->logger->expects($this->any())
+        $this->logger->expects(static::any())
             ->method('error')
             ->willReturn(true);
-        $this->logger->expects($this->any())
+        $this->logger->expects(static::any())
             ->method('info')
             ->willReturn(true);
-        $this->logger->expects($this->any())
+        $this->logger->expects(static::any())
             ->method('debug')
             ->willReturn(true);
 
-        $this->schedulerCommands->expects($this->any())
+        $this->schedulerCommands->expects(static::any())
             ->method('getRunningProcesses')
             ->willReturn([]);
 

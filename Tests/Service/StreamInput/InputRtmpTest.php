@@ -37,7 +37,7 @@ class InputRtmpTest extends TestCase
     /**
      *
      */
-    public function testMediaType()
+    public function testMediaType(): void
     {
         self::assertEquals(MediaRtmp::class, $this->serverAddress->getMediaType());
     }

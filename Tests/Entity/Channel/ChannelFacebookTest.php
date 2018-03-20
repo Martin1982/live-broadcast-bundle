@@ -18,7 +18,7 @@ class ChannelFacebookTest extends TestCase
     /**
      * Test the getters and setters
      */
-    public function testGetMethods()
+    public function testGetMethods(): void
     {
         $channel = new ChannelFacebook();
         $channel->setChannelName('Testing123')->setAccessToken('456789')->setFbEntityId('Facebook');
@@ -31,7 +31,7 @@ class ChannelFacebookTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $channel = new ChannelFacebook();
         self::assertEquals('Facebook: ', (string) $channel);
@@ -43,7 +43,7 @@ class ChannelFacebookTest extends TestCase
     /**
      * Test the isEntityConfigured method
      */
-    public function testIsEntityConfigured()
+    public function testIsEntityConfigured(): void
     {
         $channel = new ChannelFacebook();
         $configuration = [];

@@ -21,7 +21,7 @@ class SchedulerCommandsTest extends TestCase
     /**
      * Test the start process command.
      */
-    public function testStartProcess()
+    public function testStartProcess(): void
     {
         $command = $this->getSchedulerCommands();
 
@@ -41,7 +41,7 @@ class SchedulerCommandsTest extends TestCase
     /**
      * Test the start process command with a log directory configured
      */
-    public function testStartProcessWithLogDirectory()
+    public function testStartProcessWithLogDirectory(): void
     {
         $command = $this->getSchedulerCommands();
         $command->setFFMpegLogDirectory('/tmp');
@@ -63,7 +63,7 @@ class SchedulerCommandsTest extends TestCase
     /**
      * Test the stop process command.
      */
-    public function testStopProcess()
+    public function testStopProcess(): void
     {
         $command = $this->getSchedulerCommands();
 

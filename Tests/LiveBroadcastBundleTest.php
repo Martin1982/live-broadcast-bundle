@@ -19,7 +19,7 @@ class LiveBroadcastBundleTest extends TestCase
     /**
      * Test building the bundle
      */
-    public function testBuild()
+    public function testBuild(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
         $container->expects(self::any())

@@ -26,11 +26,6 @@ class YouTubeApiService implements ChannelApiInterface
     /**
      * @var string
      */
-    public const STREAM_ACTIVE_STATUS = 'active';
-
-    /**
-     * @var string
-     */
     protected $host;
 
     /**
@@ -279,70 +274,6 @@ class YouTubeApiService implements ChannelApiInterface
         }
 
         return $lifeCycleStatus;
-    }
-
-    /**
-     * @param LiveBroadcast  $liveBroadcast
-     * @param ChannelYouTube $channelYouTube
-     * @param string         $broadcastState
-     *
-     * @return boolean
-     *
-     * @throws LiveBroadcastOutputException
-     */
-    public function transitionState(LiveBroadcast $liveBroadcast, ChannelYouTube $channelYouTube, $broadcastState): bool
-    {
-        $this->getAccessToken($channelYouTube->getRefreshToken());
-
-        $eventRepository = $this->getEventRepository();
-        $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYouTube);
-
-        if (!$event) {
-            return false;
-        }
-
-        $youTubeId = $event->getYouTubeId();
-        $canChangeState = true;
-
-        $stateRemoteTesting = YouTubeEvent::STATE_REMOTE_TESTING;
-        $stateRemoteLive = YouTubeEvent::STATE_REMOTE_LIVE;
-
-        if ($broadcastState === $stateRemoteTesting || $broadcastState === $stateRemoteLive) {
-            $stream = $this->getStream($liveBroadcast, $channelYouTube);
-            if (!$stream) {
-                $canChangeState = false;
-                $warning = sprintf('Can\'t change state when no stream is present for "%s"', $liveBroadcast);
-                $this->logger->warning($warning);
-            }
-
-            $streamStatus = $stream->getStatus()->getStreamStatus();
-
-            if (self::STREAM_ACTIVE_STATUS !== $streamStatus) {
-                $canChangeState = false;
-                $this->logger->warning(sprintf(
-                    'Stream state must be \'active\' for "%s", current state is \'%s\'',
-                    $liveBroadcast,
-                    $streamStatus
-                ));
-            }
-        }
-
-        $client = $this->getYouTubeApiClient();
-        if ($canChangeState && $client) {
-            $this->logger->info('YouTube transition state', ['state' => $broadcastState]);
-            try {
-                $client->liveBroadcasts->transition($broadcastState, $youTubeId, 'status');
-
-                return true;
-            } catch (\Google_Service_Exception $exception) {
-                $this->logger->error(
-                    'YouTube transition state',
-                    ['exception' => $exception->getMessage()]
-                );
-            }
-        }
-
-        return false;
     }
 
     /**

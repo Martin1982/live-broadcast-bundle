@@ -12,7 +12,7 @@ services:
             - ~
         calls:
             - [ setTranslationDomain, [LiveBroadcastBundle]]
-            - [ setApiStack, ["@live.broadcast.channelapi.stack"]]
+            - [ setBroadcastManager, ["@live.broadcast.broadcastmanager"]]
 
     sonata.admin.channel:
         class: Martin1982\LiveBroadcastBundle\Admin\ChannelAdmin
@@ -48,9 +48,8 @@ services:
         arguments:
             - sonata.block.service.youtubeauth
             - "@templating"
-            - "@live.broadcast.youtubeapi.service"
+            - "@live.broadcast.channelapi.client.google"
             - "@request_stack"
-            - "@live.broadcast.googleredirect.service"
         tags:
             - { name: sonata.block }
 
