@@ -27,11 +27,13 @@ class SchedulerCommandsLinuxTest extends TestCase
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
         $exec->expects(static::once())->willReturnCallback(
+            // phpcs:disable Symfony.Functions.ReturnType.Invalid
             function ($command) {
                 self::assertEquals('kill 1337', $command);
 
                 return '';
             }
+            // phpcs:enable
         );
 
         $command->stopProcess(1337);

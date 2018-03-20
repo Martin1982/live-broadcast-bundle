@@ -27,11 +27,13 @@ class SchedulerCommandsWindowsTest extends TestCase
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Windows', 'exec');
         $exec->expects(static::once())->willReturnCallback(
+            // phpcs:disable Symfony.Functions.ReturnType.Invalid
             function ($command) {
                 self::assertEquals('TASKKILL /PID 1337 /T', $command);
 
                 return 'killed';
             }
+            // phpcs:enable
         );
 
         $command->stopProcess(1337);

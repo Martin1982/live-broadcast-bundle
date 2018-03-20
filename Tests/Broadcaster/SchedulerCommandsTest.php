@@ -27,12 +27,14 @@ class SchedulerCommandsTest extends TestCase
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'exec');
         $exec->expects(static::once())->willReturnCallback(
+            // phpcs:disable Symfony.Functions.ReturnType.Invalid
             function ($command) {
                 // @codingStandardsIgnoreLine
                 self::assertEquals('ffmpeg input output -metadata broadcast_id=4 -metadata unit=test -metadata env=unittest >/dev/null 2>&1;', $command);
 
                 return '';
             }
+            // phpcs:enable Symfony.Functions.ReturnType.Invalid
         );
 
         $command->startProcess('input', 'output', ['broadcast_id' => 4, 'unit' => 'test']);
@@ -48,6 +50,7 @@ class SchedulerCommandsTest extends TestCase
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'exec');
         $exec->expects(static::once())->willReturnCallback(
+            // phpcs:disable Symfony.Functions.ReturnType.Invalid
             function ($command) {
                 $now = new \DateTime();
                 // @codingStandardsIgnoreLine
@@ -55,6 +58,7 @@ class SchedulerCommandsTest extends TestCase
 
                 return '';
             }
+            // phpcs:enable Symfony.Functions.ReturnType.Invalid
         );
 
         $command->startProcess('input', 'output', ['broadcast_id' => 12, 'test' => 'unit']);
@@ -69,11 +73,13 @@ class SchedulerCommandsTest extends TestCase
 
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
         $exec->expects(static::once())->willReturnCallback(
+            // phpcs:disable Symfony.Functions.ReturnType.Invalid
             function ($command) {
                 self::assertEquals('kill 1337', $command);
 
                 return '';
             }
+            // phpcs:enable Symfony.Functions.ReturnType.Invalid
         );
 
         $command->stopProcess(1337);

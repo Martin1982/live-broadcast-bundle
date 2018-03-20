@@ -25,9 +25,6 @@ class YouTubeStreamEndListenerTest extends TestCase
     public function testOnStreamEnd(): void
     {
         $api = $this->createMock(YouTubeApiService::class);
-        $api->expects(static::any())
-            ->method('transitionState')
-            ->willReturn(true);
 
         $broadcast = $this->createMock(LiveBroadcast::class);
         $channel = $this->createMock(ChannelYouTube::class);
