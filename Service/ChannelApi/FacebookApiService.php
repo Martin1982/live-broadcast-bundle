@@ -214,6 +214,44 @@ class FacebookApiService implements ChannelApiInterface
     }
 
     /**
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     *
+     * @return null|string
+     *
+     * @throws \InvalidArgumentException
+     * @throws LiveBroadcastOutputException
+     */
+    public function getStreamUrl(LiveBroadcast $broadcast, AbstractChannel $channel): ?string
+    {
+        if (!$this->facebookSDK) {
+            $this->initFacebook();
+        }
+
+        if (!$channel instanceof ChannelFacebook) {
+            return null;
+        }
+
+        $eventRepository = $this->entityManager->getRepository(StreamEvent::class);
+        $event = $eventRepository->findOneBy(compact('broadcast', 'channel'));
+
+        if (!$event) {
+            return null;
+        }
+
+        $eventId = $event->getExternalStreamId();
+        try {
+            $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
+            $facebookStream = $this->facebookSDK->get('/'.$eventId);
+            $streamUrl = $facebookStream->getGraphNode()->getField('stream_url');
+        } catch (FacebookSDKException $exception) {
+            throw new LiveBroadcastOutputException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
+        }
+
+        return $streamUrl;
+    }
+
+    /**
      * @throws LiveBroadcastOutputException
      */
     private function initFacebook(): void

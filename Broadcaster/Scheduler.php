@@ -10,7 +10,6 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Event\PostBroadcastLoopEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\DynamicStreamUrlInterface;
@@ -99,20 +98,19 @@ class Scheduler
      */
     public function applySchedule(): void
     {
-        $this->updateRunningBroadcasts();
         $this->stopExpiredBroadcasts();
-        $this->getPlannedBroadcasts();
         $this->startPlannedBroadcasts();
-
-        $postLoopEvent = new PostBroadcastLoopEvent();
-        $this->dispatcher->dispatch(PostBroadcastLoopEvent::NAME, $postLoopEvent);
     }
 
     /**
      * Start planned broadcasts if not already running.
+     *
+     * @throws LiveBroadcastException
      */
     protected function startPlannedBroadcasts(): void
     {
+        $this->getPlannedBroadcasts();
+
         foreach ($this->plannedBroadcasts as $plannedBroadcast) {
             $this->startBroadcastOnChannels($plannedBroadcast);
         }
@@ -164,6 +162,7 @@ class Scheduler
      */
     protected function stopExpiredBroadcasts(): void
     {
+        $this->updateRunningBroadcasts();
         $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
 
         foreach ($this->runningBroadcasts as $runningBroadcast) {

@@ -59,28 +59,6 @@ services:
           - { name: doctrine.event_listener, event: preUpdate }
           - { name: doctrine.event_listener, event: postLoad }
 
-#  live.broadcast.facebook_pre_broadcast_listener:
-#      class: Martin1982\LiveBroadcastBundle\EventListener\FacebookPreBroadcastListener
-#      arguments: ["@live.broadcast.facebookapi.service"]
-#      tags:
-#          - { name: kernel.event_subscriber }
-#  live.broadcast.youtube_pre_broadcast_listener:
-#      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubePreBroadcastListener
-#      arguments: ["@live.broadcast.youtubeapi.service", "@live.broadcast.googleredirect.service"]
-#      tags:
-#          - { name: kernel.event_subscriber }
-#  live.broadcast.youtube_post_broadcast_listener:
-#      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubePostBroadcastListener
-#      arguments: ["@live.broadcast.youtubeapi.service", "@live.broadcast.googleredirect.service"]
-#      tags:
-#          - { name: kernel.event_subscriber }
-#  live.broadcast.youtube_post_broadcastloop_listener:
-#      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubePostBroadcastLoopListener
-#      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.scheduler.commands", "@live.broadcast.youtubeapi.service", "@kernel", "@live.broadcast.googleredirect.service", "@logger"]
-#      tags:
-#          - { name: kernel.event_subscriber }
-#          - { name: monolog.logger, channel: livebroadcaster }
-
 # Remote API stack
   live.broadcast.channelapi.stack:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack

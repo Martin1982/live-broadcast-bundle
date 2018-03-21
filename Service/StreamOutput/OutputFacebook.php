@@ -19,11 +19,6 @@ use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 class OutputFacebook implements OutputInterface, DynamicStreamUrlInterface
 {
     /**
-     * @var string
-     */
-    private $streamUrl;
-
-    /**
      * @var ChannelFacebook
      */
     private $channel;
@@ -69,11 +64,7 @@ class OutputFacebook implements OutputInterface, DynamicStreamUrlInterface
      */
     public function generateOutputCmd(): string
     {
-        if (empty($this->streamUrl)) {
-            throw new LiveBroadcastOutputException('The Facebook stream url must be set');
-        }
-
-        return sprintf('-c:v libx264 -crf 30 -preset ultrafast -c:a copy -f flv "%s"', $this->streamUrl);
+        return sprintf('-c:v libx264 -crf 30 -preset ultrafast -c:a copy -f flv "%s"', $this->getStreamUrl());
     }
 
     /**
@@ -89,43 +80,17 @@ class OutputFacebook implements OutputInterface, DynamicStreamUrlInterface
      *
      * @throws LiveBroadcastOutputException
      */
-    public function getAccessToken(): string
-    {
-        if (!($this->channel instanceof ChannelFacebook)) {
-            throw new LiveBroadcastOutputException(sprintf('%s Facebook channel not configured', __FUNCTION__));
-        }
-
-        return $this->channel->getAccessToken();
-    }
-
-    /**
-     * @return string
-     *
-     * @throws LiveBroadcastOutputException
-     */
-    public function getEntityId(): string
-    {
-        if (!($this->channel instanceof ChannelFacebook)) {
-            throw new LiveBroadcastOutputException(sprintf('%s Facebook channel not configured', __FUNCTION__));
-        }
-
-        return $this->channel->getFbEntityId();
-    }
-
-    /**
-     * @param string $streamUrl
-     */
-    public function setStreamUrl($streamUrl): void
-    {
-        $this->streamUrl = $streamUrl;
-    }
-
-    /**
-     * @return string
-     */
     public function getStreamUrl(): string
     {
-        return $this->streamUrl;
+        if (!$this->broadcast) {
+            throw new LiveBroadcastOutputException('No broadcast set');
+        }
+
+        if (!$this->channel) {
+            throw new LiveBroadcastOutputException('No channel set');
+        }
+
+        return $this->api->getStreamUrl($this->broadcast, $this->channel);
     }
 
     /**
