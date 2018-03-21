@@ -51,6 +51,8 @@ class CRUDController extends Controller
      * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      */
     public function youTubeOAuthAction(Request $request): RedirectResponse
     {
@@ -72,6 +74,8 @@ class CRUDController extends Controller
      * @param SessionInterface $session
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      */
     protected function clearToken(SessionInterface $session): void
     {
@@ -85,6 +89,8 @@ class CRUDController extends Controller
      * @param Request          $request
      * @param SessionInterface $session
      *
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     protected function checkRequestCode(Request $request, SessionInterface $session): void
@@ -124,6 +130,8 @@ class CRUDController extends Controller
     /**
      * @return \Google_Client
      *
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     private function getGoogleClient(): \Google_Client

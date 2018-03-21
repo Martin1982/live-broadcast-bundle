@@ -7,8 +7,11 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
+use Doctrine\Common\Persistence\AbstractManagerRegistry;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -34,6 +37,16 @@ class LiveBroadcastAdmin extends AbstractAdmin
     protected $broadcastManager;
 
     /**
+     * @var ThumbnailUploadListener
+     */
+    protected $thumbnailListener;
+
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+
+    /**
      * {@inheritdoc}
      */
     public function __construct(string $code, string $class, string $baseControllerName)
@@ -54,6 +67,24 @@ class LiveBroadcastAdmin extends AbstractAdmin
     public function setBroadcastManager(BroadcastManager $manager): void
     {
         $this->broadcastManager = $manager;
+    }
+
+    /**
+     * @param ThumbnailUploadListener $listener
+     */
+    public function setThumbnailListener(ThumbnailUploadListener $listener): void
+    {
+        $this->thumbnailListener = $listener;
+    }
+
+    /**
+     * @param AbstractManagerRegistry $registry
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function setObjectManager(AbstractManagerRegistry $registry):void
+    {
+        $this->objectManager = $registry->getManager();
     }
 
     /**
@@ -173,10 +204,8 @@ class LiveBroadcastAdmin extends AbstractAdmin
             return;
         }
 
-        $uploadListener = $container->get('live.broadcast.thumbnail.listener');
-        $objectManager = $container->get('doctrine')->getManager();
-        $lifeCycleEvent = new LifecycleEventArgs($liveBroadcast, $objectManager);
-        $uploadListener->postLoad($lifeCycleEvent);
+        $lifeCycleEvent = new LifecycleEventArgs($liveBroadcast, $this->objectManager);
+        $this->thumbnailListener->postLoad($lifeCycleEvent);
     }
 
     /**

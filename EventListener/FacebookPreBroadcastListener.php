@@ -35,7 +35,6 @@ class FacebookPreBroadcastListener implements EventSubscriberInterface
      * @param PreBroadcastEvent $event
      *
      * @throws \InvalidArgumentException
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function onPreBroadcast(PreBroadcastEvent $event): void
     {

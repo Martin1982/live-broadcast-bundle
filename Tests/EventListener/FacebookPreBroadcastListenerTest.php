@@ -7,11 +7,9 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\EventListener;
 
-use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Event\PreBroadcastEvent;
 use Martin1982\LiveBroadcastBundle\EventListener\FacebookPreBroadcastListener;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
-use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Service;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
@@ -148,12 +148,12 @@ class BroadcastManager
     }
 
     /**
-     * @param ArrayCollection $previousState
-     * @param ArrayCollection $newState
+     * @param Collection $previousState
+     * @param Collection $newState
      *
      * @return array
      */
-    private function getAddedChannels($previousState, ArrayCollection $newState): array
+    private function getAddedChannels(Collection $previousState, Collection $newState): array
     {
         $channels = [];
 
@@ -167,12 +167,12 @@ class BroadcastManager
     }
 
     /**
-     * @param ArrayCollection $previousState
-     * @param ArrayCollection $newState
+     * @param Collection $previousState
+     * @param Collection $newState
      *
      * @return array
      */
-    private function getUnchangedChannels(ArrayCollection $previousState, ArrayCollection $newState): array
+    private function getUnchangedChannels(Collection $previousState, Collection $newState): array
     {
         $channels = [];
 
@@ -186,12 +186,12 @@ class BroadcastManager
     }
 
     /**
-     * @param ArrayCollection $previousState
-     * @param ArrayCollection $newState
+     * @param Collection $previousState
+     * @param Collection $newState
      *
      * @return array
      */
-    private function getDeletedChannels(ArrayCollection $previousState, ArrayCollection $newState): array
+    private function getDeletedChannels(Collection $previousState, Collection $newState): array
     {
         $channels = [];
 

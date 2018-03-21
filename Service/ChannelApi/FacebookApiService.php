@@ -51,8 +51,8 @@ class FacebookApiService implements ChannelApiInterface
      */
     public function __construct($applicationId, $applicationSecret, EntityManager $entityManager)
     {
-        $this->applicationId = $applicationId;
-        $this->applicationSecret = $applicationSecret;
+        $this->applicationId = (string) $applicationId;
+        $this->applicationSecret = (string) $applicationSecret;
         $this->entityManager = $entityManager;
     }
 
@@ -60,6 +60,7 @@ class FacebookApiService implements ChannelApiInterface
      * @param LiveBroadcast                   $broadcast
      * @param AbstractChannel|ChannelFacebook $channel
      *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\ORMException
      * @throws \InvalidArgumentException
@@ -101,7 +102,8 @@ class FacebookApiService implements ChannelApiInterface
         $event->setChannel($channel);
         $event->setExternalStreamId($eventId);
 
-        $this->entityManager->flush($event);
+        $this->entityManager->persist($event);
+        $this->entityManager->flush();
     }
 
     /**
@@ -124,7 +126,8 @@ class FacebookApiService implements ChannelApiInterface
         $eventRepository = $this->entityManager->getRepository(StreamEvent::class);
         $event = $eventRepository->findOneBy(compact('broadcast', 'channel'));
 
-        $eventId = $event->getEventId();
+        $eventId = $event->getExternalStreamId();
+
         try {
             $params = [
                 'title' => $broadcast->getName(),
@@ -162,7 +165,11 @@ class FacebookApiService implements ChannelApiInterface
         $eventRepository = $this->entityManager->getRepository(StreamEvent::class);
         $event = $eventRepository->findOneBy(compact('broadcast', 'channel'));
 
-        $eventId = $event->getEventId();
+        if (!$event) {
+            return;
+        }
+
+        $eventId = $event->getExternalStreamId();
         try {
             $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
             $this->facebookSDK->delete('/'.$eventId);

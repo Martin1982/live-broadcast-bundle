@@ -13,6 +13,8 @@ services:
         calls:
             - [ setTranslationDomain, [LiveBroadcastBundle]]
             - [ setBroadcastManager, ["@live.broadcast.broadcastmanager"]]
+            - [ setThumbnailListener, ["@live.broadcast.thumbnail.listener"]]
+            - [ setObjectManager, ["@doctrine"]]
 
     sonata.admin.channel:
         class: Martin1982\LiveBroadcastBundle\Admin\ChannelAdmin

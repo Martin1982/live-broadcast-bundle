@@ -108,6 +108,52 @@ class YouTubeClient
     }
 
     /**
+     * Remove a planned live event on YouTube
+     *
+     * @param StreamEvent $event
+     */
+    public function removeLivestream(StreamEvent $event): void
+    {
+        $this->youTubeClient->liveBroadcasts->delete($event->getExternalStreamId());
+    }
+
+    /**
+     * @param StreamEvent $event
+     */
+    public function updateLiveStream(StreamEvent $event): void
+    {
+        $plannedBroadcast = $event->getBroadcast();
+        $externalId = $event->getExternalStreamId();
+        if (!$plannedBroadcast || !$externalId) {
+            return;
+        }
+        $start = $plannedBroadcast->getStartTimestamp();
+
+        if (new \DateTime() > $start) {
+            $start = new \DateTime('+1 second');
+        }
+
+        $broadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet();
+        $broadcastSnippet->setTitle($plannedBroadcast->getName());
+        $broadcastSnippet->setDescription($plannedBroadcast->getDescription());
+        $broadcastSnippet->setScheduledStartTime($start->format(\DateTime::ATOM));
+        $broadcastSnippet->setScheduledEndTime($plannedBroadcast->getEndTimestamp()->format(\DateTime::ATOM));
+
+        $plannedThumbnail = $plannedBroadcast->getThumbnail();
+        if ($plannedThumbnail instanceof File && $plannedThumbnail->isFile()) {
+            $thumbnails = $this->getThumbnails($plannedThumbnail);
+            $broadcastSnippet->setThumbnails($thumbnails);
+        }
+
+        $liveBroadcast = new \Google_Service_YouTube_LiveBroadcast();
+        $liveBroadcast->setId($externalId);
+        $liveBroadcast->setSnippet($broadcastSnippet);
+        $liveBroadcast->setKind('youtube#liveBroadcast');
+
+        $this->youTubeClient->liveBroadcasts->update('snippet', $liveBroadcast);
+    }
+
+    /**
      * @param string $title
      *
      * @return \Google_Service_YouTube_LiveStream
@@ -151,6 +197,7 @@ class YouTubeClient
      */
     public function getYoutubeBroadcast(string $youTubeId): ?\Google_Service_YouTube_LiveBroadcast
     {
+        /** @var \Google_Service_YouTube_LiveBroadcast|null $broadcast */
         $broadcast = $this->youTubeClient
             ->liveBroadcasts
             ->listLiveBroadcasts('status,contentDetails', [ 'id' => $youTubeId])
@@ -176,16 +223,6 @@ class YouTubeClient
         $name = $stream->getCdn()->getIngestionInfo()->getStreamName();
 
         return $address.'/'.$name;
-    }
-
-    /**
-     * Remove a planned live event on YouTube
-     *
-     * @param StreamEvent $event
-     */
-    public function removeLivestream(StreamEvent $event): void
-    {
-        $this->youTubeClient->liveBroadcasts->delete($event->getExternalStreamId());
     }
 
     /**
