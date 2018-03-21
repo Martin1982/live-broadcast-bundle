@@ -39,31 +39,6 @@ class FacebookPreBroadcastListenerTest extends TestCase
     }
 
     /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     * @throws \ReflectionException
-     */
-    public function testOnPreBroadcast(): void
-    {
-        $broadcast = new LiveBroadcast();
-        $output = new OutputFacebook($this->facebookService);
-
-        $this->facebookService->expects(self::once())
-            ->method('createFacebookLiveVideo')
-            ->with($broadcast, $output)
-            ->willReturn('facebook.stream.url');
-
-        $event = new PreBroadcastEvent($broadcast, $output);
-
-        $this->eventListener->onPreBroadcast($event);
-
-        $reflection = new \ReflectionClass($output);
-        $property = $reflection->getProperty('streamUrl');
-        $property->setAccessible(true);
-
-        self::assertEquals('facebook.stream.url', $property->getValue($output));
-    }
-
-    /**
      * Test subscribed events
      */
     public function testSubscribedEvents(): void

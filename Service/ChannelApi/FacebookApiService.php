@@ -7,14 +7,15 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi;
 
+use Doctrine\ORM\EntityManager;
 use Facebook\Authentication\AccessToken;
-use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook as FacebookSDK;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
-use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 
 /**
  * Class FacebookApiService
@@ -32,84 +33,145 @@ class FacebookApiService implements ChannelApiInterface
     private $applicationSecret;
 
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
      * @var FacebookSDK
      */
     private $facebookSDK;
 
     /**
      * FacebookApiService constructor.
-     * @param string $applicationId
-     * @param string $applicationSecret
+     *
+     * @param string        $applicationId
+     * @param string        $applicationSecret
+     * @param EntityManager $entityManager
      */
-    public function __construct($applicationId, $applicationSecret)
+    public function __construct($applicationId, $applicationSecret, EntityManager $entityManager)
     {
         $this->applicationId = $applicationId;
         $this->applicationSecret = $applicationSecret;
+        $this->entityManager = $entityManager;
     }
 
     /**
-     * @param LiveBroadcast   $broadcast
-     * @param AbstractChannel $channel
-     */
-    public function createLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel)
-    {
-        // TODO: Implement createLiveEvent() method.
-    }
-
-    /**
-     * @param LiveBroadcast   $broadcast
-     * @param AbstractChannel $channel
-     */
-    public function updateLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel)
-    {
-        // TODO: Implement updateLiveEvent() method.
-    }
-
-    /**
-     * @param LiveBroadcast   $broadcast
-     * @param AbstractChannel $channel
-     */
-    public function removeLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel)
-    {
-        // TODO: Implement removeLiveEvent() method.
-    }
-
-    /**
-     * @param LiveBroadcast  $liveBroadcast
-     * @param OutputFacebook $outputFacebook
+     * @param LiveBroadcast                   $broadcast
+     * @param AbstractChannel|ChannelFacebook $channel
      *
-     * @return null|string
-     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMException
      * @throws \InvalidArgumentException
      * @throws LiveBroadcastOutputException
      */
-    public function createFacebookLiveVideo(LiveBroadcast $liveBroadcast, OutputFacebook $outputFacebook): ?string
+    public function createLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
         if (!$this->facebookSDK) {
             $this->initFacebook();
         }
 
+        if (!$channel instanceof ChannelFacebook) {
+            return;
+        }
+
+        $eventId = null;
+
         try {
             $params = [
-                'title' => $liveBroadcast->getName(),
-                'description' => $liveBroadcast->getDescription(),
+                'title' => $broadcast->getName(),
+                'description' => $broadcast->getDescription(),
+                'planned_start_time' => $broadcast->getStartTimestamp()->format('U'),
             ];
 
-            $this->facebookSDK->setDefaultAccessToken($outputFacebook->getAccessToken());
-            $response = $this->facebookSDK->post($outputFacebook->getEntityId().'/live_videos', $params);
-        } catch (FacebookResponseException $ex) {
-            throw new LiveBroadcastOutputException(sprintf('Facebook exception: %s', $ex->getMessage()));
-        } catch (FacebookSDKException $ex) {
-            throw new LiveBroadcastOutputException(sprintf('Facebook SDK exception: %s', $ex->getMessage()));
+            $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
+            $response = $this->facebookSDK->post($channel->getFbEntityId().'/live_videos', $params);
+        } catch (FacebookSDKException $exception) {
+            throw new LiveBroadcastOutputException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
         }
 
         $body = $response->getDecodedBody();
 
         if (array_key_exists('stream_url', $body)) {
-            return $body['stream_url'];
+            $eventId = $body['id'];
         }
 
-        return null;
+        $event = new StreamEvent();
+        $event->setBroadcast($broadcast);
+        $event->setChannel($channel);
+        $event->setExternalStreamId($eventId);
+
+        $this->entityManager->flush($event);
+    }
+
+    /**
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     *
+     * @throws \InvalidArgumentException
+     * @throws LiveBroadcastOutputException
+     */
+    public function updateLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
+    {
+        if (!$this->facebookSDK) {
+            $this->initFacebook();
+        }
+
+        if (!$channel instanceof ChannelFacebook) {
+            return;
+        }
+
+        $eventRepository = $this->entityManager->getRepository(StreamEvent::class);
+        $event = $eventRepository->findOneBy(compact('broadcast', 'channel'));
+
+        $eventId = $event->getEventId();
+        try {
+            $params = [
+                'title' => $broadcast->getName(),
+                'description' => $broadcast->getDescription(),
+                'planned_start_time' => $broadcast->getStartTimestamp()->format('U'),
+            ];
+
+            $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
+            $this->facebookSDK->post('/'.$eventId, $params);
+        } catch (FacebookSDKException $exception) {
+            throw new LiveBroadcastOutputException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
+        }
+    }
+
+    /**
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \InvalidArgumentException
+     * @throws LiveBroadcastOutputException
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function removeLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
+    {
+        if (!$this->facebookSDK) {
+            $this->initFacebook();
+        }
+
+        if (!$channel instanceof ChannelFacebook) {
+            return;
+        }
+
+        $eventRepository = $this->entityManager->getRepository(StreamEvent::class);
+        $event = $eventRepository->findOneBy(compact('broadcast', 'channel'));
+
+        $eventId = $event->getEventId();
+        try {
+            $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
+            $this->facebookSDK->delete('/'.$eventId);
+        } catch (FacebookSDKException $exception) {
+            throw new LiveBroadcastOutputException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
+        }
+
+        $this->entityManager->remove($event);
+        $this->entityManager->flush();
     }
 
     /**

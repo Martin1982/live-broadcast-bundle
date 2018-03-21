@@ -9,18 +9,18 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Metadata;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class YouTubeEventTest
+ * Class StreamEventTest
  */
-class YouTubeEventTest extends TestCase
+class StreamEventTest extends TestCase
 {
     /**
-     * @var YouTubeEvent
+     * @var StreamEvent
      */
-    private $youTubeEvent;
+    private $streamEvent;
 
     /**
      * Setup default test object
@@ -29,15 +29,15 @@ class YouTubeEventTest extends TestCase
      */
     public function setUp()
     {
-        $this->youTubeEvent = new YouTubeEvent();
-        $this->youTubeEvent->setBroadcast(new LiveBroadcast());
-        $this->youTubeEvent->setChannel(new ChannelYouTube());
-        $this->youTubeEvent->setYouTubeId('youtube.id');
+        $this->streamEvent = new StreamEvent();
+        $this->streamEvent->setBroadcast(new LiveBroadcast());
+        $this->streamEvent->setChannel(new ChannelYouTube());
+        $this->streamEvent->setExternalStreamId('youtube.id');
 
-        $reflection = new \ReflectionClass($this->youTubeEvent);
+        $reflection = new \ReflectionClass($this->streamEvent);
         $property = $reflection->getProperty('eventId');
         $property->setAccessible(true);
-        $property->setValue($this->youTubeEvent, 1);
+        $property->setValue($this->streamEvent, 1);
     }
 
     /**
@@ -45,7 +45,7 @@ class YouTubeEventTest extends TestCase
      */
     public function testEventId(): void
     {
-        self::assertEquals(1, $this->youTubeEvent->getEventId());
+        self::assertEquals(1, $this->streamEvent->getEventId());
     }
 
     /**
@@ -53,7 +53,7 @@ class YouTubeEventTest extends TestCase
      */
     public function testBroadcast(): void
     {
-        self::assertInstanceOf(LiveBroadcast::class, $this->youTubeEvent->getBroadcast());
+        self::assertInstanceOf(LiveBroadcast::class, $this->streamEvent->getBroadcast());
     }
 
     /**
@@ -61,7 +61,7 @@ class YouTubeEventTest extends TestCase
      */
     public function testChannel(): void
     {
-        self::assertInstanceOf(ChannelYouTube::class, $this->youTubeEvent->getChannel());
+        self::assertInstanceOf(ChannelYouTube::class, $this->streamEvent->getChannel());
     }
 
     /**
@@ -69,6 +69,6 @@ class YouTubeEventTest extends TestCase
      */
     public function testYouTubeId(): void
     {
-        self::assertEquals('youtube.id', $this->youTubeEvent->getYouTubeId());
+        self::assertEquals('youtube.id', $this->streamEvent->getExternalStreamId());
     }
 }

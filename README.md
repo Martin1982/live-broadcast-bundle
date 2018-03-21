@@ -99,7 +99,7 @@ To view the output of FFMpeg you need to configure a log directory in your `app/
 ## Event loop
 In stead of using cronjobs to trigger broadcasts you can use an event loop by using this configuration:
 
-	live_broadcast:
+    live_broadcast:
         eventloop:
             enabled: true
             timer: 5
@@ -166,10 +166,10 @@ Add the Sonata block to your blocks config:
 ### Step 4: Update parameters 
 Add these lines to your parameters.yml (used for generating a thumbnail URL)
 
-	parameters:
-	    router.request_context.host: broadcast.com
-	    router.request_context.scheme: https
-	
+    parameters:
+        router.request_context.host: broadcast.com
+        router.request_context.scheme: https
+    
 ## Add new output platforms
 
 ### Step 1: Create channel entity 

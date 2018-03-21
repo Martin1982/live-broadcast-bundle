@@ -81,37 +81,37 @@ class RunningBroadcastTest extends TestCase
     }
 
     /**
-     * @param int $id
+     * @param int $channelId
      *
      * @return ChannelTwitch
      *
      * @throws \ReflectionException
      */
-    private function getChannelTwitch($id): ChannelTwitch
+    private function getChannelTwitch($channelId): ChannelTwitch
     {
         $channel = new ChannelTwitch();
         $reflection = new \ReflectionClass($channel);
         $property = $reflection->getProperty('channelId');
         $property->setAccessible(true);
-        $property->setValue($channel, $id);
+        $property->setValue($channel, $channelId);
 
         return $channel;
     }
 
     /**
-     * @param int $id
+     * @param int $broadcastId
      *
      * @return LiveBroadcast
      *
      * @throws \ReflectionException
      */
-    private function getLiveBroadcast($id): LiveBroadcast
+    private function getLiveBroadcast($broadcastId): LiveBroadcast
     {
         $liveBroadcast = new LiveBroadcast();
         $reflection = new \ReflectionClass($liveBroadcast);
         $property = $reflection->getProperty('broadcastId');
         $property->setAccessible(true);
-        $property->setValue($liveBroadcast, $id);
+        $property->setValue($liveBroadcast, $broadcastId);
 
         return $liveBroadcast;
     }

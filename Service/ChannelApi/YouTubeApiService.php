@@ -11,8 +11,8 @@ use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
-use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEventRepository;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\YouTubeClient;
 use Psr\Log\LoggerInterface;
@@ -89,12 +89,12 @@ class YouTubeApiService implements ChannelApiInterface
         $stream           = $this->client->createStream($broadcast->getName());
         $youtubeBroadcast = $this->client->bind($youtubeBroadcast, $stream);
 
-        $youTubeEvent = new YouTubeEvent();
-        $youTubeEvent->setBroadcast($broadcast);
-        $youTubeEvent->setChannel($channel);
-        $youTubeEvent->setYouTubeId($youtubeBroadcast->getId());
+        $streamEvent = new StreamEvent();
+        $streamEvent->setBroadcast($broadcast);
+        $streamEvent->setChannel($channel);
+        $streamEvent->setExternalStreamId($youtubeBroadcast->getId());
 
-        $this->entityManager->persist($youTubeEvent);
+        $this->entityManager->persist($streamEvent);
         $this->entityManager->flush();
     }
 
@@ -112,11 +112,11 @@ class YouTubeApiService implements ChannelApiInterface
         $this->setChannel($channel);
 
         $eventRepository = $this->getEventRepository();
-        $youTubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
+        $streamEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
 
-        if ($youTubeEvent) {
-            $this->client->removeLivestream($youTubeEvent);
-            $this->entityManager->remove($youTubeEvent);
+        if ($streamEvent) {
+            $this->client->removeLivestream($streamEvent);
+            $this->entityManager->remove($streamEvent);
             $this->entityManager->flush();
         }
     }
@@ -161,12 +161,12 @@ class YouTubeApiService implements ChannelApiInterface
         $streamUrl = null;
         $this->setChannel($channel);
 
-        $eventRepository = $this->entityManager->getRepository(YouTubeEvent::class);
+        $eventRepository = $this->entityManager->getRepository(StreamEvent::class);
         $event = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
         if (!$event) {
             throw new LiveBroadcastOutputException('No event found');
         }
-        $youTubeId = $event->getYouTubeId();
+        $youTubeId = $event->getExternalStreamId();
 
         $broadcast = $this->client->getYoutubeBroadcast($youTubeId);
         if ($broadcast) {
@@ -210,7 +210,7 @@ class YouTubeApiService implements ChannelApiInterface
             return null;
         }
 
-        $youTubeId = $event->getYouTubeId();
+        $youTubeId = $event->getExternalStreamId();
         $youTubeBroadcast = $this->getExternalBroadcastById($youTubeId);
 
         if (!$youTubeBroadcast) {
@@ -235,15 +235,15 @@ class YouTubeApiService implements ChannelApiInterface
     public function updateLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
         $eventRepository = $this->getEventRepository();
-        $youTubeEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
+        $streamEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
 
-        if (!$youTubeEvent) {
+        if (!$streamEvent) {
             $this->createLiveEvent($broadcast, $channel);
 
             return;
         }
 
-        $this->updateLiveStream($youTubeEvent);
+        $this->updateLiveStream($streamEvent);
     }
 
     /**
@@ -263,7 +263,7 @@ class YouTubeApiService implements ChannelApiInterface
         $event = $eventRepository->findBroadcastingToChannel($liveBroadcast, $channelYouTube);
 
         if ($event) {
-            $youTubeId = $event->getYouTubeId();
+            $youTubeId = $event->getExternalStreamId();
             $youTubeBroadcast = $this->getExternalBroadcastById($youTubeId);
 
             if ($youTubeBroadcast) {
@@ -279,21 +279,21 @@ class YouTubeApiService implements ChannelApiInterface
     /**
      * Edit a planned live event
      *
-     * @param YouTubeEvent $event
+     * @param StreamEvent $event
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    protected function updateLiveStream(YouTubeEvent $event): void
+    protected function updateLiveStream(StreamEvent $event): void
     {
         $channel = $event->getChannel();
         $this->getAccessToken($channel->getRefreshToken());
         $liveBroadcast = $event->getBroadcast();
 
-        $broadcastResponse = $this->updateBroadcast($liveBroadcast, 'public', $event->getYouTubeId());
-        $event->setYouTubeId($broadcastResponse->getId());
+        $broadcastResponse = $this->updateBroadcast($liveBroadcast, 'public', $event->getExternalStreamId());
+        $event->setExternalStreamId($broadcastResponse->getId());
 
         $this->entityManager->persist($event);
         $this->entityManager->flush();
@@ -460,10 +460,10 @@ class YouTubeApiService implements ChannelApiInterface
     /**
      * Get the YouTube Event repository
      *
-     * @return YouTubeEventRepository
+     * @return StreamEventRepository
      */
-    private function getEventRepository(): YouTubeEventRepository
+    private function getEventRepository(): StreamEventRepository
     {
-        return $this->entityManager->getRepository(YouTubeEvent::class);
+        return $this->entityManager->getRepository(StreamEvent::class);
     }
 }

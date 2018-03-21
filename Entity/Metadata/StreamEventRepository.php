@@ -12,17 +12,17 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
- * Class YouTubeEventRepository
+ * Class StreamEventRepository
  *
  * @codeCoverageIgnore
  */
-class YouTubeEventRepository extends EntityRepository
+class StreamEventRepository extends EntityRepository
 {
     /**
      * @param LiveBroadcast   $broadcast
      * @param AbstractChannel $channel
      *
-     * @return null|Object|YouTubeEvent
+     * @return null|Object|StreamEvent
      */
     public function findBroadcastingToChannel(LiveBroadcast $broadcast, AbstractChannel $channel)
     {

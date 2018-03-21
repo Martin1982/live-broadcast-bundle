@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi;
 
+use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use PHPUnit\Framework\TestCase;
 
@@ -33,6 +34,8 @@ class FacebookApiServiceTest extends TestCase
      */
     protected function setUp()
     {
-        $this->facebook = new FacebookApiService('appid', 'appsecret');
+        $entityManager = $this->createMock(EntityManager::class);
+
+        $this->facebook = new FacebookApiService('appid', 'appsecret', $entityManager);
     }
 }

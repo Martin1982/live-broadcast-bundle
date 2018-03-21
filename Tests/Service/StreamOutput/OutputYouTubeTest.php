@@ -42,7 +42,7 @@ class OutputYouTubeTest extends TestCase
      */
     public function testChannel(): void
     {
-        self::assertInstanceOf(ChannelYouTube::class, $this->youTube->getChannel());
+        self::assertNotNull($this->youTube->getChannel());
     }
 
     /**

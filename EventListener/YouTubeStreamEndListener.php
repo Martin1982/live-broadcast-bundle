@@ -42,7 +42,7 @@ class YouTubeStreamEndListener implements EventSubscriberInterface
 //        $channel = $event->getChannel();
 //
 //        if ($channel instanceof ChannelYouTube) {
-//            $this->youTubeApi->transitionState($broadcast, $channel, YouTubeEvent::STATE_REMOTE_COMPLETE);
+//            $this->youTubeApi->transitionState($broadcast, $channel, StreamEvent::STATE_REMOTE_COMPLETE);
 //        }
     }
 

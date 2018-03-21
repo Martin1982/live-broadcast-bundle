@@ -9,7 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEvent;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\YouTubeConfig;
 use Symfony\Component\HttpFoundation\File\File;
@@ -181,11 +181,11 @@ class YouTubeClient
     /**
      * Remove a planned live event on YouTube
      *
-     * @param YouTubeEvent $event
+     * @param StreamEvent $event
      */
-    public function removeLivestream(YouTubeEvent $event): void
+    public function removeLivestream(StreamEvent $event): void
     {
-        $this->youTubeClient->liveBroadcasts->delete($event->getYouTubeId());
+        $this->youTubeClient->liveBroadcasts->delete($event->getExternalStreamId());
     }
 
     /**

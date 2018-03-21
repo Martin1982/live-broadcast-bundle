@@ -5,7 +5,7 @@ declare(strict_types=1);
  * This file is part of martin1982/livebroadcastbundle which is released under MIT.
  * See https://opensource.org/licenses/MIT for full license details.
  */
-namespace Martin1982\LiveBroadcastBundle\Tests\DependencyInjection\Compiler;
+namespace Martin1982\LiveBroadcastBundle\Tests\DependencyInjection;
 
 use Martin1982\LiveBroadcastBundle\DependencyInjection\LiveBroadcastExtension;
 use PHPUnit\Framework\TestCase;

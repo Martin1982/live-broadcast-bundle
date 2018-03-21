@@ -54,7 +54,7 @@ class InputAdmin extends AbstractAdmin
         }
 
         if ($subject instanceof MediaUrl) {
-            $formMapper->add('url', TextType::class, ['label' => 'URL to videofile']);
+            $formMapper->add('url', TextType::class, ['label' => 'URL to video file']);
         }
 
         $formMapper->end()

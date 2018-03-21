@@ -27,7 +27,7 @@ class StreamEndEventTest extends TestCase
      */
     public function testGetBroadcast(): void
     {
-        self::assertInstanceOf(LiveBroadcast::class, $this->event->getBroadcast());
+        self::assertNotNull($this->event->getBroadcast());
     }
 
     /**
@@ -35,7 +35,7 @@ class StreamEndEventTest extends TestCase
      */
     public function testGetChannel(): void
     {
-        self::assertInstanceOf(AbstractChannel::class, $this->event->getChannel());
+        self::assertNotNull($this->event->getChannel());
     }
 
     /**

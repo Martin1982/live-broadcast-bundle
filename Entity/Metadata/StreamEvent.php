@@ -8,16 +8,16 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Entity\Metadata;
 
 use Doctrine\ORM\Mapping as ORM;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
- * Class YouTubeEvent
+ * Class StreamEvent
  *
- * @ORM\Table(name="live_broadcast_youtube_event", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity(repositoryClass="Martin1982\LiveBroadcastBundle\Entity\Metadata\YouTubeEventRepository")
+ * @ORM\Table(name="live_broadcast_stream_event", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
+ * @ORM\Entity(repositoryClass="StreamEventRepository")
  */
-class YouTubeEvent
+class StreamEvent
 {
     /**
      * @var int|null
@@ -37,9 +37,9 @@ class YouTubeEvent
     protected $broadcast;
 
     /**
-     * @var ChannelYouTube|null
+     * @var AbstractChannel|null
      *
-     * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube")
+     * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel")
      * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", unique=false)
      */
     protected $channel;
@@ -47,9 +47,9 @@ class YouTubeEvent
     /**
      * @var string|null
      *
-     * @ORM\Column(name="youtube_id", type="string", length=128, nullable=false)
+     * @ORM\Column(name="external_stream_id", type="string", length=128, nullable=false)
      */
-    protected $youTubeId;
+    protected $externalStreamId;
 
     /**
      * @return int|null
@@ -70,9 +70,9 @@ class YouTubeEvent
     /**
      * @param LiveBroadcast $broadcast
      *
-     * @return YouTubeEvent
+     * @return StreamEvent
      */
-    public function setBroadcast(LiveBroadcast $broadcast): YouTubeEvent
+    public function setBroadcast(LiveBroadcast $broadcast): StreamEvent
     {
         $this->broadcast = $broadcast;
 
@@ -80,19 +80,19 @@ class YouTubeEvent
     }
 
     /**
-     * @return ChannelYouTube|null
+     * @return AbstractChannel|null
      */
-    public function getChannel(): ?ChannelYouTube
+    public function getChannel(): ?AbstractChannel
     {
         return $this->channel;
     }
 
     /**
-     * @param ChannelYouTube $channel
+     * @param AbstractChannel $channel
      *
-     * @return YouTubeEvent
+     * @return StreamEvent
      */
-    public function setChannel(ChannelYouTube $channel): YouTubeEvent
+    public function setChannel(AbstractChannel $channel): StreamEvent
     {
         $this->channel = $channel;
 
@@ -102,19 +102,19 @@ class YouTubeEvent
     /**
      * @return string|null
      */
-    public function getYouTubeId(): ?string
+    public function getExternalStreamId(): ?string
     {
-        return $this->youTubeId;
+        return $this->externalStreamId;
     }
 
     /**
-     * @param string $youTubeId
+     * @param string $externalStreamId
      *
-     * @return YouTubeEvent
+     * @return StreamEvent
      */
-    public function setYouTubeId($youTubeId): YouTubeEvent
+    public function setExternalStreamId($externalStreamId): StreamEvent
     {
-        $this->youTubeId = $youTubeId;
+        $this->externalStreamId = $externalStreamId;
 
         return $this;
     }
