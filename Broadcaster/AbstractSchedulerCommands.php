@@ -218,7 +218,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
             $loop = '-stream_loop -1 ';
         }
 
-        $streamStart = sprintf('ffmpeg %s%s %s%s >%s 2>&1;', $loop, $input, $output, $meta, $logFile);
+        $streamStart = sprintf('ffmpeg %s%s %s%s >> %s 2>&1 &', $loop, $input, $output, $meta, $logFile);
 
         return exec($streamStart);
     }

@@ -78,11 +78,19 @@ class FacebookApiService implements ChannelApiInterface
 
         $eventId = null;
 
+        $minTimestamp = new \DateTime('+15 minutes');
+        $startTimestamp = $broadcast->getStartTimestamp();
+
+        if ($startTimestamp < $minTimestamp) {
+            $startTimestamp = $minTimestamp;
+        }
+
         try {
             $params = [
                 'title' => $broadcast->getName(),
                 'description' => $broadcast->getDescription(),
-                'planned_start_time' => $broadcast->getStartTimestamp()->format('U'),
+                'planned_start_time' => $startTimestamp->format('U'),
+                'status' => 'SCHEDULED_LIVE',
             ];
 
             $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
@@ -128,11 +136,19 @@ class FacebookApiService implements ChannelApiInterface
 
         $eventId = $event->getExternalStreamId();
 
+        $minTimestamp = new \DateTime('+15 minutes');
+        $startTimestamp = $broadcast->getStartTimestamp();
+
+        if ($startTimestamp < $minTimestamp) {
+            $startTimestamp = $minTimestamp;
+        }
+
         try {
             $params = [
                 'title' => $broadcast->getName(),
                 'description' => $broadcast->getDescription(),
-                'planned_start_time' => $broadcast->getStartTimestamp()->format('U'),
+                'planned_start_time' => $startTimestamp->format('U'),
+                'status' => 'SCHEDULED_LIVE',
             ];
 
             $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
@@ -217,26 +233,26 @@ class FacebookApiService implements ChannelApiInterface
      * @param LiveBroadcast   $broadcast
      * @param AbstractChannel $channel
      *
-     * @return null|string
+     * @return string
      *
      * @throws \InvalidArgumentException
      * @throws LiveBroadcastOutputException
      */
-    public function getStreamUrl(LiveBroadcast $broadcast, AbstractChannel $channel): ?string
+    public function getStreamUrl(LiveBroadcast $broadcast, AbstractChannel $channel): string
     {
         if (!$this->facebookSDK) {
             $this->initFacebook();
         }
 
         if (!$channel instanceof ChannelFacebook) {
-            return null;
+            return '';
         }
 
         $eventRepository = $this->entityManager->getRepository(StreamEvent::class);
         $event = $eventRepository->findOneBy(compact('broadcast', 'channel'));
 
         if (!$event) {
-            return null;
+            return '';
         }
 
         $eventId = $event->getExternalStreamId();

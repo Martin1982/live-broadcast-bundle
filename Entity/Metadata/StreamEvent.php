@@ -32,7 +32,7 @@ class StreamEvent
      * @var LiveBroadcast|null
      *
      * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast")
-     * @ORM\JoinColumn(name="broadcast_id", referencedColumnName="id", unique=false)
+     * @ORM\JoinColumn(name="broadcast_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
      */
     protected $broadcast;
 
@@ -40,7 +40,7 @@ class StreamEvent
      * @var AbstractChannel|null
      *
      * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", unique=false)
+     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
      */
     protected $channel;
 

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Command;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use React\EventLoop\Factory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -76,8 +77,12 @@ class BroadcasterCommand extends Command
         $eventLoop = Factory::create();
         $eventLoop->addPeriodicTimer(
             $this->eventLoopTimer,
-            function () use ($scheduler) {
-                $scheduler->applySchedule();
+            function () use ($scheduler, $output) {
+                try {
+                    $scheduler->applySchedule();
+                } catch (LiveBroadcastException $exception) {
+                    $output->writeln('EXCEPTION: '.$exception->getMessage());
+                }
             }
         );
 
