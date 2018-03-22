@@ -57,7 +57,7 @@ class BroadcastManager
      */
     public function getBroadcastByid($broadcastId)
     {
-        $broadcastRepository = $this->entityManager->getRepository(LiveBroadcast::class);
+        $broadcastRepository = $this->getRepository();
 
         return $broadcastRepository->findOneBy([ 'broadcastId' => (int) $broadcastId ]);
     }
@@ -145,6 +145,14 @@ class BroadcastManager
         foreach ($channels as $channel) {
             $this->streamManager->endStream($broadcast, $channel);
         }
+    }
+
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectRepository|\Doctrine\ORM\EntityRepository|\Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository
+     */
+    public function getRepository()
+    {
+        return $this->entityManager->getRepository(LiveBroadcast::class);
     }
 
     /**

@@ -7,15 +7,14 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
-use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\DynamicStreamUrlInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class Scheduler
@@ -23,9 +22,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class Scheduler
 {
     /**
-     * @var EntityManager
+     * @var BroadcastManager
      */
-    protected $entityManager;
+    protected $broadcastManager;
 
     /**
      * @var SchedulerCommandsInterface
@@ -41,11 +40,6 @@ class Scheduler
      * @var StreamInputService
      */
     protected $inputService;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
 
     /**
      * @var LoggerInterface
@@ -65,29 +59,26 @@ class Scheduler
     /**
      * Scheduler constructor
      *
-     * @param EntityManager              $entityManager
+     * @param BroadcastManager           $broadcastManager
      * @param SchedulerCommandsInterface $schedulerCommands
      * @param StreamOutputService        $outputService
      * @param StreamInputService         $inputService
-     * @param EventDispatcherInterface   $dispatcher
      * @param LoggerInterface            $logger
      *
      * phpcs:disable Symfony.Functions.Arguments.Invalid
      */
     public function __construct(
-        EntityManager $entityManager,
+        BroadcastManager $broadcastManager,
         SchedulerCommandsInterface $schedulerCommands,
         StreamOutputService $outputService,
         StreamInputService $inputService,
-        EventDispatcherInterface $dispatcher,
         LoggerInterface $logger
     ) {
         // phpcs:enable Symfony.Functions.Arguments.Invalid
-        $this->entityManager = $entityManager;
+        $this->broadcastManager = $broadcastManager;
         $this->schedulerCommands = $schedulerCommands;
         $this->outputService = $outputService;
         $this->inputService = $inputService;
-        $this->dispatcher = $dispatcher;
         $this->logger = $logger;
     }
 
@@ -100,6 +91,7 @@ class Scheduler
     {
         $this->stopExpiredBroadcasts();
         $this->startPlannedBroadcasts();
+        $this->sendEndSignals();
     }
 
     /**
@@ -163,7 +155,7 @@ class Scheduler
     protected function stopExpiredBroadcasts(): void
     {
         $this->updateRunningBroadcasts();
-        $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
+        $broadcastRepository = $this->broadcastManager->getRepository();
 
         foreach ($this->runningBroadcasts as $runningBroadcast) {
             $broadcast = $broadcastRepository->find($runningBroadcast->getBroadcastId());
@@ -279,10 +271,19 @@ class Scheduler
      */
     protected function getPlannedBroadcasts(): array
     {
-        $broadcastRepository = $this->entityManager->getRepository('LiveBroadcastBundle:LiveBroadcast');
         $this->logger->debug('Get planned broadcasts');
+
+        $broadcastRepository = $this->broadcastManager->getRepository();
         $this->plannedBroadcasts = $broadcastRepository->getPlannedBroadcasts();
 
         return $this->plannedBroadcasts;
+    }
+
+    /**
+     * @return null
+     */
+    protected function sendEndSignals()
+    {
+        return null;
     }
 }

@@ -30,7 +30,7 @@ services:
 
   live.broadcast.broadcastmanager:
       class: Martin1982\LiveBroadcastBundle\Service\BroadcastManager
-      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.streammanager", "@live.broadcast.channelapi.stack"]
+      arguments: ["@doctrine.orm.entity_manager.abstract", "@live.broadcast.streammanager", "@live.broadcast.channelapi.stack"]
 
   live.broadcast.streammanager:
       class: Martin1982\LiveBroadcastBundle\Service\StreamManager
@@ -39,11 +39,10 @@ services:
   live.broadcast.scheduler:
       class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler
       arguments:
-          - "@doctrine.orm.entity_manager"
+          - "@live.broadcast.broadcastmanager"
           - "@live.broadcast.scheduler.commands"
           - "@live.broadcast.streamoutput.service"
           - "@live.broadcast.streaminput.service"
-          - "@event_dispatcher"
           - "@logger"
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
 
@@ -66,7 +65,7 @@ services:
 # Facebook
   live.broadcast.facebookapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService
-      arguments: ["%livebroadcast.fb.appid%", "%livebroadcast.fb.appsecret%", "@doctrine.orm.entity_manager"]
+      arguments: ["%livebroadcast.fb.appid%", "%livebroadcast.fb.appsecret%", "@doctrine.orm.entity_manager.abstract"]
       tags:
           - { name: live.broadcast.api }
 
@@ -88,7 +87,7 @@ services:
       arguments: ["@live.broadcast.channelapi.client.config.youtube", "@live.broadcast.channelapi.client.google"]
   live.broadcast.youtubeapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService
-      arguments: ["@doctrine.orm.entity_manager", "@logger", "@live.broadcast.channelapi.client.youtube"]
+      arguments: ["@doctrine.orm.entity_manager.abstract", "@logger", "@live.broadcast.channelapi.client.youtube"]
       tags:
           - { name: live.broadcast.api }
           - { name: monolog.logger, channel: livebroadcaster }
