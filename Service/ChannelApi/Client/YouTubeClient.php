@@ -108,6 +108,14 @@ class YouTubeClient
     }
 
     /**
+     * @param string|int $externalId
+     */
+    public function endLiveStream($externalId): void
+    {
+        $this->youTubeClient->liveBroadcasts->transition('complete', $externalId, 'status');
+    }
+
+    /**
      * Remove a planned live event on YouTube
      *
      * @param StreamEvent $event

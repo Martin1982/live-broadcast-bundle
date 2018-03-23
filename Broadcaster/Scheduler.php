@@ -9,6 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
@@ -85,7 +86,10 @@ class Scheduler
     /**
      * Run streams that need to be running.
      *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws LiveBroadcastException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function applySchedule(): void
     {
@@ -155,7 +159,7 @@ class Scheduler
     protected function stopExpiredBroadcasts(): void
     {
         $this->updateRunningBroadcasts();
-        $broadcastRepository = $this->broadcastManager->getRepository();
+        $broadcastRepository = $this->broadcastManager->getBroadcastsRepository();
 
         foreach ($this->runningBroadcasts as $runningBroadcast) {
             $broadcast = $broadcastRepository->find($runningBroadcast->getBroadcastId());
@@ -273,17 +277,87 @@ class Scheduler
     {
         $this->logger->debug('Get planned broadcasts');
 
-        $broadcastRepository = $this->broadcastManager->getRepository();
+        $broadcastRepository = $this->broadcastManager->getBroadcastsRepository();
         $this->plannedBroadcasts = $broadcastRepository->getPlannedBroadcasts();
 
         return $this->plannedBroadcasts;
     }
 
     /**
-     * @return null
+     * Send end signals to channels where broadcasts ended
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\ORMException
      */
-    protected function sendEndSignals()
+    protected function sendEndSignals(): void
     {
-        return null;
+        $this->updateRunningBroadcasts();
+        $repository = $this->broadcastManager->getEventsRepository();
+        /** @var StreamEvent[] $activeEvents */
+        $activeEvents = $repository->findBy(['endSignalSent' => false]);
+
+        foreach ($activeEvents as $event) {
+            $needsEndSignal = $this->needsEndSignal($event);
+
+            if (true === $needsEndSignal) {
+                $this->broadcastManager->sendEndSignal($event);
+            }
+        }
+    }
+
+    /**
+     * @param StreamEvent $event
+     *
+     * @return bool
+     */
+    protected function needsEndSignal(StreamEvent $event): bool
+    {
+        $needsEndSignal = false;
+        $broadcast = $event->getBroadcast();
+        $channel = $event->getChannel();
+
+        if (!$broadcast || !$channel) {
+            return false;
+        }
+
+        $willBeStopped = $broadcast->isStopOnEndTimestamp();
+        $hasPassedEndTime = $broadcast->getEndTimestamp() < new \DateTime();
+        $isRunning = $this->isRunning($broadcast, $channel);
+
+        if ($willBeStopped && $hasPassedEndTime) {
+            $needsEndSignal = true;
+        }
+
+        if (!$willBeStopped && !$isRunning) {
+            $needsEndSignal = true;
+        }
+
+        return $needsEndSignal;
+    }
+
+    /**
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     *
+     * @return bool
+     */
+    protected function isRunning(LiveBroadcast $broadcast, AbstractChannel $channel): bool
+    {
+        $isRunning = false;
+        foreach ($this->runningBroadcasts as $runningBroadcast) {
+            $runningBroadcastId = (string) $runningBroadcast->getBroadcastId();
+            $runningChannelId = (string) $runningBroadcast->getChannelId();
+            $broadcastId = (string) $broadcast->getBroadcastId();
+            $channelId = (string) $channel->getChannelId();
+            $isBroadcastRunning = $runningBroadcastId === $broadcastId;
+            $isRunningOnChannel = $runningChannelId === $channelId;
+
+            if ($isBroadcastRunning && $isRunningOnChannel) {
+                $isRunning = true;
+            }
+        }
+
+        return $isRunning;
     }
 }

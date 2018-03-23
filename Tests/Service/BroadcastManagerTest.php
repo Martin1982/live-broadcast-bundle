@@ -8,13 +8,10 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Doctrine\ORM\EntityManager;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
-use Martin1982\LiveBroadcastBundle\Service\StreamManager;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,11 +23,6 @@ class BroadcastManagerTest extends TestCase
      * @var EntityManager|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $entityManager;
-
-    /**
-     * @var StreamManager|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $streamManager;
 
     /**
      * @var ChannelApiStack|\PHPUnit_Framework_MockObject_MockObject
@@ -54,36 +46,10 @@ class BroadcastManagerTest extends TestCase
             ->method('getRepository')
             ->willReturn($broadcastRepository);
 
-        $broadcast = new BroadcastManager($this->entityManager, $this->streamManager, $this->stack);
+        $broadcast = new BroadcastManager($this->entityManager, $this->stack);
         $result = $broadcast->getBroadcastByid('10');
 
         self::assertInstanceOf(LiveBroadcast::class, $result);
-    }
-
-    /**
-     * Test handling a broadcast's end
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
-     */
-    public function testHandleBroadcastEnd(): void
-    {
-        $this->streamManager->expects(static::any())
-            ->method('endStream')
-            ->willReturn(true);
-
-        $youtubeChannel = $this->createMock(ChannelYouTube::class);
-
-        $broadcastEntity = $this->createMock(LiveBroadcast::class);
-        $broadcastEntity->expects(static::any())
-            ->method('getOutputChannels')
-            ->willReturn([$youtubeChannel]);
-
-        $channel = $this->createMock(AbstractChannel::class);
-
-        $broadcast = new BroadcastManager($this->entityManager, $this->streamManager, $this->stack);
-        $broadcast->handleBroadcastEnd($broadcastEntity);
-        $broadcast->handleBroadcastEnd($broadcastEntity, $channel);
-        $this->addToAssertionCount(1);
     }
 
     /**
@@ -92,7 +58,6 @@ class BroadcastManagerTest extends TestCase
     protected function setUp()
     {
         $this->entityManager = $this->createMock(EntityManager::class);
-        $this->streamManager = $this->createMock(StreamManager::class);
         $this->stack = $this->createMock(ChannelApiStack::class);
     }
 }

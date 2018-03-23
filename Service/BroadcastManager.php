@@ -9,9 +9,9 @@ namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
 
 /**
@@ -25,11 +25,6 @@ class BroadcastManager
     protected $entityManager;
 
     /**
-     * @var StreamManager
-     */
-    protected $streamManager;
-
-    /**
      * @var ChannelApiStack
      */
     protected $apiStack;
@@ -38,13 +33,11 @@ class BroadcastManager
      * BroadcastManager constructor
      *
      * @param EntityManager   $entityManager
-     * @param StreamManager   $streamManager
      * @param ChannelApiStack $apiStack
      */
-    public function __construct(EntityManager $entityManager, StreamManager $streamManager, ChannelApiStack $apiStack)
+    public function __construct(EntityManager $entityManager, ChannelApiStack $apiStack)
     {
         $this->entityManager = $entityManager;
-        $this->streamManager = $streamManager;
         $this->apiStack      = $apiStack;
     }
 
@@ -57,7 +50,7 @@ class BroadcastManager
      */
     public function getBroadcastByid($broadcastId)
     {
-        $broadcastRepository = $this->getRepository();
+        $broadcastRepository = $this->getBroadcastsRepository();
 
         return $broadcastRepository->findOneBy([ 'broadcastId' => (int) $broadcastId ]);
     }
@@ -125,34 +118,45 @@ class BroadcastManager
     }
 
     /**
-     * End a broadcast on all channels
+     * Send a end signal for a broadcast's stream
      *
-     * @param LiveBroadcast   $broadcast
-     * @param AbstractChannel $channelToEnd
+     * @param StreamEvent $event
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function handleBroadcastEnd(LiveBroadcast $broadcast, AbstractChannel $channelToEnd = null): void
+    public function sendEndSignal(StreamEvent $event): void
     {
-        $channels = $broadcast->getOutputChannels();
+        $channel = $event->getChannel();
 
-        if ($channelToEnd) {
-            $this->streamManager->endStream($broadcast, $channelToEnd);
+        if ($channel && $channel instanceof PlanableChannelInterface) {
+            $api = $this->apiStack->getApiForChannel($channel);
 
-            return;
-        }
+            if ($api) {
+                $api->sendEndSignal($channel, $event->getExternalStreamId());
+                $event->setEndSignalSent(true);
 
-        foreach ($channels as $channel) {
-            $this->streamManager->endStream($broadcast, $channel);
+                $this->entityManager->persist($event);
+                $this->entityManager->flush();
+            }
         }
     }
 
     /**
      * @return \Doctrine\Common\Persistence\ObjectRepository|\Doctrine\ORM\EntityRepository|\Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository
      */
-    public function getRepository()
+    public function getBroadcastsRepository()
     {
         return $this->entityManager->getRepository(LiveBroadcast::class);
+    }
+
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectRepository|\Doctrine\ORM\EntityRepository|\Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository
+     */
+    public function getEventsRepository()
+    {
+        return $this->entityManager->getRepository(StreamEvent::class);
     }
 
     /**

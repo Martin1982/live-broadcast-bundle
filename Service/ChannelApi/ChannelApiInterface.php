@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
@@ -32,4 +33,10 @@ interface ChannelApiInterface
      * @param AbstractChannel $channel
      */
     public function removeLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel);
+
+    /**
+     * @param PlanableChannelInterface $channel
+     * @param string|int               $externalId
+     */
+    public function sendEndSignal(PlanableChannelInterface $channel, $externalId);
 }

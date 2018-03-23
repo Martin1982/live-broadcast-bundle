@@ -52,6 +52,13 @@ class StreamEvent
     protected $externalStreamId;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="end_signal_sent", type="boolean", nullable=true)
+     */
+    protected $endSignalSent = false;
+
+    /**
      * @return int|null
      */
     public function getEventId(): ?int
@@ -115,6 +122,26 @@ class StreamEvent
     public function setExternalStreamId($externalStreamId): StreamEvent
     {
         $this->externalStreamId = $externalStreamId;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEndSignalSent(): bool
+    {
+        return $this->endSignalSent;
+    }
+
+    /**
+     * @param bool $endSignalSent
+     *
+     * @return StreamEvent
+     */
+    public function setEndSignalSent(bool $endSignalSent): StreamEvent
+    {
+        $this->endSignalSent = $endSignalSent;
 
         return $this;
     }
