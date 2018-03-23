@@ -37,6 +37,8 @@ class AddChannelApiPass implements CompilerPassInterface
         $serviceIds = array_keys($taggedServices);
 
         foreach ($serviceIds as $id) {
+            $id = (string) $id;
+
             $definition->addMethodCall(
                 'addApi',
                 [new Reference($id)]

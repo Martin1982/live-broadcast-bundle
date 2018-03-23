@@ -33,6 +33,7 @@ class StreamEventTest extends TestCase
         $this->streamEvent->setBroadcast(new LiveBroadcast());
         $this->streamEvent->setChannel(new ChannelYouTube());
         $this->streamEvent->setExternalStreamId('youtube.id');
+        $this->streamEvent->setEndSignalSent(false);
 
         $reflection = new \ReflectionClass($this->streamEvent);
         $property = $reflection->getProperty('eventId');
@@ -70,5 +71,13 @@ class StreamEventTest extends TestCase
     public function testYouTubeId(): void
     {
         self::assertEquals('youtube.id', $this->streamEvent->getExternalStreamId());
+    }
+
+    /**
+     * Test if the end signal has been sent
+     */
+    public function testIsEndSignalSent(): void
+    {
+        self::assertFalse($this->streamEvent->isEndSignalSent());
     }
 }
