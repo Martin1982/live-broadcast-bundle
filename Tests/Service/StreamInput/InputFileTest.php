@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamInput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
@@ -8,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class InputFileTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Service\StreamInput
  */
 class InputFileTest extends TestCase
 {
@@ -35,7 +39,7 @@ class InputFileTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    public function testGenerateInputCmdInvalidFile()
+    public function testGenerateInputCmdInvalidFile(): void
     {
         $this->file->generateInputCmd();
     }
@@ -44,7 +48,7 @@ class InputFileTest extends TestCase
     /**
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
-    public function testGenerateInputCmd()
+    public function testGenerateInputCmd(): void
     {
         $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'inputTest';
         file_put_contents($file, 'data');
@@ -60,7 +64,7 @@ class InputFileTest extends TestCase
     /**
      *
      */
-    public function testMediaType()
+    public function testMediaType(): void
     {
         self::assertEquals(MediaFile::class, $this->file->getMediaType());
     }

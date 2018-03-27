@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream;
@@ -9,7 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class OutputUstreamTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput
  */
 class OutputUstreamTest extends TestCase
 {
@@ -31,17 +35,17 @@ class OutputUstreamTest extends TestCase
     /**
      * Test if the class implements the OutputInterface
      */
-    public function tesImplementsOutputInterface()
+    public function tesImplementsOutputInterface(): void
     {
         $implements = class_implements(OutputUstream::class);
-        self::assertTrue(in_array(OutputInterface::class, $implements, true));
+        self::assertTrue(\in_array(OutputInterface::class, $implements, true));
     }
 
     /**
      * Test the generate output command without a channel
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmdWithoutChannel()
+    public function testGenerateOutputCmdWithoutChannel(): void
     {
         $ustream = new OutputUstream();
         $ustream->generateOutputCmd();
@@ -52,7 +56,7 @@ class OutputUstreamTest extends TestCase
      *
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmdWithInvalidChannel()
+    public function testGenerateOutputCmdWithInvalidChannel(): void
     {
         $ustream = new OutputUstream();
         $channel = new ChannelUstream();
@@ -66,7 +70,7 @@ class OutputUstreamTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmd()
+    public function testGenerateOutputCmd(): void
     {
         $ustream = new OutputUstream();
         $ustream->setChannel($this->channelUstream);
@@ -79,7 +83,7 @@ class OutputUstreamTest extends TestCase
     /**
      * Test if the channelType is correct for this output
      */
-    public function testGetChannelType()
+    public function testGetChannelType(): void
     {
         $ustream = new OutputUstream();
         self::assertEquals(ChannelUstream::class, $ustream->getChannelType());

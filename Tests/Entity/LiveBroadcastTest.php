@@ -1,40 +1,44 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
+use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Class LiveBroadcastTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Entity
  */
 class LiveBroadcastTest extends TestCase
 {
     /**
      * Test class instance.
      */
-    public function testClass()
+    public function testClass(): void
     {
         $broadcast = new LiveBroadcast();
         self::assertInstanceOf(LiveBroadcast::class, $broadcast);
     }
 
     /**
-     * Test get methods.
+     * Test get methods
      */
-    public function testGetMethods()
+    public function testGetMethods(): void
     {
         $now = new \DateTime();
         $endTime = new \DateTime('+1 hour');
 
-        $channelOne = $this->createMock(BaseChannel::class);
-        $channelTwo = $this->createMock(BaseChannel::class);
+        $channelOne = $this->createMock(AbstractChannel::class);
+        $channelTwo = $this->createMock(AbstractChannel::class);
 
-        $baseChannels = [
+        $channels = [
             $channelOne,
             $channelTwo,
         ];
@@ -43,8 +47,8 @@ class LiveBroadcastTest extends TestCase
         $broadcast->setName('Test');
         $broadcast->setDescription('Description of broadcast');
         $broadcast->setThumbnail(new File('test', false));
-        $broadcast->setOutputChannels($baseChannels);
-        $broadcast->setInput($this->createMock(BaseMedia::class));
+        $broadcast->setOutputChannels($channels);
+        $broadcast->setInput($this->createMock(AbstractMedia::class));
 
         self::assertEquals('-', (string) $broadcast);
         self::assertNull($broadcast->getBroadcastId());
@@ -54,10 +58,10 @@ class LiveBroadcastTest extends TestCase
         self::assertEquals('Test', $broadcast->getName());
         self::assertEquals('Description of broadcast', $broadcast->getDescription());
         self::assertInstanceOf(File::class, $broadcast->getThumbnail());
-        self::assertInstanceOf(BaseChannel::class, $broadcast->getOutputChannels()[0]);
+        self::assertInstanceOf(AbstractChannel::class, $broadcast->getOutputChannels()[0]);
         $broadcast->removeOutputChannel($channelTwo);
         self::assertCount(1, $broadcast->getOutputChannels());
-        self::assertInstanceOf(BaseMedia::class, $broadcast->getInput());
+        self::assertInstanceOf(AbstractMedia::class, $broadcast->getInput());
 
         /* Check default value */
         self::assertTrue($broadcast->isStopOnEndTimestamp());

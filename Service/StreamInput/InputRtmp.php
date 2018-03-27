@@ -1,8 +1,13 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamInput;
 
-use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
+use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaRtmp;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 
@@ -21,7 +26,7 @@ class InputRtmp implements InputInterface
      *
      * @throws LiveBroadcastInputException
      */
-    public function generateInputCmd()
+    public function generateInputCmd(): string
     {
         $inputStream = $this->media->getRtmpAddress();
         $host = parse_url('http://'.$inputStream, PHP_URL_HOST);
@@ -30,15 +35,15 @@ class InputRtmp implements InputInterface
             throw new LiveBroadcastInputException(sprintf('Could not connect to port 1935 of at %s', $inputStream));
         }
 
-        return sprintf('-re -i rtmp://%s', escapeshellarg($inputStream));
+        return sprintf('-re -i rtmp://%s', $inputStream);
     }
 
     /**
-     * @param BaseMedia $media
+     * @param AbstractMedia $media
      *
      * @return InputRtmp
      */
-    public function setMedia(BaseMedia $media)
+    public function setMedia(AbstractMedia $media): InputRtmp
     {
         $this->media = $media;
 
@@ -50,7 +55,7 @@ class InputRtmp implements InputInterface
      *
      * @return string
      */
-    public function getMediaType()
+    public function getMediaType(): string
     {
         return MediaRtmp::class;
     }

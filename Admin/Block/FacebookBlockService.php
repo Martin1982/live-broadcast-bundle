@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Admin\Block;
 
 use Martin1982\LiveBroadcastBundle\Admin\ChannelAdmin;
-use Martin1982\LiveBroadcastBundle\Service\FacebookApiService;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,12 +37,8 @@ class FacebookBlockService extends AbstractBlockService
      * @param FacebookApiService $apiService
      * @param ChannelAdmin       $admin
      */
-    public function __construct(
-        $name,
-        EngineInterface $templating,
-        FacebookApiService $apiService,
-        ChannelAdmin $admin
-    ) {
+    public function __construct($name, EngineInterface $templating, FacebookApiService $apiService, ChannelAdmin $admin)
+    {
         $this->apiService = $apiService;
         $this->admin = $admin;
 
@@ -46,17 +47,19 @@ class FacebookBlockService extends AbstractBlockService
 
     /**
      * @param BlockContextInterface $blockContext
-     * @param Response|null $response
+     * @param Response|null         $response
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter('blockContext'))
      */
-    public function execute(BlockContextInterface $blockContext, Response $response = null)
+    public function execute(BlockContextInterface $blockContext, Response $response = null): Response
     {
         return $this->renderResponse(
             'LiveBroadcastBundle:Block:facebook_auth.html.twig',
             [
                 'facebookAppId' => $this->apiService->getAppId(),
-                'admin' => $this->admin
+                'admin' => $this->admin,
             ],
             $response
         );

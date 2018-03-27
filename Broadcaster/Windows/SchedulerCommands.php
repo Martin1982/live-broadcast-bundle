@@ -1,19 +1,23 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Broadcaster\Windows;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 
 /**
  * Class SchedulerCommands
- * @package Martin1982\LiveBroadcastBundle\Broadcaster\Windows
  */
 class SchedulerCommands extends AbstractSchedulerCommands
 {
     /**
      * {@inheritdoc}
      */
-    public function stopProcess($pid)
+    public function stopProcess($pid): string
     {
         return exec(sprintf('TASKKILL /PID %d /T', $pid));
     }
@@ -21,7 +25,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
     /**
      * {@inheritdoc}
      */
-    public function getRunningProcesses()
+    public function getRunningProcesses(): array
     {
         exec('TASKLIST /FI "IMAGENAME eq ffmpeg.exe" /FO CSV', $output);
 
@@ -31,13 +35,13 @@ class SchedulerCommands extends AbstractSchedulerCommands
     /**
      * Execute the shell command to start the stream
      *
-     * @param $input
-     * @param $output
-     * @param $meta
+     * @param string $input
+     * @param string $output
+     * @param string $meta
      *
      * @return string
      */
-    protected function execStreamCommand($input, $output, $meta)
+    protected function execStreamCommand($input, $output, $meta): string
     {
         $loop = '';
 

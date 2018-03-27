@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\DependencyInjection\Compiler;
 
 use Martin1982\LiveBroadcastBundle\DependencyInjection\Compiler\AddStreamInputPass;
@@ -10,7 +15,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Class AddStreamInputPassTest
- * @package Martin1982\LiveBroadcastBundle\Tests\DependencyInjection\Compiler
  */
 class AddStreamInputPassTest extends TestCase
 {
@@ -30,7 +34,7 @@ class AddStreamInputPassTest extends TestCase
     /**
      * Test that no processing takes place when the service isn't named correctly
      */
-    public function testNoProcessing()
+    public function testNoProcessing(): void
     {
         /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
         $container = $this->createMock(ContainerBuilder::class);
@@ -48,7 +52,7 @@ class AddStreamInputPassTest extends TestCase
     /**
      * Test processing tagged services
      */
-    public function testProcess()
+    public function testProcess(): void
     {
         /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
         $container = $this->createMock(ContainerBuilder::class);

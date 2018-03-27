@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsDetector;
@@ -19,17 +24,17 @@ class SchedulerCommandsDetectorTest extends TestCase
     /**
      * Test scheduler command class detector
      */
-    public function testCreateSchedulerCommands()
+    public function testCreateSchedulerCommands(): void
     {
         $strtoupper = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'strtoupper');
-        $strtoupper->expects($this->any())
+        $strtoupper->expects(static::any())
             ->willReturnOnConsecutiveCalls('WIN', 'DAR', 'LIN');
 
         $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
-        $this->assertInstanceOf(WindowsCommands::class, $commands);
+        static::assertInstanceOf(WindowsCommands::class, $commands);
         $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
-        $this->assertInstanceOf(DarwinCommands::class, $commands);
+        static::assertInstanceOf(DarwinCommands::class, $commands);
         $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
-        $this->assertInstanceOf(LinuxCommands::class, $commands);
+        static::assertInstanceOf(LinuxCommands::class, $commands);
     }
 }

@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Channel;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
@@ -7,14 +12,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class ChannelTwitchTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Channel
  */
 class ChannelTwitchTest extends TestCase
 {
-    /*
+    /**
      * Test the getters and setters
      */
-    public function testGetMethods()
+    public function testGetMethods(): void
     {
         $channel = new ChannelTwitch();
         self::assertEquals('live.twitch.tv', $channel->getStreamServer());
@@ -28,7 +32,7 @@ class ChannelTwitchTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $channel = new ChannelTwitch();
         self::assertEquals('Twitch: ', (string) $channel);
@@ -40,7 +44,7 @@ class ChannelTwitchTest extends TestCase
     /**
      * Test the isEntityConfigured method
      */
-    public function testIsEntityConfigured()
+    public function testIsEntityConfigured(): void
     {
         $channel = new ChannelTwitch();
         $configuration = [];

@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Entity\Media;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,15 +12,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class MediaUrl
- * @package Martin1982\LiveBroadcastBundle\Entity\Media
  *
  * @ORM\Table(name="broadcast_input_url", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class MediaUrl extends BaseMedia
+class MediaUrl extends AbstractMedia
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank()
      * @Assert\Url()
@@ -25,9 +29,9 @@ class MediaUrl extends BaseMedia
     protected $url;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
@@ -37,7 +41,7 @@ class MediaUrl extends BaseMedia
      *
      * @return MediaUrl
      */
-    public function setUrl($url)
+    public function setUrl($url): MediaUrl
     {
         $this->url = $url;
 

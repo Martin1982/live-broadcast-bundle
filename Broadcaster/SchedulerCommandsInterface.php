@@ -1,72 +1,70 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 /**
  * Interface SchedulerCommandsInterface
- * @package Martin1982\LiveBroadcastBundle\Broadcaster
  */
 interface SchedulerCommandsInterface
 {
     /**
-     * @param string  $input
-     * @param string  $output
-     * @param array   $metadata
+     * @param string $input
+     * @param string $output
+     * @param array  $metadata
      *
      * @return string
      */
-    public function startProcess($input, $output, $metadata);
+    public function startProcess($input, $output, $metadata): string;
 
     /**
      * @param int $pid
      *
      * @return string
      */
-    public function stopProcess($pid);
+    public function stopProcess($pid): string;
 
     /**
      * @return array
      */
-    public function getRunningProcesses();
+    public function getRunningProcesses(): array;
 
     /**
      * @param string $processString
      *
      * @return int|null
      */
-    public function getProcessId($processString);
-
-    /**
-     * @param $processString
-     * @return bool
-     */
-    public function isMonitorStream($processString);
+    public function getProcessId($processString): ?int;
 
     /**
      * @param string $processString
      *
      * @return int|null
      */
-    public function getBroadcastId($processString);
+    public function getBroadcastId($processString): ?int;
 
     /**
      * @param string $processString
      *
      * @return int|null
      */
-    public function getChannelId($processString);
+    public function getChannelId($processString): ?int;
 
     /**
      * @param string $processString
      *
      * @return string|null
      */
-    public function getEnvironment($processString);
+    public function getEnvironment($processString): ?string;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getKernelEnvironment();
+    public function getKernelEnvironment(): ?string;
 
     /**
      * @param string $directory
@@ -74,7 +72,7 @@ interface SchedulerCommandsInterface
     public function setFFMpegLogDirectory($directory);
 
     /**
-     * @param $loopable
+     * @param bool $loopable
      */
     public function setIsLoopable($loopable);
 }

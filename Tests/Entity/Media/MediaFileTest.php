@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
@@ -7,14 +12,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class MediaFileTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Media
  */
 class MediaFileTest extends TestCase
 {
     /**
      *
      */
-    public function testBaseMediaProperties()
+    public function testAbstractMediaProperties(): void
     {
         $input = new MediaFile();
         self::assertNull($input->getId());
@@ -24,7 +28,7 @@ class MediaFileTest extends TestCase
     /**
      * Test the getFileLocation method
      */
-    public function testFileLocation()
+    public function testFileLocation(): void
     {
         $input = new MediaFile();
         self::assertEquals('', $input->getFileLocation());
@@ -39,7 +43,7 @@ class MediaFileTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $input = new MediaFile();
         self::assertEquals('', (string) $input);

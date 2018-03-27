@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
@@ -9,7 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class OutputTwitchTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput
  */
 class OutputTwitchTest extends TestCase
 {
@@ -31,17 +35,17 @@ class OutputTwitchTest extends TestCase
     /**
      * Test if the class implements the OutputInterface
      */
-    public function tesImplementsOutputInterface()
+    public function tesImplementsOutputInterface(): void
     {
         $implements = class_implements(OutputTwitch::class);
-        self::assertTrue(in_array(OutputInterface::class, $implements, true));
+        self::assertTrue(\in_array(OutputInterface::class, $implements, true));
     }
 
     /**
      * Test the generate output command without a channel
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmdWithoutChannel()
+    public function testGenerateOutputCmdWithoutChannel(): void
     {
         $twitch = new OutputTwitch();
         $twitch->generateOutputCmd();
@@ -51,7 +55,7 @@ class OutputTwitchTest extends TestCase
      * Test the generate output command with an invalid channel
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmdWithInvalidChannel()
+    public function testGenerateOutputCmdWithInvalidChannel(): void
     {
         $twitch = new OutputTwitch();
         $channel = new ChannelTwitch();
@@ -65,7 +69,7 @@ class OutputTwitchTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmd()
+    public function testGenerateOutputCmd(): void
     {
         $twitch = new OutputTwitch();
         $twitch->setChannel($this->twitchChannel);
@@ -78,7 +82,7 @@ class OutputTwitchTest extends TestCase
     /**
      * Test if the channelType is correct for this output
      */
-    public function testGetChannelType()
+    public function testGetChannelType(): void
     {
         $twitch = new OutputTwitch();
         self::assertEquals(ChannelTwitch::class, $twitch->getChannelType());

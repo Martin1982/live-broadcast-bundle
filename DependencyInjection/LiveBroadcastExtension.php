@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
@@ -9,15 +14,15 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Class LiveBroadcastExtension
- * @package Martin1982\LiveBroadcastBundle\DependencyInjection
  */
 class LiveBroadcastExtension extends Extension
 {
     /**
      * {@inheritdoc}
+     *
      * @throws \Exception
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -38,7 +43,6 @@ class LiveBroadcastExtension extends Extension
         $container->setParameter('livebroadcast.thumbnail.web_path', $config['thumbnail']['web_path']);
         $container->setParameter('livebroadcast.thumbnail.uploaddirectory', $config['thumbnail']['upload_directory']);
 
-        $container->setParameter('livebroadcast.eventloop.enabled', $config['eventloop']['enabled']);
         $container->setParameter('livebroadcast.eventloop.timer', $config['eventloop']['timer']);
     }
 }

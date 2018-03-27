@@ -1,6 +1,11 @@
 <?php
+declare(strict_types=1);
 
-namespace Martin1982\LiveBroadcastBundle\Tests\DependencyInjection\Compiler;
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
+namespace Martin1982\LiveBroadcastBundle\Tests\DependencyInjection;
 
 use Martin1982\LiveBroadcastBundle\DependencyInjection\LiveBroadcastExtension;
 use PHPUnit\Framework\TestCase;
@@ -8,7 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Class LiveBroadcastExtensionTest
- * @package Martin1982\LiveBroadcastBundle\Tests\DependencyInjection
  */
 class LiveBroadcastExtensionTest extends TestCase
 {
@@ -17,7 +21,7 @@ class LiveBroadcastExtensionTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testConfigLoad()
+    public function testConfigLoad(): void
     {
         $container = new ContainerBuilder();
         $config = [
@@ -36,10 +40,9 @@ class LiveBroadcastExtensionTest extends TestCase
                 ],
                 'thumbnail' => [
                     'web_path' => 'thumb_web',
-                    'upload_directory' => 'thumb_upload'
+                    'upload_directory' => 'thumb_upload',
                 ],
                 'eventloop' => [
-                    'enabled' => true,
                     'timer' => 3,
                 ],
             ],
@@ -60,7 +63,6 @@ class LiveBroadcastExtensionTest extends TestCase
         self::assertEquals('thumb_web', $container->getParameter('livebroadcast.thumbnail.web_path'));
         self::assertEquals('thumb_upload', $container->getParameter('livebroadcast.thumbnail.uploaddirectory'));
 
-        self::assertTrue($container->getParameter('livebroadcast.eventloop.enabled'));
         self::assertEquals(3, $container->getParameter('livebroadcast.eventloop.timer'));
     }
 }

@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Channel;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelLively;
@@ -7,14 +12,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class ChannelLivelyTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Channel
  */
 class ChannelLivelyTest extends TestCase
 {
-    /*
+    /**
      * Test the getters and setters
      */
-    public function testGetMethods()
+    public function testGetMethods(): void
     {
         $channel = new ChannelLively();
         $channel->setChannelName('Live.ly');
@@ -29,7 +33,7 @@ class ChannelLivelyTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $channel = new ChannelLively();
         self::assertEquals('Live.ly: ', (string) $channel);
@@ -41,10 +45,10 @@ class ChannelLivelyTest extends TestCase
     /**
      * Test the isEntityConfigured method
      */
-    public function testIsEntityConfigured()
+    public function testIsEntityConfigured(): void
     {
         $channel = new ChannelLively();
-        $configuration = [];
+        $configuration = ['a'];
 
         self::assertTrue($channel::isEntityConfigured($configuration));
     }

@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaRtmp;
@@ -7,14 +12,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class MediaRtmpTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Media
  */
 class MediaRtmpTest extends TestCase
 {
     /**
      * Test the basic properties
      */
-    public function testBaseMediaProperties()
+    public function testAbstractMediaProperties(): void
     {
         $input = new MediaRtmp();
         self::assertNull($input->getId());
@@ -24,7 +28,7 @@ class MediaRtmpTest extends TestCase
     /**
      * Test the getRtmpAddress method
      */
-    public function testFileLocation()
+    public function testFileLocation(): void
     {
         $input = new MediaRtmp();
         self::assertEquals('', $input->getRtmpAddress());
@@ -39,7 +43,7 @@ class MediaRtmpTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $input = new MediaRtmp();
         self::assertEquals('', (string) $input);

@@ -1,11 +1,18 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler;
 use Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use PHPUnit\Framework\TestCase;
@@ -14,14 +21,13 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Class SchedulerTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster
  */
 class SchedulerTest extends TestCase
 {
     /**
-     * @var EntityManager|\PHPUnit_Framework_MockObject_MockObject
+     * @var BroadcastManager|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $entityManager;
+    protected $broadcastManager;
 
     /**
      * @var SchedulerCommandsInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -50,42 +56,53 @@ class SchedulerTest extends TestCase
 
     /**
      * Test applying a schedule
+     *
+     * @throws LiveBroadcastException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function testApplySchedule()
+    public function testApplySchedule(): void
     {
+        $eventRepository = $this->createMock(EntityRepository::class);
+        $eventRepository->expects(static::any())
+            ->method('findBy')
+            ->willReturn([]);
+
         $broadcastRepository = $this->createMock(LiveBroadcastRepository::class);
-        $broadcastRepository->expects($this->any())
+        $broadcastRepository->expects(static::any())
             ->method('getPlannedBroadcasts')
             ->willReturn([]);
 
-        $this->entityManager->expects($this->any())
-            ->method('getRepository')
+        $this->broadcastManager->expects(self::any())
+            ->method('getBroadcastsRepository')
             ->willReturn($broadcastRepository);
+        $this->broadcastManager->expects(self::any())
+            ->method('getEventsRepository')
+            ->willReturn($eventRepository);
 
-        $this->dispatcher->expects($this->any())
+        $this->dispatcher->expects(static::any())
             ->method('dispatch')
             ->willReturn(true);
 
-        $this->logger->expects($this->any())
+        $this->logger->expects(static::any())
             ->method('error')
             ->willReturn(true);
-        $this->logger->expects($this->any())
+        $this->logger->expects(static::any())
             ->method('info')
             ->willReturn(true);
-        $this->logger->expects($this->any())
+        $this->logger->expects(static::any())
             ->method('debug')
             ->willReturn(true);
 
-        $this->schedulerCommands->expects($this->any())
+        $this->schedulerCommands->expects(static::any())
             ->method('getRunningProcesses')
             ->willReturn([]);
 
         $scheduler = new Scheduler(
-            $this->entityManager,
+            $this->broadcastManager,
             $this->schedulerCommands,
             $this->outputService,
             $this->inputService,
-            $this->dispatcher,
             $this->logger
         );
 
@@ -98,7 +115,7 @@ class SchedulerTest extends TestCase
      */
     protected function setUp()
     {
-        $this->entityManager = $this->createMock(EntityManager::class);
+        $this->broadcastManager = $this->createMock(BroadcastManager::class);
         $this->schedulerCommands = $this->createMock(SchedulerCommandsInterface::class);
         $this->outputService = $this->createMock(StreamOutputService::class);
         $this->inputService = $this->createMock(StreamInputService::class);

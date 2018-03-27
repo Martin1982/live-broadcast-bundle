@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
@@ -12,11 +17,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class InputAdmin
- * @package Martin1982\LiveBroadcastBundle\Admin
  */
 class InputAdmin extends AbstractAdmin
 {
-    protected $baseRoutePattern = 'broadcast-input';
+    /**
+     * InputAdmin constructor
+     *
+     * @param string $code
+     * @param string $class
+     * @param string $baseControllerName
+     */
+    public function __construct(string $code, string $class, string $baseControllerName)
+    {
+        $this->baseRoutePattern = 'broadcast-input';
+        parent::__construct($code, $class, $baseControllerName);
+    }
 
     /**
      * {@inheritdoc}
@@ -39,7 +54,7 @@ class InputAdmin extends AbstractAdmin
         }
 
         if ($subject instanceof MediaUrl) {
-            $formMapper->add('url', TextType::class, ['label' => 'URL to videofile']);
+            $formMapper->add('url', TextType::class, ['label' => 'URL to video file']);
         }
 
         $formMapper->end()

@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
@@ -7,7 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class AbstractSchedulerCommandsTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster
  */
 class AbstractSchedulerCommandsTest extends TestCase
 {
@@ -32,7 +36,7 @@ class AbstractSchedulerCommandsTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
-    public function testStopProcess()
+    public function testStopProcess(): void
     {
         $this->schedulerCommands->stopProcess(5);
     }
@@ -44,39 +48,15 @@ class AbstractSchedulerCommandsTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
-    public function testGetRunningProcesses()
+    public function testGetRunningProcesses(): void
     {
         $this->schedulerCommands->getRunningProcesses();
     }
 
     /**
-     * Test checking for a monitor stream
-     */
-    public function testMonitorStream()
-    {
-        self::assertFalse(
-            $this->schedulerCommands->isMonitorStream(
-                '1234 ffmpeg -re -i -metadata env=prod -metadata broadcast_id=1337'
-            )
-        );
-
-        self::assertFalse(
-            $this->schedulerCommands->isMonitorStream(
-                '1234 ffmpeg -re -i -metadata env=prod -metadata monitor_stream=no'
-            )
-        );
-
-        self::assertTrue(
-            $this->schedulerCommands->isMonitorStream(
-                '1234 ffmpeg -re -i -metadata env=prod -metadata monitor_stream=yes'
-            )
-        );
-    }
-
-    /**
      * Test the FFMPEG log directory setter
      */
-    public function testFFMpegLogDirectory()
+    public function testFFMpegLogDirectory(): void
     {
         $this->schedulerCommands->setFFMpegLogDirectory(__DIR__);
         $this->schedulerCommands->setFFMpegLogDirectory('/does/not/exist');
@@ -92,7 +72,7 @@ class AbstractSchedulerCommandsTest extends TestCase
     /**
      * Test a stream can be loopable
      */
-    public function testLoopable()
+    public function testLoopable(): void
     {
         $this->schedulerCommands->setIsLoopable(true);
 

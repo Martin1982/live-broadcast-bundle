@@ -1,0 +1,17 @@
+services:
+  live.broadcast.streaminput.service:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamInputService
+
+# Individual input services
+  live.broadcast.input.file:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputFile
+      tags:
+          - { name: live.broadcast.input, inputtype: 'File' }
+  live.broadcast.input.url:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputUrl
+      tags:
+          - { name: live.broadcast.input, inputtype: 'Url' }
+  live.broadcast.input.rtmp:
+      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputRtmp
+      tags:
+          - { name: live.broadcast.input, inputtype: 'Rtmp' }

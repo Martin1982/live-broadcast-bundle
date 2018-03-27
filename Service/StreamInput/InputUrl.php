@@ -1,14 +1,18 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamInput;
 
-use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
+use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 
 /**
  * Class InputUrl
- * @package Martin1982\LiveBroadcastBundle\Service\StreamInput
  */
 class InputUrl implements InputInterface
 {
@@ -20,7 +24,7 @@ class InputUrl implements InputInterface
     /**
      * {@inheritdoc}
      */
-    public function setMedia(BaseMedia $media)
+    public function setMedia(AbstractMedia $media)
     {
         $this->media = $media;
 
@@ -32,7 +36,7 @@ class InputUrl implements InputInterface
      *
      * @throws LiveBroadcastInputException
      */
-    public function generateInputCmd()
+    public function generateInputCmd(): string
     {
         $inputUrl = $this->media->getUrl();
 
@@ -46,7 +50,7 @@ class InputUrl implements InputInterface
     /**
      * @return string
      */
-    public function getMediaType()
+    public function getMediaType(): string
     {
         return MediaUrl::class;
     }

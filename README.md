@@ -89,13 +89,28 @@ $ php app/console livebroadcaster:broadcast
 
 By default Facebook and YouTube are disabled, as they need extra config. To enable either one of these continue reading.
 
+### FFMpeg log directory
+To view the output of FFMpeg you need to configure a log directory in your `app/config/config.yml`.
+ 
+     live_broadcast:
+        ffmpeg:
+            log_directory: '%kernel.logs_dir%'
+
 ## Event loop
 In stead of using cronjobs to trigger broadcasts you can use an event loop by using this configuration:
 
-	livebroadcast:
+    live_broadcast:
         eventloop:
             enabled: true
             timer: 5
+
+## Thumbnailer setup
+Setup the following config for thumbnails:
+    
+    live_broadcast:
+        thumbnail:
+            upload_directory: '%kernel.root_dir%/../web/uploads/thumbnails'
+            web_path: '/uploads/thumbnails'
 
 ## Enabling Facebook Live
 
@@ -123,13 +138,6 @@ Add the Sonata block to your blocks config:
         sonata.block.service.facebookauth:
             contexts:   [admin]
 
-### FFMpeg log directory
-To view the output of FFMpeg you need to configure a log directory in your `app/config/config.yml`.
- 
-     live_broadcast:
-        ffmpeg:
-            log_directory: '%kernel.logs_dir%'
-
 ## Enabling YouTube Live
 
 ### Step 1: Request API access
@@ -145,9 +153,7 @@ Add the YouTube API info to your config.yml:
         youtube:
             client_id: YourGoogleOauthClientId
             client_secret: YourGoogleOauthClientSecret
-            redirect_route: admin_martin1982_livebroadcast_channel_basechannel_youtubeoauth
-            upload_directory: '%kernel.root_dir%/../web/uploads/thumbnails'
-            web_path: '/uploads/thumbnails'
+            redirect_route: admin_martin1982_livebroadcast_channel_abstractchannel_youtubeoauth
 
 ### Step 3 (Sonata users only): Sonata config update 
 Add the Sonata block to your blocks config:
@@ -160,14 +166,14 @@ Add the Sonata block to your blocks config:
 ### Step 4: Update parameters 
 Add these lines to your parameters.yml (used for generating a thumbnail URL)
 
-	parameters:
-	    router.request_context.host: broadcast.com
-	    router.request_context.scheme: https
-	
+    parameters:
+        router.request_context.host: broadcast.com
+        router.request_context.scheme: https
+    
 ## Add new output platforms
 
 ### Step 1: Create channel entity 
-Create a new Channel Entity in Entity/Channel that extends the BaseChannel (e.g. ChannelNew)
+Create a new Channel Entity in Entity/Channel that extends the AbstractChannel (e.g. ChannelNew)
 
 ### Step 2: Create streamoutput service 
 Create a new StreamOutput service in Service/StreamOutput that implements the OutputInterface (e.g. OutputNew)

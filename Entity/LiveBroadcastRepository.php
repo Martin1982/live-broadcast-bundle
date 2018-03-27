@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Entity;
 
 use Doctrine\Common\Collections\Criteria;
@@ -17,7 +22,8 @@ class LiveBroadcastRepository extends EntityRepository
     /**
      * Get the planned broadcasts
      *
-     * @return array
+     * @return mixed
+     *
      * @throws LiveBroadcastException
      */
     public function getPlannedBroadcasts()
@@ -36,7 +42,7 @@ class LiveBroadcastRepository extends EntityRepository
                 ->getQuery()
                 ->getResult();
         } catch (QueryException $ex) {
-            throw new LiveBroadcastException('Cannot query planned broadcasts: '.$ex->getMessage());
+            throw new LiveBroadcastException(sprintf('Cannot query planned broadcasts: %s', $ex->getMessage()));
         }
     }
 }

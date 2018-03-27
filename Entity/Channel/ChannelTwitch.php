@@ -1,36 +1,40 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class ChannelTwitch
- * @package Martin1982\LiveBroadcastBundle\Entity\Channel
  *
  * @ORM\Table(name="channel_twitch", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class ChannelTwitch extends BaseChannel
+class ChannelTwitch extends AbstractChannel
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="stream_key", type="string", length=128, nullable=false)
      */
     protected $streamKey;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="stream_server", type="string", length=128, nullable=false)
      */
     protected $streamServer = 'live.twitch.tv';
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getStreamKey()
+    public function getStreamKey(): ?string
     {
         return $this->streamKey;
     }
@@ -40,7 +44,7 @@ class ChannelTwitch extends BaseChannel
      *
      * @return ChannelTwitch
      */
-    public function setStreamKey($streamKey)
+    public function setStreamKey($streamKey): ChannelTwitch
     {
         $this->streamKey = $streamKey;
 
@@ -48,9 +52,9 @@ class ChannelTwitch extends BaseChannel
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getStreamServer()
+    public function getStreamServer(): ?string
     {
         return $this->streamServer;
     }
@@ -60,13 +64,16 @@ class ChannelTwitch extends BaseChannel
      *
      * @return ChannelTwitch
      */
-    public function setStreamServer($streamServer)
+    public function setStreamServer($streamServer): ChannelTwitch
     {
         $this->streamServer = $streamServer;
 
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return 'Twitch: '.$this->getChannelName();

@@ -1,13 +1,11 @@
+imports:
+  - { resource: 'services-input.yml' }
+  - { resource: 'services-output.yml' }
+
 services:
   live.broadcast.command.broadcast:
     class: Martin1982\LiveBroadcastBundle\Command\BroadcasterCommand
-    arguments: ["@live.broadcast.scheduler", "%livebroadcast.eventloop.enabled%", "%livebroadcast.eventloop.timer%"]
-    tags:
-        - { name: 'console.command' }
-
-  live.broadcast.command.broadcastend:
-    class: Martin1982\LiveBroadcastBundle\Command\BroadcastEndCommand
-    arguments: ["@live.broadcast.broadcastmanager"]
+    arguments: ["@live.broadcast.scheduler", "%livebroadcast.eventloop.timer%"]
     tags:
         - { name: 'console.command' }
 
@@ -26,20 +24,15 @@ services:
 
   live.broadcast.broadcastmanager:
       class: Martin1982\LiveBroadcastBundle\Service\BroadcastManager
-      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.streammanager"]
-
-  live.broadcast.streammanager:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamManager
-      arguments: ["@event_dispatcher", "@live.broadcast.scheduler.commands"]
+      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.channelapi.stack"]
 
   live.broadcast.scheduler:
       class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler
       arguments:
-          - "@doctrine.orm.entity_manager"
+          - "@live.broadcast.broadcastmanager"
           - "@live.broadcast.scheduler.commands"
           - "@live.broadcast.streamoutput.service"
           - "@live.broadcast.streaminput.service"
-          - "@event_dispatcher"
           - "@logger"
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
 
@@ -55,85 +48,36 @@ services:
           - { name: doctrine.event_listener, event: preUpdate }
           - { name: doctrine.event_listener, event: postLoad }
 
-  live.broadcast.facebook_pre_broadcast_listener:
-      class: Martin1982\LiveBroadcastBundle\EventListener\FacebookPreBroadcastListener
-      arguments: ["@live.broadcast.facebookapi.service"]
-      tags:
-          - { name: kernel.event_subscriber }
-  live.broadcast.youtube_pre_broadcast_listener:
-      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubePreBroadcastListener
-      arguments: ["@live.broadcast.youtubeapi.service", "@live.broadcast.googleredirect.service"]
-      tags:
-          - { name: kernel.event_subscriber }
-  live.broadcast.youtube_post_broadcast_listener:
-      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubePostBroadcastListener
-      arguments: ["@live.broadcast.youtubeapi.service", "@live.broadcast.googleredirect.service"]
-      tags:
-          - { name: kernel.event_subscriber }
-  live.broadcast.youtube_post_broadcastloop_listener:
-      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubePostBroadcastLoopListener
-      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.scheduler.commands", "@live.broadcast.youtubeapi.service", "@kernel", "@live.broadcast.googleredirect.service", "@logger"]
-      tags:
-          - { name: kernel.event_subscriber }
-          - { name: monolog.logger, channel: livebroadcaster }
-  live.broadcast.youtube_switch_monitor_listener:
-      class: Martin1982\LiveBroadcastBundle\EventListener\YouTubeSwitchMonitorListener
-      arguments: ["@live.broadcast.scheduler.commands", "@live.broadcast.streamoutput.service", "@live.broadcast.streaminput.service", "@live.broadcast.youtubeapi.service", "@live.broadcast.googleredirect.service", "@logger"]
-      tags:
-          - { name: kernel.event_subscriber }
-          - { name: monolog.logger, channel: livebroadcaster }
+# Remote API stack
+  live.broadcast.channelapi.stack:
+      class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack
 
-  live.broadcast.streaminput.service:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamInputService
-
-  live.broadcast.input.file:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputFile
-      tags:
-          - { name: live.broadcast.input, inputtype: 'File' }
-  live.broadcast.input.url:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputUrl
-      tags:
-          - { name: live.broadcast.input, inputtype: 'Url' }
-  live.broadcast.input.rtmp:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputRtmp
-      tags:
-          - { name: live.broadcast.input, inputtype: 'Rtmp' }
-  live.broadcast.input.monitor:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamInput\InputMonitorStream
-      tags:
-          - { name: live.broadcast.input, inputtype: 'Monitor' }
-
-  live.broadcast.streamoutput.service:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamOutputService
-
-  live.broadcast.output.youtube:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube
-      tags:
-          - { name: live.broadcast.output, platform: 'YouTube' }
-  live.broadcast.output.facebook:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook
-      tags:
-          - { name: live.broadcast.output, platform: 'Facebook' }
-  live.broadcast.output.twitch:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch
-      tags:
-          - { name: live.broadcast.output, platform: 'Twitch' }
-  live.broadcast.output.ustream:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputUstream
-      tags:
-          - { name: live.broadcast.output, platform: 'Ustream' }
-  live.broadcast.output.lively:
-      class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputLively
-      tags:
-          - { name: live.broadcast.output, platform: 'Live.ly' }
-
+# Facebook
   live.broadcast.facebookapi.service:
-      class: Martin1982\LiveBroadcastBundle\Service\FacebookApiService
-      arguments: ["%livebroadcast.fb.appid%", "%livebroadcast.fb.appsecret%"]
-  live.broadcast.youtubeapi.service:
-      class: Martin1982\LiveBroadcastBundle\Service\YouTubeApiService
-      arguments: ["%livebroadcast.yt.clientid%", "%livebroadcast.yt.clientsecret%", "%router.request_context.scheme%://%router.request_context.host%", "%livebroadcast.thumbnail.web_path%", "@doctrine.orm.entity_manager", "@logger"]
-      tags: [{ name: monolog.logger, channel: livebroadcaster }]
+      class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService
+      arguments: ["%livebroadcast.fb.appid%", "%livebroadcast.fb.appsecret%", "@doctrine.orm.entity_manager"]
+      tags:
+          - { name: live.broadcast.api }
+
+# Youtube
   live.broadcast.googleredirect.service:
       class: Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService
       arguments: ["@router", "%livebroadcast.yt.redirectroute%"]
+  live.broadcast.channelapi.client.config.google:
+      class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\GoogleConfig
+      arguments: ["%livebroadcast.yt.clientid%", "%livebroadcast.yt.clientsecret%"]
+  live.broadcast.channelapi.client.config.youtube:
+      class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\YouTubeConfig
+      arguments: ["%router.request_context.scheme%://%router.request_context.host%", "%livebroadcast.thumbnail.web_path%"]
+  live.broadcast.channelapi.client.google:
+      class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\GoogleClient
+      arguments: ["@live.broadcast.channelapi.client.config.google", "@live.broadcast.googleredirect.service", "@logger"]
+  live.broadcast.channelapi.client.youtube:
+      class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\YouTubeClient
+      arguments: ["@live.broadcast.channelapi.client.config.youtube", "@live.broadcast.channelapi.client.google"]
+  live.broadcast.youtubeapi.service:
+      class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService
+      arguments: ["@doctrine.orm.entity_manager", "@logger", "@live.broadcast.channelapi.client.youtube"]
+      tags:
+          - { name: live.broadcast.api }
+          - { name: monolog.logger, channel: livebroadcaster }

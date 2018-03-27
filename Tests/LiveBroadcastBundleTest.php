@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests;
 
 use Martin1982\LiveBroadcastBundle\LiveBroadcastBundle;
@@ -14,7 +19,7 @@ class LiveBroadcastBundleTest extends TestCase
     /**
      * Test building the bundle
      */
-    public function testBuild()
+    public function testBuild(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
         $container->expects(self::any())

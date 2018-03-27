@@ -1,15 +1,22 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
+use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class OutputFacebookTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput
  */
 class OutputFacebookTest extends TestCase
 {
@@ -19,6 +26,11 @@ class OutputFacebookTest extends TestCase
     private $facebookChannel;
 
     /**
+     * @var FacebookApiService|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $api;
+
+    /**
      * Setup a testable Facebook channel
      */
     public function setUp()
@@ -26,24 +38,26 @@ class OutputFacebookTest extends TestCase
         $this->facebookChannel = new ChannelFacebook();
         $this->facebookChannel->setAccessToken('token');
         $this->facebookChannel->setFbEntityId('id');
+
+        $this->api = $this->createMock(FacebookApiService::class);
     }
 
     /**
      * Test if the class implements the OutputInterface
      */
-    public function tesImplementsOutputInterface()
+    public function tesImplementsOutputInterface(): void
     {
         $implements = class_implements(OutputFacebook::class);
-        self::assertTrue(in_array(OutputInterface::class, $implements, true));
+        self::assertTrue(\in_array(OutputInterface::class, $implements, true));
     }
 
     /**
      * Test the generate output command without a channel
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmdWithoutChannel()
+    public function testGenerateOutputCmdWithoutChannel(): void
     {
-        $facebook = new OutputFacebook();
+        $facebook = new OutputFacebook($this->api);
         $facebook->generateOutputCmd();
     }
 
@@ -51,9 +65,9 @@ class OutputFacebookTest extends TestCase
      * Test the generate output command with an invalid channel
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmdWithInvalidChannel()
+    public function testGenerateOutputCmdWithInvalidChannel(): void
     {
-        $facebook = new OutputFacebook();
+        $facebook = new OutputFacebook($this->api);
         $channel = new ChannelFacebook();
         $facebook->setChannel($channel);
 
@@ -64,9 +78,9 @@ class OutputFacebookTest extends TestCase
      * Test the generate output command without a stream url set
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testGenerateOutputCmdWithoutStreamUrl()
+    public function testGenerateOutputCmdWithoutStreamUrl(): void
     {
-        $facebook = new OutputFacebook();
+        $facebook = new OutputFacebook($this->api);
         $facebook->setChannel($this->facebookChannel);
         $facebook->generateOutputCmd();
     }
@@ -76,11 +90,16 @@ class OutputFacebookTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testValidGenerateOutputCmd()
+    public function testValidGenerateOutputCmd(): void
     {
-        $facebook = new OutputFacebook();
+        $this->api->expects(static::any())
+            ->method('getStreamUrl')
+            ->willReturn('http://streamurl/video/');
+
+        $facebook = new OutputFacebook($this->api);
+        $facebook->setBroadcast($this->createMock(LiveBroadcast::class));
+        $facebook->setChannel($this->createMock(AbstractChannel::class));
         $facebook->setChannel($this->facebookChannel);
-        $facebook->setStreamUrl('http://streamurl/video/');
         self::assertEquals(
             '-c:v libx264 -crf 30 -preset ultrafast -c:a copy -f flv "http://streamurl/video/"',
             $facebook->generateOutputCmd()
@@ -88,53 +107,26 @@ class OutputFacebookTest extends TestCase
     }
 
     /**
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testNoStreamUrlException(): void
+    {
+        $api = $this->createMock(FacebookApiService::class);
+        $broadcast = $this->createMock(LiveBroadcast::class);
+
+        $facebook = new OutputFacebook($api);
+        $facebook->setBroadcast($broadcast);
+        $facebook->getStreamUrl();
+    }
+
+    /**
      * Test if the channelType is correct for this output
      */
-    public function testGetChannelType()
+    public function testGetChannelType(): void
     {
-        $facebook = new OutputFacebook();
+        $facebook = new OutputFacebook($this->api);
         self::assertEquals(ChannelFacebook::class, $facebook->getChannelType());
-    }
-
-    /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     */
-    public function testAccessTokenException()
-    {
-        $facebook = new OutputFacebook();
-        $facebook->getAccessToken();
-    }
-
-    /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     */
-    public function testAccessToken()
-    {
-        $facebook = new OutputFacebook();
-        $facebook->setChannel($this->facebookChannel);
-        self::assertEquals('token', $facebook->getAccessToken());
-    }
-
-    /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     */
-    public function testEntityIdException()
-    {
-        $facebook = new OutputFacebook();
-        $facebook->getEntityId();
-    }
-
-    /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     */
-    public function testEntityId()
-    {
-        $facebook = new OutputFacebook();
-        $facebook->setChannel($this->facebookChannel);
-        self::assertEquals('id', $facebook->getEntityId());
     }
 }

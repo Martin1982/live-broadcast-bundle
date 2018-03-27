@@ -1,31 +1,54 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
+use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 
 /**
  * Class OutputFacebook
- * @package Martin1982\LiveBroadcastBundle\Service\StreamOutput
  */
-class OutputFacebook implements OutputInterface
+class OutputFacebook implements OutputInterface, DynamicStreamUrlInterface
 {
-    /**
-     * @var string
-     */
-    private $streamUrl;
-
     /**
      * @var ChannelFacebook
      */
     private $channel;
 
     /**
-     * {@inheritdoc}
+     * @var FacebookApiService
      */
-    public function setChannel(BaseChannel $channel)
+    private $api;
+
+    /**
+     * @var LiveBroadcast|null
+     */
+    private $broadcast;
+
+    /**
+     * OutputFacebook constructor
+     *
+     * @param FacebookApiService $api
+     */
+    public function __construct(FacebookApiService $api)
+    {
+        $this->api = $api;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return OutputInterface|OutputFacebook
+     */
+    public function setChannel(AbstractChannel $channel): OutputInterface
     {
         $this->channel = $channel;
 
@@ -35,57 +58,46 @@ class OutputFacebook implements OutputInterface
     /**
      * Give the cmd string to start the stream.
      *
-     * @throws LiveBroadcastOutputException
      * @return string
+     *
+     * @throws LiveBroadcastOutputException
      */
-    public function generateOutputCmd()
+    public function generateOutputCmd(): string
     {
-        if (empty($this->streamUrl)) {
-            throw new LiveBroadcastOutputException('The Facebook stream url must be set');
-        }
-
-        return sprintf('-c:v libx264 -crf 30 -preset ultrafast -c:a copy -f flv "%s"', $this->streamUrl);
+        return sprintf('-c:v libx264 -crf 30 -preset ultrafast -c:a copy -f flv "%s"', $this->getStreamUrl());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getChannelType()
+    public function getChannelType(): string
     {
         return ChannelFacebook::class;
     }
 
     /**
      * @return string
+     *
      * @throws LiveBroadcastOutputException
      */
-    public function getAccessToken()
+    public function getStreamUrl(): string
     {
-        if (!($this->channel instanceof ChannelFacebook)) {
-            throw new LiveBroadcastOutputException(__FUNCTION__.' Facebook channel not configured');
+        if (!$this->broadcast) {
+            throw new LiveBroadcastOutputException('No broadcast set');
         }
 
-        return $this->channel->getAccessToken();
+        if (!$this->channel) {
+            throw new LiveBroadcastOutputException('No channel set');
+        }
+
+        return $this->api->getStreamUrl($this->broadcast, $this->channel);
     }
 
     /**
-     * @return string
-     * @throws LiveBroadcastOutputException
+     * @param LiveBroadcast $broadcast
      */
-    public function getEntityId()
+    public function setBroadcast(LiveBroadcast $broadcast): void
     {
-        if (!($this->channel instanceof ChannelFacebook)) {
-            throw new LiveBroadcastOutputException(__FUNCTION__.' Facebook channel not configured');
-        }
-
-        return $this->channel->getFbEntityId();
-    }
-
-    /**
-     * @param string $streamUrl
-     */
-    public function setStreamUrl($streamUrl)
-    {
-        $this->streamUrl = $streamUrl;
+        $this->broadcast = $broadcast;
     }
 }

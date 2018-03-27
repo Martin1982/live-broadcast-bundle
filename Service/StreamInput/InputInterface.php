@@ -1,30 +1,35 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamInput;
 
-use Martin1982\LiveBroadcastBundle\Entity\Media\BaseMedia;
+use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
 
 /**
  * Interface InputInterface
- * @package Martin1982\LiveBroadcastBundle\Service\StreamInput
  */
 interface InputInterface
 {
     /**
      * @return string
      */
-    public function generateInputCmd();
+    public function generateInputCmd(): string;
 
     /**
-     * @param BaseMedia $media
+     * @param AbstractMedia $media
+     *
      * @return mixed
      */
-    public function setMedia(BaseMedia $media);
+    public function setMedia(AbstractMedia $media);
 
     /**
      * Returns the media type
      *
      * @return string
      */
-    public function getMediaType();
+    public function getMediaType(): string;
 }

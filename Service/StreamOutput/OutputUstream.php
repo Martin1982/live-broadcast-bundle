@@ -1,14 +1,18 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\BaseChannel;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Class OutputUstream
- * @package Martin1982\LiveBroadcastBundle\Service\StreamOutput
  */
 class OutputUstream implements OutputInterface
 {
@@ -19,24 +23,29 @@ class OutputUstream implements OutputInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return OutputInterface|OutputUstream
      */
-    public function setChannel(BaseChannel $channel)
+    public function setChannel(AbstractChannel $channel): OutputInterface
     {
         $this->channel = $channel;
+
+        return $this;
     }
 
     /**
      * Get the output parameters for streaming.
      *
      * @return string
+     *
      * @throws LiveBroadcastOutputException
      */
-    public function generateOutputCmd()
+    public function generateOutputCmd(): string
     {
         if ((!($this->channel instanceof ChannelUstream)) ||
-            empty($this->channel->getStreamKey()) ||
-            empty($this->channel->getStreamServer())) {
-            throw new LiveBroadcastOutputException(__FUNCTION__.' Ustream channel not configured');
+            null === $this->channel->getStreamKey() ||
+            null === $this->channel->getStreamServer()) {
+            throw new LiveBroadcastOutputException(sprintf('%s Ustream channel not configured', __FUNCTION__));
         }
 
         return sprintf(
@@ -49,7 +58,7 @@ class OutputUstream implements OutputInterface
     /**
      * {@inheritdoc}
      */
-    public function getChannelType()
+    public function getChannelType(): string
     {
         return ChannelUstream::class;
     }

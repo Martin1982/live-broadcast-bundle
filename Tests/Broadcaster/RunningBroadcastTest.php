@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
@@ -9,27 +14,25 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class RunningBroadcastTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Broadcaster
  */
 class RunningBroadcastTest extends TestCase
 {
     /**
      * Test get method.
      */
-    public function testGetMethods()
+    public function testGetMethods(): void
     {
         $running = new RunningBroadcast(1, 2, 44, 'test');
         self::assertEquals(1, $running->getBroadcastId());
         self::assertEquals(2, $running->getProcessId());
         self::assertEquals(44, $running->getChannelId());
         self::assertEquals('test', $running->getEnvironment());
-        self::assertFalse($running->isMonitor());
     }
 
     /**
      * Test the isValid method.
      */
-    public function testIsValid()
+    public function testIsValid(): void
     {
         $running = new RunningBroadcast(null, null, null, null);
         self::assertFalse($running->isValid(''));
@@ -56,7 +59,7 @@ class RunningBroadcastTest extends TestCase
     /**
      * Test the isBroadcasting method
      */
-    public function testIsBroadcasting()
+    public function testIsBroadcasting(): void
     {
         /* Create a running broadcast with string values as id's */
         $running = new RunningBroadcast('5', '2', '6', 'test');
@@ -78,31 +81,37 @@ class RunningBroadcastTest extends TestCase
     }
 
     /**
-     * @param int $id
+     * @param int $channelId
+     *
      * @return ChannelTwitch
+     *
+     * @throws \ReflectionException
      */
-    private function getChannelTwitch($id)
+    private function getChannelTwitch($channelId): ChannelTwitch
     {
         $channel = new ChannelTwitch();
         $reflection = new \ReflectionClass($channel);
         $property = $reflection->getProperty('channelId');
         $property->setAccessible(true);
-        $property->setValue($channel, $id);
+        $property->setValue($channel, $channelId);
 
         return $channel;
     }
 
     /**
-     * @param int $id
+     * @param int $broadcastId
+     *
      * @return LiveBroadcast
+     *
+     * @throws \ReflectionException
      */
-    private function getLiveBroadcast($id)
+    private function getLiveBroadcast($broadcastId): LiveBroadcast
     {
         $liveBroadcast = new LiveBroadcast();
         $reflection = new \ReflectionClass($liveBroadcast);
         $property = $reflection->getProperty('broadcastId');
         $property->setAccessible(true);
-        $property->setValue($liveBroadcast, $id);
+        $property->setValue($liveBroadcast, $broadcastId);
 
         return $liveBroadcast;
     }

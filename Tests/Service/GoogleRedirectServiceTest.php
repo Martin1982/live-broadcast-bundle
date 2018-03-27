@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
@@ -17,10 +22,10 @@ class GoogleRedirectServiceTest extends TestCase
     /**
      * Test getting the redirect url
      */
-    public function testGetOAuthRedirectUrl()
+    public function testGetOAuthRedirectUrl(): void
     {
         $router = $this->createMock(RouterInterface::class);
-        $router->expects($this->once())
+        $router->expects(static::once())
             ->method('generate')
             ->willReturn('myresultingroute');
 
@@ -37,10 +42,10 @@ class GoogleRedirectServiceTest extends TestCase
      *
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testRouteNotFound()
+    public function testRouteNotFound(): void
     {
         $router = $this->createMock(RouterInterface::class);
-        $router->expects($this->once())
+        $router->expects(static::once())
             ->method('generate')
             ->willThrowException(new RouteNotFoundException());
 
@@ -57,10 +62,10 @@ class GoogleRedirectServiceTest extends TestCase
      *
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testMissingMandatoryParameters()
+    public function testMissingMandatoryParameters(): void
     {
         $router = $this->createMock(RouterInterface::class);
-        $router->expects($this->once())
+        $router->expects(static::once())
             ->method('generate')
             ->willThrowException(new MissingMandatoryParametersException());
 
@@ -77,10 +82,10 @@ class GoogleRedirectServiceTest extends TestCase
      *
      * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testInvalidParameter()
+    public function testInvalidParameter(): void
     {
         $router = $this->createMock(RouterInterface::class);
-        $router->expects($this->once())
+        $router->expects(static::once())
             ->method('generate')
             ->willThrowException(new InvalidParameterException());
 

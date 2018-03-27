@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Entity\Media;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,15 +12,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class MediaFile
- * @package Martin1982\LiveBroadcastBundle\Entity\Media
  *
  * @ORM\Table(name="broadcast_input_file", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class MediaFile extends BaseMedia
+class MediaFile extends AbstractMedia
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank()
      *
@@ -24,9 +28,9 @@ class MediaFile extends BaseMedia
     protected $fileLocation;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFileLocation()
+    public function getFileLocation(): ?string
     {
         return $this->fileLocation;
     }
@@ -36,7 +40,7 @@ class MediaFile extends BaseMedia
      *
      * @return MediaFile
      */
-    public function setFileLocation($fileLocation)
+    public function setFileLocation($fileLocation): MediaFile
     {
         $this->fileLocation = $fileLocation;
 

@@ -1,8 +1,14 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Command;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use React\EventLoop\Factory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,11 +27,6 @@ class BroadcasterCommand extends Command
     private $scheduler;
 
     /**
-     * @var bool
-     */
-    private $eventLoopEnabled;
-
-    /**
      * @var int
      */
     private $eventLoopTimer;
@@ -37,13 +38,13 @@ class BroadcasterCommand extends Command
 
     /**
      * @param Scheduler $scheduler
-     * @param bool      $eventLoopEnabled
      * @param int       $eventLoopTimer
+     *
+     * @throws \Symfony\Component\Console\Exception\LogicException
      */
-    public function __construct(Scheduler $scheduler, $eventLoopEnabled = false, $eventLoopTimer = 10)
+    public function __construct(Scheduler $scheduler, $eventLoopTimer = 10)
     {
         $this->scheduler = $scheduler;
-        $this->eventLoopEnabled = $eventLoopEnabled;
         $this->eventLoopTimer = $eventLoopTimer;
 
         parent::__construct();
@@ -54,7 +55,7 @@ class BroadcasterCommand extends Command
      *
      * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Run any broadcasts that haven\'t started yet and which are planned');
     }
@@ -73,17 +74,15 @@ class BroadcasterCommand extends Command
     {
         $scheduler = $this->scheduler;
 
-        if (!$this->eventLoopEnabled) {
-            $scheduler->applySchedule();
-
-            return;
-        }
-
         $eventLoop = Factory::create();
         $eventLoop->addPeriodicTimer(
             $this->eventLoopTimer,
-            function () use ($scheduler) {
-                $scheduler->applySchedule();
+            function () use ($scheduler, $output) {
+                try {
+                    $scheduler->applySchedule();
+                } catch (LiveBroadcastException $exception) {
+                    $output->writeln('EXCEPTION: '.$exception->getMessage());
+                }
             }
         );
 

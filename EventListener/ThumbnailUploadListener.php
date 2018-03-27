@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -11,7 +16,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class ThumbnailUploadListener
- * @package Martin1982\LiveBroadcastBundle\EventListener
  */
 class ThumbnailUploadListener
 {
@@ -31,16 +35,20 @@ class ThumbnailUploadListener
 
     /**
      * @param LifecycleEventArgs $args
+     *
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    public function prePersist(LifecycleEventArgs $args)
+    public function prePersist(LifecycleEventArgs $args): void
     {
         $this->uploadFile($args->getEntity());
     }
 
     /**
      * @param PreUpdateEventArgs $args
+     *
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    public function preUpdate(PreUpdateEventArgs $args)
+    public function preUpdate(PreUpdateEventArgs $args): void
     {
         $this->uploadFile($args->getEntity(), $args->getEntityChangeSet());
     }
@@ -50,7 +58,7 @@ class ThumbnailUploadListener
      *
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException
      */
-    public function postLoad(LifecycleEventArgs $args)
+    public function postLoad(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
 
@@ -60,7 +68,7 @@ class ThumbnailUploadListener
 
         $thumbnail = $entity->getThumbnail();
 
-        if ($thumbnail !== null) {
+        if (null !== $thumbnail) {
             $entity->setThumbnail(
                 new File($this->uploadService->getTargetDirectory().DIRECTORY_SEPARATOR.$thumbnail, false)
             );
@@ -70,8 +78,10 @@ class ThumbnailUploadListener
     /**
      * @param LiveBroadcast|mixed $entity
      * @param array               $entityChangeset
+     *
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    private function uploadFile($entity, array $entityChangeset = [])
+    private function uploadFile($entity, array $entityChangeset = []): void
     {
         if (!$entity instanceof LiveBroadcast) {
             return;

@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
 
+/**
+ * This file is part of martin1982/livebroadcastbundle which is released under MIT.
+ * See https://opensource.org/licenses/MIT for full license details.
+ */
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl;
@@ -7,14 +12,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class MediaUrlTest
- * @package Martin1982\LiveBroadcastBundle\Tests\Entity\Media
  */
 class MediaUrlTest extends TestCase
 {
     /**
      * Test the getUrl method
      */
-    public function testGetUrl()
+    public function testGetUrl(): void
     {
         $input = new MediaUrl();
         self::assertEquals('', $input->getUrl());
@@ -26,7 +30,7 @@ class MediaUrlTest extends TestCase
     /**
      * Test the __toString method
      */
-    public function testToString()
+    public function testToString(): void
     {
         $input = new MediaUrl();
         self::assertEquals('', (string) $input);
