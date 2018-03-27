@@ -9,6 +9,8 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Facebook\Authentication\AccessToken;
+use Facebook\Authentication\OAuth2Client;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook as FacebookSDK;
 use Facebook\FacebookResponse;
@@ -403,6 +405,61 @@ class FacebookApiServiceTest extends TestCase
         $facebook->setFacebookSdk($sdk);
         $facebook->removeLiveEvent($liveBroadcast, $channelFacebook);
     }
+
+    /**
+     * @throws LiveBroadcastOutputException
+     */
+    public function testGetLongLivedAccessTokenWithoutToken(): void
+    {
+        $sdk = $this->createMock(FacebookSDK::class);
+        $sdk->expects(self::never())
+            ->method('getOAuth2Client');
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->setFacebookSdk($sdk);
+        $facebook->getLongLivedAccessToken(false);
+    }
+
+    /**
+     * Test that an SDK exception is caught
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testGetLongLivedAccessTokenSdkError(): void
+    {
+        $sdk = $this->createMock(FacebookSDK::class);
+        $sdk->expects(self::atLeastOnce())
+            ->method('getOAuth2Client')
+            ->willThrowException(new FacebookSDKException('no such client'));
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->setFacebookSdk($sdk);
+        $facebook->getLongLivedAccessToken('abcdef');
+    }
+
+    /**
+     * @throws LiveBroadcastOutputException
+     */
+    public function testGetLongLivedAccessToken(): void
+    {
+        $accessToken = $this->createMock(AccessToken::class);
+
+        $client = $this->createMock(OAuth2Client::class);
+        $client->expects(self::atLeastOnce())
+            ->method('getLongLivedAccessToken')
+            ->willReturn($accessToken);
+
+        $sdk = $this->createMock(FacebookSDK::class);
+        $sdk->expects(self::atLeastOnce())
+            ->method('getOAuth2Client')
+            ->willReturn($client);
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->setFacebookSdk($sdk);
+        $facebook->getLongLivedAccessToken('ddadsa');
+    }
+
+
 
     /**
      * Test retrieving the app id
