@@ -14,6 +14,7 @@ use Facebook\Authentication\OAuth2Client;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook as FacebookSDK;
 use Facebook\FacebookResponse;
+use Facebook\GraphNodes\GraphNode;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -459,7 +460,240 @@ class FacebookApiServiceTest extends TestCase
         $facebook->getLongLivedAccessToken('ddadsa');
     }
 
+    /**
+     * Test that this method doesn't do anything with a incompatible channel
+     *
+     * @throws LiveBroadcastOutputException
+     */
+    public function testGetStreamUrlWithNonFacebookChannel(): void
+    {
+        $sdk = $this->createMock(FacebookSDK::class);
+        $broadcast = $this->createMock(LiveBroadcast::class);
+        $channel = $this->createMock(ChannelYouTube::class);
 
+        $this->entityManager->expects(self::never())
+            ->method('getRepository');
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->setFacebookSdk($sdk);
+        $url = $facebook->getStreamUrl($broadcast, $channel);
+
+        self::assertEmpty($url);
+    }
+
+    /**
+     * @throws LiveBroadcastOutputException
+     */
+    public function testGetStreamUrlWithNoEvent(): void
+    {
+        $sdk = $this->createMock(FacebookSDK::class);
+        $broadcast = $this->createMock(LiveBroadcast::class);
+        $channel = $this->createMock(ChannelFacebook::class);
+
+        $repository = $this->createMock(EntityRepository::class);
+        $repository->expects(self::atLeastOnce())
+            ->method('findOneBy')
+            ->willReturn(null);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('getRepository')
+            ->willReturn($repository);
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->setFacebookSdk($sdk);
+        $url = $facebook->getStreamUrl($broadcast, $channel);
+
+        self::assertEmpty($url);
+    }
+
+    /**
+     * Test that a facebook exception is caught
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testGetStreamUrlFacebookError(): void
+    {
+        $sdk = $this->createMock(FacebookSDK::class);
+        $sdk->expects(self::atLeastOnce())
+            ->method('setDefaultAccessToken')
+            ->willThrowException(new FacebookSDKException('no token'));
+
+        $broadcast = $this->createMock(LiveBroadcast::class);
+
+        $channel = $this->createMock(ChannelFacebook::class);
+        $channel->expects(self::atLeastOnce())
+            ->method('getAccessToken')
+            ->willReturn('dksakmdsa');
+
+        $streamEvent = $this->createMock(StreamEvent::class);
+        $streamEvent->expects(self::atLeastOnce())
+            ->method('getExternalStreamId')
+            ->willReturn('832');
+
+        $repository = $this->createMock(EntityRepository::class);
+        $repository->expects(self::atLeastOnce())
+            ->method('findOneBy')
+            ->willReturn($streamEvent);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('getRepository')
+            ->willReturn($repository);
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->setFacebookSdk($sdk);
+        $url = $facebook->getStreamUrl($broadcast, $channel);
+
+        self::assertEmpty($url);
+    }
+
+    /**
+     * @throws LiveBroadcastOutputException
+     */
+    public function testGetStreamUrl(): void
+    {
+        $node = $this->createMock(GraphNode::class);
+        $node->expects(self::atLeastOnce())
+            ->method('getField')
+            ->willReturn('rtmp://some.url');
+
+        $response = $this->createMock(FacebookResponse::class);
+        $response->expects(self::atLeastOnce())
+            ->method('getGraphNode')
+            ->willReturn($node);
+
+        $sdk = $this->createMock(FacebookSDK::class);
+        $sdk->expects(self::atLeastOnce())
+            ->method('setDefaultAccessToken')
+            ->willReturn(true);
+        $sdk->expects(self::atLeastOnce())
+            ->method('get')
+            ->willReturn($response);
+
+        $broadcast = $this->createMock(LiveBroadcast::class);
+
+        $channel = $this->createMock(ChannelFacebook::class);
+        $channel->expects(self::atLeastOnce())
+            ->method('getAccessToken')
+            ->willReturn('dksakmdsa');
+
+        $streamEvent = $this->createMock(StreamEvent::class);
+        $streamEvent->expects(self::atLeastOnce())
+            ->method('getExternalStreamId')
+            ->willReturn('832');
+
+        $repository = $this->createMock(EntityRepository::class);
+        $repository->expects(self::atLeastOnce())
+            ->method('findOneBy')
+            ->willReturn($streamEvent);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('getRepository')
+            ->willReturn($repository);
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->setFacebookSdk($sdk);
+        $url = $facebook->getStreamUrl($broadcast, $channel);
+
+        self::assertEquals('rtmp://some.url', $url);
+    }
+
+    /**
+     * Test sending a end signal to a non Facebook channel
+     *
+     * @throws LiveBroadcastOutputException
+     */
+    public function testSendEndSignalOnNonFacebookChannel(): void
+    {
+        $channel = $this->createMock(ChannelYouTube::class);
+        $sdk = $this->createMock(FacebookSDK::class);
+        $sdk->expects(self::never())
+            ->method('post');
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->setFacebookSdk($sdk);
+        $facebook->sendEndSignal($channel, '3223');
+    }
+
+    /**
+     * Test that an exception is caught and converted
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testSendEndSignalSdkError(): void
+    {
+        $channel = $this->createMock(ChannelFacebook::class);
+        $sdk = $this->createMock(FacebookSDK::class);
+        $sdk->expects(self::atLeastOnce())
+            ->method('post')
+            ->willThrowException(new FacebookSDKException('no such event'));
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->setFacebookSdk($sdk);
+        $facebook->sendEndSignal($channel, '3223');
+    }
+
+    /**
+     * Test sending an end signal
+     *
+     * @throws LiveBroadcastOutputException
+     */
+    public function testSendEndSignal(): void
+    {
+        $channel = $this->createMock(ChannelFacebook::class);
+        $sdk = $this->createMock(FacebookSDK::class);
+        $sdk->expects(self::atLeastOnce())
+            ->method('post')
+            ->willReturn(true);
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->setFacebookSdk($sdk);
+        $facebook->sendEndSignal($channel, '3223');
+    }
+
+    /**
+     * Test initializing without proper parameters
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testInitFacebookWithoutParameters(): void
+    {
+        $channel = $this->createMock(ChannelYouTube::class);
+        $channel->expects(self::never())
+            ->method('getRefreshToken');
+
+        $facebook = new FacebookApiService('', '', $this->entityManager);
+        $facebook->sendEndSignal($channel, '3223');
+    }
+
+    /**
+     * Test initializing Facebook and getting an SDK error
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     *
+     * @expectedExceptionMessage Facebook SDK Exception: Something went wrong...
+     */
+    public function testInitFacebookWithSdkError(): void
+    {
+        $channel = $this->createMock(ChannelYouTube::class);
+        $channel->expects(self::never())
+            ->method('getRefreshToken');
+
+        $facebook = new FacebookApiServiceMock('a', 'b', $this->entityManager);
+        $facebook->sendEndSignal($channel, '3223');
+    }
+
+    /**
+     * @throws LiveBroadcastOutputException
+     */
+    public function testInitFacebook(): void
+    {
+        $channel = $this->createMock(ChannelYouTube::class);
+        $channel->expects(self::never())
+            ->method('getRefreshToken');
+
+        $facebook = $this->getFacebookApiService();
+        $facebook->sendEndSignal($channel, '3223');
+    }
 
     /**
      * Test retrieving the app id
