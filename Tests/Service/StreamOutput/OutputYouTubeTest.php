@@ -65,6 +65,21 @@ class OutputYouTubeTest extends TestCase
 
     /**
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testNoStreamUrlException(): void
+    {
+        $api = $this->createMock(YouTubeApiService::class);
+        $broadcast = $this->createMock(LiveBroadcast::class);
+
+        $youtube = new OutputYouTube($api);
+        $youtube->setBroadcast($broadcast);
+        $youtube->getStreamUrl();
+    }
+
+    /**
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmd(): void
     {

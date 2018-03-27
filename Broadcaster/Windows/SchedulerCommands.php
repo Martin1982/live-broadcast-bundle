@@ -11,7 +11,6 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 
 /**
  * Class SchedulerCommands
- * @todo full test
  */
 class SchedulerCommands extends AbstractSchedulerCommands
 {

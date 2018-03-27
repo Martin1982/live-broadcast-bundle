@@ -47,6 +47,14 @@ class YouTubeClient
     }
 
     /**
+     * @param \Google_Service_YouTube $service
+     */
+    public function setYouTubeClient(\Google_Service_YouTube $service): void
+    {
+        $this->youTubeClient = $service;
+    }
+
+    /**
      * @param ChannelYouTube $channel
      *
      * @throws LiveBroadcastOutputException
@@ -60,7 +68,7 @@ class YouTubeClient
         }
         $client->fetchAccessTokenWithRefreshToken($refreshToken);
 
-        $this->youTubeClient = new \Google_Service_YouTube($client);
+        $this->setYouTubeClient(new \Google_Service_YouTube($client));
     }
 
     /**
@@ -227,8 +235,10 @@ class YouTubeClient
             ->listLiveStreams('snippet,cdn,status', [ 'id' => $streamId])
             ->current();
 
-        $address = $stream->getCdn()->getIngestionInfo()->getIngestionAddress();
-        $name = $stream->getCdn()->getIngestionInfo()->getStreamName();
+        $ingestion = $stream->getCdn()->getIngestionInfo();
+
+        $address = $ingestion->getIngestionAddress();
+        $name = $ingestion->getStreamName();
 
         return $address.'/'.$name;
     }

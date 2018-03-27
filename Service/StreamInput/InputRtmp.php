@@ -35,7 +35,7 @@ class InputRtmp implements InputInterface
             throw new LiveBroadcastInputException(sprintf('Could not connect to port 1935 of at %s', $inputStream));
         }
 
-        return sprintf('-re -i rtmp://%s', escapeshellarg($inputStream));
+        return sprintf('-re -i rtmp://%s', $inputStream);
     }
 
     /**

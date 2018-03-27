@@ -276,6 +276,10 @@ class FacebookApiService implements ChannelApiInterface
      */
     public function sendEndSignal(PlanableChannelInterface $channel, $externalId): void
     {
+        if (!$this->facebookSDK) {
+            $this->initFacebook();
+        }
+
         if (!$channel instanceof ChannelFacebook) {
             return;
         }
@@ -288,6 +292,14 @@ class FacebookApiService implements ChannelApiInterface
     }
 
     /**
+     * @param FacebookSDK $sdk
+     */
+    public function setFacebookSdk(FacebookSDK $sdk): void
+    {
+        $this->facebookSDK = $sdk;
+    }
+
+    /**
      * @throws LiveBroadcastOutputException
      */
     private function initFacebook(): void
@@ -297,10 +309,10 @@ class FacebookApiService implements ChannelApiInterface
         }
 
         try {
-            $this->facebookSDK = new FacebookSDK([
+            $this->setFacebookSdk(new FacebookSDK([
                 'app_id' => $this->applicationId,
                 'app_secret' => $this->applicationSecret,
-            ]);
+            ]));
         } catch (FacebookSDKException $ex) {
             throw new LiveBroadcastOutputException(sprintf('Facebook SDK Exception: %s', $ex->getMessage()));
         }

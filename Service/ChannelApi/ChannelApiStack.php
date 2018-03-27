@@ -64,7 +64,7 @@ class ChannelApiStack
         $serviceApi = null;
 
         foreach ($this->apis as $api) {
-            if (\get_class($api) === $className) {
+            if ($api instanceof $className) {
                 $serviceApi = $api;
             }
         }

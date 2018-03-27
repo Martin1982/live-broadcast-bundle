@@ -7,11 +7,18 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiInterface;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -50,6 +57,198 @@ class BroadcastManagerTest extends TestCase
         $result = $broadcast->getBroadcastByid('10');
 
         self::assertInstanceOf(LiveBroadcast::class, $result);
+    }
+
+    /**
+     * Test that preinserts get executed
+     */
+    public function testPreInsert(): void
+    {
+        $channels = [ $this->createMock(ChannelFacebook::class) ];
+
+        $api = $this->createMock(ChannelApiInterface::class);
+        $api->expects(self::once())
+            ->method('createLiveEvent')
+            ->willReturn(true);
+
+        $broadcast = $this->createMock(LiveBroadcast::class);
+        $broadcast->expects(self::atLeastOnce())
+            ->method('getOutputChannels')
+            ->willReturn($channels);
+
+        $this->stack->expects(self::atLeastOnce())
+            ->method('getApiForChannel')
+            ->willReturn($api);
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager->preInsert($broadcast);
+    }
+
+    /**
+     * Test preupdate events
+     */
+    public function testPreUpdate(): void
+    {
+        $fbSpinninDeep = new ChannelFacebook();
+        $fbSpinninDeep->setFbEntityId('fbspinnindeep');
+
+        $fbSpinninRecords = new ChannelFacebook();
+        $fbSpinninRecords->setFbEntityId('fbspinninrecords');
+
+        $ytSpinninRecords = new ChannelYouTube();
+        $ytSpinninRecords->setYouTubeChannelName('Spinnin\' Records');
+
+        $ytSpinninDeep = new ChannelYouTube();
+        $ytSpinninDeep->setYouTubeChannelName('Spinnin\' Deep');
+
+        $broadcastNewState = $this->createMock(LiveBroadcast::class);
+        $broadcastOldState = $this->createMock(LiveBroadcast::class);
+        $broadcastRepository = $this->createMock(EntityRepository::class);
+        $api = $this->createMock(FacebookApiService::class);
+
+        $oldChannelList = new ArrayCollection();
+        $oldChannelList->add($fbSpinninDeep);
+        $oldChannelList->add($ytSpinninRecords);
+        $oldChannelList->add($ytSpinninDeep);
+
+        $newChannelList = new ArrayCollection();
+        $newChannelList->add($fbSpinninRecords);
+        $newChannelList->add($ytSpinninRecords);
+
+        $api->expects(self::atLeastOnce())
+            ->method('createLiveEvent')
+            ->willReturn(true);
+
+        $api->expects(self::atLeastOnce())
+            ->method('updateLiveEvent')
+            ->willReturn(true);
+
+        $api->expects(self::atLeastOnce())
+            ->method('removeLiveEvent')
+            ->willReturn(true);
+
+        $broadcastOldState->expects(self::atLeastOnce())
+            ->method('getOutputChannels')
+            ->willReturn($oldChannelList);
+
+        $broadcastNewState->expects(self::atLeastOnce())
+            ->method('getOutputChannels')
+            ->willReturn($newChannelList);
+
+        $broadcastRepository->expects(self::atLeastOnce())
+            ->method('findOneBy')
+            ->willReturn($broadcastOldState);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('getRepository')
+            ->with(LiveBroadcast::class)
+            ->willReturn($broadcastRepository);
+
+        $this->stack->expects(self::atLeast(3))
+            ->method('getApiForChannel')
+            ->willReturn($api);
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager->preUpdate($broadcastNewState);
+    }
+
+    /**
+     * Test that no updates are done when there is no previous state
+     */
+    public function testUpdateWithNoPreviousState():void
+    {
+        $broadcast = $this->createMock(LiveBroadcast::class);
+
+        $broadcastRepository = $this->createMock(EntityRepository::class);
+        $broadcastRepository->expects(self::atLeastOnce())
+            ->method('findOneBy')
+            ->willReturn(null);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('getRepository')
+            ->with(LiveBroadcast::class)
+            ->willReturn($broadcastRepository);
+
+        $this->stack->expects(self::never())
+            ->method('getApiForChannel');
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager->preUpdate($broadcast);
+    }
+
+    /**
+     * Test pre delete actions
+     */
+    public function testPreDelete(): void
+    {
+        $channels = [ $this->createMock(ChannelFacebook::class) ];
+
+        $api = $this->createMock(ChannelApiInterface::class);
+        $api->expects(self::once())
+            ->method('removeLiveEvent')
+            ->willReturn(true);
+
+        $broadcast = $this->createMock(LiveBroadcast::class);
+        $broadcast->expects(self::atLeastOnce())
+            ->method('getOutputChannels')
+            ->willReturn($channels);
+
+        $this->stack->expects(self::atLeastOnce())
+            ->method('getApiForChannel')
+            ->willReturn($api);
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager->preDelete($broadcast);
+    }
+
+    /**
+     * Test sending an end signal
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function testSendEndSignal(): void
+    {
+        $channel = $this->createMock(ChannelFacebook::class);
+
+        $api = $this->createMock(ChannelApiInterface::class);
+        $api->expects(self::atLeastOnce())
+            ->method('sendEndSignal')
+            ->willReturn(true);
+
+        $streamEvent = $this->createMock(StreamEvent::class);
+        $streamEvent->expects(self::atLeastOnce())
+            ->method('getChannel')
+            ->willReturn($channel);
+
+        $this->stack->expects(self::atLeastOnce())
+            ->method('getApiForChannel')
+            ->willReturn($api);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('persist')
+            ->willReturn(true);
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('flush')
+            ->willReturn(true);
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager->sendEndSignal($streamEvent);
+    }
+
+    /**
+     * Test getting an events repository
+     */
+    public function testGetEventsRepository(): void
+    {
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('getRepository')
+            ->with(StreamEvent::class)
+            ->willReturn($this->createMock(EntityRepository::class));
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        self::assertInstanceOf(EntityRepository::class, $broadcastManager->getEventsRepository());
     }
 
     /**

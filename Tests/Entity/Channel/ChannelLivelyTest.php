@@ -48,7 +48,7 @@ class ChannelLivelyTest extends TestCase
     public function testIsEntityConfigured(): void
     {
         $channel = new ChannelLively();
-        $configuration = [];
+        $configuration = ['a'];
 
         self::assertTrue($channel::isEntityConfigured($configuration));
     }

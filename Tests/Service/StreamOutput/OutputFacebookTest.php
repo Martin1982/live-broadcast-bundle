@@ -107,6 +107,21 @@ class OutputFacebookTest extends TestCase
     }
 
     /**
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testNoStreamUrlException(): void
+    {
+        $api = $this->createMock(FacebookApiService::class);
+        $broadcast = $this->createMock(LiveBroadcast::class);
+
+        $facebook = new OutputFacebook($api);
+        $facebook->setBroadcast($broadcast);
+        $facebook->getStreamUrl();
+    }
+
+    /**
      * Test if the channelType is correct for this output
      */
     public function testGetChannelType(): void
