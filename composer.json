@@ -24,7 +24,8 @@
         "symfony/yaml": "^3.4"
     },
     "suggest": {
-        "sonata-project/doctrine-orm-admin-bundle": "Sonata admin (version 3.x) for easy broadcast planning"
+        "sonata-project/doctrine-orm-admin-bundle": "Sonata admin (version 3.x) for easy broadcast planning",
+        "doctrine/doctrine-migrations-bundle": "Keep track of updated entities in your database"
     },
     "autoload": {
         "psr-4": { "Martin1982\\LiveBroadcastBundle\\": "" }
