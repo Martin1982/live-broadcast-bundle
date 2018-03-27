@@ -10,6 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
@@ -198,6 +199,110 @@ class YouTubeApiServiceTest extends TestCase
     }
 
     /**
+     * Test that when no event is available an exception is thrown
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testGetStreamUrlForNoEvent(): void
+    {
+        $broadcast = $this->createMock(LiveBroadcast::class);
+        $channel = $this->createMock(ChannelYouTube::class);
+
+        $repository = $this->createMock(StreamEventRepository::class);
+        $repository->expects(self::atLeastOnce())
+            ->method('findBroadcastingToChannel')
+            ->willReturn(null);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('getRepository')
+            ->willReturn($repository);
+
+        $service = $this->getService();
+        $service->getStreamUrl($broadcast, $channel);
+    }
+
+    /**
+     * Test getting a stream url
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testGetStreamUrl(): void
+    {
+        $broadcast = $this->createMock(LiveBroadcast::class);
+        $channel = $this->createMock(ChannelYouTube::class);
+
+        $contentDetails = $this->createMock(\Google_Service_YouTube_LiveBroadcastContentDetails::class);
+        $contentDetails->expects(self::atLeastOnce())
+            ->method('getBoundStreamId')
+            ->willReturn('abcdef');
+
+        $youTubeBroadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
+        $youTubeBroadcast->expects(self::atLeastOnce())
+            ->method('getContentDetails')
+            ->willReturn($contentDetails);
+
+        $event = $this->createMock(StreamEvent::class);
+        $event->expects(self::atLeastOnce())
+            ->method('getExternalStreamId')
+            ->willReturn('fdkkfd');
+
+        $repository = $this->createMock(StreamEventRepository::class);
+        $repository->expects(self::atLeastOnce())
+            ->method('findBroadcastingToChannel')
+            ->willReturn($event);
+
+        $this->client->expects(self::atLeastOnce())
+            ->method('getYoutubeBroadcast')
+            ->willReturn($youTubeBroadcast);
+        $this->client->expects(self::atLeastOnce())
+            ->method('getStreamUrl')
+            ->willReturn('rtmp://you.tu.be/abc');
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('getRepository')
+            ->willReturn($repository);
+
+        $service = $this->getService();
+        $url = $service->getStreamUrl($broadcast, $channel);
+
+        self::assertEquals('rtmp://you.tu.be/abc', $url);
+    }
+
+    /**
+     * Test sending an end signal to a wrong channel type
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testSendEndSignalOnWrongChannel()
+    {
+        $channel = $this->createMock(PlanableChannelInterface::class);
+
+        $this->client->expects(self::never())
+            ->method('endLiveStream')
+            ->willReturn(true);
+
+        $service = $this->getService();
+        $service->sendEndSignal($channel, 'fdjj');
+    }
+
+    /**
+     * Test sending an end signal
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     */
+    public function testSendEndSignal()
+    {
+        $channel = $this->createMock(ChannelYouTube::class);
+
+        $this->client->expects(self::atLeastOnce())
+            ->method('endLiveStream')
+            ->willReturn(true);
+
+        $service = $this->getService();
+        $service->sendEndSignal($channel, 'fdjj');
+    }
+
+    /**
      * Test that only YouTube channels are allowed
      *
      * @expectedException  \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
@@ -205,7 +310,7 @@ class YouTubeApiServiceTest extends TestCase
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function testCantSetOtherChannel()
+    public function testCantSetOtherChannel(): void
     {
         $broadcast = $this->createMock(LiveBroadcast::class);
         $channel = $this->createMock(ChannelFacebook::class);
