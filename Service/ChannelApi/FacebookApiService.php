@@ -69,9 +69,7 @@ class FacebookApiService implements ChannelApiInterface
      */
     public function createLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
-        if (!$this->facebookSDK) {
-            $this->initFacebook();
-        }
+        $this->ensureSdkLoaded();
 
         if (!$channel instanceof ChannelFacebook) {
             return;
@@ -124,9 +122,7 @@ class FacebookApiService implements ChannelApiInterface
      */
     public function updateLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
-        if (!$this->facebookSDK) {
-            $this->initFacebook();
-        }
+        $this->ensureSdkLoaded();
 
         if (!$channel instanceof ChannelFacebook) {
             return;
@@ -171,9 +167,7 @@ class FacebookApiService implements ChannelApiInterface
      */
     public function removeLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
-        if (!$this->facebookSDK) {
-            $this->initFacebook();
-        }
+        $this->ensureSdkLoaded();
 
         if (!$channel instanceof ChannelFacebook) {
             return;
@@ -207,9 +201,7 @@ class FacebookApiService implements ChannelApiInterface
      */
     public function getLongLivedAccessToken($userAccessToken): ?AccessToken
     {
-        if (!$this->facebookSDK) {
-            $this->initFacebook();
-        }
+        $this->ensureSdkLoaded();
 
         if (!$userAccessToken) {
             return null;
@@ -241,9 +233,7 @@ class FacebookApiService implements ChannelApiInterface
      */
     public function getStreamUrl(LiveBroadcast $broadcast, AbstractChannel $channel): string
     {
-        if (!$this->facebookSDK) {
-            $this->initFacebook();
-        }
+        $this->ensureSdkLoaded();
 
         if (!$channel instanceof ChannelFacebook) {
             return '';
@@ -276,9 +266,7 @@ class FacebookApiService implements ChannelApiInterface
      */
     public function sendEndSignal(PlanableChannelInterface $channel, $externalId): void
     {
-        if (!$this->facebookSDK) {
-            $this->initFacebook();
-        }
+        $this->ensureSdkLoaded();
 
         if (!$channel instanceof ChannelFacebook) {
             return;
@@ -315,6 +303,16 @@ class FacebookApiService implements ChannelApiInterface
             ]));
         } catch (FacebookSDKException $ex) {
             throw new LiveBroadcastOutputException(sprintf('Facebook SDK Exception: %s', $ex->getMessage()));
+        }
+    }
+
+    /**
+     * @throws LiveBroadcastOutputException
+     */
+    private function ensureSdkLoaded(): void
+    {
+        if (!$this->facebookSDK) {
+            $this->initFacebook();
         }
     }
 }
