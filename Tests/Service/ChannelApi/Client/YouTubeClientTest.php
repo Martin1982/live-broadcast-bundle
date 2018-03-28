@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi\Client;
 
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -305,7 +306,7 @@ class YouTubeClientTest extends TestCase
         $thumbnails->expects(self::atLeastOnce())
             ->method('set')
             ->with('youtube.id')
-            ->willReturn(new \GuzzleHttp\Psr7\Request('get', 'test_upload'));
+            ->willReturn(new Request('get', 'test_upload'));
 
         $client = $this->createMock(\Google_Service_YouTube::class);
         $client->thumbnails = $thumbnails;

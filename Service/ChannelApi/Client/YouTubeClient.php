@@ -12,7 +12,6 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\YouTubeConfig;
-use Psr\Http\Message\RequestInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -131,7 +130,7 @@ class YouTubeClient
         $client->setDefer(true);
         $thumbnailPath = $plannedThumbnail->getRealPath();
 
-        /** @var RequestInterface $setRequest */
+        /** @var \Psr\Http\Message\RequestInterface $setRequest */
         $setRequest = $this->youTubeClient->thumbnails->set($youtubeBroadcast->getId());
         $fileUpload = new \Google_Http_MediaFileUpload(
             $client,
