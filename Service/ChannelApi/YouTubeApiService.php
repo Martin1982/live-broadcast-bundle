@@ -86,6 +86,7 @@ class YouTubeApiService implements ChannelApiInterface
         $this->setChannel($channel);
 
         $youtubeBroadcast = $this->client->createBroadcast($broadcast);
+        $this->client->addThumbnailToBroadcast($youtubeBroadcast, $broadcast);
         $stream           = $this->client->createStream($broadcast->getName());
         $youtubeBroadcast = $this->client->bind($youtubeBroadcast, $stream);
 
@@ -166,9 +167,9 @@ class YouTubeApiService implements ChannelApiInterface
         }
         $streamId = (string) $event->getExternalStreamId();
 
-        $broadcast = $this->client->getYoutubeBroadcast($streamId);
-        if ($broadcast) {
-            $streamId  = $broadcast->getContentDetails()->getBoundStreamId();
+        $youTubeBroadcast = $this->client->getYoutubeBroadcast($streamId);
+        if ($youTubeBroadcast) {
+            $streamId  = $youTubeBroadcast->getContentDetails()->getBoundStreamId();
             $streamUrl = $this->client->getStreamUrl($streamId);
         }
 
