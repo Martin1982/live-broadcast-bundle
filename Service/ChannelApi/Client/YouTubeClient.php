@@ -12,6 +12,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\YouTubeConfig;
+use Psr\Http\Message\RequestInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -90,12 +91,6 @@ class YouTubeClient
         $broadcastSnippet->setScheduledStartTime($start->format(\DateTime::ATOM));
         $broadcastSnippet->setScheduledEndTime($plannedBroadcast->getEndTimestamp()->format(\DateTime::ATOM));
 
-        $plannedThumbnail = $plannedBroadcast->getThumbnail();
-        if ($plannedThumbnail instanceof File && $plannedThumbnail->isFile()) {
-            $thumbnails = $this->getThumbnails($plannedThumbnail);
-            $broadcastSnippet->setThumbnails($thumbnails);
-        }
-
         $monitorStreamData = new \Google_Service_YouTube_MonitorStreamInfo();
         $monitorStreamData->setEnableMonitorStream(false);
 
@@ -113,6 +108,52 @@ class YouTubeClient
         $liveBroadcast->setKind('youtube#liveBroadcast');
 
         return $this->youTubeClient->liveBroadcasts->insert('snippet,contentDetails,status', $liveBroadcast);
+    }
+
+    /**
+     * @param \Google_Service_YouTube_LiveBroadcast $youtubeBroadcast
+     * @param LiveBroadcast                         $plannedBroadcast
+     *
+     * @return bool
+     *
+     * @throws LiveBroadcastOutputException
+     */
+    public function addThumbnailToBroadcast(\Google_Service_YouTube_LiveBroadcast $youtubeBroadcast, LiveBroadcast $plannedBroadcast)
+    {
+        $plannedThumbnail = $plannedBroadcast->getThumbnail();
+
+        if (!$plannedThumbnail instanceof File || !$plannedThumbnail->isFile()) {
+            return false;
+        }
+
+        $chunkSizeBytes = (1 * 1024 * 1024);
+        $client = $this->googleClient->getClient();
+        $client->setDefer(true);
+        $thumbnailPath = $plannedThumbnail->getRealPath();
+
+        /** @var RequestInterface $setRequest */
+        $setRequest = $this->youTubeClient->thumbnails->set($youtubeBroadcast->getId());
+        $fileUpload = new \Google_Http_MediaFileUpload(
+            $client,
+            $setRequest,
+            mime_content_type($thumbnailPath),
+            null,
+            true,
+            $chunkSizeBytes
+        );
+        $fileUpload->setFileSize(filesize($thumbnailPath));
+
+        $status = false;
+        $handle = fopen($thumbnailPath, 'rb');
+        while (!$status && !feof($handle)) {
+            $chunk = fread($handle, $chunkSizeBytes);
+            $status = $fileUpload->nextChunk($chunk);
+        }
+
+        fclose($handle);
+        $client->setDefer(false);
+
+        return true;
     }
 
     /**
@@ -154,12 +195,6 @@ class YouTubeClient
         $broadcastSnippet->setDescription($plannedBroadcast->getDescription());
         $broadcastSnippet->setScheduledStartTime($start->format(\DateTime::ATOM));
         $broadcastSnippet->setScheduledEndTime($plannedBroadcast->getEndTimestamp()->format(\DateTime::ATOM));
-
-        $plannedThumbnail = $plannedBroadcast->getThumbnail();
-        if ($plannedThumbnail instanceof File && $plannedThumbnail->isFile()) {
-            $thumbnails = $this->getThumbnails($plannedThumbnail);
-            $broadcastSnippet->setThumbnails($thumbnails);
-        }
 
         $liveBroadcast = new \Google_Service_YouTube_LiveBroadcast();
         $liveBroadcast->setId($externalId);
@@ -241,31 +276,5 @@ class YouTubeClient
         $name = $ingestion->getStreamName();
 
         return $address.'/'.$name;
-    }
-
-    /**
-     * @param File $thumbnail
-     *
-     * @return \Google_Service_YouTube_ThumbnailDetails
-     */
-    protected function getThumbnails(File $thumbnail): \Google_Service_YouTube_ThumbnailDetails
-    {
-        $defaultThumbnail = new \Google_Service_YouTube_Thumbnail();
-        $thumbnailUrl = sprintf(
-            '%s%s/%s',
-            $this->config->getHost(),
-            $this->config->getThumbnailDirectory(),
-            $thumbnail->getFilename()
-        );
-        $defaultThumbnail->setUrl($thumbnailUrl);
-
-        [$width, $height] = getimagesize($thumbnail->getRealPath());
-        $defaultThumbnail->setWidth($width);
-        $defaultThumbnail->setHeight($height);
-
-        $thumbnails = new \Google_Service_YouTube_ThumbnailDetails();
-        $thumbnails->setDefault($defaultThumbnail);
-
-        return $thumbnails;
     }
 }

@@ -86,6 +86,7 @@ class YouTubeApiService implements ChannelApiInterface
         $this->setChannel($channel);
 
         $youtubeBroadcast = $this->client->createBroadcast($broadcast);
+        $this->client->addThumbnailToBroadcast($youtubeBroadcast, $broadcast);
         $stream           = $this->client->createStream($broadcast->getName());
         $youtubeBroadcast = $this->client->bind($youtubeBroadcast, $stream);
 
