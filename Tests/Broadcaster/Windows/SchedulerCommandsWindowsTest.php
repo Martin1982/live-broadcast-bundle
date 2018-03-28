@@ -72,7 +72,7 @@ class SchedulerCommandsWindowsTest extends TestCase
             ->willReturn('Streaming...');
 
         $command = new SchedulerCommands('/some/directory', 'unittest');
-        $command->setIsLoopable(true);
+        $command->setLoopable(true);
         $command->startProcess('input', 'output', [ 'x' => 'y', 'a' => 'b']);
     }
 }

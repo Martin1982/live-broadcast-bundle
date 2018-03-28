@@ -74,5 +74,5 @@ interface SchedulerCommandsInterface
     /**
      * @param bool $loopable
      */
-    public function setIsLoopable($loopable);
+    public function setLoopable($loopable);
 }

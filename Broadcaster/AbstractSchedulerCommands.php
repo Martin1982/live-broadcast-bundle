@@ -181,7 +181,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * @param bool $loopable
      */
-    public function setIsLoopable($loopable): void
+    public function setLoopable($loopable): void
     {
         $this->loopable = (bool) $loopable;
     }

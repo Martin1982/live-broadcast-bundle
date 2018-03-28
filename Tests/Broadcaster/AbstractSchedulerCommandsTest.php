@@ -74,7 +74,7 @@ class AbstractSchedulerCommandsTest extends TestCase
      */
     public function testLoopable(): void
     {
-        $this->schedulerCommands->setIsLoopable(true);
+        $this->schedulerCommands->setLoopable(true);
 
         self::assertTrue($this->schedulerCommands->isLoopable());
     }
