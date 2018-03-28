@@ -55,7 +55,7 @@ services:
 # Facebook
   live.broadcast.facebookapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService
-      arguments: ["%livebroadcast.fb.appid%", "%livebroadcast.fb.appsecret%", "@doctrine.orm.entity_manager"]
+      arguments: ["@doctrine.orm.entity_manager", "%livebroadcast.fb.appid%", "%livebroadcast.fb.appsecret%"]
       tags:
           - { name: live.broadcast.api }
 

@@ -46,11 +46,11 @@ class FacebookApiService implements ChannelApiInterface
     /**
      * FacebookApiService constructor.
      *
-     * @param string        $applicationId
-     * @param string        $applicationSecret
      * @param EntityManager $entityManager
+     * @param string|null   $applicationId
+     * @param string|null   $applicationSecret
      */
-    public function __construct($applicationId, $applicationSecret, EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, $applicationId = null, $applicationSecret = null)
     {
         $this->applicationId = (string) $applicationId;
         $this->applicationSecret = (string) $applicationSecret;

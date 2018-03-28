@@ -661,7 +661,7 @@ class FacebookApiServiceTest extends TestCase
         $channel->expects(self::never())
             ->method('getRefreshToken');
 
-        $facebook = new FacebookApiService('', '', $this->entityManager);
+        $facebook = new FacebookApiService($this->entityManager, '', '');
         $facebook->sendEndSignal($channel, '3223');
     }
 
@@ -678,7 +678,7 @@ class FacebookApiServiceTest extends TestCase
         $channel->expects(self::never())
             ->method('getRefreshToken');
 
-        $facebook = new FacebookApiServiceMock('a', 'b', $this->entityManager);
+        $facebook = new FacebookApiServiceMock($this->entityManager, 'a', 'b');
         $facebook->sendEndSignal($channel, '3223');
     }
 
@@ -708,7 +708,7 @@ class FacebookApiServiceTest extends TestCase
      */
     protected function getFacebookApiService(): FacebookApiService
     {
-        return new FacebookApiService('appid', 'appsecret', $this->entityManager);
+        return new FacebookApiService($this->entityManager, 'appid', 'appsecret');
     }
 
     /**

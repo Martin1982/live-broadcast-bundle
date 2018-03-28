@@ -32,9 +32,9 @@ class GoogleRedirectService
      * GoogleRedirectService constructor
      *
      * @param RouterInterface $router
-     * @param string          $redirectRoute
+     * @param string|null     $redirectRoute
      */
-    public function __construct(RouterInterface $router, $redirectRoute)
+    public function __construct(RouterInterface $router, $redirectRoute = null)
     {
         $this->router = $router;
         $this->redirectRoute = $redirectRoute;

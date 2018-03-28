@@ -25,10 +25,10 @@ class GoogleConfig
     /**
      * GoogleConfig constructor
      *
-     * @param string $clientId
-     * @param string $clientSecret
+     * @param string|null $clientId
+     * @param string|null $clientSecret
      */
-    public function __construct(string $clientId, string $clientSecret)
+    public function __construct(string $clientId = null, string $clientSecret = null)
     {
         $this->setClientId($clientId);
         $this->setClientSecret($clientSecret);
