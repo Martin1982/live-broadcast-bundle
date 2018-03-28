@@ -16,12 +16,12 @@
         "google/apiclient-services": "^0.51",
         "google/apiclient": "^2.2",
         "react/event-loop": "^0.4.3",
-        "symfony/console": "^3.4",
-        "symfony/framework-bundle": "^3.4",
-        "symfony/http-kernel": "^3.4",
+        "symfony/console": "^3.4|^4.0",
+        "symfony/framework-bundle": "^3.4|^4.0",
+        "symfony/http-kernel": "^3.4|^4.0",
         "symfony/monolog-bundle": "^3.2",
-        "symfony/validator": "^3.4",
-        "symfony/yaml": "^3.4"
+        "symfony/validator": "^3.4|^4.0",
+        "symfony/yaml": "^3.4|^4.0"
     },
     "suggest": {
         "sonata-project/doctrine-orm-admin-bundle": "Sonata admin (version 3.x) for easy broadcast planning",
