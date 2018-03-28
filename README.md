@@ -53,15 +53,11 @@ To test these prerequisites the Symfony command `livebroadcaster:test:shell` can
 
 ## Basic installation
 
-### Step 1: Download Bundle
-
 This bundle will be made available on Packagist. You can then install it using Composer:
 
 ```bash
 $ composer require martin1982/live-broadcast-bundle
 ```
-
-### Step 2: Enable the bundle
 
 Next, enable the bundle in the kernel:
 
@@ -78,21 +74,15 @@ public function registerBundles()
 }
 ```
 
-### Step 3: Update your database schema
-
-Use doctrine to update your database schema with the broadcasting entities
-
-### Step 4 (Sonata users only): Activate the Sonata Admin module
-
-To make planning available through an admin interface it is recommended to use the Sonata Admin bundle.
-
-### Step 5 (Optional): Start the broadcast!
+Use Doctrine to update your database schema with the broadcasting entities, when upgrading it is recommended to use migrations.
 
 To start the broadcast scheduler you can run the following command:
 
 ```bash
 $ php app/console livebroadcaster:broadcast
 ```
+
+To make broadcast planning available through an admin interface we've added support for the Sonata Admin bundle.
 
 ### FFMpeg log directory
 To view the output of FFMpeg you need to configure a log directory in your `app/config/config.yml`.
@@ -117,8 +107,6 @@ Setup the following config for thumbnails:
             web_path: '/uploads/thumbnails'
 
 ## Enabling Facebook Live
-
-### Step 1: Create a Facebook App
 Create a Facebook app on https://developers.facebook.com with the following permissions:
 
 - user_videos
@@ -128,14 +116,14 @@ Create a Facebook app on https://developers.facebook.com with the following perm
 - publish_actions
 - Live-Video API
 
-### Step 2: Edit your `app/config/config.yml` with the following configuration:
+Edit your `app/config/config.yml` with the following configuration:
+
     live_broadcast:
         facebook:
             application_id: YourFacebookAppId
             application_secret: YourFacebookAppSecret
 
-### Step 3 (Sonata users only): Sonata config update 
-Add the Sonata block to your blocks config:
+When using Sonata Admin; add the Sonata block to your blocks config:
 
     sonata_block:
         blocks:
@@ -144,13 +132,11 @@ Add the Sonata block to your blocks config:
 
 ## Enabling YouTube Live
 
-### Step 1: Request API access
 Login to https://console.developers.google.com/ and enable the 'YouTube Data API v3'.
 
 Setup oAuth Credentials for your server. In case you're using the Sonata Admin from this
 bundle the redirect URI's path is `<your domain>/admin/channel/youtube/oauthprovider`
 
-### Step 2: Update config
 Add the YouTube API info to your config.yml:
 
     live_broadcast:
@@ -159,15 +145,14 @@ Add the YouTube API info to your config.yml:
             client_secret: YourGoogleOauthClientSecret
             redirect_route: admin_martin1982_livebroadcast_channel_abstractchannel_youtubeoauth
 
-### Step 3 (Sonata users only): Sonata config update 
-Add the Sonata block to your blocks config:
+ 
+When using Sonata Admin; add the Sonata block to your blocks config:
 
     sonata_block:
         blocks:
         sonata.block.service.youtubeauth:
             contexts:   [admin]
              
-### Step 4: Update parameters 
 Add these lines to your parameters.yml (used for generating a thumbnail URL)
 
     parameters:
@@ -176,13 +161,10 @@ Add these lines to your parameters.yml (used for generating a thumbnail URL)
     
 ## Add new output platforms
 
-### Step 1: Create channel entity 
 Create a new Channel Entity in Entity/Channel that extends the AbstractChannel (e.g. ChannelNew)
 
-### Step 2: Create streamoutput service 
 Create a new StreamOutput service in Service/StreamOutput that implements the OutputInterface (e.g. OutputNew)
 
-### Step 3: Configure your service 
 Configure the service with the output tag in Resources/config/services.yml
 
     live.broadcast.output.new:
@@ -190,8 +172,7 @@ Configure the service with the output tag in Resources/config/services.yml
         tags:
             - { name: live.broadcast.output, platform: 'New' }
 
-### Step 4 (Sonata users only): Create Sonata form
-Add a new form for the Channel in Admin/ChannelAdmin.php
+To add support for Sonata admin; add a new form for the Channel in Admin/ChannelAdmin.php
 
 ``` php
 protected function configureFormFields(FormMapper $formMapper)
@@ -202,8 +183,7 @@ protected function configureFormFields(FormMapper $formMapper)
 }
 ```
 
-### Step 5 (Sonata users only): Create channeladmin subclass 
-Add the sub class for the channelAdmin in Resources/config/admin.yml for 
+Next add the sub class for the channelAdmin in Resources/config/admin.yml for 
 
     sonata.admin.channel
         calls:
