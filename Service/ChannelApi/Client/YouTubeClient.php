@@ -117,7 +117,7 @@ class YouTubeClient
      *
      * @throws LiveBroadcastOutputException
      */
-    public function addThumbnailToBroadcast(\Google_Service_YouTube_LiveBroadcast $youtubeBroadcast, LiveBroadcast $plannedBroadcast)
+    public function addThumbnailToBroadcast(\Google_Service_YouTube_LiveBroadcast $youtubeBroadcast, LiveBroadcast $plannedBroadcast): bool
     {
         $plannedThumbnail = $plannedBroadcast->getThumbnail();
 
@@ -127,6 +127,11 @@ class YouTubeClient
 
         $chunkSizeBytes = (1 * 1024 * 1024);
         $client = $this->googleClient->getClient();
+
+        if (!$client) {
+            return false;
+        }
+
         $client->setDefer(true);
         $thumbnailPath = $plannedThumbnail->getRealPath();
 

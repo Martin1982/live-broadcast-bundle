@@ -167,9 +167,9 @@ class YouTubeApiService implements ChannelApiInterface
         }
         $streamId = (string) $event->getExternalStreamId();
 
-        $broadcast = $this->client->getYoutubeBroadcast($streamId);
-        if ($broadcast) {
-            $streamId  = $broadcast->getContentDetails()->getBoundStreamId();
+        $youTubeBroadcast = $this->client->getYoutubeBroadcast($streamId);
+        if ($youTubeBroadcast) {
+            $streamId  = $youTubeBroadcast->getContentDetails()->getBoundStreamId();
             $streamUrl = $this->client->getStreamUrl($streamId);
         }
 
