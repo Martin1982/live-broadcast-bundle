@@ -24,7 +24,7 @@
 The Live Broadcast Bundle will make it possible to plan live video streams to
 various channels like Twitch, YouTube Live, Facebook Live, UStream and Live.Ly (referred to as Output or Channels).
 
-The basic "Input" will be a file or URL that will be streamed. Other inputs will be created thereafter.
+As "Input" we support files, URL's or existing RTMP streams.
 
 For more info you can view the latest recorded presentation below, check the demo project at https://github.com/Martin1982/live-broadcast-demo or read on;
 
