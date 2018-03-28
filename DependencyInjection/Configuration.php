@@ -58,7 +58,6 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('eventloop')
                     ->canBeEnabled()
                     ->children()
-                        ->scalarNode('enabled')->defaultFalse()->end()
                         ->scalarNode('timer')->defaultValue(5)->end()
                     ->end()
                 ->end()

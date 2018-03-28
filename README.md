@@ -1,5 +1,4 @@
-Live Broadcast Bundle
-=====================
+# Live Broadcast Bundle
 
 *As we're stabilizing the bundle please note that database schema and config changes may occur*
 
@@ -11,7 +10,16 @@ Live Broadcast Bundle
 [![Latest Unstable Version](https://poser.pugx.org/martin1982/live-broadcast-bundle/v/unstable)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
 [![License](https://poser.pugx.org/martin1982/live-broadcast-bundle/license)](https://packagist.org/packages/martin1982/live-broadcast-bundle)
 
-# About
+## Table of contents
+
+- [About](#about)
+- [Prerequisites](#prerequisites)
+- [Basic installation](#basic-installation)
+- [Enabling Facebook Live](#enabling-facebook-live)
+- [Enabling YouTube Live](#enabling-youtube-live)
+- [Add new output platforms](#add-new-output-platforms)
+
+## About
 
 The Live Broadcast Bundle will make it possible to plan live video streams to
 various channels like Twitch, YouTube Live, Facebook Live, UStream and Live.Ly (referred to as Output or Channels).
@@ -43,7 +51,7 @@ On Windows:
 
 To test these prerequisites the Symfony command `livebroadcaster:test:shell` can be used after the installation described below.
 
-## Installation
+## Basic installation
 
 ### Step 1: Download Bundle
 
@@ -80,13 +88,11 @@ To make planning available through an admin interface it is recommended to use t
 
 ### Step 5 (Optional): Start the broadcast!
 
-To start a broadcast you can use a console command, you can add this to a cronjob to automate your broadcast schedule.
+To start the broadcast scheduler you can run the following command:
 
 ```bash
 $ php app/console livebroadcaster:broadcast
 ```
-
-By default Facebook and YouTube are disabled, as they need extra config. To enable either one of these continue reading.
 
 ### FFMpeg log directory
 To view the output of FFMpeg you need to configure a log directory in your `app/config/config.yml`.
@@ -95,15 +101,14 @@ To view the output of FFMpeg you need to configure a log directory in your `app/
         ffmpeg:
             log_directory: '%kernel.logs_dir%'
 
-## Event loop
-In stead of using cronjobs to trigger broadcasts you can use an event loop by using this configuration:
+### Event loop
+You can use this configuration to set the event loop timer:
 
     live_broadcast:
         eventloop:
-            enabled: true
             timer: 5
 
-## Thumbnailer setup
+### Thumbnailer setup
 Setup the following config for thumbnails:
     
     live_broadcast:
