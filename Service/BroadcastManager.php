@@ -134,11 +134,12 @@ class BroadcastManager
             $api = $this->apiStack->getApiForChannel($channel);
 
             if ($api) {
-                $api->sendEndSignal($channel, $event->getExternalStreamId());
                 $event->setEndSignalSent(true);
 
                 $this->entityManager->persist($event);
                 $this->entityManager->flush();
+
+                $api->sendEndSignal($channel, $event->getExternalStreamId());
             }
         }
     }
