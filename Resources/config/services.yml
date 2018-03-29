@@ -5,7 +5,7 @@ imports:
 services:
   live.broadcast.command.broadcast:
     class: Martin1982\LiveBroadcastBundle\Command\BroadcasterCommand
-    arguments: ["@live.broadcast.scheduler", "%livebroadcast.eventloop.timer%"]
+    arguments: ["@live.broadcast.scheduler", "@logger", "%livebroadcast.eventloop.timer%"]
     tags:
         - { name: 'console.command' }
 

@@ -75,6 +75,8 @@ class YouTubeClient
      * @param LiveBroadcast $plannedBroadcast
      *
      * @return \Google_Service_YouTube_LiveBroadcast
+     *
+     * @throws LiveBroadcastOutputException
      */
     public function createBroadcast(LiveBroadcast $plannedBroadcast): \Google_Service_YouTube_LiveBroadcast
     {
@@ -106,7 +108,11 @@ class YouTubeClient
         $liveBroadcast->setStatus($status);
         $liveBroadcast->setKind('youtube#liveBroadcast');
 
-        return $this->youTubeClient->liveBroadcasts->insert('snippet,contentDetails,status', $liveBroadcast);
+        try {
+            return $this->youTubeClient->liveBroadcasts->insert('snippet,contentDetails,status', $liveBroadcast);
+        } catch (\Google_Service_Exception $exception) {
+            throw new LiveBroadcastOutputException($exception->getMessage());
+        }
     }
 
     /**
@@ -162,24 +168,38 @@ class YouTubeClient
 
     /**
      * @param string|int $externalId
+     *
+     * @throws LiveBroadcastOutputException
      */
     public function endLiveStream($externalId): void
     {
-        $this->youTubeClient->liveBroadcasts->transition('complete', $externalId, 'status');
+        try {
+            $this->youTubeClient->liveBroadcasts->transition('complete', $externalId, 'status');
+        } catch (\Google_Service_Exception $exception) {
+            throw new LiveBroadcastOutputException($exception->getMessage());
+        }
     }
 
     /**
      * Remove a planned live event on YouTube
      *
      * @param StreamEvent $event
+     *
+     * @throws LiveBroadcastOutputException
      */
     public function removeLivestream(StreamEvent $event): void
     {
-        $this->youTubeClient->liveBroadcasts->delete($event->getExternalStreamId());
+        try {
+            $this->youTubeClient->liveBroadcasts->delete($event->getExternalStreamId());
+        } catch (\Google_Service_Exception $exception) {
+            throw new LiveBroadcastOutputException($exception->getMessage());
+        }
     }
 
     /**
      * @param StreamEvent $event
+     *
+     * @throws LiveBroadcastOutputException
      */
     public function updateLiveStream(StreamEvent $event): void
     {
@@ -205,13 +225,19 @@ class YouTubeClient
         $liveBroadcast->setSnippet($broadcastSnippet);
         $liveBroadcast->setKind('youtube#liveBroadcast');
 
-        $this->youTubeClient->liveBroadcasts->update('snippet', $liveBroadcast);
+        try {
+            $this->youTubeClient->liveBroadcasts->update('snippet', $liveBroadcast);
+        } catch (\Google_Service_Exception $exception) {
+            throw new LiveBroadcastOutputException($exception->getMessage());
+        }
     }
 
     /**
      * @param string $title
      *
      * @return \Google_Service_YouTube_LiveStream
+     *
+     * @throws LiveBroadcastOutputException
      */
     public function createStream(string $title): \Google_Service_YouTube_LiveStream
     {
@@ -227,7 +253,11 @@ class YouTubeClient
         $streamInsert->setCdn($cdn);
         $streamInsert->setKind('youtube#liveStream');
 
-        return $this->youTubeClient->liveStreams->insert('snippet,cdn', $streamInsert);
+        try {
+            return $this->youTubeClient->liveStreams->insert('snippet,cdn', $streamInsert);
+        } catch (\Google_Service_Exception $exception) {
+            throw new LiveBroadcastOutputException($exception->getMessage());
+        }
     }
 
     /**
@@ -235,6 +265,8 @@ class YouTubeClient
      * @param \Google_Service_YouTube_LiveStream    $stream
      *
      * @return \Google_Service_YouTube_LiveBroadcast
+     *
+     * @throws LiveBroadcastOutputException
      */
     public function bind(\Google_Service_YouTube_LiveBroadcast $broadcast, \Google_Service_YouTube_LiveStream $stream): \Google_Service_YouTube_LiveBroadcast
     {
@@ -242,7 +274,11 @@ class YouTubeClient
         $parameters = 'id,contentDetails';
         $options = ['streamId' => $stream->getId()];
 
-        return $this->youTubeClient->liveBroadcasts->bind($broadcastId, $parameters, $options);
+        try {
+            return $this->youTubeClient->liveBroadcasts->bind($broadcastId, $parameters, $options);
+        } catch (\Google_Service_Exception $exception) {
+            throw new LiveBroadcastOutputException($exception->getMessage());
+        }
     }
 
     /**

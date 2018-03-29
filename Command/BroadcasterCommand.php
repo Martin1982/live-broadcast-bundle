@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Command;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Psr\Log\LoggerInterface;
 use React\EventLoop\Factory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,6 +27,11 @@ class BroadcasterCommand extends Command
     private $scheduler;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var int
      */
     private $eventLoopTimer;
@@ -37,14 +42,15 @@ class BroadcasterCommand extends Command
     protected static $defaultName = 'livebroadcaster:broadcast';
 
     /**
-     * @param Scheduler $scheduler
-     * @param int       $eventLoopTimer
+     * @param Scheduler       $scheduler
+     * @param LoggerInterface $logger
+     * @param int             $eventLoopTimer
      *
-     * @throws \Symfony\Component\Console\Exception\LogicException
      */
-    public function __construct(Scheduler $scheduler, $eventLoopTimer = 10)
+    public function __construct(Scheduler $scheduler, LoggerInterface $logger, $eventLoopTimer = 10)
     {
         $this->scheduler = $scheduler;
+        $this->logger = $logger;
         $this->eventLoopTimer = $eventLoopTimer;
 
         parent::__construct();
@@ -62,13 +68,6 @@ class BroadcasterCommand extends Command
 
     /**
      * {@inheritdoc}
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
-     * @throws \Doctrine\ORM\Query\QueryException
-     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
-     * @throws \LogicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -80,8 +79,8 @@ class BroadcasterCommand extends Command
             function () use ($scheduler, $output) {
                 try {
                     $scheduler->applySchedule();
-                } catch (LiveBroadcastException $exception) {
-                    $output->writeln('EXCEPTION: '.$exception->getMessage());
+                } catch (\Throwable $exception) {
+                    $this->logger->critical($exception->getMessage());
                 }
             }
         );
