@@ -55,6 +55,8 @@ class AbstractSchedulerCommandsTest extends TestCase
 
     /**
      * Test the FFMPEG log directory setter
+     *
+     * @throws \ReflectionException
      */
     public function testFFMpegLogDirectory(): void
     {

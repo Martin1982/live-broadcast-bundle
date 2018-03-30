@@ -4,12 +4,14 @@ services:
 
 # Individual output services
   live.broadcast.output.youtube:
-      arguments: ["@live.broadcast.youtubeapi.service"]
+      arguments:
+          - "@live.broadcast.youtubeapi.service"
       class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube
       tags:
           - { name: live.broadcast.output, platform: 'YouTube' }
   live.broadcast.output.facebook:
-      arguments: ["@live.broadcast.facebookapi.service"]
+      arguments:
+          - "@live.broadcast.facebookapi.service"
       class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook
       tags:
           - { name: live.broadcast.output, platform: 'Facebook' }

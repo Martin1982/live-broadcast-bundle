@@ -9,9 +9,13 @@ namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMInvalidArgumentException;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
 
 /**
@@ -122,9 +126,7 @@ class BroadcastManager
      *
      * @param StreamEvent $event
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\ORMException
+     * @throws LiveBroadcastException
      */
     public function sendEndSignal(StreamEvent $event): void
     {
@@ -136,12 +138,36 @@ class BroadcastManager
             if ($api) {
                 $event->setEndSignalSent(true);
 
-                $this->entityManager->persist($event);
-                $this->entityManager->flush();
+                try {
+                    $this->entityManager->persist($event);
+                    $this->entityManager->flush();
 
-                $api->sendEndSignal($channel, $event->getExternalStreamId());
+                    $api->sendEndSignal($channel, $event->getExternalStreamId());
+                } catch (OptimisticLockException $exception) {
+                    throw new LiveBroadcastException(sprintf('Couldn\'t save broadcast end: %s', $exception->getMessage()));
+                } catch (ORMInvalidArgumentException $exception) {
+                    throw new LiveBroadcastException(sprintf('Couldn\'t save broadcast end: %s', $exception->getMessage()));
+                } catch (ORMException $exception) {
+                    throw new LiveBroadcastException(sprintf('Couldn\'t save broadcast end: %s', $exception->getMessage()));
+                }
             }
         }
+    }
+
+    /**
+     * @return LiveBroadcast[]|Collection
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     */
+    public function getPlannedBroadcasts()
+    {
+        $broadcasts = $this->getBroadcastsRepository()->getPlannedBroadcasts();
+
+        if (!$broadcasts) {
+            $broadcasts = [];
+        }
+
+        return $broadcasts;
     }
 
     /**

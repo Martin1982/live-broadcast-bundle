@@ -12,9 +12,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
-use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
-use Martin1982\LiveBroadcastBundle\Service\StreamOutput\DynamicStreamUrlInterface;
-use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
+use Martin1982\LiveBroadcastBundle\Service\BroadcastStarter;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -22,6 +20,11 @@ use Psr\Log\LoggerInterface;
  */
 class Scheduler
 {
+    /**
+     * @var BroadcastStarter
+     */
+    protected $starter;
+
     /**
      * @var BroadcastManager
      */
@@ -33,63 +36,32 @@ class Scheduler
     protected $schedulerCommands;
 
     /**
-     * @var StreamOutputService
-     */
-    protected $outputService;
-
-    /**
-     * @var StreamInputService
-     */
-    protected $inputService;
-
-    /**
      * @var LoggerInterface
      */
     protected $logger;
 
     /**
-     * @var RunningBroadcast[]
-     */
-    protected $runningBroadcasts = [];
-
-    /**
-     * @var LiveBroadcast[]
-     */
-    protected $plannedBroadcasts = [];
-
-    /**
      * Scheduler constructor
      *
+     * @param BroadcastStarter           $starter
      * @param BroadcastManager           $broadcastManager
      * @param SchedulerCommandsInterface $schedulerCommands
-     * @param StreamOutputService        $outputService
-     * @param StreamInputService         $inputService
      * @param LoggerInterface            $logger
      *
      * phpcs:disable Symfony.Functions.Arguments.Invalid
      */
-    public function __construct(
-        BroadcastManager $broadcastManager,
-        SchedulerCommandsInterface $schedulerCommands,
-        StreamOutputService $outputService,
-        StreamInputService $inputService,
-        LoggerInterface $logger
-    ) {
-        // phpcs:enable Symfony.Functions.Arguments.Invalid
+    public function __construct(BroadcastStarter $starter, BroadcastManager $broadcastManager, SchedulerCommandsInterface $schedulerCommands, LoggerInterface $logger)
+    {
+        $this->starter = $starter;
         $this->broadcastManager = $broadcastManager;
         $this->schedulerCommands = $schedulerCommands;
-        $this->outputService = $outputService;
-        $this->inputService = $inputService;
         $this->logger = $logger;
     }
 
     /**
      * Run streams that need to be running.
      *
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws LiveBroadcastException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function applySchedule(): void
     {
@@ -99,69 +71,13 @@ class Scheduler
     }
 
     /**
-     * Start planned broadcasts if not already running.
-     *
-     * @throws LiveBroadcastException
-     */
-    protected function startPlannedBroadcasts(): void
-    {
-        $this->getPlannedBroadcasts();
-
-        foreach ($this->plannedBroadcasts as $plannedBroadcast) {
-            $this->startBroadcastOnChannels($plannedBroadcast);
-        }
-
-        $this->updateRunningBroadcasts();
-    }
-
-    /**
-     * @param LiveBroadcast $plannedBroadcast
-     */
-    protected function startBroadcastOnChannels(LiveBroadcast $plannedBroadcast): void
-    {
-        $channels = $plannedBroadcast->getOutputChannels();
-
-        foreach ($channels as $channel) {
-            $isBroadcasting = $this->isBroadcasting($plannedBroadcast, $channel);
-
-            // Run broadcasts which need to start
-            if (!$isBroadcasting) {
-                $this->startBroadcast($plannedBroadcast, $channel);
-            }
-        }
-    }
-
-    /**
-     * @param LiveBroadcast   $broadcast
-     * @param AbstractChannel $channel
-     *
-     * @return bool
-     */
-    protected function isBroadcasting(LiveBroadcast $broadcast, AbstractChannel $channel): bool
-    {
-        $isBroadcasting = false;
-
-        foreach ($this->runningBroadcasts as $runningBroadcast) {
-            $sameChannel = $runningBroadcast->getChannelId() === $channel->getChannelId();
-            $sameBroadcast = $runningBroadcast->getBroadcastId() === $broadcast->getBroadcastId();
-
-            if ($sameBroadcast && $sameChannel) {
-                $isBroadcasting = true;
-            }
-        }
-
-        return $isBroadcasting;
-    }
-
-    /**
      * Stop running broadcasts that have expired.
      */
     protected function stopExpiredBroadcasts(): void
     {
-        $this->updateRunningBroadcasts();
         $broadcastRepository = $this->broadcastManager->getBroadcastsRepository();
 
-        foreach ($this->runningBroadcasts as $runningBroadcast) {
+        foreach ($this->getRunningBroadcasts() as $runningBroadcast) {
             $broadcast = $broadcastRepository->find($runningBroadcast->getBroadcastId());
 
             if (!($broadcast instanceof LiveBroadcast)) {
@@ -188,8 +104,74 @@ class Scheduler
                 $this->schedulerCommands->stopProcess($runningBroadcast->getProcessId());
             }
         }
+    }
 
-        $this->updateRunningBroadcasts();
+    /**
+     * Start planned broadcasts if not already running.
+     *
+     * @throws LiveBroadcastException
+     */
+    protected function startPlannedBroadcasts(): void
+    {
+        $planned = $this->broadcastManager->getPlannedBroadcasts();
+
+        foreach ($planned as $plannedBroadcast) {
+            $this->startBroadcastOnChannels($plannedBroadcast);
+        }
+    }
+
+    /**
+     * @param LiveBroadcast $plannedBroadcast
+     */
+    protected function startBroadcastOnChannels(LiveBroadcast $plannedBroadcast): void
+    {
+        $channels = $plannedBroadcast->getOutputChannels();
+
+        foreach ($channels as $channel) {
+            $isBroadcasting = $this->isBroadcasting($plannedBroadcast, $channel);
+
+            if ($isBroadcasting) {
+                continue;
+            }
+
+            try {
+                $this->starter->startBroadcast($plannedBroadcast, $channel);
+            } catch (\Throwable $exception) {
+                $this->logger->error(
+                    'Could not start broadcast',
+                    [
+                        'broadcast_id' => $plannedBroadcast->getBroadcastId(),
+                        'broadcast_name' => $plannedBroadcast->getName(),
+                        'exception' => $exception->getMessage(),
+                    ]
+                );
+            }
+
+            $infoMessage = sprintf('Started broadcast \'%s\' on \'%s\'', $plannedBroadcast->getName(), $channel->getChannelName());
+            $this->logger->info($infoMessage);
+        }
+    }
+
+    /**
+     * @param LiveBroadcast   $broadcast
+     * @param AbstractChannel $channel
+     *
+     * @return bool
+     */
+    protected function isBroadcasting(LiveBroadcast $broadcast, AbstractChannel $channel): bool
+    {
+        $isBroadcasting = false;
+
+        foreach ($this->getRunningBroadcasts() as $runningBroadcast) {
+            $sameChannel = $runningBroadcast->getChannelId() === $channel->getChannelId();
+            $sameBroadcast = $runningBroadcast->getBroadcastId() === $broadcast->getBroadcastId();
+
+            if ($sameBroadcast && $sameChannel) {
+                $isBroadcasting = true;
+            }
+        }
+
+        return $isBroadcasting;
     }
 
     /**
@@ -197,9 +179,9 @@ class Scheduler
      *
      * @return RunningBroadcast[]
      */
-    protected function updateRunningBroadcasts(): array
+    protected function getRunningBroadcasts(): array
     {
-        $this->runningBroadcasts = [];
+        $runningBroadcasts = [];
         $this->logger->debug('Retrieve running broadcasts');
         $processStrings = $this->schedulerCommands->getRunningProcesses();
 
@@ -212,87 +194,20 @@ class Scheduler
             );
 
             if ($runningItem->isValid($this->schedulerCommands->getKernelEnvironment())) {
-                $this->runningBroadcasts[] = $runningItem;
+                $runningBroadcasts[] = $runningItem;
             }
         }
 
-        return $this->runningBroadcasts;
-    }
-
-    /**
-     * Initiate a new broadcast.
-     *
-     * @param LiveBroadcast   $broadcast
-     * @param AbstractChannel $channel
-     */
-    protected function startBroadcast(LiveBroadcast $broadcast, AbstractChannel $channel): void
-    {
-        try {
-            $input = $this->inputService->getInputInterface($broadcast->getInput());
-            $output = $this->outputService->getOutputInterface($channel);
-        } catch (LiveBroadcastException $exception) {
-            $this->logger->error(
-                'Could not start broadcast',
-                [
-                    'broadcast_id' => $broadcast->getBroadcastId(),
-                    'broadcast_name' => $broadcast->getName(),
-                    'exception' => $exception->getMessage(),
-                ]
-            );
-
-            return;
-        }
-
-        if ($output instanceof DynamicStreamUrlInterface) {
-            $output->setBroadcast($broadcast);
-        }
-
-        $this->logger->info(
-            'Start broadcast',
-            [
-                'broadcast_id' => $broadcast->getBroadcastId(),
-                'broadcast_name' => $broadcast->getName(),
-                'channel_id' => $channel->getChannelId(),
-                'channel_name' => $channel->getChannelName(),
-                'input_cmd' => $input->generateInputCmd(),
-                'output_cmd' => $output->generateOutputCmd(),
-            ]
-        );
-
-        $this->schedulerCommands->setLoopable($broadcast->isStopOnEndTimestamp());
-        $this->schedulerCommands->startProcess($input->generateInputCmd(), $output->generateOutputCmd(), [
-            'broadcast_id' => $broadcast->getBroadcastId(),
-            'channel_id' => $channel->getChannelId(),
-        ]);
-    }
-
-    /**
-     * Get the planned broadcast items.
-     *
-     * @return LiveBroadcast[]
-     *
-     * @throws LiveBroadcastException
-     */
-    protected function getPlannedBroadcasts(): array
-    {
-        $this->logger->debug('Get planned broadcasts');
-
-        $broadcastRepository = $this->broadcastManager->getBroadcastsRepository();
-        $this->plannedBroadcasts = $broadcastRepository->getPlannedBroadcasts();
-
-        return $this->plannedBroadcasts;
+        return $runningBroadcasts;
     }
 
     /**
      * Send end signals to channels where broadcasts ended
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\ORMException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     protected function sendEndSignals(): void
     {
-        $this->updateRunningBroadcasts();
         $repository = $this->broadcastManager->getEventsRepository();
         /** @var StreamEvent[] $activeEvents */
         $activeEvents = $repository->findBy(['endSignalSent' => false]);
@@ -321,6 +236,12 @@ class Scheduler
             return false;
         }
 
+        $hasStarted = $broadcast->getStartTimestamp() < new \DateTime();
+
+        if (!$hasStarted) {
+            return false;
+        }
+
         $willBeStopped = $broadcast->isStopOnEndTimestamp();
         $hasPassedEndTime = $broadcast->getEndTimestamp() < new \DateTime();
         $isRunning = $this->isRunning($broadcast, $channel);
@@ -345,11 +266,13 @@ class Scheduler
     protected function isRunning(LiveBroadcast $broadcast, AbstractChannel $channel): bool
     {
         $isRunning = false;
-        foreach ($this->runningBroadcasts as $runningBroadcast) {
+
+        foreach ($this->getRunningBroadcasts() as $runningBroadcast) {
             $runningBroadcastId = (string) $runningBroadcast->getBroadcastId();
-            $runningChannelId = (string) $runningBroadcast->getChannelId();
-            $broadcastId = (string) $broadcast->getBroadcastId();
-            $channelId = (string) $channel->getChannelId();
+            $runningChannelId   = (string) $runningBroadcast->getChannelId();
+            $broadcastId        = (string) $broadcast->getBroadcastId();
+            $channelId          = (string) $channel->getChannelId();
+
             $isBroadcastRunning = $runningBroadcastId === $broadcastId;
             $isRunningOnChannel = $runningChannelId === $channelId;
 

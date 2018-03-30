@@ -5,7 +5,10 @@ imports:
 services:
   live.broadcast.command.broadcast:
     class: Martin1982\LiveBroadcastBundle\Command\BroadcasterCommand
-    arguments: ["@live.broadcast.scheduler", "@logger", "%livebroadcast.eventloop.timer%"]
+    arguments:
+        - "@live.broadcast.scheduler"
+        - "@logger"
+        - "%livebroadcast.eventloop.timer%"
     tags:
         - { name: 'console.command' }
 
@@ -22,27 +25,37 @@ services:
           - "%kernel.environment%"
           - "%livebroadcast.ffmpeg.logdirectory%"
 
+  live.broadcast.starter:
+      class: Martin1982\LiveBroadcastBundle\Service\BroadcastStarter
+      arguments:
+          - "@live.broadcast.streaminput.service"
+          - "@live.broadcast.streamoutput.service"
+          - "@live.broadcast.scheduler.commands"
+
   live.broadcast.broadcastmanager:
       class: Martin1982\LiveBroadcastBundle\Service\BroadcastManager
-      arguments: ["@doctrine.orm.entity_manager", "@live.broadcast.channelapi.stack"]
+      arguments:
+          - "@doctrine.orm.entity_manager"
+          - "@live.broadcast.channelapi.stack"
 
   live.broadcast.scheduler:
       class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler
       arguments:
+          - "@live.broadcast.starter"
           - "@live.broadcast.broadcastmanager"
           - "@live.broadcast.scheduler.commands"
-          - "@live.broadcast.streamoutput.service"
-          - "@live.broadcast.streaminput.service"
           - "@logger"
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
 
   live.broadcast.thumbnail.uploader:
       class: Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService
-      arguments: ['%livebroadcast.thumbnail.uploaddirectory%']
+      arguments:
+          - '%livebroadcast.thumbnail.uploaddirectory%'
 
   live.broadcast.thumbnail.listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener
-      arguments: ['@live.broadcast.thumbnail.uploader']
+      arguments:
+          - '@live.broadcast.thumbnail.uploader'
       tags:
           - { name: doctrine.event_listener, event: prePersist }
           - { name: doctrine.event_listener, event: preUpdate }
@@ -55,29 +68,46 @@ services:
 # Facebook
   live.broadcast.facebookapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService
-      arguments: ["@doctrine.orm.entity_manager", "%livebroadcast.fb.appid%", "%livebroadcast.fb.appsecret%"]
+      arguments:
+          - "@doctrine.orm.entity_manager"
+          - "%livebroadcast.fb.appid%"
+          - "%livebroadcast.fb.appsecret%"
       tags:
           - { name: live.broadcast.api }
 
 # Youtube
   live.broadcast.googleredirect.service:
       class: Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService
-      arguments: ["@router", "%livebroadcast.yt.redirectroute%"]
+      arguments:
+          - "@router"
+          - "%livebroadcast.yt.redirectroute%"
   live.broadcast.channelapi.client.config.google:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\GoogleConfig
-      arguments: ["%livebroadcast.yt.clientid%", "%livebroadcast.yt.clientsecret%"]
+      arguments:
+          - "%livebroadcast.yt.clientid%"
+          - "%livebroadcast.yt.clientsecret%"
   live.broadcast.channelapi.client.config.youtube:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\YouTubeConfig
-      arguments: ["%router.request_context.scheme%://%router.request_context.host%", "%livebroadcast.thumbnail.web_path%"]
+      arguments:
+          - "%router.request_context.scheme%://%router.request_context.host%"
+          - "%livebroadcast.thumbnail.web_path%"
   live.broadcast.channelapi.client.google:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\GoogleClient
-      arguments: ["@live.broadcast.channelapi.client.config.google", "@live.broadcast.googleredirect.service", "@logger"]
+      arguments:
+          - "@live.broadcast.channelapi.client.config.google"
+          - "@live.broadcast.googleredirect.service"
+          - "@logger"
   live.broadcast.channelapi.client.youtube:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\YouTubeClient
-      arguments: ["@live.broadcast.channelapi.client.config.youtube", "@live.broadcast.channelapi.client.google"]
+      arguments:
+          - "@live.broadcast.channelapi.client.config.youtube"
+          - "@live.broadcast.channelapi.client.google"
   live.broadcast.youtubeapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService
-      arguments: ["@doctrine.orm.entity_manager", "@logger", "@live.broadcast.channelapi.client.youtube"]
+      arguments:
+          - "@doctrine.orm.entity_manager"
+          - "@logger"
+          - "@live.broadcast.channelapi.client.youtube"
       tags:
           - { name: live.broadcast.api }
           - { name: monolog.logger, channel: livebroadcaster }

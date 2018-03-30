@@ -10,6 +10,9 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMInvalidArgumentException;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -204,9 +207,7 @@ class BroadcastManagerTest extends TestCase
     /**
      * Test sending an end signal
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\ORMException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testSendEndSignal(): void
     {
@@ -249,6 +250,155 @@ class BroadcastManagerTest extends TestCase
 
         $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
         self::assertInstanceOf(EntityRepository::class, $broadcastManager->getEventsRepository());
+    }
+
+    /**
+     * Test sending an end signal
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     */
+    public function testSendEndSignalLockException(): void
+    {
+
+        $channel = $this->createMock(ChannelFacebook::class);
+
+        $streamEvent = $this->createMock(StreamEvent::class);
+        $streamEvent->expects(self::atLeastOnce())
+            ->method('getChannel')
+            ->willReturn($channel);
+
+        $api = $this->createMock(ChannelApiInterface::class);
+        $api->expects(self::atLeastOnce())
+            ->method('sendEndSignal')
+            ->willThrowException(new OptimisticLockException('some error', $streamEvent));
+
+        $this->stack->expects(self::atLeastOnce())
+            ->method('getApiForChannel')
+            ->willReturn($api);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('persist')
+            ->willReturn(true);
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('flush')
+            ->willReturn(true);
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager->sendEndSignal($streamEvent);
+    }
+
+    /**
+     * Test sending an end signal
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     */
+    public function testSendEndSignalArgumentException(): void
+    {
+
+        $channel = $this->createMock(ChannelFacebook::class);
+
+        $streamEvent = $this->createMock(StreamEvent::class);
+        $streamEvent->expects(self::atLeastOnce())
+            ->method('getChannel')
+            ->willReturn($channel);
+
+        $api = $this->createMock(ChannelApiInterface::class);
+        $api->expects(self::atLeastOnce())
+            ->method('sendEndSignal')
+            ->willThrowException(new ORMInvalidArgumentException('some error'));
+
+        $this->stack->expects(self::atLeastOnce())
+            ->method('getApiForChannel')
+            ->willReturn($api);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('persist')
+            ->willReturn(true);
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('flush')
+            ->willReturn(true);
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager->sendEndSignal($streamEvent);
+    }
+
+    /**
+     * Test sending an end signal
+     *
+     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     */
+    public function testSendEndSignalORMException(): void
+    {
+
+        $channel = $this->createMock(ChannelFacebook::class);
+
+        $streamEvent = $this->createMock(StreamEvent::class);
+        $streamEvent->expects(self::atLeastOnce())
+            ->method('getChannel')
+            ->willReturn($channel);
+
+        $api = $this->createMock(ChannelApiInterface::class);
+        $api->expects(self::atLeastOnce())
+            ->method('sendEndSignal')
+            ->willThrowException(new ORMException('some error'));
+
+        $this->stack->expects(self::atLeastOnce())
+            ->method('getApiForChannel')
+            ->willReturn($api);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('persist')
+            ->willReturn(true);
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('flush')
+            ->willReturn(true);
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager->sendEndSignal($streamEvent);
+    }
+
+    /**
+     * Test getting planned broadcasts
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     */
+    public function testGetPlannedBroadcasts(): void
+    {
+        $repository = $this->createMock(LiveBroadcastRepository::class);
+        $repository->expects(self::atLeastOnce())
+            ->method('getPlannedBroadcasts')
+            ->willReturn([new LiveBroadcast()]);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('getRepository')
+            ->willReturn($repository);
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcasts = $broadcastManager->getPlannedBroadcasts();
+
+        self::assertCount(1, $broadcasts);
+    }
+
+    /**
+     * Test getting planned broadcasts
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     */
+    public function testGetNonePlannedBroadcasts(): void
+    {
+        $repository = $this->createMock(LiveBroadcastRepository::class);
+        $repository->expects(self::atLeastOnce())
+            ->method('getPlannedBroadcasts')
+            ->willReturn([]);
+
+        $this->entityManager->expects(self::atLeastOnce())
+            ->method('getRepository')
+            ->willReturn($repository);
+
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcasts = $broadcastManager->getPlannedBroadcasts();
+
+        self::assertCount(0, $broadcasts);
     }
 
     /**

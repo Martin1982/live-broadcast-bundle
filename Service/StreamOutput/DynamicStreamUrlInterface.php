@@ -12,7 +12,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 /**
  * Interface DynamicStreamUrlInterface
  */
-interface DynamicStreamUrlInterface
+interface DynamicStreamUrlInterface extends OutputInterface
 {
     /**
      * @return string
