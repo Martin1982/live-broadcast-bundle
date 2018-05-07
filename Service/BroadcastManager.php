@@ -16,6 +16,8 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiInterface;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
 
 /**
@@ -113,10 +115,7 @@ class BroadcastManager
         foreach ($broadcast->getOutputChannels() as $channel) {
             if ($channel instanceof PlanableChannelInterface) {
                 $api = $this->apiStack->getApiForChannel($channel);
-
-                if ($api) {
-                    $api->removeLiveEvent($broadcast, $channel);
-                }
+                $this->attemptDeleteOnApi($broadcast, $channel, $api);
             }
         }
     }
@@ -286,11 +285,26 @@ class BroadcastManager
         foreach ($channels as $channel) {
             if ($channel instanceof PlanableChannelInterface) {
                 $api = $this->apiStack->getApiForChannel($channel);
-
-                if ($api) {
-                    $api->removeLiveEvent($broadcast, $channel);
-                }
+                $this->attemptDeleteOnApi($broadcast, $channel, $api);
             }
+        }
+    }
+
+    /**
+     * @param LiveBroadcast            $broadcast
+     * @param PlanableChannelInterface $channel
+     * @param ChannelApiInterface      $api
+     */
+    private function attemptDeleteOnApi(LiveBroadcast $broadcast, PlanableChannelInterface $channel, ChannelApiInterface $api = null)
+    {
+        if (!$api) {
+            return;
+        }
+
+        try {
+            $api->removeLiveEvent($broadcast, $channel);
+        } catch (LiveBroadcastOutputException $exception) {
+            // Just let it pass....
         }
     }
 }

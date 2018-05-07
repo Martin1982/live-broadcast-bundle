@@ -10,6 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Interface ChannelApiInterface
@@ -31,6 +32,8 @@ interface ChannelApiInterface
     /**
      * @param LiveBroadcast   $broadcast
      * @param AbstractChannel $channel
+     *
+     * @throws LiveBroadcastOutputException
      */
     public function removeLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel);
 
