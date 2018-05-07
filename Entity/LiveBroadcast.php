@@ -58,7 +58,7 @@ class LiveBroadcast
     /**
      * @var AbstractMedia|null
      *
-     * @ORM\OneToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia")
+     * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia")
      * @ORM\JoinColumn(name="input_id", referencedColumnName="id")
      */
     private $input;
