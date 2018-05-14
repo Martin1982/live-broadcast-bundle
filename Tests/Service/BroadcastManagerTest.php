@@ -10,7 +10,6 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -55,7 +54,7 @@ class BroadcastManagerTest extends TestCase
             ->willReturn(true);
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|EntityManager $entityManager */
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createMock(EntityManager::class);
         $entityManager->expects(self::atLeastOnce())
             ->method('getConnection')
             ->willReturn($connection);
