@@ -8,7 +8,9 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -38,6 +40,29 @@ class BroadcastManagerTest extends TestCase
      * @var ChannelApiStack|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $stack;
+
+    public function testKeepConnectionAlive(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->expects(self::atLeastOnce())
+            ->method('ping')
+            ->willReturn(false);
+        $connection->expects(self::atLeastOnce())
+            ->method('close')
+            ->willReturn(true);
+        $connection->expects(self::atLeastOnce())
+            ->method('connect')
+            ->willReturn(true);
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|EntityManager $entityManager */
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->expects(self::atLeastOnce())
+            ->method('getConnection')
+            ->willReturn($connection);
+
+        $manager = new BroadcastManager($entityManager, $this->stack);
+        $manager->keepConnectionAlive();
+    }
 
     /**
      * Test getting a broadcast entity by id

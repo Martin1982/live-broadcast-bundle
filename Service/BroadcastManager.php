@@ -48,6 +48,18 @@ class BroadcastManager
     }
 
     /**
+     * Keep a remote connection alive
+     */
+    public function keepConnectionAlive(): void
+    {
+        $connection = $this->entityManager->getConnection();
+        if (!$connection->ping()) {
+            $connection->close();
+            $connection->connect();
+        }
+    }
+
+    /**
      * Get a broadcast by it's id
      *
      * @param string $broadcastId
