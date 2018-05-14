@@ -40,6 +40,9 @@ class BroadcastManagerTest extends TestCase
      */
     protected $stack;
 
+    /**
+     * Test connection keepalive method
+     */
     public function testKeepConnectionAlive(): void
     {
         $connection = $this->createMock(Connection::class);
