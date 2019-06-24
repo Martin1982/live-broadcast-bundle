@@ -19,13 +19,13 @@ class SchedulerCommandsDetector
     /**
      * Create the class required for scheduler commands.
      *
-     * @param string $rootDir
-     * @param string $environment
-     * @param string $ffmpegLogDirectory
+     * @param string      $rootDir
+     * @param string      $environment
+     * @param string|null $ffmpegLogDirectory
      *
      * @return SchedulerCommandsInterface
      */
-    public static function createSchedulerCommands($rootDir, $environment, $ffmpegLogDirectory): SchedulerCommandsInterface
+    public static function createSchedulerCommands($rootDir, $environment, $ffmpegLogDirectory = null): SchedulerCommandsInterface
     {
         $osCode = strtoupper(substr(PHP_OS, 0, 3));
 

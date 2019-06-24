@@ -142,7 +142,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      */
     public function setFFMpegLogDirectory($directory): void
     {
-        if (!is_writable($directory)) {
+        if (null === $directory || !is_writable($directory)) {
             return;
         }
 
