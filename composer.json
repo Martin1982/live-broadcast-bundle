@@ -1,5 +1,6 @@
 {
     "name": "martin1982/live-broadcast-bundle",
+    "type": "symfony-bundle",
     "description": "Bundle for live-streaming to various online networks",
     "license": "MIT",
     "authors": [
