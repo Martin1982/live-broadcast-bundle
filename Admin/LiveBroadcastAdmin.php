@@ -19,8 +19,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelAutocompleteType;
 use Sonata\AdminBundle\Form\Type\ModelListType;
-use Sonata\AdminBundle\Form\Type\ModelType;
-use Sonata\CoreBundle\Form\Type\DateTimePickerType;
+use Sonata\Form\Type\DateTimePickerType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -184,7 +183,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->add('outputChannels', ModelAutocompleteType::class, [
                 'multiple' => true,
                 'property' => ['channelName'],
-                'btn_add' => 'Add new'
+                'btn_add' => 'Add new',
             ])
             ->end();
     }
