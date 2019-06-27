@@ -59,7 +59,7 @@ This bundle will be made available on Packagist. You can then install it using C
 $ composer require martin1982/live-broadcast-bundle
 ```
 
-Next, enable the bundle in the kernel:
+Next, for Symfony \< 4 enable the bundle in the kernel:
 
 ``` php
 <?php
