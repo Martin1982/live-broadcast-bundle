@@ -17,6 +17,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\ModelAutocompleteType;
 use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\CoreBundle\Form\Type\DateTimePickerType;
@@ -180,10 +181,10 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->with('Channels', [
                 'class' => 'col-md-4',
             ])
-            ->add('outputChannels', ModelType::class, [
+            ->add('outputChannels', ModelAutocompleteType::class, [
                 'multiple' => true,
-                'expanded' => true,
-                'translation_domain' => false,
+                'property' => ['channelName'],
+                'btn_add' => 'Add new'
             ])
             ->end();
     }
