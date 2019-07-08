@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelLively;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
@@ -41,9 +41,9 @@ class ChannelApiStackTest extends TestCase
      */
     public function testCannotFindApiForChannel(): void
     {
-        $livelyChannel = new ChannelLively();
+        $twitchChannel = new ChannelTwitch();
         $apiStack = new ChannelApiStack();
 
-        self::assertNull($apiStack->getApiForChannel($livelyChannel));
+        self::assertNull($apiStack->getApiForChannel($twitchChannel));
     }
 }

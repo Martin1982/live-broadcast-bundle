@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 /**
  * This file is part of martin1982/livebroadcastbundle which is released under MIT.
@@ -7,7 +6,6 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
@@ -16,22 +14,22 @@ use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 /**
  * Class OutputYouTube
  */
-class OutputYouTube implements OutputInterface, DynamicStreamUrlInterface
+class OutputYouTube extends AbstractOutput implements DynamicStreamUrlInterface
 {
     /**
      * @var ChannelYouTube
      */
-    private $channel;
+    protected $channel;
 
     /**
      * @var YouTubeApiService
      */
-    private $api;
+    protected $api;
 
     /**
      * @var LiveBroadcast|null
      */
-    private $broadcast;
+    protected $broadcast;
 
     /**
      * OutputYouTube constructor
@@ -41,18 +39,6 @@ class OutputYouTube implements OutputInterface, DynamicStreamUrlInterface
     public function __construct(YouTubeApiService $api)
     {
         $this->api = $api;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return OutputInterface|OutputYouTube
-     */
-    public function setChannel(AbstractChannel $channel): OutputInterface
-    {
-        $this->channel = $channel;
-
-        return $this;
     }
 
     /**

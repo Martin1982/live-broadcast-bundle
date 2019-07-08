@@ -29,7 +29,7 @@ services:
             - LiveBroadcastBundle:CRUD
         calls:
             - [setSubclassConfigs, ["%livebroadcast.config%"]]
-            - [setConfiguredSubclasses, [ { "Twitch": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch, "Facebook": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook, "YouTube": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube, "Ustream": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream, "Live.ly": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelLively } ] ]
+            - [setConfiguredSubclasses, [ { "Twitch": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch, "Facebook": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook, "YouTube": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube, "Ustream": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelUstream } ] ]
 
     sonata.admin.streaminput:
         class: Martin1982\LiveBroadcastBundle\Admin\InputAdmin

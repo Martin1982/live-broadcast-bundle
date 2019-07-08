@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 /**
  * This file is part of martin1982/livebroadcastbundle which is released under MIT.
@@ -7,31 +6,18 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
-use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
 /**
  * Class OutputTwitch
  */
-class OutputTwitch implements OutputInterface
+class OutputTwitch extends AbstractOutput
 {
     /**
      * @var ChannelTwitch
      */
     protected $channel;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return OutputInterface|OutputTwitch
-     */
-    public function setChannel(AbstractChannel $channel): OutputInterface
-    {
-        $this->channel = $channel;
-
-        return $this;
-    }
 
     /**
      * Get the output parameters for streaming.
