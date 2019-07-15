@@ -7,13 +7,10 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
-use Doctrine\ORM\EntityRepository;
-use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler;
 use Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsInterface;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
@@ -21,6 +18,8 @@ use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastStarter;
+use Martin1982\LiveBroadcastBundle\Service\ChannelValidatorService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -30,22 +29,27 @@ use Psr\Log\LoggerInterface;
 class SchedulerTest extends TestCase
 {
     /**
-     * @var BroadcastStarter|\PHPUnit_Framework_MockObject_MockObject
+     * @var ChannelValidatorService|MockObject
+     */
+    protected $validator;
+
+    /**
+     * @var BroadcastStarter|MockObject
      */
     protected $broadcastStarter;
 
     /**
-     * @var BroadcastManager|\PHPUnit_Framework_MockObject_MockObject
+     * @var BroadcastManager|MockObject
      */
     protected $broadcastManager;
 
     /**
-     * @var SchedulerCommandsInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SchedulerCommandsInterface|MockObject
      */
     protected $schedulerCommands;
 
     /**
-     * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var LoggerInterface|MockObject
      */
     protected $logger;
 
@@ -102,13 +106,7 @@ class SchedulerTest extends TestCase
             ->method('stopProcess')
             ->willReturn('');
 
-        $scheduler = new Scheduler(
-            $this->broadcastStarter,
-            $this->broadcastManager,
-            $this->schedulerCommands,
-            $this->logger
-        );
-
+        $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
     }
 
@@ -160,13 +158,7 @@ class SchedulerTest extends TestCase
             ->method('error')
             ->willReturn(null);
 
-        $scheduler = new Scheduler(
-            $this->broadcastStarter,
-            $this->broadcastManager,
-            $this->schedulerCommands,
-            $this->logger
-        );
-
+        $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
     }
 
@@ -234,13 +226,7 @@ class SchedulerTest extends TestCase
             ->method('info')
             ->willReturn(null);
 
-        $scheduler = new Scheduler(
-            $this->broadcastStarter,
-            $this->broadcastManager,
-            $this->schedulerCommands,
-            $this->logger
-        );
-
+        $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
     }
 
@@ -309,13 +295,7 @@ class SchedulerTest extends TestCase
         $this->broadcastStarter->expects(self::never())
             ->method('startBroadcast');
 
-        $scheduler = new Scheduler(
-            $this->broadcastStarter,
-            $this->broadcastManager,
-            $this->schedulerCommands,
-            $this->logger
-        );
-
+        $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
     }
 
@@ -389,13 +369,7 @@ class SchedulerTest extends TestCase
             ->method('error')
             ->willReturn(null);
 
-        $scheduler = new Scheduler(
-            $this->broadcastStarter,
-            $this->broadcastManager,
-            $this->schedulerCommands,
-            $this->logger
-        );
-
+        $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
     }
 
@@ -448,13 +422,7 @@ class SchedulerTest extends TestCase
             ->method('getEventsRepository')
             ->willReturn($eventsRepository);
 
-        $scheduler = new Scheduler(
-            $this->broadcastStarter,
-            $this->broadcastManager,
-            $this->schedulerCommands,
-            $this->logger
-        );
-
+        $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
     }
 
@@ -497,13 +465,7 @@ class SchedulerTest extends TestCase
             ->method('getEventsRepository')
             ->willReturn($eventsRepository);
 
-        $scheduler = new Scheduler(
-            $this->broadcastStarter,
-            $this->broadcastManager,
-            $this->schedulerCommands,
-            $this->logger
-        );
-
+        $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
     }
 
@@ -550,13 +512,7 @@ class SchedulerTest extends TestCase
             ->method('getEventsRepository')
             ->willReturn($eventsRepository);
 
-        $scheduler = new Scheduler(
-            $this->broadcastStarter,
-            $this->broadcastManager,
-            $this->schedulerCommands,
-            $this->logger
-        );
-
+        $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
     }
 
@@ -630,14 +586,24 @@ class SchedulerTest extends TestCase
             ->method('getEventsRepository')
             ->willReturn($eventsRepository);
 
-        $scheduler = new Scheduler(
+        $scheduler = $this->getScheduler();
+        $scheduler->applySchedule();
+    }
+
+    /**
+     * Get a scheduler instance
+     *
+     * @return Scheduler
+     */
+    protected function getScheduler(): Scheduler
+    {
+        return new Scheduler(
+            $this->validator,
             $this->broadcastStarter,
             $this->broadcastManager,
             $this->schedulerCommands,
             $this->logger
         );
-
-        $scheduler->applySchedule();
     }
 
     /**
@@ -645,6 +611,7 @@ class SchedulerTest extends TestCase
      */
     protected function setUp()
     {
+        $this->validator = $this->createMock(ChannelValidatorService::class);
         $this->broadcastStarter = $this->createMock(BroadcastStarter::class);
         $this->broadcastManager = $this->createMock(BroadcastManager::class);
         $this->schedulerCommands = $this->createMock(SchedulerCommandsInterface::class);
