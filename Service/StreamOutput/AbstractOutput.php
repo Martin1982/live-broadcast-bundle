@@ -35,24 +35,12 @@ abstract class AbstractOutput implements OutputInterface
     }
 
     /**
-     * Test if the channel config is still valid
-     *
-     * @return bool
-     */
-    public function isAllowedToStream(): bool
-    {
-        return true;
-    }
-
-    /**
      * Get the last validation error for a stream channel
      *
      * @return string
      */
     public function getLastValidationError(): string
     {
-        $this->isAllowedToStream();
-
         return $this->lastError;
     }
 }

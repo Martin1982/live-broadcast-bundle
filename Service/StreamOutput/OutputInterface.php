@@ -43,13 +43,6 @@ interface OutputInterface
     public function getChannelType(): string;
 
     /**
-     * Test if the channel config is still valid
-     *
-     * @return bool
-     */
-    public function isAllowedToStream(): bool;
-
-    /**
      * Get the last validation error for a stream channel
      *
      * @return string
