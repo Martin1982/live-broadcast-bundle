@@ -22,8 +22,13 @@ class ChannelTwitchTest extends TestCase
     {
         $channel = new ChannelTwitch();
         self::assertEquals('live.twitch.tv', $channel->getStreamServer());
+        self::assertFalse($channel->isHealthy());
 
-        $channel->setChannelName('UnitTest')->setStreamKey('key')->setStreamServer('server');
+        $channel->setChannelName('UnitTest')
+            ->setStreamKey('key')
+            ->setStreamServer('server')
+            ->setIsHealthy(true);
+        self::assertTrue($channel->isHealthy());
         self::assertEquals('UnitTest', $channel->getChannelName());
         self::assertEquals('key', $channel->getStreamKey());
         self::assertEquals('server', $channel->getStreamServer());
