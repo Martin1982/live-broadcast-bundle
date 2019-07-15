@@ -198,9 +198,13 @@ class YouTubeApiService implements ChannelApiInterface
      * @param AbstractChannel $channel
      *
      * @return bool
+     *
+     * @throws LiveBroadcastOutputException
      */
     public function canStream(AbstractChannel $channel): bool
     {
+        $this->client->setChannel($channel);
+
         return ((bool) $this->client->getStreamsList()) === true;
     }
 

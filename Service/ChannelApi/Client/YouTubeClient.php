@@ -325,7 +325,9 @@ class YouTubeClient
      */
     public function getStreamsList()
     {
-        $response = $this->youTubeClient->liveBroadcasts->listLiveBroadcasts('snippet,contentDetails,status');
+        $response = $this->youTubeClient
+            ->liveBroadcasts
+            ->listLiveBroadcasts('snippet,contentDetails,status', ['broadcastStatus' => 'all']);
 
         return $response->getItems();
     }

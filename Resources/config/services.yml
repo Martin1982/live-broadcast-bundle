@@ -101,12 +101,14 @@ services:
           - "%router.request_context.scheme%://%router.request_context.host%"
           - "%livebroadcast.thumbnail.web_path%"
   live.broadcast.channelapi.client.google:
+      public: true
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\GoogleClient
       arguments:
           - "@live.broadcast.channelapi.client.config.google"
           - "@live.broadcast.googleredirect.service"
           - "@logger"
   live.broadcast.channelapi.client.youtube:
+      public: true
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\YouTubeClient
       arguments:
           - "@live.broadcast.channelapi.client.config.youtube"
