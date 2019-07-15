@@ -1,6 +1,9 @@
 language: php
-
 dist: trusty
+
+cache:
+    directories:
+        - $HOME/.composer/cache/files
 
 php:
     - 7.1
