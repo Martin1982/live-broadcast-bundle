@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
@@ -66,7 +67,7 @@ class BroadcastManager
      *
      * @return LiveBroadcast|null|Object
      */
-    public function getBroadcastByid($broadcastId)
+    public function getBroadcastById($broadcastId)
     {
         $broadcastRepository = $this->getBroadcastsRepository();
 
@@ -98,7 +99,7 @@ class BroadcastManager
      */
     public function preUpdate(LiveBroadcast $broadcast): void
     {
-        $previousState = $this->getBroadcastByid($broadcast->getBroadcastId());
+        $previousState = $this->getBroadcastById($broadcast->getBroadcastId());
 
         if (!$previousState) {
             return;
@@ -168,7 +169,7 @@ class BroadcastManager
     /**
      * @return LiveBroadcast[]|Collection
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
      */
     public function getPlannedBroadcasts()
     {
@@ -303,13 +304,13 @@ class BroadcastManager
     }
 
     /**
-     * @param LiveBroadcast            $broadcast
-     * @param PlanableChannelInterface $channel
-     * @param ChannelApiInterface      $api
+     * @param LiveBroadcast       $broadcast
+     * @param AbstractChannel     $channel
+     * @param ChannelApiInterface $api
      */
-    private function attemptDeleteOnApi(LiveBroadcast $broadcast, PlanableChannelInterface $channel, ChannelApiInterface $api = null)
+    private function attemptDeleteOnApi(LiveBroadcast $broadcast, AbstractChannel $channel, ChannelApiInterface $api = null): void
     {
-        if (!$api) {
+        if (!$api || !$channel instanceof PlanableChannelInterface) {
             return;
         }
 

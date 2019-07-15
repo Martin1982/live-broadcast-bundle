@@ -42,4 +42,13 @@ interface ChannelApiInterface
      * @param string|int               $externalId
      */
     public function sendEndSignal(PlanableChannelInterface $channel, $externalId);
+
+    /**
+     * Test if the API allows streaming
+     *
+     * @param AbstractChannel $channel
+     *
+     * @return bool
+     */
+    public function canStream(AbstractChannel $channel): bool;
 }

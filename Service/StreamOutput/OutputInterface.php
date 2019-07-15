@@ -22,6 +22,13 @@ interface OutputInterface
     public function setChannel(AbstractChannel $channel): OutputInterface;
 
     /**
+     * Validate channel usage
+     *
+     * @return bool
+     */
+    public function validate(): bool;
+
+    /**
      * Give the cmd string to start the stream.
      *
      * @return string

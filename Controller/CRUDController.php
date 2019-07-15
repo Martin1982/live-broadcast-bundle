@@ -50,9 +50,9 @@ class CRUDController extends Controller
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
      * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function youTubeOAuthAction(Request $request): RedirectResponse
     {
@@ -73,9 +73,9 @@ class CRUDController extends Controller
     /**
      * @param SessionInterface $session
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     protected function clearToken(SessionInterface $session): void
     {

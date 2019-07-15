@@ -84,7 +84,7 @@ class BroadcastManagerTest extends TestCase
             ->willReturn($broadcastRepository);
 
         $broadcast = new BroadcastManager($this->entityManager, $this->stack);
-        $result = $broadcast->getBroadcastByid('10');
+        $result = $broadcast->getBroadcastById('10');
 
         self::assertInstanceOf(LiveBroadcast::class, $result);
     }

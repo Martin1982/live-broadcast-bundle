@@ -38,13 +38,21 @@ services:
           - "@doctrine.orm.entity_manager"
           - "@live.broadcast.channelapi.stack"
 
+  live.broadcast.channel_validator:
+      class: Martin1982\LiveBroadcastBundle\Service\ChannelValidatorService
+      arguments:
+        - "@kernel"
+        - "@doctrine.orm.entity_manager"
+        - "@validator"
+
   live.broadcast.scheduler:
       class: Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler
       arguments:
-          - "@live.broadcast.starter"
-          - "@live.broadcast.broadcastmanager"
-          - "@live.broadcast.scheduler.commands"
-          - "@logger"
+        - "@live.broadcast.channel_validator"
+        - "@live.broadcast.starter"
+        - "@live.broadcast.broadcastmanager"
+        - "@live.broadcast.scheduler.commands"
+        - "@logger"
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
 
   live.broadcast.thumbnail.uploader:
@@ -68,6 +76,7 @@ services:
 # Facebook
   live.broadcast.facebookapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService
+      public: true
       arguments:
           - "@doctrine.orm.entity_manager"
           - "%livebroadcast.fb.appid%"

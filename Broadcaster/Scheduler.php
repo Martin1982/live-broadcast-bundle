@@ -13,6 +13,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastStarter;
+use Martin1982\LiveBroadcastBundle\Service\ChannelValidatorService;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -20,6 +21,11 @@ use Psr\Log\LoggerInterface;
  */
 class Scheduler
 {
+    /**
+     * @var ChannelValidatorService
+     */
+    protected $validator;
+
     /**
      * @var BroadcastStarter
      */
@@ -43,6 +49,7 @@ class Scheduler
     /**
      * Scheduler constructor
      *
+     * @param ChannelValidatorService    $validator
      * @param BroadcastStarter           $starter
      * @param BroadcastManager           $broadcastManager
      * @param SchedulerCommandsInterface $schedulerCommands
@@ -50,8 +57,9 @@ class Scheduler
      *
      * phpcs:disable Symfony.Functions.Arguments.Invalid
      */
-    public function __construct(BroadcastStarter $starter, BroadcastManager $broadcastManager, SchedulerCommandsInterface $schedulerCommands, LoggerInterface $logger)
+    public function __construct(ChannelValidatorService $validator, BroadcastStarter $starter, BroadcastManager $broadcastManager, SchedulerCommandsInterface $schedulerCommands, LoggerInterface $logger)
     {
+        $this->validator = $validator;
         $this->starter = $starter;
         $this->broadcastManager = $broadcastManager;
         $this->schedulerCommands = $schedulerCommands;
@@ -66,6 +74,7 @@ class Scheduler
     public function applySchedule(): void
     {
         $this->broadcastManager->keepConnectionAlive();
+        $this->validator->validate();
         $this->stopExpiredBroadcasts();
         $this->startPlannedBroadcasts();
         $this->sendEndSignals();

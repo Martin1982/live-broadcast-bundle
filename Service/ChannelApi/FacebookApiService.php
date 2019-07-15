@@ -280,6 +280,33 @@ class FacebookApiService implements ChannelApiInterface
     }
 
     /**
+     * Test if the API allows streaming
+     *
+     * @param AbstractChannel $channel
+     *
+     * @return bool
+     *
+     * @throws LiveBroadcastOutputException
+     */
+    public function canStream(AbstractChannel $channel): bool
+    {
+        if (!$channel instanceof ChannelFacebook) {
+            throw new LiveBroadcastOutputException('Expected Facebook channel');
+        }
+
+        $this->ensureSdkLoaded();
+
+        try {
+            $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
+            $this->facebookSDK->get('/'.$channel->getFbEntityId().'/live_videos');
+        } catch (FacebookSDKException $exception) {
+            throw new LiveBroadcastOutputException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
+        }
+
+        return true;
+    }
+
+    /**
      * @param FacebookSDK $sdk
      */
     public function setFacebookSdk(FacebookSDK $sdk): void
@@ -300,6 +327,7 @@ class FacebookApiService implements ChannelApiInterface
             $this->setFacebookSdk(new FacebookSDK([
                 'app_id' => $this->applicationId,
                 'app_secret' => $this->applicationSecret,
+                'default_graph_version' => 'v3.3',
             ]));
         } catch (FacebookSDKException $ex) {
             throw new LiveBroadcastOutputException(sprintf('Facebook SDK Exception: %s', $ex->getMessage()));

@@ -52,4 +52,18 @@ class StreamOutputService
         $error = sprintf('No OutputInterface configured for channel %s', $channel->getChannelName());
         throw new LiveBroadcastOutputException($error);
     }
+
+    /**
+     * Test if output channels are still valid
+     *
+     * @param AbstractChannel $channel
+     *
+     * @throws \Exception
+     */
+    public function testOutput(AbstractChannel $channel): void
+    {
+        $output = $this->getOutputInterface($channel);
+        $output->setChannel($channel);
+        $output->validate();
+    }
 }

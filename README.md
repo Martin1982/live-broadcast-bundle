@@ -22,7 +22,7 @@
 ## About
 
 The Live Broadcast Bundle will make it possible to plan live video streams to
-various channels like Twitch, YouTube Live, Facebook Live, UStream and Live.Ly (referred to as Output or Channels).
+various channels like Twitch, YouTube Live, Facebook Live (referred to as Output or Channels).
 
 As "Input" we support files, URL's or existing RTMP streams.
 

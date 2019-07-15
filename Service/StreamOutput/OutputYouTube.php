@@ -97,4 +97,14 @@ class OutputYouTube extends AbstractOutput implements DynamicStreamUrlInterface
 
         return $this->api->getStreamUrl($this->broadcast, $this->channel);
     }
+
+    /**
+     * Validate channel usage
+     *
+     * @return bool
+     */
+    public function validate(): bool
+    {
+        return $this->api->canStream($this->channel);
+    }
 }

@@ -317,4 +317,16 @@ class YouTubeClient
 
         return $address.'/'.$name;
     }
+
+    /**
+     * Get a list of live streams
+     *
+     * @return mixed
+     */
+    public function getStreamsList()
+    {
+        $response = $this->youTubeClient->liveBroadcasts->listLiveBroadcasts('snippet,contentDetails,status');
+
+        return $response->getItems();
+    }
 }

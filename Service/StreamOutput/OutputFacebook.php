@@ -86,4 +86,16 @@ class OutputFacebook extends AbstractOutput implements DynamicStreamUrlInterface
     {
         $this->broadcast = $broadcast;
     }
+
+    /**
+     * Validate channel usage
+     *
+     * @return bool
+     *
+     * @throws LiveBroadcastOutputException
+     */
+    public function validate(): bool
+    {
+        return $this->api->canStream($this->channel);
+    }
 }

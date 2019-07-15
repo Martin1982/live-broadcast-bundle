@@ -164,6 +164,7 @@ class ChannelAdmin extends AbstractAdmin
     {
         $listMapper
             ->add('channelName')
+            ->add('isHealthy')
             ->add('_action', 'actions', [
                 'actions' => [
                     'edit' => [],

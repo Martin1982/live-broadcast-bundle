@@ -28,11 +28,7 @@ class OutputTwitch extends AbstractOutput
      */
     public function generateOutputCmd(): string
     {
-        if ((!($this->channel instanceof ChannelTwitch)) ||
-            null === $this->channel->getStreamKey() ||
-            null === $this->channel->getStreamServer()) {
-            throw new LiveBroadcastOutputException(sprintf('%s Twitch channel not configured', __FUNCTION__));
-        }
+        $this->validate();
 
         return sprintf(
             '-vcodec copy -acodec copy -f flv "rtmp://%s/app/%s"',
@@ -47,5 +43,23 @@ class OutputTwitch extends AbstractOutput
     public function getChannelType(): string
     {
         return ChannelTwitch::class;
+    }
+
+    /**
+     * Validate channel usage
+     *
+     * @return bool
+     *
+     * @throws LiveBroadcastOutputException
+     */
+    public function validate(): bool
+    {
+        if ((!($this->channel instanceof ChannelTwitch)) ||
+            null === $this->channel->getStreamKey() ||
+            null === $this->channel->getStreamServer()) {
+            throw new LiveBroadcastOutputException(sprintf('%s Twitch channel not configured', __FUNCTION__));
+        }
+
+        return true;
     }
 }

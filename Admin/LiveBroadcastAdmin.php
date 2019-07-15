@@ -9,7 +9,9 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
@@ -17,8 +19,8 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Form\Type\ModelAutocompleteType;
 use Sonata\AdminBundle\Form\Type\ModelListType;
+use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\Form\Type\DateTimePickerType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -133,19 +135,34 @@ class LiveBroadcastAdmin extends AbstractAdmin
 
         /** @var LiveBroadcast $broadcast */
         $broadcast = $this->getSubject();
+        $container = $this->getContainer();
 
-        if ($broadcast->getThumbnail()) {
-            $container = $this->getContainer();
+        if ($container && $broadcast->getThumbnail()) {
+            $fullPath = sprintf(
+                '%s/%s',
+                $container->getParameter('livebroadcast.thumbnail.web_path'),
+                $broadcast->getThumbnail()->getFilename()
+            );
 
-            if ($container) {
-                $fullPath = sprintf(
-                    '%s/%s',
-                    $container->getParameter('livebroadcast.thumbnail.web_path'),
-                    $broadcast->getThumbnail()->getFilename()
-                );
+            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" style="max-width: 100%;"/>';
+        }
 
-                $fileFieldOptions['help'] = '<img src="'.$fullPath.'" style="max-width: 100%;"/>';
-            }
+        $channelOptions = [
+            'multiple' => true,
+            'expanded' => true,
+            'translation_domain' => false,
+        ];
+
+        if ($container) {
+            /** @var EntityManagerInterface $entityManager */
+            $entityManager = $container->get('doctrine.orm.entity_manager');
+            $queryBuilder = $entityManager->createQueryBuilder()
+                ->select('channel')
+                ->from(AbstractChannel::class, 'channel')
+                ->where('channel.isHealthy = :healthyParam')
+                ->setParameter('healthyParam', true);
+
+            $channelOptions['query'] = $queryBuilder;
         }
 
         $formMapper
@@ -180,11 +197,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->with('Channels', [
                 'class' => 'col-md-4',
             ])
-            ->add('outputChannels', ModelAutocompleteType::class, [
-                'multiple' => true,
-                'property' => ['channelName'],
-                'btn_add' => 'Add new',
-            ])
+            ->add('outputChannels', ModelType::class, $channelOptions)
             ->end();
     }
 
