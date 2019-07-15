@@ -113,6 +113,7 @@ services:
           - "@live.broadcast.channelapi.client.google"
   live.broadcast.youtubeapi.service:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService
+      public: true
       arguments:
           - "@doctrine.orm.entity_manager"
           - "@logger"
