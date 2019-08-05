@@ -41,7 +41,7 @@ abstract class AbstractChannel
     /**
      * @var bool
      *
-     * @ORM\Column(name="is_healthy", type="boolean")
+     * @ORM\Column(name="is_healthy", type="boolean", options={"default": 0})
      */
     protected $isHealthy = false;
 
