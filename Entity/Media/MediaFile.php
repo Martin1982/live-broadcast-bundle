@@ -21,9 +21,9 @@ class MediaFile extends AbstractMedia
     /**
      * @var string|null
      *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="file_location", type="string", nullable=false)
+     *
+     * @Assert\File()
      */
     protected $fileLocation;
 

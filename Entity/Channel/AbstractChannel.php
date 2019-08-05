@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Martin1982\LiveBroadcastBundle\Validator\Constraints as BroadcastAssert;
 
 /**
@@ -35,6 +36,8 @@ abstract class AbstractChannel
      * @var string|null
      *
      * @ORM\Column(name="name", type="string", length=128, nullable=false)
+     *
+     * @Assert\NotBlank
      */
     protected $channelName;
 

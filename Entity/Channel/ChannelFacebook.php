@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class ChannelFacebook
@@ -21,6 +22,8 @@ class ChannelFacebook extends AbstractChannel implements PlanableChannelInterfac
      * @var string|null
      *
      * @ORM\Column(name="access_token", type="string", length=255, nullable=false)
+     *
+     * @Assert\NotBlank
      */
     protected $accessToken;
 
@@ -28,6 +31,8 @@ class ChannelFacebook extends AbstractChannel implements PlanableChannelInterfac
      * @var string|null
      *
      * @ORM\Column(name="fb_entity_id", type="string", length=128, nullable=false)
+     *
+     * @Assert\NotBlank
      */
     protected $fbEntityId;
 

@@ -21,9 +21,9 @@ class MediaRtmp extends AbstractMedia
     /**
      * @var string|null
      *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="rtmp_address", type="string", nullable=false)
+     *
+     * @Assert\Url()
      */
     protected $rtmpAddress;
 

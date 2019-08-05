@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class ChannelTwitch
@@ -21,6 +22,8 @@ class ChannelTwitch extends AbstractChannel
      * @var string|null
      *
      * @ORM\Column(name="stream_key", type="string", length=128, nullable=false)
+     *
+     * @Assert\NotBlank
      */
     protected $streamKey;
 
@@ -28,6 +31,8 @@ class ChannelTwitch extends AbstractChannel
      * @var string|null
      *
      * @ORM\Column(name="stream_server", type="string", length=128, nullable=false)
+     *
+     * @Assert\Url
      */
     protected $streamServer = 'live.twitch.tv';
 

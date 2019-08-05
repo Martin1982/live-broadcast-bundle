@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class ChannelYouTube
@@ -21,6 +22,8 @@ class ChannelYouTube extends AbstractChannel implements PlanableChannelInterface
      * @var string|null
      *
      * @ORM\Column(name="refresh_token", type="string", length=255, nullable=false)
+     *
+     * @Assert\NotBlank
      */
     protected $refreshToken;
 
@@ -28,6 +31,8 @@ class ChannelYouTube extends AbstractChannel implements PlanableChannelInterface
      * @var string|null
      *
      * @ORM\Column(name="youtube_channel_name", type="string", length=255, nullable=false)
+     *
+     * @Assert\NotBlank
      */
     protected $youTubeChannelName;
 

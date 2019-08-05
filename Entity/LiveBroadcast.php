@@ -36,6 +36,8 @@ class LiveBroadcast
      * @var string|null
      *
      * @ORM\Column(name="name", type="string", length=128, nullable=false)
+     *
+     * @Assert\NotBlank
      */
     private $name;
 
@@ -67,6 +69,8 @@ class LiveBroadcast
      * @var \DateTime
      *
      * @ORM\Column(name="broadcast_start", type="datetime", nullable=false)
+     *
+     * @Assert\NotBlank
      */
     private $startTimestamp;
 
@@ -74,6 +78,8 @@ class LiveBroadcast
      * @var \DateTime
      *
      * @ORM\Column(name="broadcast_end", type="datetime", nullable=false)
+     *
+     * @Assert\NotBlank
      */
     private $endTimestamp;
 
