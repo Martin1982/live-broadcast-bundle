@@ -32,7 +32,7 @@ class ChannelTwitch extends AbstractChannel
      *
      * @ORM\Column(name="stream_server", type="string", length=128, nullable=false)
      *
-     * @Assert\Url
+     * @Assert\NotBlank
      */
     protected $streamServer = 'live.twitch.tv';
 
