@@ -32,7 +32,7 @@ class LiveBroadcastTest extends TestCase
      */
     public function testGetMethods(): void
     {
-        $now = new \DateTime();
+        $now = new \DateTime('+15 minutes');
         $endTime = new \DateTime('+1 hour');
 
         $channelOne = $this->createMock(AbstractChannel::class);
