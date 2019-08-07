@@ -19,6 +19,11 @@ use PHPUnit\Framework\TestCase;
 class OutputYouTubeTest extends TestCase
 {
     /**
+     * @var YouTubeApiService
+     */
+    private $api;
+
+    /**
      * @var OutputYouTube
      */
     private $youTube;
@@ -28,12 +33,8 @@ class OutputYouTubeTest extends TestCase
      */
     public function setUp()
     {
-        $api = $this->createMock(YouTubeApiService::class);
-        $api->expects(static::any())
-            ->method('getStreamUrl')
-            ->willReturn('stream.url');
-
-        $this->youTube = new OutputYouTube($api);
+        $this->api = $this->createMock(YouTubeApiService::class);
+        $this->youTube = new OutputYouTube($this->api);
         $this->youTube->setChannel(new ChannelYouTube());
     }
 
@@ -73,9 +74,9 @@ class OutputYouTubeTest extends TestCase
         $api = $this->createMock(YouTubeApiService::class);
         $broadcast = $this->createMock(LiveBroadcast::class);
 
-        $youtube = new OutputYouTube($api);
-        $youtube->setBroadcast($broadcast);
-        $youtube->getStreamUrl();
+        $youTube = new OutputYouTube($api);
+        $youTube->setBroadcast($broadcast);
+        $youTube->getStreamUrl();
     }
 
     /**
@@ -83,9 +84,17 @@ class OutputYouTubeTest extends TestCase
      */
     public function testGenerateOutputCmd(): void
     {
+        $api = $this->createMock(YouTubeApiService::class);
+        $api->expects(static::atLeastOnce())
+            ->method('getStreamUrl')
+            ->willReturn('stream.url');
+
         $broadcast = $this->createMock(LiveBroadcast::class);
 
+        $this->youTube = new OutputYouTube($api);
+        $this->youTube->setChannel(new ChannelYouTube());
         $this->youTube->setBroadcast($broadcast);
+
         self::assertEquals(
             // @codingStandardsIgnoreLine
             '-vf scale=-1:720 -c:v libx264 -pix_fmt yuv420p -preset veryfast -r 30 -g 60 -b:v 4000k -c:a aac -f flv "stream.url"',

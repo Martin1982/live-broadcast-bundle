@@ -76,7 +76,7 @@ class BroadcasterCommand extends Command
         $eventLoop = Factory::create();
         $eventLoop->addPeriodicTimer(
             $this->eventLoopTimer,
-            function () use ($scheduler, $output) {
+            function () use ($scheduler) {
                 try {
                     $scheduler->applySchedule();
                 } catch (\Throwable $exception) {

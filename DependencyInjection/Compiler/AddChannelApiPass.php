@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddChannelApiPass implements CompilerPassInterface
 {
-    public const CHANNEL_STACK_SERVICE = 'live.broadcast.channelapi.stack';
+    public const CHANNEL_STACK_SERVICE = 'live.broadcast.channel_api.stack';
     public const API_SERVICE_TAG = 'live.broadcast.api';
 
     /**

@@ -10,7 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
@@ -65,7 +65,7 @@ class YouTubeApiServiceTest extends TestCase
         $youTubeBroadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
         $youTubeBroadcast->expects(self::atLeastOnce())
             ->method('getId')
-            ->willReturn('dfdnjfds');
+            ->willReturn('broadcast-id');
 
         $youTubeStream = $this->createMock(\Google_Service_YouTube_LiveStream::class);
 
@@ -100,7 +100,7 @@ class YouTubeApiServiceTest extends TestCase
             ->willReturn(true);
 
         $this->client->expects(self::atLeastOnce())
-            ->method('removeLivestream')
+            ->method('removeLiveStream')
             ->willReturn(true);
 
         $broadcast = $this->createMock(LiveBroadcast::class);
@@ -140,7 +140,7 @@ class YouTubeApiServiceTest extends TestCase
         $youTubeBroadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
         $youTubeBroadcast->expects(self::atLeastOnce())
             ->method('getId')
-            ->willReturn('dfdnjfds');
+            ->willReturn('broadcast-id');
 
         $youTubeStream = $this->createMock(\Google_Service_YouTube_LiveStream::class);
 
@@ -234,7 +234,7 @@ class YouTubeApiServiceTest extends TestCase
         $contentDetails = $this->createMock(\Google_Service_YouTube_LiveBroadcastContentDetails::class);
         $contentDetails->expects(self::atLeastOnce())
             ->method('getBoundStreamId')
-            ->willReturn('abcdef');
+            ->willReturn('bound-stream-id');
 
         $youTubeBroadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
         $youTubeBroadcast->expects(self::atLeastOnce())
@@ -244,7 +244,7 @@ class YouTubeApiServiceTest extends TestCase
         $event = $this->createMock(StreamEvent::class);
         $event->expects(self::atLeastOnce())
             ->method('getExternalStreamId')
-            ->willReturn('fdkkfd');
+            ->willReturn('external-stream-id');
 
         $repository = $this->createMock(StreamEventRepository::class);
         $repository->expects(self::atLeastOnce())
@@ -273,16 +273,16 @@ class YouTubeApiServiceTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testSendEndSignalOnWrongChannel()
+    public function testSendEndSignalOnWrongChannel(): void
     {
-        $channel = $this->createMock(PlanableChannelInterface::class);
+        $channel = $this->createMock(PlannedChannelInterface::class);
 
         $this->client->expects(self::never())
             ->method('endLiveStream')
             ->willReturn(true);
 
         $service = $this->getService();
-        $service->sendEndSignal($channel, 'fdjj');
+        $service->sendEndSignal($channel, 'external-id');
     }
 
     /**
@@ -290,7 +290,7 @@ class YouTubeApiServiceTest extends TestCase
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function testSendEndSignal()
+    public function testSendEndSignal(): void
     {
         $channel = $this->createMock(ChannelYouTube::class);
 
@@ -299,7 +299,7 @@ class YouTubeApiServiceTest extends TestCase
             ->willReturn(true);
 
         $service = $this->getService();
-        $service->sendEndSignal($channel, 'fdjj');
+        $service->sendEndSignal($channel, 'external-id');
     }
 
     /**
@@ -335,8 +335,5 @@ class YouTubeApiServiceTest extends TestCase
         $this->entityManager = $this->createMock(EntityManager::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->client = $this->createMock(YouTubeClient::class);
-        $this->client->expects(self::any())
-            ->method('setChannel')
-            ->willReturn(true);
     }
 }

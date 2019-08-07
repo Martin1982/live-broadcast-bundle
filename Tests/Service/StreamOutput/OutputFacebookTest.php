@@ -48,7 +48,7 @@ class OutputFacebookTest extends TestCase
     public function tesImplementsOutputInterface(): void
     {
         $implements = class_implements(OutputFacebook::class);
-        self::assertTrue(\in_array(OutputInterface::class, $implements, true));
+        self::assertContains(OutputInterface::class, $implements);
     }
 
     /**
@@ -92,7 +92,7 @@ class OutputFacebookTest extends TestCase
      */
     public function testValidGenerateOutputCmd(): void
     {
-        $this->api->expects(static::any())
+        $this->api->expects(static::atLeastOnce())
             ->method('getStreamUrl')
             ->willReturn('http://streamurl/video/');
 

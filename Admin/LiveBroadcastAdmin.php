@@ -9,7 +9,6 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -154,8 +153,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
         ];
 
         if ($container) {
-            /** @var EntityManagerInterface $entityManager */
-            $entityManager = $container->get('doctrine.orm.entity_manager');
+            $entityManager = $container->get('doctrine.orm.entity_manager.abstract');
             $queryBuilder = $entityManager->createQueryBuilder()
                 ->select('channel')
                 ->from(AbstractChannel::class, 'channel')

@@ -187,7 +187,7 @@ class YouTubeClient
      *
      * @throws LiveBroadcastOutputException
      */
-    public function removeLivestream(StreamEvent $event): void
+    public function removeLiveStream(StreamEvent $event): void
     {
         try {
             $this->youTubeClient->liveBroadcasts->delete($event->getExternalStreamId());

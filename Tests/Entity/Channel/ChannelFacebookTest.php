@@ -11,7 +11,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ChannelFacebooKTest
+ * Class ChannelFacebookTest
  */
 class ChannelFacebookTest extends TestCase
 {

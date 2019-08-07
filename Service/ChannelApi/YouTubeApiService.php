@@ -10,7 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi;
 use Doctrine\ORM\EntityManager;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
@@ -116,7 +116,7 @@ class YouTubeApiService implements ChannelApiInterface
         $streamEvent = $eventRepository->findBroadcastingToChannel($broadcast, $channel);
 
         if ($streamEvent) {
-            $this->client->removeLivestream($streamEvent);
+            $this->client->removeLiveStream($streamEvent);
             $this->entityManager->remove($streamEvent);
             $this->entityManager->flush();
         }
@@ -177,12 +177,12 @@ class YouTubeApiService implements ChannelApiInterface
     }
 
     /**
-     * @param PlanableChannelInterface $channel
-     * @param string|int               $externalId
+     * @param PlannedChannelInterface $channel
+     * @param string|int              $externalId
      *
      * @throws LiveBroadcastOutputException
      */
-    public function sendEndSignal(PlanableChannelInterface $channel, $externalId): void
+    public function sendEndSignal(PlannedChannelInterface $channel, $externalId): void
     {
         if (!$channel instanceof AbstractChannel) {
             return;

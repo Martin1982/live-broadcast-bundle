@@ -95,13 +95,15 @@ class OutputYouTube extends AbstractOutput implements DynamicStreamUrlInterface
             throw new LiveBroadcastOutputException('No channel set');
         }
 
-        return $this->api->getStreamUrl($this->broadcast, $this->channel);
+        return (string) $this->api->getStreamUrl($this->broadcast, $this->channel);
     }
 
     /**
      * Validate channel usage
      *
      * @return bool
+     *
+     * @throws LiveBroadcastOutputException
      */
     public function validate(): bool
     {

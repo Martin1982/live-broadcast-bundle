@@ -40,7 +40,7 @@ class AddChannelApiPassTest extends TestCase
         $container = $this->createMock(ContainerBuilder::class);
         $container->expects(static::once())
             ->method('hasDefinition')
-            ->with('live.broadcast.channelapi.stack')
+            ->with('live.broadcast.channel_api.stack')
             ->willReturn(false);
 
         $container->expects(static::never())
@@ -60,12 +60,12 @@ class AddChannelApiPassTest extends TestCase
 
         $container->expects(static::once())
             ->method('hasDefinition')
-            ->with('live.broadcast.channelapi.stack')
+            ->with('live.broadcast.channel_api.stack')
             ->willReturn(true);
 
         $container->expects(static::once())
             ->method('findDefinition')
-            ->with('live.broadcast.channelapi.stack')
+            ->with('live.broadcast.channel_api.stack')
             ->willReturn($definition);
 
         $container->expects(static::once())

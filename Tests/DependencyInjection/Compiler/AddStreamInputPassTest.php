@@ -40,7 +40,7 @@ class AddStreamInputPassTest extends TestCase
         $container = $this->createMock(ContainerBuilder::class);
         $container->expects(static::once())
             ->method('hasDefinition')
-            ->with('live.broadcast.streaminput.service')
+            ->with('live.broadcast.stream_input.service')
             ->willReturn(false);
 
         $container->expects(static::never())
@@ -60,12 +60,12 @@ class AddStreamInputPassTest extends TestCase
 
         $container->expects(static::once())
             ->method('hasDefinition')
-            ->with('live.broadcast.streaminput.service')
+            ->with('live.broadcast.stream_input.service')
             ->willReturn(true);
 
         $container->expects(static::once())
             ->method('findDefinition')
-            ->with('live.broadcast.streaminput.service')
+            ->with('live.broadcast.stream_input.service')
             ->willReturn($definition);
 
         $container->expects(static::once())

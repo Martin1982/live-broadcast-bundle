@@ -9,6 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Class AbstractSchedulerCommandsTest
@@ -22,11 +23,16 @@ class AbstractSchedulerCommandsTest extends TestCase
 
     /**
      * Setup a basic test object
+     *
+     * @throws \ReflectionException
      */
     public function setUp()
     {
-        $arguments = ['/some/directory', 'test'];
-        $this->schedulerCommands = $this->getMockForAbstractClass(AbstractSchedulerCommands::class, $arguments);
+        $kernel = $this->createMock(Kernel::class);
+        $kernel->expects(self::once())->method('getProjectDir')->willReturn('/some/directory');
+        $kernel->expects(self::once())->method('getEnvironment')->willReturn('unit_test');
+
+        $this->schedulerCommands = $this->getMockForAbstractClass(AbstractSchedulerCommands::class, [$kernel]);
     }
 
     /**
@@ -72,12 +78,12 @@ class AbstractSchedulerCommandsTest extends TestCase
     }
 
     /**
-     * Test a stream can be loopable
+     * Test if a stream can looped
      */
-    public function testLoopable(): void
+    public function testLooping(): void
     {
-        $this->schedulerCommands->setLoopable(true);
+        $this->schedulerCommands->setLooping(true);
 
-        self::assertTrue($this->schedulerCommands->isLoopable());
+        self::assertTrue($this->schedulerCommands->isLooping());
     }
 }

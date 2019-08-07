@@ -1,4 +1,5 @@
 <?php
+/** @noinspection ALL */
 declare(strict_types=1);
 
 /**
@@ -41,24 +42,12 @@ class FacebookApiServiceTest extends TestCase
      * @throws \Doctrine\ORM\ORMException
      * @throws \InvalidArgumentException
      * @throws LiveBroadcastOutputException
+     * @throws \Exception
      */
     public function testCreateLiveEvent(): void
     {
-        $liveBroadcast = $this->createMock(LiveBroadcast::class);
-        $liveBroadcast->expects(self::atLeastOnce())
-            ->method('getStartTimestamp')
-            ->willReturn(new \DateTime());
-        $liveBroadcast->expects(self::atLeastOnce())
-            ->method('getName')
-            ->willReturn('Test Broadcast');
-        $liveBroadcast->expects(self::atLeastOnce())
-            ->method('getDescription')
-            ->willReturn('Test broadcast description');
-
-        $channelFacebook = $this->createMock(ChannelFacebook::class);
-        $channelFacebook->expects(self::atLeastOnce())
-            ->method('getAccessToken')
-            ->willReturn('aToken');
+        $liveBroadcast = $this->getLiveBroadcast();
+        $channelFacebook = $this->getFacebookChannel();
 
         $response = $this->createMock(FacebookResponse::class);
         $response->expects(self::atLeastOnce())
@@ -118,24 +107,13 @@ class FacebookApiServiceTest extends TestCase
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function testExceptionWhenStreamCannotBeCreated(): void
     {
-        $liveBroadcast = $this->createMock(LiveBroadcast::class);
-        $liveBroadcast->expects(self::atLeastOnce())
-            ->method('getStartTimestamp')
-            ->willReturn(new \DateTime());
-        $liveBroadcast->expects(self::atLeastOnce())
-            ->method('getName')
-            ->willReturn('Test Broadcast');
-        $liveBroadcast->expects(self::atLeastOnce())
-            ->method('getDescription')
-            ->willReturn('Test broadcast description');
+        $liveBroadcast = $this->getLiveBroadcast();
 
-        $channelFacebook = $this->createMock(ChannelFacebook::class);
-        $channelFacebook->expects(self::atLeastOnce())
-            ->method('getAccessToken')
-            ->willReturn('aToken');
+        $channelFacebook = $this->getFacebookChannel();
 
         $sdk = $this->createMock(FacebookSDK::class);
         $sdk->expects(self::atLeastOnce())
@@ -700,7 +678,7 @@ class FacebookApiServiceTest extends TestCase
      */
     public function testGetAppId(): void
     {
-        self::assertEquals('appid', $this->getFacebookApiService()->getAppId());
+        self::assertEquals('app_id', $this->getFacebookApiService()->getAppId());
     }
 
     /**
@@ -708,7 +686,7 @@ class FacebookApiServiceTest extends TestCase
      */
     protected function getFacebookApiService(): FacebookApiService
     {
-        return new FacebookApiService($this->entityManager, 'appid', 'appsecret');
+        return new FacebookApiService($this->entityManager, 'app_id', 'app_secret');
     }
 
     /**
@@ -717,5 +695,43 @@ class FacebookApiServiceTest extends TestCase
     protected function setUp()
     {
         $this->entityManager = $this->createMock(EntityManager::class);
+    }
+
+    /**
+     * Get a general live broadcast object
+     *
+     * @return LiveBroadcast
+     *
+     * @throws \Exception
+     */
+    protected function getLiveBroadcast(): LiveBroadcast
+    {
+        $liveBroadcast = $this->createMock(LiveBroadcast::class);
+        $liveBroadcast->expects(self::atLeastOnce())
+            ->method('getStartTimestamp')
+            ->willReturn(new \DateTime());
+        $liveBroadcast->expects(self::atLeastOnce())
+            ->method('getName')
+            ->willReturn('Test Broadcast');
+        $liveBroadcast->expects(self::atLeastOnce())
+            ->method('getDescription')
+            ->willReturn('Test broadcast description');
+
+        return $liveBroadcast;
+    }
+
+    /**
+     * Get a Facebook channel mock
+     *
+     * @return ChannelFacebook
+     */
+    protected function getFacebookChannel(): ChannelFacebook
+    {
+        $channelFacebook = $this->createMock(ChannelFacebook::class);
+        $channelFacebook->expects(self::atLeastOnce())
+            ->method('getAccessToken')
+            ->willReturn('aToken');
+
+        return $channelFacebook;
     }
 }

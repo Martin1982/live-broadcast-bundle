@@ -29,20 +29,22 @@ class LiveBroadcastExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('services-input.yml');
+        $loader->load('services-output.yml');
 
         $container->setParameter('livebroadcast.config', $config);
 
-        $container->setParameter('livebroadcast.fb.appid', $config['facebook']['application_id']);
-        $container->setParameter('livebroadcast.fb.appsecret', $config['facebook']['application_secret']);
+        $container->setParameter('livebroadcast.fb.app_id', $config['facebook']['application_id']);
+        $container->setParameter('livebroadcast.fb.app_secret', $config['facebook']['application_secret']);
 
-        $container->setParameter('livebroadcast.yt.clientid', $config['youtube']['client_id']);
-        $container->setParameter('livebroadcast.yt.clientsecret', $config['youtube']['client_secret']);
-        $container->setParameter('livebroadcast.yt.redirectroute', $config['youtube']['redirect_route']);
+        $container->setParameter('livebroadcast.yt.client_id', $config['youtube']['client_id']);
+        $container->setParameter('livebroadcast.yt.client_secret', $config['youtube']['client_secret']);
+        $container->setParameter('livebroadcast.yt.redirect_route', $config['youtube']['redirect_route']);
 
-        $container->setParameter('livebroadcast.ffmpeg.logdirectory', $config['ffmpeg']['log_directory']);
+        $container->setParameter('livebroadcast.ffmpeg.log_directory', $config['ffmpeg']['log_directory']);
         $container->setParameter('livebroadcast.thumbnail.web_path', $config['thumbnail']['web_path']);
-        $container->setParameter('livebroadcast.thumbnail.uploaddirectory', $config['thumbnail']['upload_directory']);
+        $container->setParameter('livebroadcast.thumbnail.upload_directory', $config['thumbnail']['upload_directory']);
 
-        $container->setParameter('livebroadcast.eventloop.timer', $config['eventloop']['timer']);
+        $container->setParameter('livebroadcast.event_loop.timer', $config['event_loop']['timer']);
     }
 }

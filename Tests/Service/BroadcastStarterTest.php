@@ -85,7 +85,7 @@ class BroadcastStarterTest extends TestCase
             ->willReturn($outputInterface);
 
         $this->commands->expects(self::atLeastOnce())
-            ->method('setLoopable')
+            ->method('setLooping')
             ->willReturn(null);
         $this->commands->expects(self::atLeastOnce())
             ->method('startProcess')

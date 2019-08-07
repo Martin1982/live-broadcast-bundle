@@ -27,6 +27,7 @@
         "symfony/yaml": "^3.4|^4.0"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-master",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "escapestudios/symfony2-coding-standard": "^3.1",
         "friendsofphp/php-cs-fixer": "^2.10",

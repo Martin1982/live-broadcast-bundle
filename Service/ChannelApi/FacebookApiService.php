@@ -13,7 +13,7 @@ use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook as FacebookSDK;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
@@ -259,12 +259,12 @@ class FacebookApiService implements ChannelApiInterface
     }
 
     /**
-     * @param PlanableChannelInterface $channel
-     * @param string|int               $externalId
+     * @param PlannedChannelInterface $channel
+     * @param string|int              $externalId
      *
      * @throws LiveBroadcastOutputException
      */
-    public function sendEndSignal(PlanableChannelInterface $channel, $externalId): void
+    public function sendEndSignal(PlannedChannelInterface $channel, $externalId): void
     {
         $this->ensureSdkLoaded();
 

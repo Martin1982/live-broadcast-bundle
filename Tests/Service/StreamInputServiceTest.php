@@ -25,7 +25,7 @@ class StreamInputServiceTest extends TestCase
     public function testGetInputInterface(): void
     {
         $inputFile = $this->createMock(InputFile::class);
-        $inputFile->expects(static::any())
+        $inputFile->expects(static::atLeastOnce())
             ->method('getMediaType')
             ->willReturn(MediaFile::class);
 

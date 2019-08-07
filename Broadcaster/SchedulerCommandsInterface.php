@@ -72,7 +72,7 @@ interface SchedulerCommandsInterface
     public function setFFMpegLogDirectory($directory);
 
     /**
-     * @param bool $loopable
+     * @param bool $looping
      */
-    public function setLoopable($loopable);
+    public function setLooping($looping);
 }

@@ -13,7 +13,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
@@ -82,7 +82,7 @@ class BroadcastManager
     public function preInsert(LiveBroadcast $broadcast): void
     {
         foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof PlanableChannelInterface) {
+            if ($channel instanceof PlannedChannelInterface) {
                 $api = $this->apiStack->getApiForChannel($channel);
 
                 if ($api) {
@@ -126,7 +126,7 @@ class BroadcastManager
     public function preDelete(LiveBroadcast $broadcast): void
     {
         foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof PlanableChannelInterface) {
+            if ($channel instanceof PlannedChannelInterface) {
                 $api = $this->apiStack->getApiForChannel($channel);
                 $this->attemptDeleteOnApi($broadcast, $channel, $api);
             }
@@ -144,7 +144,7 @@ class BroadcastManager
     {
         $channel = $event->getChannel();
 
-        if ($channel && $channel instanceof PlanableChannelInterface) {
+        if ($channel && $channel instanceof PlannedChannelInterface) {
             $api = $this->apiStack->getApiForChannel($channel);
 
             if ($api) {
@@ -262,7 +262,7 @@ class BroadcastManager
     private function createLiveEvents(LiveBroadcast $broadcast, array $channels): void
     {
         foreach ($channels as $channel) {
-            if ($channel instanceof PlanableChannelInterface) {
+            if ($channel instanceof PlannedChannelInterface) {
                 $api = $this->apiStack->getApiForChannel($channel);
 
                 if ($api) {
@@ -279,7 +279,7 @@ class BroadcastManager
     private function updateLiveEvents(LiveBroadcast $broadcast, array $channels): void
     {
         foreach ($channels as $channel) {
-            if ($channel instanceof PlanableChannelInterface) {
+            if ($channel instanceof PlannedChannelInterface) {
                 $api = $this->apiStack->getApiForChannel($channel);
 
                 if ($api) {
@@ -296,7 +296,7 @@ class BroadcastManager
     private function removeLiveEvents(LiveBroadcast $broadcast, array $channels): void
     {
         foreach ($channels as $channel) {
-            if ($channel instanceof PlanableChannelInterface) {
+            if ($channel instanceof PlannedChannelInterface) {
                 $api = $this->apiStack->getApiForChannel($channel);
                 $this->attemptDeleteOnApi($broadcast, $channel, $api);
             }
@@ -310,7 +310,7 @@ class BroadcastManager
      */
     private function attemptDeleteOnApi(LiveBroadcast $broadcast, AbstractChannel $channel, ChannelApiInterface $api = null): void
     {
-        if (!$api || !$channel instanceof PlanableChannelInterface) {
+        if (!$api || !$channel instanceof PlannedChannelInterface) {
             return;
         }
 

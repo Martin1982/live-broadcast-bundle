@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="channel_youtube", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class ChannelYouTube extends AbstractChannel implements PlanableChannelInterface
+class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
 {
     /**
      * @var string|null

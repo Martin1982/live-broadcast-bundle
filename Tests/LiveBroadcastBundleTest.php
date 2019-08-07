@@ -22,7 +22,7 @@ class LiveBroadcastBundleTest extends TestCase
     public function testBuild(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
-        $container->expects(self::any())
+        $container->expects(self::atLeastOnce())
             ->method('addCompilerPass')
             ->willReturn(true);
 

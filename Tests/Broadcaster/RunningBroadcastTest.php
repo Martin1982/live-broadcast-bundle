@@ -58,6 +58,8 @@ class RunningBroadcastTest extends TestCase
 
     /**
      * Test the isBroadcasting method
+     *
+     * @throws \ReflectionException
      */
     public function testIsBroadcasting(): void
     {

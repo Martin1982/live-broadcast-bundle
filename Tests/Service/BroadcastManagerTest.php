@@ -74,12 +74,12 @@ class BroadcastManagerTest extends TestCase
         $broadcastEntity = $this->createMock(LiveBroadcast::class);
 
         $broadcastRepository = $this->createMock(LiveBroadcastRepository::class);
-        $broadcastRepository->expects(static::any())
+        $broadcastRepository->expects(static::atLeastOnce())
             ->method('findOneBy')
             ->with([ 'broadcastId' => 10 ])
             ->willReturn($broadcastEntity);
 
-        $this->entityManager->expects(static::any())
+        $this->entityManager->expects(static::atLeastOnce())
             ->method('getRepository')
             ->willReturn($broadcastRepository);
 

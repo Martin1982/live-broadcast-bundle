@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Class AbstractSchedulerCommands
@@ -36,7 +37,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * @var bool Can the input be looped
      */
-    protected $loopable = false;
+    protected $looping = false;
 
     /**
      * @var string
@@ -46,17 +47,18 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * SchedulerCommands constructor.
      *
-     * @param string $rootDir
-     * @param string $kernelEnvironment
+     * @param Kernel $kernel
      */
-    public function __construct($rootDir, $kernelEnvironment)
+    public function __construct(Kernel $kernel)
     {
-        $this->rootDir = $rootDir;
-        $this->kernelEnvironment = $kernelEnvironment;
+        $this->rootDir = $kernel->getProjectDir();
+        $this->kernelEnvironment = $kernel->getEnvironment();
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \Exception
      */
     public function startProcess($input, $output, $metadata): string
     {
@@ -150,19 +152,19 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     }
 
     /**
-     * @param bool $loopable
+     * @param bool $looping
      */
-    public function setLoopable($loopable): void
+    public function setLooping($looping): void
     {
-        $this->loopable = (bool) $loopable;
+        $this->looping = (bool) $looping;
     }
 
     /**
      * @return bool
      */
-    public function isLoopable(): bool
+    public function isLooping(): bool
     {
-        return $this->loopable;
+        return $this->looping;
     }
 
     /**
@@ -173,6 +175,8 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      * @param string $meta
      *
      * @return string
+     *
+     * @throws \Exception
      */
     protected function execStreamCommand($input, $output, $meta): string
     {
@@ -184,7 +188,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
             $logFile = $this->logDirectoryFFMpeg.DIRECTORY_SEPARATOR.sprintf(self::LOG_FILE, $now->format('Y-m-d_His'));
         }
 
-        if ($this->isLoopable()) {
+        if ($this->isLooping()) {
             $loop = '-stream_loop -1 ';
         }
 

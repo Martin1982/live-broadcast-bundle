@@ -13,6 +13,7 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\Darwin\SchedulerCommands as Darwi
 use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands as LinuxCommands;
 use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Class SchedulerCommandsDetectorTest
@@ -26,15 +27,19 @@ class SchedulerCommandsDetectorTest extends TestCase
      */
     public function testCreateSchedulerCommands(): void
     {
-        $strtoupper = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'strtoupper');
-        $strtoupper->expects(static::any())
+        $functionMock = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'strtoupper');
+        $functionMock->expects(static::atLeastOnce())
             ->willReturnOnConsecutiveCalls('WIN', 'DAR', 'LIN');
 
-        $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
+        $kernel = $this->createMock(Kernel::class);
+        $kernel->expects(self::atLeastOnce())->method('getProjectDir')->willReturn('.');
+        $kernel->expects(self::atLeastOnce())->method('getEnvironment')->willReturn('unit_test');
+
+        $commands = SchedulerCommandsDetector::createSchedulerCommands($kernel, '.');
         static::assertInstanceOf(WindowsCommands::class, $commands);
-        $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
+        $commands = SchedulerCommandsDetector::createSchedulerCommands($kernel, '.');
         static::assertInstanceOf(DarwinCommands::class, $commands);
-        $commands = SchedulerCommandsDetector::createSchedulerCommands('.', 'test', '.');
+        $commands = SchedulerCommandsDetector::createSchedulerCommands($kernel, '.');
         static::assertInstanceOf(LinuxCommands::class, $commands);
     }
 }

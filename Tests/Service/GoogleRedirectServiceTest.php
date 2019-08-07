@@ -21,20 +21,22 @@ class GoogleRedirectServiceTest extends TestCase
 {
     /**
      * Test getting the redirect url
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGetOAuthRedirectUrl(): void
     {
         $router = $this->createMock(RouterInterface::class);
         $router->expects(static::once())
             ->method('generate')
-            ->willReturn('myresultingroute');
+            ->willReturn('my_resulting_route');
 
         $redirectRoute = 'test';
 
         $redirect = new GoogleRedirectService($router, $redirectRoute);
         $url = $redirect->getOAuthRedirectUrl();
 
-        self::assertEquals('myresultingroute', $url);
+        self::assertEquals('my_resulting_route', $url);
     }
 
     /**
@@ -54,7 +56,7 @@ class GoogleRedirectServiceTest extends TestCase
         $redirect = new GoogleRedirectService($router, $redirectRoute);
         $url = $redirect->getOAuthRedirectUrl();
 
-        self::assertEquals('myresultingroute', $url);
+        self::assertEquals('my_resulting_route', $url);
     }
 
     /**
@@ -74,7 +76,7 @@ class GoogleRedirectServiceTest extends TestCase
         $redirect = new GoogleRedirectService($router, $redirectRoute);
         $url = $redirect->getOAuthRedirectUrl();
 
-        self::assertEquals('myresultingroute', $url);
+        self::assertEquals('my_resulting_route', $url);
     }
 
     /**
@@ -94,6 +96,6 @@ class GoogleRedirectServiceTest extends TestCase
         $redirect = new GoogleRedirectService($router, $redirectRoute);
         $url = $redirect->getOAuthRedirectUrl();
 
-        self::assertEquals('myresultingroute', $url);
+        self::assertEquals('my_resulting_route', $url);
     }
 }

@@ -1,5 +1,5 @@
 services:
-  live.broadcast.streaminput.service:
+  live.broadcast.stream_input.service:
       class: Martin1982\LiveBroadcastBundle\Service\StreamInputService
 
 # Individual input services

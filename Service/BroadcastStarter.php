@@ -64,7 +64,7 @@ class BroadcastStarter
             $output->setBroadcast($broadcast);
         }
 
-        $this->commands->setLoopable($broadcast->isStopOnEndTimestamp());
+        $this->commands->setLooping($broadcast->isStopOnEndTimestamp());
         $this->commands->startProcess($input->generateInputCmd(), $output->generateOutputCmd(), [
             'broadcast_id' => $broadcast->getBroadcastId(),
             'channel_id' => $channel->getChannelId(),

@@ -45,7 +45,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
     {
         $loop = '';
 
-        if ($this->isLoopable()) {
+        if ($this->isLooping()) {
             $loop = '-stream_loop -1 ';
         }
 

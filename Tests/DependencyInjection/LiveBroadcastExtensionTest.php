@@ -24,6 +24,8 @@ class LiveBroadcastExtensionTest extends TestCase
     public function testConfigLoad(): void
     {
         $container = new ContainerBuilder();
+
+
         $config = [
             'live_broadcast' => [
                 'facebook' => [
@@ -42,7 +44,7 @@ class LiveBroadcastExtensionTest extends TestCase
                     'web_path' => 'thumb_web',
                     'upload_directory' => 'thumb_upload',
                 ],
-                'eventloop' => [
+                'event_loop' => [
                     'timer' => 3,
                 ],
             ],
@@ -51,18 +53,18 @@ class LiveBroadcastExtensionTest extends TestCase
         $extension = new LiveBroadcastExtension();
         $extension->load($config, $container);
 
-        self::assertEquals('fb_id', $container->getParameter('livebroadcast.fb.appid'));
-        self::assertEquals('fb_secret', $container->getParameter('livebroadcast.fb.appsecret'));
+        self::assertEquals('fb_id', $container->getParameter('livebroadcast.fb.app_id'));
+        self::assertEquals('fb_secret', $container->getParameter('livebroadcast.fb.app_secret'));
 
-        self::assertEquals('yt_id', $container->getParameter('livebroadcast.yt.clientid'));
-        self::assertEquals('yt_secret', $container->getParameter('livebroadcast.yt.clientsecret'));
-        self::assertEquals('yt_redirect', $container->getParameter('livebroadcast.yt.redirectroute'));
+        self::assertEquals('yt_id', $container->getParameter('livebroadcast.yt.client_id'));
+        self::assertEquals('yt_secret', $container->getParameter('livebroadcast.yt.client_secret'));
+        self::assertEquals('yt_redirect', $container->getParameter('livebroadcast.yt.redirect_route'));
 
-        self::assertEquals('log_dir', $container->getParameter('livebroadcast.ffmpeg.logdirectory'));
+        self::assertEquals('log_dir', $container->getParameter('livebroadcast.ffmpeg.log_directory'));
 
         self::assertEquals('thumb_web', $container->getParameter('livebroadcast.thumbnail.web_path'));
-        self::assertEquals('thumb_upload', $container->getParameter('livebroadcast.thumbnail.uploaddirectory'));
+        self::assertEquals('thumb_upload', $container->getParameter('livebroadcast.thumbnail.upload_directory'));
 
-        self::assertEquals(3, $container->getParameter('livebroadcast.eventloop.timer'));
+        self::assertEquals(3, $container->getParameter('livebroadcast.event_loop.timer'));
     }
 }

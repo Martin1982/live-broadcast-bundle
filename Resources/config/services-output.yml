@@ -1,24 +1,24 @@
 services:
-  live.broadcast.streamoutput.service:
+  live.broadcast.stream_output.service:
     class: Martin1982\LiveBroadcastBundle\Service\StreamOutputService
 
   live.broadcast.can_stream_to_channel_validator:
     class: Martin1982\LiveBroadcastBundle\Validator\Constraints\CanStreamToChannelValidator
     arguments:
-      - "@live.broadcast.streamoutput.service"
+      - "@live.broadcast.stream_output.service"
     tags:
       - { name: validator.constraint_validator }
 
 # Individual output services
   live.broadcast.output.youtube:
     arguments:
-      - "@live.broadcast.youtubeapi.service"
+      - "@live.broadcast.youtube_api.service"
     class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube
     tags:
       - { name: live.broadcast.output, platform: 'YouTube' }
   live.broadcast.output.facebook:
     arguments:
-      - "@live.broadcast.facebookapi.service"
+      - "@live.broadcast.facebook_api.service"
     class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook
     tags:
       - { name: live.broadcast.output, platform: 'Facebook' }

@@ -214,7 +214,8 @@ class Scheduler
     /**
      * Send end signals to channels where broadcasts ended
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
+     * @throws \Exception
      */
     protected function sendEndSignals(): void
     {
@@ -235,6 +236,8 @@ class Scheduler
      * @param StreamEvent $event
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     protected function needsEndSignal(StreamEvent $event): bool
     {

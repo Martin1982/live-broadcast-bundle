@@ -12,7 +12,7 @@ services:
             - ~
         calls:
             - [ setTranslationDomain, [LiveBroadcastBundle]]
-            - [ setBroadcastManager, ["@live.broadcast.broadcastmanager"]]
+            - [ setBroadcastManager, ["@live.broadcast.broadcast_manager"]]
             - [ setThumbnailListener, ["@live.broadcast.thumbnail.listener"]]
             - [ setObjectManager, ["@doctrine"]]
 
@@ -49,8 +49,8 @@ services:
         class: Martin1982\LiveBroadcastBundle\Admin\Block\YouTubeBlockService
         arguments:
             - sonata.block.service.youtubeauth
-            - "@templating"
-            - "@live.broadcast.channelapi.client.google"
+            - "@templating.engine.twig"
+            - "@live.broadcast.channel_api.client.google"
             - "@request_stack"
         tags:
             - { name: sonata.block }
@@ -59,8 +59,8 @@ services:
         class: Martin1982\LiveBroadcastBundle\Admin\Block\FacebookBlockService
         arguments:
             - sonata.block.service.facebookauth
-            - "@templating"
-            - "@live.broadcast.facebookapi.service"
+            - "@templating.engine.twig"
+            - "@live.broadcast.facebook_api.service"
             - "@sonata.admin.channel"
         tags:
             - { name: sonata.block }

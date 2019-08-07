@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddStreamInputPass implements CompilerPassInterface
 {
-    public const STREAM_INPUT_SERVICE = 'live.broadcast.streaminput.service';
+    public const STREAM_INPUT_SERVICE = 'live.broadcast.stream_input.service';
     public const STREAM_INPUT_TAG = 'live.broadcast.input';
 
     /**

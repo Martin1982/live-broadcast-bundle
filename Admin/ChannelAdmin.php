@@ -10,7 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Admin;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
-use Martin1982\LiveBroadcastBundle\Entity\Channel\PlanableChannelInterface;
+use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -117,7 +117,7 @@ class ChannelAdmin extends AbstractAdmin
                     'attr' => ['class' => $nameClasses],
                 ]);
 
-        if (!$subject instanceof PlanableChannelInterface) {
+        if (!$subject instanceof PlannedChannelInterface) {
             $formMapper->add('streamKey', TextType::class, ['label' => 'Stream key']);
             $formMapper->add('streamServer', TextType::class, ['label' => 'Stream server']);
         }

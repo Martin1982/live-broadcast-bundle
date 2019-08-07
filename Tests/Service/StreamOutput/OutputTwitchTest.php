@@ -38,7 +38,7 @@ class OutputTwitchTest extends TestCase
     public function tesImplementsOutputInterface(): void
     {
         $implements = class_implements(OutputTwitch::class);
-        self::assertTrue(\in_array(OutputInterface::class, $implements, true));
+        self::assertContains(OutputInterface::class, $implements);
     }
 
     /**

@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Controller;
 
 use Facebook\Authentication\AccessToken;
-use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
@@ -31,9 +30,8 @@ class CRUDController extends Controller
      */
     public function longLivedAccessTokenAction(Request $request): JsonResponse
     {
-        /** @var FacebookApiService $facebookService */
-        $facebookService = $this->get('live.broadcast.facebookapi.service');
-        $accessToken = $facebookService->getLongLivedAccessToken($request->get('userAccessToken', null));
+        $facebookService = $this->get('live.broadcast.facebook_api.service');
+        $accessToken = $facebookService->getLongLivedAccessToken($request->get('userAccessToken'));
 
         if ($accessToken instanceof AccessToken) {
             return new JsonResponse(['accessToken' => $accessToken->getValue()]);
@@ -136,7 +134,7 @@ class CRUDController extends Controller
      */
     private function getGoogleClient(): \Google_Client
     {
-        $clientService = $this->container->get('live.broadcast.channelapi.client.google');
+        $clientService = $this->container->get('live.broadcast.channel_api.client.google');
 
         return $clientService->getClient();
     }

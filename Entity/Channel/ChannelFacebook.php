@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="channel_facebook", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
  * @ORM\Entity()
  */
-class ChannelFacebook extends AbstractChannel implements PlanableChannelInterface
+class ChannelFacebook extends AbstractChannel implements PlannedChannelInterface
 {
     /**
      * @var string|null

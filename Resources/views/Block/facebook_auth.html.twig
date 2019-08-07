@@ -6,9 +6,10 @@
     <div class="box-body">
         <div class="sonata-ba-collapsed-fields">
             <div class="form-group">
-                <fb:login-button scope="public_profile,email,publish_pages,user_events,publish_video" onlogin="checkLoginState();" autologoutlink="true"></fb:login-button>
+                <fb:login-button scope="public_profile,email,publish_pages,user_events,publish_video" onlogin="checkLoginState();" autologoutlink="true" />
             </div>
             <div class="form-group">
+                <label for="livebroadcast-fb-entity-select"></label>
                 <select id="livebroadcast-fb-entity-select">
                     <option>Select your Facebook entity</option>
                 </select>
@@ -19,6 +20,7 @@
 
 {% block facebook_js %}
     <script type="text/javascript">
+        /* global FB: false */
         function statusChangeCallback(response) {
             $('#livebroadcast-fb-entity-select').html('<option>Select your Facebook entity</option>');
 
@@ -51,7 +53,7 @@
             });
 
             $('#livebroadcast-fb-entity-select').on('change', function(){
-                var selected = $(this).find('option:selected');
+                let selected = $(this).find('option:selected');
 
                 if (selected.val().length > 0) {
                     $('input.generic-channel-name').val(selected.text());
@@ -62,7 +64,7 @@
         };
 
         (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
+            let js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
             js = d.createElement(s); js.id = id;
             js.src = "https://connect.facebook.net/en_US/sdk.js";
@@ -70,15 +72,15 @@
         }(document, 'script', 'facebook-jssdk'));
 
         function getAccountsForLoggedInUser() {
-            var channel, option;
+            let channel, option;
 
             /**
              * Get URL variables
              */
             function getUrlVars(url) {
-                var vars = {}, hash;
-                var hashes = url.slice(url.indexOf('?') + 1).split('&');
-                for(var i = 0; i < hashes.length; i++)
+                let vars = {}, hash;
+                let hashes = url.slice(url.indexOf('?') + 1).split('&');
+                for(let i = 0; i < hashes.length; i++)
                 {
                     hash = hashes[i].split('=');
                     vars[hash[0]] = hash[1];
@@ -120,10 +122,11 @@
              * Loop streamable data and create option values
              */
             function loopStreams(response, accessToken, typeLabel) {
-                var useStaticToken = accessToken ? true : false,
-                    useStaticLabel = typeLabel ? true: false;
+                let useStaticToken = !!accessToken,
+                    useStaticLabel = !!typeLabel;
 
-                for (var i=0, l=response.data.length; i<l; i++) {
+                let i = 0, l = response.data.length;
+                for (; i<l; i++) {
                     channel = response.data[i];
                     option = $('<option>');
                     option.text((useStaticLabel ? typeLabel: channel.category) + ': ' + channel.name);
@@ -141,7 +144,7 @@
                 loopStreams(response, null, null);
 
                 if (response.paging && response.paging.next) {
-                    var params = getUrlVars(response.paging.next);
+                    let params = getUrlVars(response.paging.next);
                     FB.api('/me/accounts', params, makeAccountSelectable)
                 }
             }
@@ -154,7 +157,7 @@
                 loopStreams(response, FB.broadcast.accessToken, 'Group');
 
                 if (response.paging && response.paging.next) {
-                    var params = getUrlVars(response.paging.next);
+                    let params = getUrlVars(response.paging.next);
                     FB.api('/me/groups', params, makeGroupsSelectable)
                 }
             }
@@ -167,7 +170,7 @@
                 loopStreams(response, FB.broadcast.accessToken, 'Event');
 
                 if (response.paging && response.paging.next) {
-                    var params = getUrlVars(response.paging.next);
+                    let params = getUrlVars(response.paging.next);
                     FB.api('/me/events', params, makeEventsSelectable)
                 }
             }

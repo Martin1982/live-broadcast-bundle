@@ -10,6 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Windows\SchedulerCommands as WindowsCommands;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Darwin\SchedulerCommands as MacCommands;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands as LinuxCommands;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Class SchedulerCommandsDetector
@@ -19,25 +20,24 @@ class SchedulerCommandsDetector
     /**
      * Create the class required for scheduler commands.
      *
-     * @param string      $rootDir
-     * @param string      $environment
+     * @param Kernel      $kernel
      * @param string|null $ffmpegLogDirectory
      *
      * @return SchedulerCommandsInterface
      */
-    public static function createSchedulerCommands($rootDir, $environment, $ffmpegLogDirectory = null): SchedulerCommandsInterface
+    public static function createSchedulerCommands(Kernel $kernel, $ffmpegLogDirectory = null): SchedulerCommandsInterface
     {
         $osCode = strtoupper(substr(PHP_OS, 0, 3));
 
         switch ($osCode) {
             case 'WIN':
-                $schedulerCommands = new WindowsCommands($rootDir, $environment);
+                $schedulerCommands = new WindowsCommands($kernel);
                 break;
             case 'DAR':
-                $schedulerCommands = new MacCommands($rootDir, $environment);
+                $schedulerCommands = new MacCommands($kernel);
                 break;
             default:
-                $schedulerCommands = new LinuxCommands($rootDir, $environment);
+                $schedulerCommands = new LinuxCommands($kernel);
                 break;
         }
 

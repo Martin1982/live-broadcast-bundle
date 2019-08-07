@@ -8,9 +8,9 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
 
 /**
- * Interface PlanableChannelInterface
+ * Interface PlannedChannelInterface
  */
-interface PlanableChannelInterface
+interface PlannedChannelInterface
 {
 
 }

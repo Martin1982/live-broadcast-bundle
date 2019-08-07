@@ -1,14 +1,10 @@
-imports:
-  - { resource: 'services-input.yml' }
-  - { resource: 'services-output.yml' }
-
 services:
   live.broadcast.command.broadcast:
     class: Martin1982\LiveBroadcastBundle\Command\BroadcasterCommand
     arguments:
         - "@live.broadcast.scheduler"
         - "@logger"
-        - "%livebroadcast.eventloop.timer%"
+        - "%livebroadcast.event_loop.timer%"
     tags:
         - { name: 'console.command' }
 
@@ -21,28 +17,26 @@ services:
       class: Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands
       factory: [Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsDetector, createSchedulerCommands]
       arguments:
-          - "%kernel.root_dir%"
-          - "%kernel.environment%"
-          - "%livebroadcast.ffmpeg.logdirectory%"
+          - "@kernel"
 
   live.broadcast.starter:
       class: Martin1982\LiveBroadcastBundle\Service\BroadcastStarter
       arguments:
-          - "@live.broadcast.streaminput.service"
-          - "@live.broadcast.streamoutput.service"
+          - "@live.broadcast.stream_input.service"
+          - "@live.broadcast.stream_output.service"
           - "@live.broadcast.scheduler.commands"
 
-  live.broadcast.broadcastmanager:
+  live.broadcast.broadcast_manager:
       class: Martin1982\LiveBroadcastBundle\Service\BroadcastManager
       arguments:
-          - "@doctrine.orm.entity_manager"
-          - "@live.broadcast.channelapi.stack"
+          - "@doctrine.orm.entity_manager.abstract"
+          - "@live.broadcast.channel_api.stack"
 
   live.broadcast.channel_validator:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelValidatorService
       arguments:
         - "@kernel"
-        - "@doctrine.orm.entity_manager"
+        - "@doctrine.orm.entity_manager.abstract"
         - "@validator"
 
   live.broadcast.scheduler:
@@ -50,7 +44,7 @@ services:
       arguments:
         - "@live.broadcast.channel_validator"
         - "@live.broadcast.starter"
-        - "@live.broadcast.broadcastmanager"
+        - "@live.broadcast.broadcast_manager"
         - "@live.broadcast.scheduler.commands"
         - "@logger"
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
@@ -58,7 +52,7 @@ services:
   live.broadcast.thumbnail.uploader:
       class: Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService
       arguments:
-          - '%livebroadcast.thumbnail.uploaddirectory%'
+          - '%livebroadcast.thumbnail.upload_directory%'
 
   live.broadcast.thumbnail.listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener
@@ -70,56 +64,56 @@ services:
           - { name: doctrine.event_listener, event: postLoad }
 
 # Remote API stack
-  live.broadcast.channelapi.stack:
+  live.broadcast.channel_api.stack:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack
 
 # Facebook
-  live.broadcast.facebookapi.service:
+  live.broadcast.facebook_api.service:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService
       public: true
       arguments:
-          - "@doctrine.orm.entity_manager"
-          - "%livebroadcast.fb.appid%"
-          - "%livebroadcast.fb.appsecret%"
+          - "@doctrine.orm.entity_manager.abstract"
+          - "%livebroadcast.fb.app_id%"
+          - "%livebroadcast.fb.app_secret%"
       tags:
           - { name: live.broadcast.api }
 
 # Youtube
-  live.broadcast.googleredirect.service:
+  live.broadcast.google_redirect.service:
       class: Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService
       arguments:
           - "@router"
-          - "%livebroadcast.yt.redirectroute%"
-  live.broadcast.channelapi.client.config.google:
+          - "%livebroadcast.yt.redirect_route%"
+  live.broadcast.channel_api.client.config.google:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\GoogleConfig
       arguments:
-          - "%livebroadcast.yt.clientid%"
-          - "%livebroadcast.yt.clientsecret%"
-  live.broadcast.channelapi.client.config.youtube:
+          - "%livebroadcast.yt.client_id%"
+          - "%livebroadcast.yt.client_secret%"
+  live.broadcast.channel_api.client.config.youtube:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\YouTubeConfig
       arguments:
           - "%router.request_context.scheme%://%router.request_context.host%"
           - "%livebroadcast.thumbnail.web_path%"
-  live.broadcast.channelapi.client.google:
+  live.broadcast.channel_api.client.google:
       public: true
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\GoogleClient
       arguments:
-          - "@live.broadcast.channelapi.client.config.google"
-          - "@live.broadcast.googleredirect.service"
+          - "@live.broadcast.channel_api.client.config.google"
+          - "@live.broadcast.google_redirect.service"
           - "@logger"
-  live.broadcast.channelapi.client.youtube:
+  live.broadcast.channel_api.client.youtube:
       public: true
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\YouTubeClient
       arguments:
-          - "@live.broadcast.channelapi.client.config.youtube"
-          - "@live.broadcast.channelapi.client.google"
-  live.broadcast.youtubeapi.service:
+          - "@live.broadcast.channel_api.client.config.youtube"
+          - "@live.broadcast.channel_api.client.google"
+  live.broadcast.youtube_api.service:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService
       public: true
       arguments:
-          - "@doctrine.orm.entity_manager"
+          - "@doctrine.orm.entity_manager.abstract"
           - "@logger"
-          - "@live.broadcast.channelapi.client.youtube"
+          - "@live.broadcast.channel_api.client.youtube"
       tags:
           - { name: live.broadcast.api }
           - { name: monolog.logger, channel: livebroadcaster }

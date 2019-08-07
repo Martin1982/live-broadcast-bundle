@@ -22,8 +22,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('live_broadcast');
+        $treeBuilder = new TreeBuilder('live_broadcast');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()
@@ -55,7 +55,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('web_path')->defaultValue('/uploads/thumbnails')->end()
                     ->end()
                 ->end()
-                ->arrayNode('eventloop')
+                ->arrayNode('event_loop')
                     ->canBeEnabled()
                     ->children()
                         ->scalarNode('timer')->defaultValue(5)->end()

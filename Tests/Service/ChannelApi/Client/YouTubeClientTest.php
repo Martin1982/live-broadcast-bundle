@@ -1,4 +1,5 @@
 <?php
+/** @noinspection ALL */
 declare(strict_types=1);
 
 /**
@@ -59,7 +60,7 @@ class YouTubeClientTest extends TestCase
     /**
      * Test setting a channel
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testSetChannel(): void
     {
@@ -117,7 +118,7 @@ class YouTubeClientTest extends TestCase
     /**
      * Test creating a broadcast
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testCreateBroadcast(): void
     {
@@ -210,7 +211,7 @@ class YouTubeClientTest extends TestCase
 
         $youtube = new YouTubeClient($this->config, $this->google);
         $youtube->setYouTubeClient($client);
-        $youtube->removeLivestream($streamEvent);
+        $youtube->removeLiveStream($streamEvent);
     }
 
     /**
@@ -235,7 +236,7 @@ class YouTubeClientTest extends TestCase
 
         $youtube = new YouTubeClient($this->config, $this->google);
         $youtube->setYouTubeClient($client);
-        $youtube->removeLivestream($streamEvent);
+        $youtube->removeLiveStream($streamEvent);
     }
 
     /**
@@ -344,7 +345,7 @@ class YouTubeClientTest extends TestCase
     /**
      * Test adding a thumbnail to a broadcast with an invalid thumbnail
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testAddThumbnailToBroadcastInvalidThumbnail(): void
     {
@@ -370,7 +371,7 @@ class YouTubeClientTest extends TestCase
     /**
      * Test adding a thumbnail to a broadcast
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testAddThumbnailToBroadcast(): void
     {
@@ -380,7 +381,7 @@ class YouTubeClientTest extends TestCase
             ->willReturn(true);
         $thumbFile->expects(self::atLeastOnce())
             ->method('getRealPath')
-            ->willReturn('/tmp/thumbfile.png');
+            ->willReturn('/tmp/thumbnail.png');
 
         $mimeContentType = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client', 'mime_content_type');
         $mimeContentType->expects(static::once())
@@ -392,7 +393,7 @@ class YouTubeClientTest extends TestCase
 
         $fileSize = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client', 'fopen');
         $fileSize->expects(static::once())
-            ->with('/tmp/thumbfile.png')
+            ->with('/tmp/thumbnail.png')
             ->willReturn(1);
 
         $feof = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client', 'feof');
@@ -573,7 +574,7 @@ class YouTubeClientTest extends TestCase
             ->willReturn('rtmp://you.tu.be');
         $ingestion->expects(self::atLeastOnce())
             ->method('getStreamName')
-            ->willReturn('astreamname');
+            ->willReturn('a-stream-name');
 
         $cdn = $this->createMock(\Google_Service_YouTube_CdnSettings::class);
         $cdn->expects(self::atLeastOnce())
@@ -602,7 +603,7 @@ class YouTubeClientTest extends TestCase
         $youtube->setYouTubeClient($client);
         $url = $youtube->getStreamUrl('xyz');
 
-        self::assertEquals('rtmp://you.tu.be/astreamname', $url);
+        self::assertEquals('rtmp://you.tu.be/a-stream-name', $url);
     }
 
     /**
