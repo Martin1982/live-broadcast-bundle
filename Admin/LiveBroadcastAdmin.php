@@ -153,7 +153,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
         ];
 
         if ($container) {
-            $entityManager = $container->get('doctrine.orm.entity_manager.abstract');
+            $entityManager = $container->get('doctrine.orm.entity_manager');
             $queryBuilder = $entityManager->createQueryBuilder()
                 ->select('channel')
                 ->from(AbstractChannel::class, 'channel')
