@@ -70,7 +70,7 @@ class LiveBroadcast
      *
      * @ORM\Column(name="broadcast_start", type="datetime", nullable=false)
      *
-     * @Assert\NotBlank
+     * @Assert\GreaterThan("+30 seconds")
      */
     private $startTimestamp;
 
@@ -79,7 +79,7 @@ class LiveBroadcast
      *
      * @ORM\Column(name="broadcast_end", type="datetime", nullable=false)
      *
-     * @Assert\NotBlank
+     * @Assert\GreaterThan("+1 minute")
      */
     private $endTimestamp;
 
@@ -107,7 +107,7 @@ class LiveBroadcast
     public function __construct()
     {
         $this->outputChannels = new ArrayCollection();
-        $this->setStartTimestamp(new \DateTime());
+        $this->setStartTimestamp(new \DateTime('+15 minutes'));
         $this->setEndTimestamp(new \DateTime('+1 hour'));
     }
 
