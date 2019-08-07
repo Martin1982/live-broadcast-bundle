@@ -29,14 +29,14 @@ services:
   live.broadcast.broadcast_manager:
       class: Martin1982\LiveBroadcastBundle\Service\BroadcastManager
       arguments:
-          - "@doctrine.orm.entity_manager.abstract"
+          - "@doctrine.orm.entity_manager"
           - "@live.broadcast.channel_api.stack"
 
   live.broadcast.channel_validator:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelValidatorService
       arguments:
         - "@kernel"
-        - "@doctrine.orm.entity_manager.abstract"
+        - "@doctrine.orm.entity_manager"
         - "@validator"
 
   live.broadcast.scheduler:
@@ -72,7 +72,7 @@ services:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService
       public: true
       arguments:
-          - "@doctrine.orm.entity_manager.abstract"
+          - "@doctrine.orm.entity_manager"
           - "%livebroadcast.fb.app_id%"
           - "%livebroadcast.fb.app_secret%"
       tags:
@@ -111,7 +111,7 @@ services:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService
       public: true
       arguments:
-          - "@doctrine.orm.entity_manager.abstract"
+          - "@doctrine.orm.entity_manager"
           - "@logger"
           - "@live.broadcast.channel_api.client.youtube"
       tags:
