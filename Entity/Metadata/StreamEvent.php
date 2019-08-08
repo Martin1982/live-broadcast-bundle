@@ -31,7 +31,7 @@ class StreamEvent
     /**
      * @var LiveBroadcast|null
      *
-     * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast")
+     * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast", cascade={"persist"})
      * @ORM\JoinColumn(name="broadcast_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
      */
     protected $broadcast;
