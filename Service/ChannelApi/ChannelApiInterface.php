@@ -51,4 +51,11 @@ interface ChannelApiInterface
      * @return bool
      */
     public function canStream(AbstractChannel $channel): bool;
+
+    /**
+     * Set if the entity manager is allowed to flush
+     *
+     * @param bool $canFlush
+     */
+    public function setCanFlush(bool $canFlush): void;
 }
