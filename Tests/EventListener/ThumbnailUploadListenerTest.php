@@ -57,12 +57,12 @@ class ThumbnailUploadListenerTest extends TestCase
         $this->uploadService->expects(static::once())
             ->method('upload')
             ->with($uploadedFile)
-            ->willReturn('new-filename');
+            ->willReturn($this->createMock(File::class));
 
         $args = new LifecycleEventArgs($liveBroadcast, $objectManager);
         $this->eventListener->prePersist($args);
 
-        self::assertEquals('new-filename', $liveBroadcast->getThumbnail());
+        self::assertInstanceOf(File::class, $liveBroadcast->getThumbnail());
     }
 
     /**
@@ -80,13 +80,13 @@ class ThumbnailUploadListenerTest extends TestCase
         $this->uploadService->expects(static::once())
             ->method('upload')
             ->with($uploadedFile)
-            ->willReturn('new-thumbnail');
+            ->willReturn($this->createMock(File::class));
 
         $changeSet = [];
         $args = new PreUpdateEventArgs($liveBroadcast, $entityManager, $changeSet);
         $this->eventListener->preUpdate($args);
 
-        self::assertEquals('new-thumbnail', $liveBroadcast->getThumbnail());
+        self::assertInstanceOf(File::class, $liveBroadcast->getThumbnail());
     }
 
     /**

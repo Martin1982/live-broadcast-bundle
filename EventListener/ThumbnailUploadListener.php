@@ -98,7 +98,7 @@ class ThumbnailUploadListener
             return;
         }
 
-        $fileName = $this->uploadService->upload($file);
-        $entity->setThumbnail($fileName);
+        $uploadedFile = $this->uploadService->upload($file);
+        $entity->setThumbnail($uploadedFile);
     }
 }

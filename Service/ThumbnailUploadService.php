@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Service;
 
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -32,16 +33,15 @@ class ThumbnailUploadService
     /**
      * @param UploadedFile $file
      *
-     * @return string
+     * @return File
      *
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    public function upload(UploadedFile $file): string
+    public function upload(UploadedFile $file): File
     {
         $fileName = md5(uniqid('', true)).'.'.$file->guessExtension();
-        $file->move($this->getTargetDirectory(), $fileName);
 
-        return $fileName;
+        return $file->move($this->getTargetDirectory(), $fileName);
     }
 
     /**

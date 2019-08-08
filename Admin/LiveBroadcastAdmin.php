@@ -87,7 +87,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
         $broadcast = $this->getSubject();
 
         if ($broadcast->getThumbnail()) {
-            $fullPath = sprintf('%s/%s', $this->thumbnailPath, $broadcast->getThumbnail()->getFilename());
+            $fullPath = sprintf('/%s/%s', $this->thumbnailPath, $broadcast->getThumbnail()->getFilename());
 
             $html = '<img src="'.$fullPath.'" style="max-width: 100%;"/>';
         }
