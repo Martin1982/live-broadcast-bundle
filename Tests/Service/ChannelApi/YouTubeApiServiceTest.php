@@ -51,9 +51,6 @@ class YouTubeApiServiceTest extends TestCase
         $this->entityManager->expects(self::atLeastOnce())
             ->method('persist')
             ->willReturn(true);
-        $this->entityManager->expects(self::atLeastOnce())
-            ->method('flush')
-            ->willReturn(true);
 
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
@@ -94,9 +91,6 @@ class YouTubeApiServiceTest extends TestCase
     {
         $this->entityManager->expects(self::atLeastOnce())
             ->method('remove')
-            ->willReturn(true);
-        $this->entityManager->expects(self::atLeastOnce())
-            ->method('flush')
             ->willReturn(true);
 
         $this->client->expects(self::atLeastOnce())

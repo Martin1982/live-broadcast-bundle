@@ -17,11 +17,6 @@ use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 class FacebookApiServiceMock extends FacebookApiService
 {
     /**
-     * @var bool
-     */
-    protected $canFlush = false;
-
-    /**
      * @param FacebookSDK $sdk
      *
      * @throws FacebookSDKException
@@ -31,15 +26,5 @@ class FacebookApiServiceMock extends FacebookApiService
         if ($sdk) {
             throw new FacebookSDKException('Something went wrong...');
         }
-    }
-
-    /**
-     * Set if the entity manager is allowed to flush
-     *
-     * @param bool $canFlush
-     */
-    public function setCanFlush(bool $canFlush): void
-    {
-        $this->canFlush = $canFlush;
     }
 }
