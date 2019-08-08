@@ -7,21 +7,17 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
-use Doctrine\Common\Persistence\AbstractManagerRegistry;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\QueryBuilder;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener;
-use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\AdminBundle\Form\Type\ModelType;
+use Sonata\DoctrineORMAdminBundle\Model\ModelManager;
 use Sonata\Form\Type\DateTimePickerType;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -33,19 +29,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class LiveBroadcastAdmin extends AbstractAdmin
 {
     /**
-     * @var BroadcastManager
+     * @var string
      */
-    protected $broadcastManager;
-
-    /**
-     * @var ThumbnailUploadListener
-     */
-    protected $thumbnailListener;
-
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
+    protected $thumbnailPath = '';
 
     /**
      * {@inheritdoc}
@@ -63,63 +49,50 @@ class LiveBroadcastAdmin extends AbstractAdmin
     }
 
     /**
-     * @param BroadcastManager $manager
+     * @param string $path
      */
-    public function setBroadcastManager(BroadcastManager $manager): void
+    public function setThumbnailPath(string $path = ''): void
     {
-        $this->broadcastManager = $manager;
+        $this->thumbnailPath = $path;
     }
 
     /**
-     * @param ThumbnailUploadListener $listener
-     */
-    public function setThumbnailListener(ThumbnailUploadListener $listener): void
-    {
-        $this->thumbnailListener = $listener;
-    }
-
-    /**
-     * @param AbstractManagerRegistry $registry
+     * Get a query for healthy channels
      *
-     * @throws \InvalidArgumentException
+     * @return QueryBuilder
      */
-    public function setObjectManager(AbstractManagerRegistry $registry):void
+    protected function getHealthyChannelsQuery(): QueryBuilder
     {
-        $this->objectManager = $registry->getManager();
+        /** @var ModelManager $modelManager */
+        $modelManager = $this->getModelManager();
+
+        return  $modelManager->getEntityManager($this->getSubject())
+            ->createQueryBuilder()
+            ->addSelect('channel')
+            ->from(AbstractChannel::class, 'channel')
+            ->where('channel.isHealthy = :healthyParam')
+            ->setParameter('healthyParam', true);
     }
 
     /**
-     * @param LiveBroadcast $broadcast
+     * Get the HTML for showing the thumbnail image
      *
-     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
-     * @throws \InvalidArgumentException
+     * @return string|null
      */
-    public function postPersist($broadcast)
+    protected function getThumbnailHtml(): ?string
     {
-        $this->loadThumbnail($broadcast);
-        $this->broadcastManager->preInsert($broadcast);
+        $html = null;
 
-        parent::postPersist($broadcast);
-    }
+        /** @var LiveBroadcast $broadcast */
+        $broadcast = $this->getSubject();
 
-    /**
-     * @param LiveBroadcast $broadcast
-     */
-    public function postUpdate($broadcast)
-    {
-        $this->broadcastManager->preUpdate($broadcast);
-        parent::postUpdate($broadcast);
-    }
+        if ($broadcast->getThumbnail()) {
+            $fullPath = sprintf('%s/%s', $this->thumbnailPath, $broadcast->getThumbnail()->getFilename());
 
-    /**
-     * @param LiveBroadcast $broadcast
-     */
-    public function preRemove($broadcast)
-    {
-        $this->broadcastManager->preDelete($broadcast);
-        parent::preRemove($broadcast);
+            $html = '<img src="'.$fullPath.'" style="max-width: 100%;"/>';
+        }
+
+        return $html;
     }
 
     /**
@@ -130,93 +103,49 @@ class LiveBroadcastAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        $fileFieldOptions = ['required' => false, 'label' => 'Thumbnail (min. 1280x720px, 16:9 ratio)'];
-
-        /** @var LiveBroadcast $broadcast */
-        $broadcast = $this->getSubject();
-        $container = $this->getContainer();
-
-        if ($container && $broadcast->getThumbnail()) {
-            $fullPath = sprintf(
-                '%s/%s',
-                $container->getParameter('livebroadcast.thumbnail.web_path'),
-                $broadcast->getThumbnail()->getFilename()
-            );
-
-            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" style="max-width: 100%;"/>';
-        }
-
-        $channelOptions = [
-            'multiple' => true,
-            'expanded' => true,
-            'translation_domain' => false,
-        ];
-
-        if ($container) {
-            $entityManager = $container->get('doctrine.orm.entity_manager');
-            $queryBuilder = $entityManager->createQueryBuilder()
-                ->select('channel')
-                ->from(AbstractChannel::class, 'channel')
-                ->where('channel.isHealthy = :healthyParam')
-                ->setParameter('healthyParam', true);
-
-            $channelOptions['query'] = $queryBuilder;
-        }
-
         $formMapper
             ->with('General', [
                 'class' => 'col-md-8',
             ])
-            ->add('name', TextType::class, ['label' => 'Name'])
-            ->add('description', TextareaType::class, [
-                'label' => 'Description',
-                'required' => false,
-                'attr' => ['class' => 'form-control', 'rows' => 5],
-            ])
-            ->add('thumbnail', FileType::class, $fileFieldOptions)
-            ->add('startTimestamp', DateTimePickerType::class, [
-                'label' => 'Broadcast start',
-                'dp_side_by_side' => true,
-            ])
-            ->add('endTimestamp', DateTimePickerType::class, [
-                'label' => 'Broadcast end',
-                'dp_side_by_side' => true,
-            ])
-            ->add('stopOnEndTimestamp', CheckboxType::class, [
-                'label' => 'Stop on broadcast end timestamp',
-                'required' => false,
-            ])
+                ->add('name', TextType::class, ['label' => 'Name'])
+                ->add('description', TextareaType::class, [
+                    'label' => 'Description',
+                    'required' => false,
+                    'attr' => ['class' => 'form-control', 'rows' => 5],
+                ])
+                ->add('thumbnail', FileType::class, [
+                    'required' => false,
+                    'label' => 'Thumbnail (min. 1280x720px, 16:9 ratio)',
+                    'help' => $this->getThumbnailHtml(),
+                ])
+                ->add('startTimestamp', DateTimePickerType::class, [
+                    'label' => 'Broadcast start',
+                    'dp_side_by_side' => true,
+                ])
+                ->add('endTimestamp', DateTimePickerType::class, [
+                    'label' => 'Broadcast end',
+                    'dp_side_by_side' => true,
+                ])
+                ->add('stopOnEndTimestamp', CheckboxType::class, [
+                    'label' => 'Stop on broadcast end timestamp',
+                    'required' => false,
+                ])
             ->end()
             ->with('Video Input', [
                 'class' => 'col-md-4',
             ])
-            ->add('input', ModelListType::class)
+                ->add('input', ModelListType::class)
             ->end()
             ->with('Channels', [
                 'class' => 'col-md-4',
             ])
-            ->add('outputChannels', ModelType::class, $channelOptions)
+                ->add('outputChannels', ModelType::class, [
+                    'multiple' => true,
+                    'expanded' => true,
+                    'translation_domain' => false,
+                    'query' => $this->getHealthyChannelsQuery(),
+                ])
             ->end();
-    }
-
-    /**
-     * @param LiveBroadcast $liveBroadcast
-     *
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
-     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException
-     * @throws \InvalidArgumentException
-     */
-    protected function loadThumbnail(LiveBroadcast $liveBroadcast): void
-    {
-        $container = $this->getContainer();
-
-        if (!$container) {
-            return;
-        }
-
-        $lifeCycleEvent = new LifecycleEventArgs($liveBroadcast, $this->objectManager);
-        $this->thumbnailListener->postLoad($lifeCycleEvent);
     }
 
     /**
@@ -240,7 +169,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('name')
+            ->addIdentifier('name')
             ->add('outputChannels', 'sonata_type_model', ['label' => 'Channel(s)'])
             ->add('startTimestamp', 'datetime', ['label' => 'Start time'])
             ->add('endTimestamp', 'datetime', ['label' => 'End time'])
@@ -251,13 +180,5 @@ class LiveBroadcastAdmin extends AbstractAdmin
                 ],
             ])
         ;
-    }
-
-    /**
-     * @return null|ContainerInterface
-     */
-    private function getContainer(): ?ContainerInterface
-    {
-        return $this->getConfigurationPool()->getContainer();
     }
 }

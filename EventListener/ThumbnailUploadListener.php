@@ -40,7 +40,7 @@ class ThumbnailUploadListener
      */
     public function prePersist(LifecycleEventArgs $args): void
     {
-        $this->uploadFile($args->getEntity());
+        $this->uploadFile($args->getObject());
     }
 
     /**
@@ -50,7 +50,7 @@ class ThumbnailUploadListener
      */
     public function preUpdate(PreUpdateEventArgs $args): void
     {
-        $this->uploadFile($args->getEntity(), $args->getEntityChangeSet());
+        $this->uploadFile($args->getObject(), $args->getEntityChangeSet());
     }
 
     /**
@@ -60,7 +60,7 @@ class ThumbnailUploadListener
      */
     public function postLoad(LifecycleEventArgs $args): void
     {
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
 
         if (!$entity instanceof LiveBroadcast) {
             return;
@@ -77,11 +77,11 @@ class ThumbnailUploadListener
 
     /**
      * @param LiveBroadcast|mixed $entity
-     * @param array               $entityChangeset
+     * @param array               $entityChangeSet
      *
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    private function uploadFile($entity, array $entityChangeset = []): void
+    private function uploadFile($entity, array $entityChangeSet = []): void
     {
         if (!$entity instanceof LiveBroadcast) {
             return;
@@ -91,8 +91,8 @@ class ThumbnailUploadListener
 
         if (!$file instanceof UploadedFile) {
             // Keep current value when no new file is uploaded
-            if (array_key_exists('thumbnail', $entityChangeset)) {
-                $entity->setThumbnail($entityChangeset['thumbnail'][0]);
+            if (array_key_exists('thumbnail', $entityChangeSet)) {
+                $entity->setThumbnail($entityChangeSet['thumbnail'][0]);
             }
 
             return;

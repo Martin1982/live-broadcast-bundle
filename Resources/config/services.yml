@@ -49,6 +49,7 @@ services:
         - "@logger"
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
 
+# Thumbnail handling
   live.broadcast.thumbnail.uploader:
       class: Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService
       arguments:
