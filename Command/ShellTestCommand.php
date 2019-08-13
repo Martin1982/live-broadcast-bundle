@@ -99,7 +99,7 @@ class ShellTestCommand extends Command
     protected function testFfmpeg(OutputInterface $output): void
     {
         exec('ffmpeg -version', $cmdResult);
-        $this->analyseResult($cmdResult, 'ffmpeg version 3.', $output);
+        $this->analyseResult($cmdResult, 'ffmpeg version (3|4).', $output);
     }
 
     /**
@@ -166,7 +166,7 @@ class ShellTestCommand extends Command
      */
     protected function analyseResult($cmdResult, $testable, OutputInterface $output): void
     {
-        if (count($cmdResult) && false !== strpos(implode($cmdResult), $testable)) {
+        if (count($cmdResult) && 0 !== preg_match('/'.$testable.'/', implode($cmdResult))) {
             $output->writeln('<info>[OK]</info>');
 
             return;
