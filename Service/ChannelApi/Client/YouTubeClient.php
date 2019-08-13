@@ -77,20 +77,11 @@ class YouTubeClient
      * @return \Google_Service_YouTube_LiveBroadcast
      *
      * @throws LiveBroadcastOutputException
+     * @throws \Exception
      */
     public function createBroadcast(LiveBroadcast $plannedBroadcast): \Google_Service_YouTube_LiveBroadcast
     {
-        $start = $plannedBroadcast->getStartTimestamp();
-
-        if (new \DateTime() > $start) {
-            $start = new \DateTime('+1 second');
-        }
-
-        $broadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet();
-        $broadcastSnippet->setTitle($plannedBroadcast->getName());
-        $broadcastSnippet->setDescription($plannedBroadcast->getDescription());
-        $broadcastSnippet->setScheduledStartTime($start->format(\DateTime::ATOM));
-        $broadcastSnippet->setScheduledEndTime($plannedBroadcast->getEndTimestamp()->format(\DateTime::ATOM));
+        $broadcastSnippet = $this->createBroadcastSnippet($plannedBroadcast);
 
         $monitorStreamData = new \Google_Service_YouTube_MonitorStreamInfo();
         $monitorStreamData->setEnableMonitorStream(false);
@@ -200,6 +191,7 @@ class YouTubeClient
      * @param StreamEvent $event
      *
      * @throws LiveBroadcastOutputException
+     * @throws \Exception
      */
     public function updateLiveStream(StreamEvent $event): void
     {
@@ -208,22 +200,14 @@ class YouTubeClient
         if (!$plannedBroadcast || !$externalId) {
             return;
         }
-        $start = $plannedBroadcast->getStartTimestamp();
 
-        if (new \DateTime() > $start) {
-            $start = new \DateTime('+1 second');
-        }
-
-        $broadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet();
-        $broadcastSnippet->setTitle($plannedBroadcast->getName());
-        $broadcastSnippet->setDescription($plannedBroadcast->getDescription());
-        $broadcastSnippet->setScheduledStartTime($start->format(\DateTime::ATOM));
-        $broadcastSnippet->setScheduledEndTime($plannedBroadcast->getEndTimestamp()->format(\DateTime::ATOM));
+        $broadcastSnippet = $this->createBroadcastSnippet($plannedBroadcast);
 
         $liveBroadcast = new \Google_Service_YouTube_LiveBroadcast();
         $liveBroadcast->setId($externalId);
         $liveBroadcast->setSnippet($broadcastSnippet);
         $liveBroadcast->setKind('youtube#liveBroadcast');
+        $this->addThumbnailToBroadcast($liveBroadcast, $event->getBroadcast());
 
         try {
             $this->youTubeClient->liveBroadcasts->update('snippet', $liveBroadcast);
@@ -330,5 +314,31 @@ class YouTubeClient
             ->listLiveBroadcasts('snippet,contentDetails,status', ['broadcastStatus' => 'all']);
 
         return $response->getItems();
+    }
+
+    /**
+     * FunctionDescription
+     *
+     * @param LiveBroadcast $plannedBroadcast
+     *
+     * @return \Google_Service_YouTube_LiveBroadcastSnippet
+     *
+     * @throws \Exception
+     */
+    protected function createBroadcastSnippet(LiveBroadcast $plannedBroadcast): \Google_Service_YouTube_LiveBroadcastSnippet
+    {
+        $start = $plannedBroadcast->getStartTimestamp();
+
+        if (new \DateTime() > $start) {
+            $start = new \DateTime('+1 second');
+        }
+
+        $broadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet();
+        $broadcastSnippet->setTitle($plannedBroadcast->getName());
+        $broadcastSnippet->setDescription($plannedBroadcast->getDescription());
+        $broadcastSnippet->setScheduledStartTime($start->format(\DateTime::ATOM));
+        $broadcastSnippet->setScheduledEndTime($plannedBroadcast->getEndTimestamp()->format(\DateTime::ATOM));
+
+        return $broadcastSnippet;
     }
 }
