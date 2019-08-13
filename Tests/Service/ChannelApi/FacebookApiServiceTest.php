@@ -74,6 +74,7 @@ class FacebookApiServiceTest extends TestCase
 
         $facebook = $this->getFacebookApiService();
         $facebook->setFacebookSdk($sdk);
+        $facebook->setCanFlush(true);
         $facebook->createLiveEvent($liveBroadcast, $channelFacebook);
     }
 
@@ -382,6 +383,7 @@ class FacebookApiServiceTest extends TestCase
 
         $facebook = $this->getFacebookApiService();
         $facebook->setFacebookSdk($sdk);
+        $facebook->setCanFlush(true);
         $facebook->removeLiveEvent($liveBroadcast, $channelFacebook);
     }
 

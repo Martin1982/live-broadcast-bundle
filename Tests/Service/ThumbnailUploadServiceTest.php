@@ -9,6 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -27,7 +28,7 @@ class ThumbnailUploadServiceTest extends TestCase
             ->willReturn('png');
         $file->expects(static::once())
             ->method('move')
-            ->willReturn(true);
+            ->willReturn($this->createMock(File::class));
 
         $uploader = new ThumbnailUploadService('/test/dir');
         $file = $uploader->upload($file);

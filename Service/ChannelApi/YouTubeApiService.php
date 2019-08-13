@@ -29,24 +29,9 @@ class YouTubeApiService implements ChannelApiInterface
     protected $host;
 
     /**
-     * @var string
-     */
-    protected $thumbnailDir;
-
-    /**
      * @var LoggerInterface
      */
     protected $logger;
-
-    /**
-     * @var \Google_Client
-     */
-    protected $googleApiClient;
-
-    /**
-     * @var \Google_Service_YouTube
-     */
-    protected $youTubeApiClient;
 
     /**
      * @var EntityManager
@@ -57,6 +42,11 @@ class YouTubeApiService implements ChannelApiInterface
      * @var YouTubeClient
      */
     protected $client;
+
+    /**
+     * @var bool
+     */
+    protected $canFlush = false;
 
     /**
      * YouTubeApiService constructor
@@ -96,7 +86,9 @@ class YouTubeApiService implements ChannelApiInterface
         $streamEvent->setExternalStreamId($youtubeBroadcast->getId());
 
         $this->entityManager->persist($streamEvent);
-        $this->entityManager->flush();
+        if (true === $this->canFlush) {
+            $this->entityManager->flush();
+        }
     }
 
     /**
@@ -118,7 +110,9 @@ class YouTubeApiService implements ChannelApiInterface
         if ($streamEvent) {
             $this->client->removeLiveStream($streamEvent);
             $this->entityManager->remove($streamEvent);
-            $this->entityManager->flush();
+            if (true === $this->canFlush) {
+                $this->entityManager->flush();
+            }
         }
     }
 
@@ -203,9 +197,23 @@ class YouTubeApiService implements ChannelApiInterface
      */
     public function canStream(AbstractChannel $channel): bool
     {
+        if (!$channel instanceof ChannelYouTube) {
+            throw new LiveBroadcastOutputException(sprintf('Expected youtube channel, got %s', \get_class($channel)));
+        }
+
         $this->client->setChannel($channel);
 
         return ((bool) $this->client->getStreamsList()) === true;
+    }
+
+    /**
+     * Set if the entity manager is allowed to flush
+     *
+     * @param bool $canFlush
+     */
+    public function setCanFlush(bool $canFlush): void
+    {
+        $this->canFlush = $canFlush;
     }
 
     /**

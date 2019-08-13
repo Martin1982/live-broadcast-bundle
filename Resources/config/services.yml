@@ -49,6 +49,7 @@ services:
         - "@logger"
       tags: [{ name: monolog.logger, channel: livebroadcaster }]
 
+# Thumbnail handling
   live.broadcast.thumbnail.uploader:
       class: Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService
       arguments:
@@ -63,7 +64,16 @@ services:
           - { name: doctrine.event_listener, event: preUpdate }
           - { name: doctrine.event_listener, event: postLoad }
 
-# Remote API stack
+# Remote API services
+  live.broadcast.stream.announcement.listener:
+      class: Martin1982\LiveBroadcastBundle\EventListener\StreamAnnouncementListener
+      arguments:
+          - '@live.broadcast.broadcast_manager'
+      tags:
+          - { name: doctrine.event_listener, event: prePersist }
+          - { name: doctrine.event_listener, event: preUpdate }
+          - { name: doctrine.event_listener, event: preRemove }
+
   live.broadcast.channel_api.stack:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack
 

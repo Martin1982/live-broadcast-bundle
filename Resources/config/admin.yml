@@ -12,9 +12,7 @@ services:
             - ~
         calls:
             - [ setTranslationDomain, [LiveBroadcastBundle]]
-            - [ setBroadcastManager, ["@live.broadcast.broadcast_manager"]]
-            - [ setThumbnailListener, ["@live.broadcast.thumbnail.listener"]]
-            - [ setObjectManager, ["@doctrine"]]
+            - [ setThumbnailPath, ["%livebroadcast.thumbnail.web_path%"]]
 
     sonata.admin.channel:
         class: Martin1982\LiveBroadcastBundle\Admin\ChannelAdmin
