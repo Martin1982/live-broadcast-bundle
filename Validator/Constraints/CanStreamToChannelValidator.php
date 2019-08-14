@@ -6,6 +6,7 @@
 namespace Martin1982\LiveBroadcastBundle\Validator\Constraints;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -54,7 +55,10 @@ class CanStreamToChannelValidator extends ConstraintValidator
 
         // validate abstract channel
         try {
-            $this->outputService->testOutput($channel);
+            $hasOutput = $this->outputService->testOutput($channel);
+            if (false === $hasOutput) {
+                throw new LiveBroadcastOutputException(sprintf('Channel \'%s\' is no longer valid...', $channel->getChannelName()));
+            }
         } catch (\Exception $exception) {
             $this->context->buildViolation($constraint->message)
                 ->atPath('channelName')

@@ -58,12 +58,15 @@ class StreamOutputService
      *
      * @param AbstractChannel $channel
      *
+     * @return bool
+     *
      * @throws \Exception
      */
-    public function testOutput(AbstractChannel $channel): void
+    public function testOutput(AbstractChannel $channel): bool
     {
         $output = $this->getOutputInterface($channel);
         $output->setChannel($channel);
-        $output->validate();
+
+        return $output->validate();
     }
 }
