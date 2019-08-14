@@ -203,7 +203,10 @@ class YouTubeApiService implements ChannelApiInterface
 
         $this->client->setChannel($channel);
 
-        return ((bool) $this->client->getStreamsList()) === true;
+        $this->client->setChannel($channel);
+        $this->client->getStreamsList();
+
+        return true;
     }
 
     /**
