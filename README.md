@@ -1,7 +1,5 @@
 # Live Broadcast Bundle
 
-*As we're stabilizing the bundle please note that database schema and config changes may occur*
-
 [![Build status](https://travis-ci.org/Martin1982/live-broadcast-bundle.svg?branch=master)](https://travis-ci.org/Martin1982/live-broadcast-bundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/6027a50f-06cf-4989-8267-9f481e838b2a/mini.png)](https://insight.sensiolabs.com/projects/6027a50f-06cf-4989-8267-9f481e838b2a)
 
