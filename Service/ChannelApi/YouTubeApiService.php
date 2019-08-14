@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi;
 
 use Doctrine\ORM\EntityManager;
-use Google_Service_YouTube_LiveBroadcastListResponse;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
@@ -204,7 +203,7 @@ class YouTubeApiService implements ChannelApiInterface
 
         $this->client->setChannel($channel);
 
-        return ($this->client->getStreamsList() instanceof Google_Service_YouTube_LiveBroadcastListResponse);
+        return ((bool) $this->client->getStreamsList()) === true;
     }
 
     /**

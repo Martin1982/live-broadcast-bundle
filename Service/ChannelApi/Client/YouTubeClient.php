@@ -66,7 +66,12 @@ class YouTubeClient
         if (!$client) {
             throw new LiveBroadcastOutputException('No Google client available');
         }
-        $client->fetchAccessTokenWithRefreshToken($refreshToken);
+        $tokenResult = $client->fetchAccessTokenWithRefreshToken($refreshToken);
+
+        if (array_key_exists('error', $tokenResult)) {
+            $error = sprintf('Cannot connect YouTube channel %s: %s', $channel->getChannelName(), $tokenResult['error']);
+            throw new LiveBroadcastOutputException($error);
+        }
 
         $this->setYouTubeClient(new \Google_Service_YouTube($client));
     }
