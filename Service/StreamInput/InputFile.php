@@ -44,7 +44,7 @@ class InputFile implements InputInterface
             throw new LiveBroadcastInputException(sprintf('Could not find input file %s', $inputFilename));
         }
 
-        return sprintf('-re -i %s', escapeshellarg($inputFilename));
+        return sprintf('-re -i "%s"', escapeshellarg($inputFilename));
     }
 
     /**

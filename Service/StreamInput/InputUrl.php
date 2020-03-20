@@ -44,7 +44,7 @@ class InputUrl implements InputInterface
             throw new LiveBroadcastInputException(sprintf('Invalid URL %s', $inputUrl));
         }
 
-        return sprintf('-re -i %s', escapeshellarg($inputUrl));
+        return sprintf('-re -i "%s"', escapeshellarg($inputUrl));
     }
 
     /**
