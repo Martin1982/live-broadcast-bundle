@@ -73,6 +73,6 @@ class InputRtmpTest extends TestCase
             ->willReturn(true);
 
         $command = $this->serverAddress->generateInputCmd();
-        self::assertEquals('-re -i rtmp://10.10.10.10/live/stream1', $command);
+        self::assertEquals('-re -i \'rtmp://10.10.10.10/live/stream1\'', $command);
     }
 }
