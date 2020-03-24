@@ -131,14 +131,13 @@ class LiveBroadcastAdmin extends AbstractAdmin
                     'label' => 'Stop on broadcast end timestamp',
                     'required' => false,
                 ])
-                ->add('privacyStatus', ChoiceType::class,
-                    [
-                        'choices' => [
-                            'Public' => LiveBroadcast::PRIVACY_STATUS_PUBLIC ,
-                            'Private' => LiveBroadcast::PRIVACY_STATUS_PRIVATE,
-                            'Unlisted' => LiveBroadcast::PRIVACY_STATUS_UNLISTED,
-                            ],
-                        'label' => 'Privacy status (YouTube only)',
+                ->add('privacyStatus', ChoiceType::class, [
+                    'choices' => [
+                        'Public' => LiveBroadcast::PRIVACY_STATUS_PUBLIC,
+                        'Private' => LiveBroadcast::PRIVACY_STATUS_PRIVATE,
+                        'Unlisted' => LiveBroadcast::PRIVACY_STATUS_UNLISTED,
+                        ],
+                    'label' => 'Privacy status (YouTube only)',
                 ])
             ->end()
             ->with('Video Input', [

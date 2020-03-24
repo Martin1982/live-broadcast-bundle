@@ -103,7 +103,7 @@ class YouTubeClientTest extends TestCase
             ->willReturn(new \DateTime('+3 days'));
         $broadcast->expects(self::atLeastOnce())
             ->method('getPrivacyStatus')
-            ->willReturn(LiveBroadcast::PRIVACY_STATUS_PRIVATE;
+            ->willReturn(LiveBroadcast::PRIVACY_STATUS_PRIVATE);
 
         $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
