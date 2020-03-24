@@ -23,6 +23,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class LiveBroadcast
 {
+    public const PRIVACY_STATUS_PUBLIC = 0;
+    public const PRIVACY_STATUS_PRIVATE = 1;
+    public const PRIVACY_STATUS_UNLISTED = 2;
+
     /**
      * @var int|null
      *
@@ -82,6 +86,13 @@ class LiveBroadcast
      * @Assert\GreaterThan("+1 minute")
      */
     private $endTimestamp;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="privacy_status", type="integer", options={"default": 0})
+     */
+    private $privacyStatus = self::PRIVACY_STATUS_PUBLIC;
 
     /**
      * @var bool
@@ -313,6 +324,26 @@ class LiveBroadcast
     public function setStopOnEndTimestamp($stopOnEndTimestamp): LiveBroadcast
     {
         $this->stopOnEndTimestamp = $stopOnEndTimestamp;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrivacyStatus(): int
+    {
+        return $this->privacyStatus;
+    }
+
+    /**
+     * @param int $privacyStatus
+     *
+     * @return LiveBroadcast
+     */
+    public function setPrivacyStatus(int $privacyStatus): LiveBroadcast
+    {
+        $this->privacyStatus = $privacyStatus;
 
         return $this;
     }
