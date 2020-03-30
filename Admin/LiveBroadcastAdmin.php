@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -72,7 +73,8 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->addSelect('channel')
             ->from(AbstractChannel::class, 'channel')
             ->where('channel.isHealthy = :healthyParam')
-            ->setParameter('healthyParam', true);
+            ->setParameter('healthyParam', true)
+            ->orderBy('channel.discr, channel.name', Criteria::ASC);
     }
 
     /**
