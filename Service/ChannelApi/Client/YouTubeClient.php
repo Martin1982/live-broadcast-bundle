@@ -96,7 +96,7 @@ class YouTubeClient
         $contentDetails->setEnableAutoStart(true);
 
         $status = new \Google_Service_YouTube_LiveBroadcastStatus();
-        $status->setPrivacyStatus('public');
+        $status->setPrivacyStatus($this->convertPrivacyStatus($plannedBroadcast->getPrivacyStatus()));
 
         $liveBroadcast = new \Google_Service_YouTube_LiveBroadcast();
         $liveBroadcast->setContentDetails($contentDetails);
@@ -345,5 +345,29 @@ class YouTubeClient
         $broadcastSnippet->setScheduledEndTime($plannedBroadcast->getEndTimestamp()->format(\DateTime::ATOM));
 
         return $broadcastSnippet;
+    }
+
+    /**
+     * @param int $privacyStatus
+     *
+     * @return string
+     */
+    private function convertPrivacyStatus(int $privacyStatus): string
+    {
+        $status = '';
+
+        switch ($privacyStatus) {
+            case LiveBroadcast::PRIVACY_STATUS_UNLISTED:
+                $status = 'unlisted';
+                break;
+            case LiveBroadcast::PRIVACY_STATUS_PRIVATE:
+                $status = 'private';
+                break;
+            default:
+                $status = 'public';
+                break;
+        }
+
+        return $status;
     }
 }

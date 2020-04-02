@@ -67,5 +67,9 @@ class LiveBroadcastTest extends TestCase
         self::assertTrue($broadcast->isStopOnEndTimestamp());
         $broadcast->setStopOnEndTimestamp(false);
         self::assertFalse($broadcast->isStopOnEndTimestamp());
+
+        self::assertEquals(LiveBroadcast::PRIVACY_STATUS_PUBLIC, $broadcast->getPrivacyStatus());
+        $broadcast->setPrivacyStatus(LiveBroadcast::PRIVACY_STATUS_PRIVATE);
+        self::assertEquals(LiveBroadcast::PRIVACY_STATUS_PRIVATE, $broadcast->getPrivacyStatus());
     }
 }

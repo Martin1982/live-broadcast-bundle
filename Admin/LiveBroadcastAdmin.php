@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Admin;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -19,6 +20,7 @@ use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\DoctrineORMAdminBundle\Model\ModelManager;
 use Sonata\Form\Type\DateTimePickerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -71,7 +73,8 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->addSelect('channel')
             ->from(AbstractChannel::class, 'channel')
             ->where('channel.isHealthy = :healthyParam')
-            ->setParameter('healthyParam', true);
+            ->setParameter('healthyParam', true)
+            ->orderBy('channel.channelName', Criteria::ASC);
     }
 
     /**
@@ -129,6 +132,14 @@ class LiveBroadcastAdmin extends AbstractAdmin
                 ->add('stopOnEndTimestamp', CheckboxType::class, [
                     'label' => 'Stop on broadcast end timestamp',
                     'required' => false,
+                ])
+                ->add('privacyStatus', ChoiceType::class, [
+                    'choices' => [
+                        'Public' => LiveBroadcast::PRIVACY_STATUS_PUBLIC,
+                        'Private' => LiveBroadcast::PRIVACY_STATUS_PRIVATE,
+                        'Unlisted' => LiveBroadcast::PRIVACY_STATUS_UNLISTED,
+                        ],
+                    'label' => 'Privacy status (YouTube only)',
                 ])
             ->end()
             ->with('Video Input', [

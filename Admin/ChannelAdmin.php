@@ -152,7 +152,8 @@ class ChannelAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
-            ->add('channelName');
+            ->add('channelName')
+            ->add('isHealthy');
     }
 
     /**
