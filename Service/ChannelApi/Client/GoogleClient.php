@@ -19,7 +19,7 @@ class GoogleClient
     /**
      * @var array
      */
-    public $scope = ['https://www.googleapis.com/auth/youtube'];
+    public $scope = [\Google_Service_YouTube::YOUTUBE];
 
     /**
      * @var GoogleConfig

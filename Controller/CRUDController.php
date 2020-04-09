@@ -99,7 +99,7 @@ class CRUDController extends Controller
 
         $googleClient = $this->getGoogleClient();
 
-        if ($sessionState !== $requestState) {
+        if (((string) $sessionState !== (string) $requestState) || $googleClient->isAccessTokenExpired()) {
             $googleClient->fetchAccessTokenWithAuthCode($requestCode);
             $googleClient->getAccessToken();
         }

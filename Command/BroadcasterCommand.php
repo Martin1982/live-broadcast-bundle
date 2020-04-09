@@ -80,7 +80,7 @@ class BroadcasterCommand extends Command
                 try {
                     $scheduler->applySchedule();
                 } catch (\Throwable $exception) {
-                    $this->logger->critical($exception->getMessage());
+                    $this->logger->critical($exception->getMessage(), $exception->getTrace());
                 }
             }
         );
