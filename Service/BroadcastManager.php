@@ -75,6 +75,20 @@ class BroadcastManager
     }
 
     /**
+     * Retrieve a channel by it's id
+     *
+     * @param int $id
+     *
+     * @return AbstractChannel|null
+     */
+    public function getChannelById(int $id): ?AbstractChannel
+    {
+        $repository = $this->entityManager->getRepository(AbstractChannel::class);
+
+        return $repository->find($id);
+    }
+
+    /**
      * Handles API calls for new broadcasts
      *
      * @param LiveBroadcast $broadcast
