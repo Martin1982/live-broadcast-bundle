@@ -69,6 +69,7 @@ services:
   live.broadcast.stream.announcement.listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\StreamAnnouncementListener
       arguments:
+          - '@messenger.routable_message_bus'
           - '@live.broadcast.broadcast_manager'
       tags:
           - { name: doctrine.event_listener, event: prePersist }
