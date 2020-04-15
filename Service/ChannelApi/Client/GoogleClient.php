@@ -56,13 +56,13 @@ class GoogleClient
     }
 
     /**
-     * @return \Google_Client|null
+     * @return \Google_Client
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function getClient(): ?\Google_Client
+    public function getClient(): \Google_Client
     {
-        if (!$this->googleClient) {
+        if (!$this->googleClient instanceof \Google_Client) {
             $this->setupClient();
         }
 
