@@ -1,5 +1,4 @@
 <?php
-/** @noinspection ALL */
 declare(strict_types=1);
 
 /**
@@ -37,25 +36,6 @@ class YouTubeClientTest extends TestCase
      * @var GoogleClient|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $google;
-
-    /**
-     * Test setting a channel
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     */
-    public function testCannotSetChannel(): void
-    {
-        $channel = $this->createMock(ChannelYouTube::class);
-        $channel->expects(self::atLeastOnce())
-            ->method('getRefreshToken');
-
-        $this->google->expects(self::atLeastOnce())
-            ->method('getClient')
-            ->willReturn(null);
-
-        $youtube = new YouTubeClient($this->config, $this->google);
-        $youtube->setChannel($channel);
-    }
 
     /**
      * Test setting a channel

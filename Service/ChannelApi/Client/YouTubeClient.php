@@ -63,9 +63,6 @@ class YouTubeClient
     {
         $refreshToken = $channel->getRefreshToken();
         $client = $this->googleClient->getClient();
-        if (!$client) {
-            throw new LiveBroadcastOutputException('No Google client available');
-        }
         $tokenResult = $client->fetchAccessTokenWithRefreshToken($refreshToken);
 
         if (array_key_exists('error', $tokenResult)) {
@@ -354,8 +351,6 @@ class YouTubeClient
      */
     private function convertPrivacyStatus(int $privacyStatus): string
     {
-        $status = '';
-
         switch ($privacyStatus) {
             case LiveBroadcast::PRIVACY_STATUS_UNLISTED:
                 $status = 'unlisted';
