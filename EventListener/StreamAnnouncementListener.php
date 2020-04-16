@@ -11,7 +11,9 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Message\StreamServiceAnnouncement;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 
 /**
  * Class StreamAnnouncementListener
@@ -53,7 +55,10 @@ class StreamAnnouncementListener
             $action = StreamServiceAnnouncement::ACTION_PRE_PERSIST;
             $channelIds = $this->getChannelIds($broadcast->getOutputChannels());
             $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
-            $this->bus->dispatch($serviceAnnouncement);
+            $envelope = new Envelope($serviceAnnouncement, [
+                new DelayStamp(5000)
+            ]);
+            $this->bus->dispatch($envelope);
         }
     }
 
@@ -70,7 +75,11 @@ class StreamAnnouncementListener
             $action = StreamServiceAnnouncement::ACTION_PRE_UPDATE;
             $channelIds = $this->getChannelIds($broadcast->getOutputChannels());
             $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
-            $this->bus->dispatch($serviceAnnouncement);
+            $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
+            $envelope = new Envelope($serviceAnnouncement, [
+                new DelayStamp(5000)
+            ]);
+            $this->bus->dispatch($envelope);
         }
     }
 
@@ -87,7 +96,11 @@ class StreamAnnouncementListener
             $action = StreamServiceAnnouncement::ACTION_PRE_REMOVE;
             $channelIds = $this->getChannelIds($broadcast->getOutputChannels());
             $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
-            $this->bus->dispatch($serviceAnnouncement);
+            $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
+            $envelope = new Envelope($serviceAnnouncement, [
+                new DelayStamp(5000)
+            ]);
+            $this->bus->dispatch($envelope);
         }
     }
 

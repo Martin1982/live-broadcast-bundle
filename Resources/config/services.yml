@@ -76,6 +76,10 @@ services:
           - { name: doctrine.event_listener, event: preUpdate }
           - { name: doctrine.event_listener, event: preRemove }
 
+  live.broadcast.message_handler.stream_announcement:
+    class: Martin1982\LiveBroadcastBundle\MessageHandler\StreamServiceAnnouncementHandler
+    tags: [messenger.message_handler]
+
   live.broadcast.channel_api.stack:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack
 
