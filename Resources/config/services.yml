@@ -78,6 +78,8 @@ services:
 
   live.broadcast.message_handler.stream_announcement:
     class: Martin1982\LiveBroadcastBundle\MessageHandler\StreamServiceAnnouncementHandler
+    arguments:
+      - '@live.broadcast.broadcast_manager'
     tags: [messenger.message_handler]
 
   live.broadcast.channel_api.stack:
