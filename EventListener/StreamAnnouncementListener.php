@@ -45,7 +45,7 @@ class StreamAnnouncementListener
      *
      * @param LifecycleEventArgs $args
      */
-    public function prePersist(LifecycleEventArgs $args): void
+    public function postPersist(LifecycleEventArgs $args): void
     {
         $broadcast = $this->getBroadcast($args->getObject());
 

@@ -72,7 +72,7 @@ services:
           - '@messenger.routable_message_bus'
           - '@live.broadcast.broadcast_manager'
       tags:
-          - { name: doctrine.event_listener, event: prePersist }
+          - { name: doctrine.event_listener, event: postPersist }
           - { name: doctrine.event_listener, event: preUpdate }
           - { name: doctrine.event_listener, event: preRemove }
 
