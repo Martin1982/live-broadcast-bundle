@@ -67,14 +67,14 @@ class StreamAnnouncementListenerTest extends TestCase
     /**
      * Test prePersist
      */
-    public function testPrePersist(): void
+    public function testPostPersist(): void
     {
         $broadcast = $this->getBroadcastMock();
         $this->lifecycle->expects(self::atLeastOnce())->method('getObject')->willReturn($broadcast);
         $this->bus->expects(self::atLeastOnce())->method('dispatch')->willReturn($this->envelope);
 
         $listener = new StreamAnnouncementListener($this->bus, $this->manager);
-        $listener->prePersist($this->lifecycle);
+        $listener->postPersist($this->lifecycle);
     }
 
     /**

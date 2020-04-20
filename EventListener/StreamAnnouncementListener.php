@@ -56,7 +56,7 @@ class StreamAnnouncementListener
             $channelIds = $this->getChannelIds($broadcast->getOutputChannels());
             $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
             $envelope = new Envelope($serviceAnnouncement, [
-                new DelayStamp(5000)
+                new DelayStamp(5000),
             ]);
             $this->bus->dispatch($envelope);
         }
@@ -75,9 +75,8 @@ class StreamAnnouncementListener
             $action = StreamServiceAnnouncement::ACTION_PRE_UPDATE;
             $channelIds = $this->getChannelIds($broadcast->getOutputChannels());
             $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
-            $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
             $envelope = new Envelope($serviceAnnouncement, [
-                new DelayStamp(5000)
+                new DelayStamp(5000),
             ]);
             $this->bus->dispatch($envelope);
         }
@@ -96,9 +95,8 @@ class StreamAnnouncementListener
             $action = StreamServiceAnnouncement::ACTION_PRE_REMOVE;
             $channelIds = $this->getChannelIds($broadcast->getOutputChannels());
             $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
-            $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
             $envelope = new Envelope($serviceAnnouncement, [
-                new DelayStamp(5000)
+                new DelayStamp(5000),
             ]);
             $this->bus->dispatch($envelope);
         }
