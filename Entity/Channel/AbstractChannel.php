@@ -123,6 +123,6 @@ abstract class AbstractChannel
      */
     public function __toString()
     {
-        return sprintf('%s: %s',$this->getTypeName(), $this->getChannelName());
+        return sprintf('%s: %s', $this->getTypeName(), $this->getChannelName());
     }
 }
