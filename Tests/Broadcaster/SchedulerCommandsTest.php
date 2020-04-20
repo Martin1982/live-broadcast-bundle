@@ -59,7 +59,8 @@ class SchedulerCommandsTest extends TestCase
             static function ($command) {
                 $now = new \DateTime();
                 // @codingStandardsIgnoreLine
-                self::assertEquals('ffmpeg input output -metadata broadcast_id=12 -metadata test=unit -metadata env=unit_test >> /tmp/livebroadcaster-ffmpeg-'.$now->format('Y-m-d_His').'.log 2>&1 &', $command);
+                self::assertStringStartsWith('ffmpeg input output -metadata broadcast_id=12 -metadata test=unit -metadata env=unit_test >> /tmp/livebroadcaster-ffmpeg-'.$now->format('Y-m-d_Hi'), $command);
+                self::assertStringEndsWith('.log 2>&1 &', $command);
 
                 return '';
             }

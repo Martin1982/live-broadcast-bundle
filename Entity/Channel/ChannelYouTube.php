@@ -77,14 +77,6 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     }
 
     /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return 'YouTube: '.$this->getChannelName();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public static function isEntityConfigured($configuration): bool
@@ -115,5 +107,13 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
         }
 
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeName(): string
+    {
+        return 'YouTube';
     }
 }

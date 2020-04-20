@@ -79,8 +79,8 @@ class ChannelTwitch extends AbstractChannel
     /**
      * @return string
      */
-    public function __toString()
+    public function getTypeName(): string
     {
-        return 'Twitch: '.$this->getChannelName();
+        return 'Twitch';
     }
 }

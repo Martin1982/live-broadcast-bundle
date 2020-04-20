@@ -32,6 +32,7 @@ class ChannelTwitchTest extends TestCase
         self::assertEquals('UnitTest', $channel->getChannelName());
         self::assertEquals('key', $channel->getStreamKey());
         self::assertEquals('server', $channel->getStreamServer());
+        self::assertEquals('Twitch', $channel->getTypeName());
     }
 
     /**

@@ -152,13 +152,19 @@ class Scheduler
                     [
                         'broadcast_id' => $plannedBroadcast->getBroadcastId(),
                         'broadcast_name' => $plannedBroadcast->getName(),
+                        'channel' => $channel->getChannelName(),
+                        'type' => $channel->getTypeName(),
                         'exception' => $exception->getMessage(),
                     ]
                 );
             }
 
-            $infoMessage = sprintf('Started broadcast \'%s\' on \'%s\'', $plannedBroadcast->getName(), $channel->getChannelName());
-            $this->logger->info($infoMessage);
+            $this->logger->info('Start broadcast', [
+                'broadcast_id' => $plannedBroadcast->getBroadcastId(),
+                'broadcast_name' => $plannedBroadcast->getName(),
+                'channel' => $channel->getChannelName(),
+                'type' => $channel->getTypeName(),
+            ]);
         }
     }
 

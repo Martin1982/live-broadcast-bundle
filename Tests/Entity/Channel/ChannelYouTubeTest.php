@@ -26,6 +26,7 @@ class ChannelYouTubeTest extends TestCase
         self::assertEquals('YouTube', $channel->getChannelName());
         self::assertEquals('refresh', $channel->getRefreshToken());
         self::assertEquals('YT-Name', $channel->getYouTubeChannelName());
+        self::assertEquals('YouTube', $channel->getTypeName());
     }
 
     /**
