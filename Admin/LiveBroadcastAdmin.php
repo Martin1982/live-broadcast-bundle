@@ -74,7 +74,7 @@ class LiveBroadcastAdmin extends AbstractAdmin
             ->from(AbstractChannel::class, 'channel')
             ->where('channel.isHealthy = :healthyParam')
             ->setParameter('healthyParam', true)
-            ->orderBy('channel.discr, channel.name', Criteria::ASC);
+            ->orderBy('channel.channelName', Criteria::ASC);
     }
 
     /**

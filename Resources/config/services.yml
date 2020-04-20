@@ -69,11 +69,18 @@ services:
   live.broadcast.stream.announcement.listener:
       class: Martin1982\LiveBroadcastBundle\EventListener\StreamAnnouncementListener
       arguments:
+          - '@messenger.routable_message_bus'
           - '@live.broadcast.broadcast_manager'
       tags:
-          - { name: doctrine.event_listener, event: prePersist }
+          - { name: doctrine.event_listener, event: postPersist }
           - { name: doctrine.event_listener, event: preUpdate }
           - { name: doctrine.event_listener, event: preRemove }
+
+  live.broadcast.message_handler.stream_announcement:
+    class: Martin1982\LiveBroadcastBundle\MessageHandler\StreamServiceAnnouncementHandler
+    arguments:
+      - '@live.broadcast.broadcast_manager'
+    tags: [messenger.message_handler]
 
   live.broadcast.channel_api.stack:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack

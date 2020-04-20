@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Controller;
 
 use Facebook\Authentication\AccessToken;
+use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\GoogleClient;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
@@ -94,12 +95,12 @@ class CRUDController extends Controller
     protected function checkRequestCode(Request $request, SessionInterface $session): void
     {
         $requestCode = $request->get('code');
-        $requestState = $request->get('state', 'norequeststate');
-        $sessionState = $session->get('state', 'nosessionstate');
+        $requestState = (string) $request->get('state', 'norequeststate');
+        $sessionState = (string) $session->get('state', 'nosessionstate');
 
         $googleClient = $this->getGoogleClient();
 
-        if ($sessionState !== $requestState) {
+        if ($sessionState !== $requestState || $googleClient->isAccessTokenExpired()) {
             $googleClient->fetchAccessTokenWithAuthCode($requestCode);
             $googleClient->getAccessToken();
         }
@@ -134,6 +135,7 @@ class CRUDController extends Controller
      */
     private function getGoogleClient(): \Google_Client
     {
+        /** @var GoogleClient $clientService */
         $clientService = $this->container->get('live.broadcast.channel_api.client.google');
 
         return $clientService->getClient();
