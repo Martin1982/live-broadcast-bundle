@@ -44,11 +44,6 @@ class YouTubeApiService implements ChannelApiInterface
     protected $client;
 
     /**
-     * @var bool
-     */
-    protected $canFlush = false;
-
-    /**
      * YouTubeApiService constructor
      *
      * @param EntityManager   $entityManager
@@ -77,7 +72,7 @@ class YouTubeApiService implements ChannelApiInterface
 
         $youtubeBroadcast = $this->client->createBroadcast($broadcast);
         $this->client->addThumbnailToBroadcast($youtubeBroadcast, $broadcast);
-        $stream           = $this->client->createStream($broadcast->getName());
+        $stream = $this->client->createStream($broadcast->getName());
         $youtubeBroadcast = $this->client->bind($youtubeBroadcast, $stream);
 
         $streamEvent = new StreamEvent();
@@ -86,9 +81,7 @@ class YouTubeApiService implements ChannelApiInterface
         $streamEvent->setExternalStreamId($youtubeBroadcast->getId());
 
         $this->entityManager->persist($streamEvent);
-        if (true === $this->canFlush) {
-            $this->entityManager->flush();
-        }
+        $this->entityManager->flush();
     }
 
     /**
@@ -110,9 +103,7 @@ class YouTubeApiService implements ChannelApiInterface
         if ($streamEvent) {
             $this->client->removeLiveStream($streamEvent);
             $this->entityManager->remove($streamEvent);
-            if (true === $this->canFlush) {
-                $this->entityManager->flush();
-            }
+            $this->entityManager->flush();
         }
     }
 
@@ -207,16 +198,6 @@ class YouTubeApiService implements ChannelApiInterface
         $this->client->getStreamsList();
 
         return true;
-    }
-
-    /**
-     * Set if the entity manager is allowed to flush
-     *
-     * @param bool $canFlush
-     */
-    public function setCanFlush(bool $canFlush): void
-    {
-        $this->canFlush = $canFlush;
     }
 
     /**

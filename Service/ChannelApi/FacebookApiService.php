@@ -44,11 +44,6 @@ class FacebookApiService implements ChannelApiInterface
     private $facebookSDK;
 
     /**
-     * @var bool
-     */
-    private $canFlush = false;
-
-    /**
      * FacebookApiService constructor.
      *
      * @param EntityManager $entityManager
@@ -115,9 +110,7 @@ class FacebookApiService implements ChannelApiInterface
         $event->setExternalStreamId($eventId);
 
         $this->entityManager->persist($event);
-        if (true === $this->canFlush) {
-            $this->entityManager->flush();
-        }
+        $this->entityManager->flush();
     }
 
     /**
@@ -196,9 +189,7 @@ class FacebookApiService implements ChannelApiInterface
         }
 
         $this->entityManager->remove($event);
-        if (true === $this->canFlush) {
-            $this->entityManager->flush();
-        }
+        $this->entityManager->flush();
     }
 
     /**
@@ -321,16 +312,6 @@ class FacebookApiService implements ChannelApiInterface
     public function setFacebookSdk(FacebookSDK $sdk): void
     {
         $this->facebookSDK = $sdk;
-    }
-
-    /**
-     * Set if the entity manager is allowed to flush
-     *
-     * @param bool $canFlush
-     */
-    public function setCanFlush(bool $canFlush): void
-    {
-        $this->canFlush = $canFlush;
     }
 
     /**

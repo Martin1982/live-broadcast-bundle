@@ -31,7 +31,7 @@ class StreamServiceAnnouncementHandler implements MessageHandlerInterface
     }
 
     /**
-     * FunctionDescription
+     * Handle messages for stream announcements
      *
      * @param StreamServiceAnnouncement $message
      *
