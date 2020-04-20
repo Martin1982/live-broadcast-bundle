@@ -77,14 +77,6 @@ class ChannelFacebook extends AbstractChannel implements PlannedChannelInterface
     }
 
     /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return 'Facebook: '.$this->getChannelName();
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @return bool
@@ -110,5 +102,13 @@ class ChannelFacebook extends AbstractChannel implements PlannedChannelInterface
         }
 
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeName(): string
+    {
+        return 'Facebook';
     }
 }

@@ -26,6 +26,7 @@ class ChannelFacebookTest extends TestCase
         self::assertEquals('Testing123', $channel->getChannelName());
         self::assertEquals('456789', $channel->getAccessToken());
         self::assertEquals('Facebook', $channel->getFbEntityId());
+        self::assertEquals('Facebook', $channel->getTypeName());
     }
 
     /**

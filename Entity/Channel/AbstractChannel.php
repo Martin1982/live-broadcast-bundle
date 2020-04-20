@@ -109,4 +109,20 @@ abstract class AbstractChannel
 
         return true;
     }
+
+    /**
+     * @return string
+     */
+    public function getTypeName(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('%s: %s',$this->getTypeName(), $this->getChannelName());
+    }
 }
