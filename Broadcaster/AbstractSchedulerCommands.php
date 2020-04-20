@@ -185,7 +185,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 
         if (!empty($this->logDirectoryFFMpeg)) {
             $now = new \DateTime();
-            $logFile = $this->logDirectoryFFMpeg.DIRECTORY_SEPARATOR.sprintf(self::LOG_FILE, $now->format('Y-m-d_His'));
+            $logFile = $this->logDirectoryFFMpeg.DIRECTORY_SEPARATOR.sprintf(self::LOG_FILE, $now->format('Y-m-d_His.v'));
         }
 
         if ($this->isLooping()) {
