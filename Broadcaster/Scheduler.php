@@ -160,6 +160,7 @@ class Scheduler
             }
 
             $this->logger->info('Start broadcast', [
+                'broadcast_id' => $plannedBroadcast->getBroadcastId(),
                 'broadcast_name' => $plannedBroadcast->getName(),
                 'channel' => $channel->getChannelName(),
                 'type' => $channel->getTypeName(),
