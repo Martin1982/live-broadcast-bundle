@@ -29,6 +29,11 @@ class LiveBroadcastRepository extends EntityRepository
     public function getPlannedBroadcasts()
     {
         $expr = Criteria::expr();
+
+        if (!$expr) {
+            return null;
+        }
+
         $criteria = Criteria::create();
 
         $criteria->where($expr->andX(

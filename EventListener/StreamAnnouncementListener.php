@@ -53,12 +53,7 @@ class StreamAnnouncementListener
 
         if ($broadcast) {
             $action = StreamServiceAnnouncement::ACTION_PRE_PERSIST;
-            $channelIds = $this->getChannelIds($broadcast->getOutputChannels());
-            $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
-            $envelope = new Envelope($serviceAnnouncement, [
-                new DelayStamp(5000),
-            ]);
-            $this->bus->dispatch($envelope);
+            $this->dispatchAnnouncement($broadcast, $action);
         }
     }
 
@@ -73,12 +68,7 @@ class StreamAnnouncementListener
 
         if ($broadcast) {
             $action = StreamServiceAnnouncement::ACTION_PRE_UPDATE;
-            $channelIds = $this->getChannelIds($broadcast->getOutputChannels());
-            $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
-            $envelope = new Envelope($serviceAnnouncement, [
-                new DelayStamp(5000),
-            ]);
-            $this->bus->dispatch($envelope);
+            $this->dispatchAnnouncement($broadcast, $action);
         }
     }
 
@@ -93,12 +83,7 @@ class StreamAnnouncementListener
 
         if ($broadcast) {
             $action = StreamServiceAnnouncement::ACTION_PRE_REMOVE;
-            $channelIds = $this->getChannelIds($broadcast->getOutputChannels());
-            $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
-            $envelope = new Envelope($serviceAnnouncement, [
-                new DelayStamp(5000),
-            ]);
-            $this->bus->dispatch($envelope);
+            $this->dispatchAnnouncement($broadcast, $action);
         }
     }
 
@@ -134,5 +119,23 @@ class StreamAnnouncementListener
         }
 
         return $ids;
+    }
+
+    /**
+     * Dispatch announcement to the queue
+     *
+     * @param LiveBroadcast $broadcast
+     * @param int           $action
+     *
+     * @return void
+     */
+    private function dispatchAnnouncement(LiveBroadcast $broadcast, int $action): void
+    {
+        $channelIds = $this->getChannelIds($broadcast->getOutputChannels());
+        $serviceAnnouncement = new StreamServiceAnnouncement($action, $broadcast->getBroadcastId(), $channelIds);
+        $envelope = new Envelope($serviceAnnouncement, [
+            new DelayStamp(5000),
+        ]);
+        $this->bus->dispatch($envelope);
     }
 }

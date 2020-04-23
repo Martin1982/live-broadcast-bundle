@@ -37,7 +37,7 @@ class InputAdmin extends AbstractAdmin
      * {@inheritdoc}
      * @throws \RuntimeException
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $formMapper): void
     {
         $subject = $this->getSubject();
 
@@ -65,7 +65,7 @@ class InputAdmin extends AbstractAdmin
      * {@inheritdoc}
      * @throws \RuntimeException
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper->add('__toString', 'string', ['label' => 'Input']);
     }

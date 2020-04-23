@@ -57,7 +57,7 @@ class ChannelAdmin extends AbstractAdmin
             return 'LiveBroadcastBundle:CRUD:channel_youtube_edit.html.twig';
         }
 
-        return parent::getTemplate($name);
+        return $this->getTemplateRegistry()->getTemplate($name);
     }
 
     /**
