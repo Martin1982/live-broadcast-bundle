@@ -10,6 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\YouTubeConfig;
 use Symfony\Component\HttpFoundation\File\File;
@@ -271,16 +272,22 @@ class YouTubeClient
      * @param string $youTubeId
      *
      * @return \Google_Service_YouTube_LiveBroadcast|null
+     *
+     * @throws LiveBroadcastException
      */
     public function getYoutubeBroadcast(string $youTubeId): ?\Google_Service_YouTube_LiveBroadcast
     {
-        /** @var \Google_Service_YouTube_LiveBroadcast|null $broadcast */
-        $broadcast = $this->youTubeClient
+        /** @var \Google_Service_YouTube_LiveBroadcast[] $broadcasts */
+        $broadcasts = $this->youTubeClient
             ->liveBroadcasts
             ->listLiveBroadcasts('status,contentDetails', [ 'id' => $youTubeId])
-            ->current();
+            ->getItems();
 
-        return $broadcast;
+        if (!count($broadcasts)) {
+            throw new LiveBroadcastException(sprintf('No broadcast found for YouTube ID: %s', $youTubeId));
+        }
+
+        return $broadcasts[0];
     }
 
     /**
