@@ -14,6 +14,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener;
 use Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class ThumbnailUploadListenerTest extends TestCase
 {
     /**
-     * @var ThumbnailUploadService|\PHPUnit_Framework_MockObject_MockObject
+     * @var ThumbnailUploadService|MockObject
      */
     private $uploadService;
 
@@ -36,7 +37,7 @@ class ThumbnailUploadListenerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->uploadService = $this->createMock(ThumbnailUploadService::class);
         $this->eventListener = new ThumbnailUploadListener($this->uploadService);

@@ -9,6 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch;
@@ -21,20 +22,24 @@ use PHPUnit\Framework\TestCase;
 class StreamOutputServiceTest extends TestCase
 {
     /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * Test that not having a channel throws an exception
      */
     public function testGetOutputInterfaceWithoutChannels(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
+
         $channel = new ChannelFacebook();
         $service = new StreamOutputService();
         $service->getOutputInterface($channel);
     }
 
     /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * Test that not having a configured channel throws an exception
      */
     public function testGetOutputInterfaceWithNotConfiguredChannel(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
+
         $apiService = $this->createMock(FacebookApiService::class);
 
         $outputFacebook = new OutputFacebook($apiService);
@@ -48,7 +53,7 @@ class StreamOutputServiceTest extends TestCase
     /**
      * Test if the correct output instance is returned for a given channel
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testGetOutputInterface(): void
     {

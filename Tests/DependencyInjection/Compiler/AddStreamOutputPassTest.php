@@ -26,7 +26,7 @@ class AddStreamOutputPassTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->compilerPass = new AddStreamOutputPass();
     }

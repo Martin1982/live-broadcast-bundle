@@ -43,7 +43,7 @@ class StreamAnnouncementListenerTest extends TestCase
     /**
      * Setup mock objects
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->manager = $this->createMock(BroadcastManager::class);
         $this->lifecycle = $this->createMock(LifecycleEventArgs::class);

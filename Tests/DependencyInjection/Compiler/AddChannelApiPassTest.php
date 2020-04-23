@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\DependencyInjection\Compiler;
 
 use Martin1982\LiveBroadcastBundle\DependencyInjection\Compiler\AddChannelApiPass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -26,7 +27,7 @@ class AddChannelApiPassTest extends TestCase
     /**
      * Setup basic object
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->compilerPass = new AddChannelApiPass();
     }
@@ -36,7 +37,7 @@ class AddChannelApiPassTest extends TestCase
      */
     public function testNoProcessing(): void
     {
-        /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
+        /** @var ContainerBuilder|MockObject $container */
         $container = $this->createMock(ContainerBuilder::class);
         $container->expects(static::once())
             ->method('hasDefinition')
@@ -54,7 +55,7 @@ class AddChannelApiPassTest extends TestCase
      */
     public function testProcess(): void
     {
-        /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
+        /** @var ContainerBuilder|MockObject $container */
         $container = $this->createMock(ContainerBuilder::class);
         $definition = $this->createMock(Definition::class);
 

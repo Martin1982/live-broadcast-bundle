@@ -15,7 +15,7 @@
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/orm": "^2.7",
         "facebook/graph-sdk": "^5.7",
-        "google/apiclient-services": "^0.127",
+        "google/apiclient-services": "^0.131",
         "google/apiclient": "^2.4",
         "psr/log": "^1.1",
         "react/event-loop": "^1.1",
@@ -34,7 +34,7 @@
         "friendsofphp/php-cs-fixer": "^2.16",
         "guzzlehttp/guzzle": "^6.5",
         "php-mock/php-mock-phpunit": "^2.6",
-        "phpunit/phpunit": "^7.5",
+        "phpunit/phpunit": "^9.1",
         "sonata-project/doctrine-orm-admin-bundle": "^3.15",
         "squizlabs/php_codesniffer": "^3.5"
     },

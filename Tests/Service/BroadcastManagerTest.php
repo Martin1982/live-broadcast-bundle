@@ -19,10 +19,12 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiInterface;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,12 +33,12 @@ use PHPUnit\Framework\TestCase;
 class BroadcastManagerTest extends TestCase
 {
     /**
-     * @var EntityManager|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManager|MockObject
      */
     protected $entityManager;
 
     /**
-     * @var ChannelApiStack|\PHPUnit_Framework_MockObject_MockObject
+     * @var ChannelApiStack|MockObject
      */
     protected $stack;
 
@@ -56,7 +58,7 @@ class BroadcastManagerTest extends TestCase
             ->method('connect')
             ->willReturn(true);
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|EntityManager $entityManager */
+        /** @var MockObject|EntityManager $entityManager */
         $entityManager = $this->createMock(EntityManager::class);
         $entityManager->expects(self::atLeastOnce())
             ->method('getConnection')
@@ -146,16 +148,13 @@ class BroadcastManagerTest extends TestCase
         $newChannelList->add($ytSpinninRecords);
 
         $api->expects(self::atLeastOnce())
-            ->method('createLiveEvent')
-            ->willReturn(true);
+            ->method('createLiveEvent');
 
         $api->expects(self::atLeastOnce())
-            ->method('updateLiveEvent')
-            ->willReturn(true);
+            ->method('updateLiveEvent');
 
         $api->expects(self::atLeastOnce())
-            ->method('removeLiveEvent')
-            ->willReturn(true);
+            ->method('removeLiveEvent');
 
         $broadcastOldState->expects(self::atLeastOnce())
             ->method('getOutputChannels')
@@ -234,7 +233,7 @@ class BroadcastManagerTest extends TestCase
     /**
      * Test sending an end signal
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
      */
     public function testSendEndSignal(): void
     {
@@ -281,11 +280,10 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test sending an end signal
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testSendEndSignalLockException(): void
     {
+        $this->expectException(LiveBroadcastException::class);
 
         $channel = $this->createMock(ChannelFacebook::class);
 
@@ -316,11 +314,10 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test sending an end signal
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testSendEndSignalArgumentException(): void
     {
+        $this->expectException(LiveBroadcastException::class);
 
         $channel = $this->createMock(ChannelFacebook::class);
 
@@ -351,11 +348,10 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test sending an end signal
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testSendEndSignalORMException(): void
     {
+        $this->expectException(LiveBroadcastException::class);
 
         $channel = $this->createMock(ChannelFacebook::class);
 
@@ -387,7 +383,7 @@ class BroadcastManagerTest extends TestCase
     /**
      * Test getting planned broadcasts
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
      */
     public function testGetPlannedBroadcasts(): void
     {
@@ -409,7 +405,7 @@ class BroadcastManagerTest extends TestCase
     /**
      * Test getting planned broadcasts
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
      */
     public function testGetNonePlannedBroadcasts(): void
     {
@@ -431,7 +427,7 @@ class BroadcastManagerTest extends TestCase
     /**
      * Setup mock objects
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManager::class);
         $this->stack = $this->createMock(ChannelApiStack::class);

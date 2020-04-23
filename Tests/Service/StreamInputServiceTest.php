@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputFile;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
 use PHPUnit\Framework\TestCase;
@@ -40,11 +41,10 @@ class StreamInputServiceTest extends TestCase
 
     /**
      * Test that an exception is thrown when the interface class is unknown
-     *
-     * @expectedException  \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
     public function testNoInputInterfaceFound(): void
     {
+        $this->expectException(LiveBroadcastInputException::class);
         $input = new StreamInputService();
         $media = $this->createMock(MediaFile::class);
 

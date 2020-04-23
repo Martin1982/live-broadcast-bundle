@@ -9,6 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
 use PHPUnit\Framework\TestCase;
@@ -19,11 +20,6 @@ use PHPUnit\Framework\TestCase;
 class OutputYouTubeTest extends TestCase
 {
     /**
-     * @var YouTubeApiService
-     */
-    private $api;
-
-    /**
      * @var OutputYouTube
      */
     private $youTube;
@@ -31,10 +27,10 @@ class OutputYouTubeTest extends TestCase
     /**
      * Setup a testable Facebook channel
      */
-    public function setUp()
+    public function setUp(): void
     {
-        $this->api = $this->createMock(YouTubeApiService::class);
-        $this->youTube = new OutputYouTube($this->api);
+        $api = $this->createMock(YouTubeApiService::class);
+        $this->youTube = new OutputYouTube($api);
         $this->youTube->setChannel(new ChannelYouTube());
     }
 
@@ -55,22 +51,20 @@ class OutputYouTubeTest extends TestCase
     }
 
     /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * Test generating an output throws an exception
      */
     public function testGenerateOutputCmdException(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $this->youTube->generateOutputCmd();
     }
 
     /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * Test that no stream url throws an exception
      */
     public function testNoStreamUrlException(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $api = $this->createMock(YouTubeApiService::class);
         $broadcast = $this->createMock(LiveBroadcast::class);
 
@@ -80,7 +74,7 @@ class OutputYouTubeTest extends TestCase
     }
 
     /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testGenerateOutputCmd(): void
     {

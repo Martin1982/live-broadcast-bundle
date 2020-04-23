@@ -17,6 +17,7 @@ use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\YouTubeConfi
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\GoogleClient;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\YouTubeClient;
 use phpmock\phpunit\PHPMock;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -28,12 +29,12 @@ class YouTubeClientTest extends TestCase
     use PHPMock;
 
     /**
-     * @var YouTubeConfig|\PHPUnit_Framework_MockObject_MockObject
+     * @var YouTubeConfig|MockObject
      */
     protected $config;
 
     /**
-     * @var GoogleClient|\PHPUnit_Framework_MockObject_MockObject
+     * @var GoogleClient|MockObject
      */
     protected $google;
 
@@ -63,11 +64,11 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test creating a broadcast
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testCreateBroadcastThrowsException(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
+
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getStartTimestamp')
@@ -137,11 +138,10 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test ending the live-stream
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testEndLiveStreamThrowsException(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('transition')
@@ -177,15 +177,14 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test removing the live-stream
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testRemoveStreamThrowsException(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $streamEvent = $this->createMock(StreamEvent::class);
         $streamEvent->expects(self::atLeastOnce())
             ->method('getExternalStreamId')
-            ->willReturn(10);
+            ->willReturn('10');
 
         $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
@@ -210,7 +209,7 @@ class YouTubeClientTest extends TestCase
         $streamEvent = $this->createMock(StreamEvent::class);
         $streamEvent->expects(self::atLeastOnce())
             ->method('getExternalStreamId')
-            ->willReturn(10);
+            ->willReturn('10');
 
         $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
@@ -288,11 +287,10 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test updating a live-stream
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testUpdateLiveStreamThrowsException(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getStartTimestamp')
@@ -437,11 +435,10 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test creating a stream
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testCreateStreamThrowsException(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $liveStreams = $this->createMock(\Google_Service_YouTube_Resource_LiveStreams::class);
         $liveStreams->expects(self::atLeastOnce())
             ->method('insert')
@@ -477,11 +474,10 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test binding a stream to a broadcast
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testBindThrowsException(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $broadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getId')
@@ -595,7 +591,7 @@ class YouTubeClientTest extends TestCase
     /**
      * Setup basic mock objects
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->config = $this->createMock(YouTubeConfig::class);
         $this->google = $this->createMock(GoogleClient::class);

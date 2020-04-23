@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -17,16 +19,14 @@ use Symfony\Component\HttpKernel\Kernel;
 class AbstractSchedulerCommandsTest extends TestCase
 {
     /**
-     * @var AbstractSchedulerCommands|\PHPUnit_Framework_MockObject_MockObject
+     * @var AbstractSchedulerCommands|MockObject
      */
     private $schedulerCommands;
 
     /**
      * Setup a basic test object
-     *
-     * @throws \ReflectionException
      */
-    public function setUp()
+    public function setUp(): void
     {
         $kernel = $this->createMock(Kernel::class);
         $kernel->expects(self::once())->method('getProjectDir')->willReturn('/some/directory');
@@ -37,25 +37,21 @@ class AbstractSchedulerCommandsTest extends TestCase
 
     /**
      * Test stopping the process throws exception
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testStopProcess(): void
     {
+        $this->expectException(LiveBroadcastException::class);
+
         $this->schedulerCommands->stopProcess(5);
     }
 
     /**
      * Test getting the running process throws an exception
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testGetRunningProcesses(): void
     {
+        $this->expectException(LiveBroadcastException::class);
+
         $this->schedulerCommands->getRunningProcesses();
     }
 

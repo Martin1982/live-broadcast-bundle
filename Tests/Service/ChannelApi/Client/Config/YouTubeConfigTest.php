@@ -39,7 +39,7 @@ class YouTubeConfigTest extends TestCase
     /**
      * Setup basic object
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->config = new YouTubeConfig('a.host.com', '/a/directory');
     }

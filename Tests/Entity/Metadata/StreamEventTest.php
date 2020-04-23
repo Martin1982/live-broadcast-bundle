@@ -27,7 +27,7 @@ class StreamEventTest extends TestCase
      *
      * @throws \ReflectionException
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->streamEvent = new StreamEvent();
         $this->streamEvent->setBroadcast(new LiveBroadcast());

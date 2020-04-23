@@ -21,6 +21,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 class FacebookApiServiceTest extends TestCase
 {
     /**
-     * @var EntityManager|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManager|MockObject
      */
     protected $entityManager;
 
@@ -102,14 +103,13 @@ class FacebookApiServiceTest extends TestCase
     /**
      * Test that an exception is thrown when no stream can be created
      *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Exception
      */
     public function testExceptionWhenStreamCannotBeCreated(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $liveBroadcast = $this->getLiveBroadcast();
 
         $channelFacebook = $this->getFacebookChannel();
@@ -148,11 +148,10 @@ class FacebookApiServiceTest extends TestCase
 
     /**
      * Test updating a stream on a non-facebook channel
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testUpdateStreamNoResponse(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $channelFacebook = $this->createMock(ChannelFacebook::class);
         $channelFacebook->expects(self::atLeastOnce())
             ->method('getAccessToken')
@@ -297,13 +296,12 @@ class FacebookApiServiceTest extends TestCase
     /**
      * Test that a facebook error is caught when removing an event
      *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function testRemoveLiveEventFacebookError(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $sdk = $this->createMock(FacebookSDK::class);
         $sdk->expects(self::atLeastOnce())
             ->method('setDefaultAccessToken')
@@ -400,11 +398,10 @@ class FacebookApiServiceTest extends TestCase
 
     /**
      * Test that an SDK exception is caught
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGetLongLivedAccessTokenSdkError(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $sdk = $this->createMock(FacebookSDK::class);
         $sdk->expects(self::atLeastOnce())
             ->method('getOAuth2Client')
@@ -485,11 +482,10 @@ class FacebookApiServiceTest extends TestCase
 
     /**
      * Test that a facebook exception is caught
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGetStreamUrlFacebookError(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $sdk = $this->createMock(FacebookSDK::class);
         $sdk->expects(self::atLeastOnce())
             ->method('setDefaultAccessToken')
@@ -593,11 +589,10 @@ class FacebookApiServiceTest extends TestCase
 
     /**
      * Test that an exception is caught and converted
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testSendEndSignalSdkError(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $channel = $this->createMock(ChannelFacebook::class);
         $sdk = $this->createMock(FacebookSDK::class);
         $sdk->expects(self::atLeastOnce())
@@ -629,11 +624,10 @@ class FacebookApiServiceTest extends TestCase
 
     /**
      * Test initializing without proper parameters
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testInitFacebookWithoutParameters(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $channel = $this->createMock(ChannelYouTube::class);
         $channel->expects(self::never())
             ->method('getRefreshToken');
@@ -644,13 +638,11 @@ class FacebookApiServiceTest extends TestCase
 
     /**
      * Test initializing Facebook and getting an SDK error
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     *
-     * @expectedExceptionMessage Facebook SDK Exception: Something went wrong...
      */
     public function testInitFacebookWithSdkError(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
+        $this->expectExceptionMessage('Facebook SDK Exception: Something went wrong...');
         $channel = $this->createMock(ChannelYouTube::class);
         $channel->expects(self::never())
             ->method('getRefreshToken');
@@ -691,7 +683,7 @@ class FacebookApiServiceTest extends TestCase
     /**
      * Setup mock object
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManager::class);
     }

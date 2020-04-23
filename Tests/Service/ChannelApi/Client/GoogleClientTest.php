@@ -10,6 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi\Client;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\GoogleConfig;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\GoogleClient;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -19,17 +20,17 @@ use Psr\Log\LoggerInterface;
 class GoogleClientTest extends TestCase
 {
     /**
-     * @var GoogleConfig|\PHPUnit_Framework_MockObject_MockObject
+     * @var GoogleConfig|MockObject
      */
     protected $config;
 
     /**
-     * @var GoogleRedirectService|\PHPUnit_Framework_MockObject_MockObject
+     * @var GoogleRedirectService|MockObject
      */
     protected $redirect;
 
     /**
-     * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var LoggerInterface|MockObject
      */
     protected $logger;
 
@@ -60,7 +61,7 @@ class GoogleClientTest extends TestCase
     /**
      * Setup mock objects
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->config = $this->createMock(GoogleConfig::class);
         $this->redirect = $this->createMock(GoogleRedirectService::class);

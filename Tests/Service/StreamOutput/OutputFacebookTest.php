@@ -10,9 +10,11 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,14 +28,14 @@ class OutputFacebookTest extends TestCase
     private $facebookChannel;
 
     /**
-     * @var FacebookApiService|\PHPUnit_Framework_MockObject_MockObject
+     * @var FacebookApiService|MockObject
      */
     private $api;
 
     /**
      * Setup a testable Facebook channel
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->facebookChannel = new ChannelFacebook();
         $this->facebookChannel->setAccessToken('token');
@@ -53,20 +55,20 @@ class OutputFacebookTest extends TestCase
 
     /**
      * Test the generate output command without a channel
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithoutChannel(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $facebook = new OutputFacebook($this->api);
         $facebook->generateOutputCmd();
     }
 
     /**
      * Test the generate output command with an invalid channel
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithInvalidChannel(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $facebook = new OutputFacebook($this->api);
         $channel = new ChannelFacebook();
         $facebook->setChannel($channel);
@@ -76,10 +78,10 @@ class OutputFacebookTest extends TestCase
 
     /**
      * Test the generate output command without a stream url set
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithoutStreamUrl(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $facebook = new OutputFacebook($this->api);
         $facebook->setChannel($this->facebookChannel);
         $facebook->generateOutputCmd();
@@ -88,7 +90,7 @@ class OutputFacebookTest extends TestCase
     /**
      * Test if the Facebook output class generates the correct output command.
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testValidGenerateOutputCmd(): void
     {
@@ -107,12 +109,13 @@ class OutputFacebookTest extends TestCase
     }
 
     /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * Test without a stream url
      *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testNoStreamUrlException(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $api = $this->createMock(FacebookApiService::class);
         $broadcast = $this->createMock(LiveBroadcast::class);
 

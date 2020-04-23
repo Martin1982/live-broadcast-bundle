@@ -14,8 +14,10 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\YouTubeClient;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -25,17 +27,17 @@ use Psr\Log\LoggerInterface;
 class YouTubeApiServiceTest extends TestCase
 {
     /**
-     * @var EntityManager|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManager|MockObject
      */
     protected $entityManager;
 
     /**
-     * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var LoggerInterface|MockObject
      */
     protected $logger;
 
     /**
-     * @var YouTubeClient|\PHPUnit_Framework_MockObject_MockObject
+     * @var YouTubeClient|MockObject
      */
     protected $client;
 
@@ -44,7 +46,7 @@ class YouTubeApiServiceTest extends TestCase
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testCreateLiveEvent(): void
     {
@@ -85,17 +87,15 @@ class YouTubeApiServiceTest extends TestCase
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testRemoveLiveEvent(): void
     {
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('remove')
-            ->willReturn(true);
+            ->method('remove');
 
         $this->client->expects(self::atLeastOnce())
-            ->method('removeLiveStream')
-            ->willReturn(true);
+            ->method('removeLiveStream');
 
         $broadcast = $this->createMock(LiveBroadcast::class);
         $channel = $this->createMock(ChannelYouTube::class);
@@ -120,7 +120,7 @@ class YouTubeApiServiceTest extends TestCase
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testUpdateLiveEventWhenThereIsNone(): void
     {
@@ -166,7 +166,7 @@ class YouTubeApiServiceTest extends TestCase
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testUpdateLiveEvent(): void
     {
@@ -185,8 +185,7 @@ class YouTubeApiServiceTest extends TestCase
             ->willReturn($repository);
 
         $this->client->expects(self::atLeastOnce())
-            ->method('updateLiveStream')
-            ->willReturn(true);
+            ->method('updateLiveStream');
 
         $service = $this->getService();
         $service->updateLiveEvent($broadcast, $channel);
@@ -194,11 +193,10 @@ class YouTubeApiServiceTest extends TestCase
 
     /**
      * Test that when no event is available an exception is thrown
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGetStreamUrlForNoEvent(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $broadcast = $this->createMock(LiveBroadcast::class);
         $channel = $this->createMock(ChannelYouTube::class);
 
@@ -218,7 +216,7 @@ class YouTubeApiServiceTest extends TestCase
     /**
      * Test getting a stream url
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testGetStreamUrl(): void
     {
@@ -265,15 +263,14 @@ class YouTubeApiServiceTest extends TestCase
     /**
      * Test sending an end signal to a wrong channel type
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testSendEndSignalOnWrongChannel(): void
     {
         $channel = $this->createMock(PlannedChannelInterface::class);
 
         $this->client->expects(self::never())
-            ->method('endLiveStream')
-            ->willReturn(true);
+            ->method('endLiveStream');
 
         $service = $this->getService();
         $service->sendEndSignal($channel, 'external-id');
@@ -282,15 +279,14 @@ class YouTubeApiServiceTest extends TestCase
     /**
      * Test sending an end signal
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testSendEndSignal(): void
     {
         $channel = $this->createMock(ChannelYouTube::class);
 
         $this->client->expects(self::atLeastOnce())
-            ->method('endLiveStream')
-            ->willReturn(true);
+            ->method('endLiveStream');
 
         $service = $this->getService();
         $service->sendEndSignal($channel, 'external-id');
@@ -299,13 +295,12 @@ class YouTubeApiServiceTest extends TestCase
     /**
      * Test that only YouTube channels are allowed
      *
-     * @expectedException  \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function testCantSetOtherChannel(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $broadcast = $this->createMock(LiveBroadcast::class);
         $channel = $this->createMock(ChannelFacebook::class);
 
@@ -324,7 +319,7 @@ class YouTubeApiServiceTest extends TestCase
     /**
      * Setup basic mocks
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManager::class);
         $this->logger = $this->createMock(LoggerInterface::class);

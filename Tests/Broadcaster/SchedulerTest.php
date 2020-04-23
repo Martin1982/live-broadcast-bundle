@@ -219,12 +219,10 @@ class SchedulerTest extends TestCase
             ->willReturn($eventsRepository);
 
         $this->broadcastStarter->expects(self::atLeastOnce())
-            ->method('startBroadcast')
-            ->willReturn(null);
+            ->method('startBroadcast');
 
         $this->logger->expects(self::atLeastOnce())
-            ->method('info')
-            ->willReturn(null);
+            ->method('info');
 
         $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
@@ -609,7 +607,7 @@ class SchedulerTest extends TestCase
     /**
      * Setup default mocks
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->validator = $this->createMock(ChannelValidatorService::class);
         $this->broadcastStarter = $this->createMock(BroadcastStarter::class);

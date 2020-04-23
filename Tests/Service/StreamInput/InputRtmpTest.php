@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamInput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaRtmp;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputRtmp;
 use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +28,7 @@ class InputRtmpTest extends TestCase
     /**
      * Setup a basic RTMP object
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->serverAddress = new InputRtmp();
 
@@ -47,11 +48,10 @@ class InputRtmpTest extends TestCase
 
     /**
      * Test that an input cmd cannot be generated
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
      */
     public function testCannotGenerateInputCmd(): void
     {
+        $this->expectException(LiveBroadcastInputException::class);
         $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\StreamInput', 'fsockopen');
         $exec->expects(static::once())
             ->with('10.10.10.10')
@@ -63,7 +63,7 @@ class InputRtmpTest extends TestCase
     /**
      * Test that an input cmd is properly generated
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
+     * @throws LiveBroadcastInputException
      */
     public function testGenerateInputCmd(): void
     {

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamInput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaUrl;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputUrl;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +25,7 @@ class InputUrlTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->inputUrl = new InputUrl();
 
@@ -34,12 +35,11 @@ class InputUrlTest extends TestCase
     }
 
     /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
+     * Test invalid url as cmd input
      */
     public function testGenerateInputCmdInvalidUrl(): void
     {
+        $this->expectException(LiveBroadcastInputException::class);
         $media = new MediaUrl();
         $media->setUrl('invalid_url');
         $this->inputUrl->setMedia($media);
@@ -49,7 +49,9 @@ class InputUrlTest extends TestCase
 
 
     /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
+     * Test generating an input command
+     *
+     * @throws LiveBroadcastInputException
      */
     public function testGenerateInputCmd(): void
     {
@@ -57,7 +59,7 @@ class InputUrlTest extends TestCase
     }
 
     /**
-     *
+     * Test the media type
      */
     public function testMediaType(): void
     {

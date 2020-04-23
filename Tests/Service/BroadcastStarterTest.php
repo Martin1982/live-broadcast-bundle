@@ -16,6 +16,7 @@ use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\DynamicStreamUrlInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,17 +25,17 @@ use PHPUnit\Framework\TestCase;
 class BroadcastStarterTest extends TestCase
 {
     /**
-     * @var StreamInputService|\PHPUnit_Framework_MockObject_MockObject
+     * @var StreamInputService|MockObject
      */
     protected $input;
 
     /**
-     * @var StreamOutputService|\PHPUnit_Framework_MockObject_MockObject
+     * @var StreamOutputService|MockObject
      */
     protected $output;
 
     /**
-     * @var AbstractSchedulerCommands|\PHPUnit_Framework_MockObject_MockObject
+     * @var AbstractSchedulerCommands|MockObject
      */
     protected $commands;
 
@@ -85,8 +86,7 @@ class BroadcastStarterTest extends TestCase
             ->willReturn($outputInterface);
 
         $this->commands->expects(self::atLeastOnce())
-            ->method('setLooping')
-            ->willReturn(null);
+            ->method('setLooping');
         $this->commands->expects(self::atLeastOnce())
             ->method('startProcess')
             ->willReturn('');
@@ -98,7 +98,7 @@ class BroadcastStarterTest extends TestCase
     /**
      * Setup basic mocks
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->input = $this->createMock(StreamInputService::class);
         $this->output = $this->createMock(StreamOutputService::class);

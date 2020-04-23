@@ -39,7 +39,7 @@ class GoogleConfigTest extends TestCase
     /**
      * Test object setup
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->defaultConfig = new GoogleConfig('a', 'b');
     }

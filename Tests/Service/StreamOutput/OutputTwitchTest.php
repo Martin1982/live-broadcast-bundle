@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +26,7 @@ class OutputTwitchTest extends TestCase
     /**
      * Setup a testable Twitch channel.
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->twitchChannel = new ChannelTwitch();
         $this->twitchChannel->setStreamServer('value1');
@@ -43,20 +44,20 @@ class OutputTwitchTest extends TestCase
 
     /**
      * Test the generate output command without a channel
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithoutChannel(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $twitch = new OutputTwitch();
         $twitch->generateOutputCmd();
     }
 
     /**
      * Test the generate output command with an invalid channel
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testGenerateOutputCmdWithInvalidChannel(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
         $twitch = new OutputTwitch();
         $channel = new ChannelTwitch();
         $twitch->setChannel($channel);
@@ -67,15 +68,15 @@ class OutputTwitchTest extends TestCase
     /**
      * Test if the Twitch output class generates the correct output command.
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testGenerateOutputCmd(): void
     {
         $twitch = new OutputTwitch();
         $twitch->setChannel($this->twitchChannel);
         self::assertEquals(
-            $twitch->generateOutputCmd(),
-            '-vcodec copy -acodec copy -f flv "rtmp://value1/app/value2"'
+            '-vcodec copy -acodec copy -f flv "rtmp://value1/app/value2"',
+            $twitch->generateOutputCmd()
         );
     }
 

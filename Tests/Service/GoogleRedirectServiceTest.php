@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
@@ -41,11 +42,11 @@ class GoogleRedirectServiceTest extends TestCase
 
     /**
      * Test getting the redirect url
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testRouteNotFound(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
+
         $router = $this->createMock(RouterInterface::class);
         $router->expects(static::once())
             ->method('generate')
@@ -61,11 +62,11 @@ class GoogleRedirectServiceTest extends TestCase
 
     /**
      * Test getting the redirect url
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testMissingMandatoryParameters(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
+
         $router = $this->createMock(RouterInterface::class);
         $router->expects(static::once())
             ->method('generate')
@@ -81,11 +82,11 @@ class GoogleRedirectServiceTest extends TestCase
 
     /**
      * Test getting the redirect url
-     *
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
     public function testInvalidParameter(): void
     {
+        $this->expectException(LiveBroadcastOutputException::class);
+
         $router = $this->createMock(RouterInterface::class);
         $router->expects(static::once())
             ->method('generate')

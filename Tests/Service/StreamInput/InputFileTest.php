@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamInput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputFile;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +25,7 @@ class InputFileTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->file = new InputFile();
 
@@ -35,18 +36,19 @@ class InputFileTest extends TestCase
     }
 
     /**
-     * @expectedException \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
+     * Test that cmd gets an invalid input file
      */
     public function testGenerateInputCmdInvalidFile(): void
     {
+        $this->expectException(LiveBroadcastInputException::class);
         $this->file->generateInputCmd();
     }
 
 
     /**
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
+     * Test generating the input command
+     *
+     * @throws LiveBroadcastInputException
      */
     public function testGenerateInputCmd(): void
     {
@@ -62,7 +64,7 @@ class InputFileTest extends TestCase
     }
 
     /**
-     *
+     * Test the type of media
      */
     public function testMediaType(): void
     {
