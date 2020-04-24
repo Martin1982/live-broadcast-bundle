@@ -95,6 +95,7 @@ class YouTubeClient
 
         $status = new \Google_Service_YouTube_LiveBroadcastStatus();
         $status->setPrivacyStatus($this->convertPrivacyStatus($plannedBroadcast->getPrivacyStatus()));
+        $status->setMadeForKids(false);
 
         $liveBroadcast = new \Google_Service_YouTube_LiveBroadcast();
         $liveBroadcast->setContentDetails($contentDetails);
@@ -277,7 +278,6 @@ class YouTubeClient
      */
     public function getYoutubeBroadcast(string $youTubeId): ?\Google_Service_YouTube_LiveBroadcast
     {
-        /** @var \Google_Service_YouTube_LiveBroadcast[] $broadcasts */
         $broadcasts = $this->youTubeClient
             ->liveBroadcasts
             ->listLiveBroadcasts('status,contentDetails', [ 'id' => $youTubeId])

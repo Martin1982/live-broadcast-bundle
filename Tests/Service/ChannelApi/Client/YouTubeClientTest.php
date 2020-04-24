@@ -530,9 +530,14 @@ class YouTubeClientTest extends TestCase
      */
     public function testGetYouTubeBroadcast(): void
     {
-        $listResponse = $this->createMock(\Google_Service_YouTube_LiveBroadcastListResponse::class);
-
         $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $listResponse = $this->createMock(\Google_Service_YouTube_LiveBroadcastListResponse::class);
+        $broadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
+        $itemsResponse = [$broadcast];
+
+        $listResponse->expects(self::atLeastOnce())
+            ->method('getItems')
+            ->willReturn($itemsResponse);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('listLiveBroadcasts')
             ->willReturn($listResponse);
