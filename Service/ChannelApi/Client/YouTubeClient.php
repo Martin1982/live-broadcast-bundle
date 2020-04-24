@@ -95,7 +95,7 @@ class YouTubeClient
 
         $status = new \Google_Service_YouTube_LiveBroadcastStatus();
         $status->setPrivacyStatus($this->convertPrivacyStatus($plannedBroadcast->getPrivacyStatus()));
-        $status->setMadeForKids(false);
+        $status->setSelfDeclaredMadeForKids(false);
 
         $liveBroadcast = new \Google_Service_YouTube_LiveBroadcast();
         $liveBroadcast->setContentDetails($contentDetails);
