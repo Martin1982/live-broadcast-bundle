@@ -139,12 +139,7 @@ class BroadcastManager
      */
     public function preDelete(LiveBroadcast $broadcast): void
     {
-        foreach ($broadcast->getOutputChannels() as $channel) {
-            if ($channel instanceof PlannedChannelInterface) {
-                $api = $this->apiStack->getApiForChannel($channel);
-                $this->attemptDeleteOnApi($broadcast, $channel, $api);
-            }
-        }
+        $this->removeLiveEvents($broadcast, $broadcast->getOutputChannels());
     }
 
     /**
