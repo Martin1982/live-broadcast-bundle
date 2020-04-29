@@ -33,12 +33,14 @@ class CRUDController extends Controller
     {
         $facebookService = $this->get('live.broadcast.facebook_api.service');
         $accessToken = $facebookService->getLongLivedAccessToken($request->get('userAccessToken'));
+        $response = new JsonResponse(null, 500);
 
         if ($accessToken instanceof AccessToken) {
-            return new JsonResponse(['accessToken' => $accessToken->getValue()]);
+            $response->setData(['accessToken' => $accessToken->getValue()]);
+            $response->setStatusCode(200);
         }
 
-        return new JsonResponse(null, 500);
+        return $response;
     }
 
     /**
