@@ -37,11 +37,6 @@ class GoogleClient
     protected $logger;
 
     /**
-     * @var \Google_Client|null
-     */
-    protected $googleClient;
-
-    /**
      * GoogleClient constructor.
      *
      * @param GoogleConfig          $config
@@ -62,20 +57,6 @@ class GoogleClient
      */
     public function getClient(): \Google_Client
     {
-        if (!$this->googleClient instanceof \Google_Client) {
-            $this->setupClient();
-        }
-
-        return $this->googleClient;
-    }
-
-    /**
-     * Setup the Google API client
-     *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
-     */
-    protected function setupClient(): void
-    {
         $client = new \Google_Client();
         $client->setLogger($this->logger);
         $client->setClientId($this->config->getClientId());
@@ -85,6 +66,6 @@ class GoogleClient
         $client->setRedirectUri($this->redirect->getOAuthRedirectUrl());
         $client->setApprovalPrompt('force');
 
-        $this->googleClient = $client;
+        return $client;
     }
 }
