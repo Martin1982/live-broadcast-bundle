@@ -144,27 +144,21 @@ class Scheduler
                 continue;
             }
 
-            try {
-                $this->starter->startBroadcast($plannedBroadcast, $channel);
-            } catch (\Throwable $exception) {
-                $this->logger->error(
-                    'Could not start broadcast',
-                    [
-                        'broadcast_id' => $plannedBroadcast->getBroadcastId(),
-                        'broadcast_name' => $plannedBroadcast->getName(),
-                        'channel' => $channel->getChannelName(),
-                        'type' => $channel->getTypeName(),
-                        'exception' => $exception->getMessage(),
-                    ]
-                );
-            }
-
-            $this->logger->info('Start broadcast', [
+            $logContext = [
                 'broadcast_id' => $plannedBroadcast->getBroadcastId(),
                 'broadcast_name' => $plannedBroadcast->getName(),
                 'channel' => $channel->getChannelName(),
                 'type' => $channel->getTypeName(),
-            ]);
+            ];
+
+            $this->logger->info('Starting broadcast', $logContext);
+
+            try {
+                $this->starter->startBroadcast($plannedBroadcast, $channel);
+            } catch (\Throwable $exception) {
+                $logContext['exception'] = $exception->getMessage();
+                $this->logger->error('Could not start broadcast', $logContext);
+            }
         }
     }
 
