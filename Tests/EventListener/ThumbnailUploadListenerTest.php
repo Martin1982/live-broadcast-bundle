@@ -135,11 +135,7 @@ class ThumbnailUploadListenerTest extends TestCase
         $objectManager = $this->createMock(ObjectManager::class);
         $liveBroadcast = new LiveBroadcast();
 
-        $liveBroadcast->setThumbnail('thumbnail.jpg');
-
-        $this->uploadService->expects(static::once())
-            ->method('getTargetDirectory')
-            ->willReturn('/tmp/dir');
+        $liveBroadcast->setThumbnail('/tmp/dir/thumbnail.jpg');
 
         $args = new LifecycleEventArgs($liveBroadcast, $objectManager);
         $this->eventListener->postLoad($args);

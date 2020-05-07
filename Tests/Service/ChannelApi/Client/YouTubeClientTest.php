@@ -414,10 +414,6 @@ class YouTubeClientTest extends TestCase
             ->method('execute')
             ->willReturn(new Response(200, ['location' => 'test']));
 
-        $this->google->expects(self::atLeastOnce())
-            ->method('getClient')
-            ->willReturn($googleClient);
-
         $thumbnails = $this->createMock(\Google_Service_YouTube_Resource_Thumbnails::class);
         $thumbnails->expects(self::atLeastOnce())
             ->method('set')
@@ -425,6 +421,9 @@ class YouTubeClientTest extends TestCase
             ->willReturn(new Request('get', 'test_upload'));
 
         $client = $this->createMock(\Google_Service_YouTube::class);
+        $client->expects(self::atLeastOnce())
+            ->method('getClient')
+            ->willReturn($googleClient);
         $client->thumbnails = $thumbnails;
 
         $youtube = new YouTubeClient($this->config, $this->google);

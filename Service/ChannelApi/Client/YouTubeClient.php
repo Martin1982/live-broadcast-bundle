@@ -127,7 +127,7 @@ class YouTubeClient
         }
 
         $chunkSizeBytes = (1 * 1024 * 1024);
-        $client = $this->googleClient->getClient();
+        $client = $this->youTubeClient->getClient();
 
         if (!$client) {
             return false;
