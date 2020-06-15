@@ -3,3 +3,4 @@ composer.lock
 testvideo.mp4
 .idea
 composer.phar
+*.cache
