@@ -52,7 +52,7 @@ class ThumbnailUploadListenerTest extends TestCase
         $objectManager = $this->createMock(ObjectManager::class);
         $liveBroadcast = new LiveBroadcast();
 
-        $uploadedFile = new UploadedFile('/tmp', 'filename', null, null, UPLOAD_ERR_NO_FILE);
+        $uploadedFile = new UploadedFile('/tmp', 'filename', null, UPLOAD_ERR_NO_FILE);
         $liveBroadcast->setThumbnail($uploadedFile);
 
         $this->uploadService->expects(static::once())
@@ -75,7 +75,7 @@ class ThumbnailUploadListenerTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $liveBroadcast = new LiveBroadcast();
 
-        $uploadedFile = new UploadedFile('/tmp', 'thumbnail', null, null, UPLOAD_ERR_NO_FILE);
+        $uploadedFile = new UploadedFile('/tmp', 'thumbnail', null, UPLOAD_ERR_NO_FILE);
         $liveBroadcast->setThumbnail($uploadedFile);
 
         $this->uploadService->expects(static::once())
