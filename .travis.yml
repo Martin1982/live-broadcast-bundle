@@ -25,4 +25,4 @@ install:
 
 script:
     - php ./vendor/bin/phpunit --coverage-text --colors
-    - php ./vendor/bin/phpcs --standard=./vendor/escapestudios/symfony2-coding-standard/Symfony/ Admin/ Broadcaster/ Command/ Controller/ DependencyInjection/ Entity/ EventListener/ Exception/ Resources/ Service/ Tests/ LiveBroadcastBundle.php
+    - php ./vendor/bin/phpcs --standard=./vendor/escapestudios/symfony2-coding-standard/Symfony/ Broadcaster/ Command/ DependencyInjection/ Entity/ EventListener/ Exception/ Resources/ Service/ Tests/ LiveBroadcastBundle.php
