@@ -17,6 +17,7 @@
 - [Enabling Facebook Live](#enabling-facebook-live)
 - [Enabling YouTube Live](#enabling-youtube-live)
 - [Add new output platforms](#add-new-output-platforms)
+- [Using an admin GUI](#using-an-admin-gui)
 
 ## About
 
@@ -52,7 +53,7 @@ To test these prerequisites the Symfony command `livebroadcaster:test:shell` can
 
 ## Basic installation
 
-This bundle will be made available on Packagist. You can then install it using Composer:
+This bundle is available on Packagist. You can then install it using Composer:
 
 ```bash
 $ composer require martin1982/live-broadcast-bundle
@@ -80,8 +81,6 @@ To start the broadcast scheduler you can run the following command:
 ```bash
 $ php app/console livebroadcaster:broadcast
 ```
-
-To make broadcast planning available through an admin interface we've added support for the Sonata Admin bundle.
 
 ### FFMpeg log directory
 To view the output of FFMpeg you need to configure a log directory in your `app/config/config.yml`.
@@ -122,19 +121,9 @@ Edit your `app/config/config.yml` with the following configuration:
             application_id: YourFacebookAppId
             application_secret: YourFacebookAppSecret
 
-When using Sonata Admin; add the Sonata block to your blocks config:
-
-    sonata_block:
-        blocks:
-        sonata.block.service.facebookauth:
-            contexts:   [admin]
-
 ## Enabling YouTube Live
 
 Login to https://console.developers.google.com/ and enable the 'YouTube Data API v3'.
-
-Setup oAuth Credentials for your server. In case you're using the Sonata Admin from this
-bundle the redirect URI's path is `<your domain>/admin/channel/youtube/oauthprovider`
 
 Add the YouTube API info to your config.yml:
 
@@ -142,16 +131,7 @@ Add the YouTube API info to your config.yml:
         youtube:
             client_id: YourGoogleOauthClientId
             client_secret: YourGoogleOauthClientSecret
-            redirect_route: admin_martin1982_livebroadcast_channel_abstractchannel_youtubeoauth
-
- 
-When using Sonata Admin; add the Sonata block to your blocks config:
-
-    sonata_block:
-        blocks:
-        sonata.block.service.youtubeauth:
-            contexts:   [admin]
-             
+              
 Add these lines to your parameters.yml (used for generating a thumbnail URL)
 
     parameters:
@@ -171,19 +151,8 @@ Configure the service with the output tag in Resources/config/services.yml
         tags:
             - { name: live.broadcast.output, platform: 'New' }
 
-To add support for Sonata admin; add a new form for the Channel in Admin/ChannelAdmin.php
+## Using an admin GUI
 
-``` php
-protected function configureFormFields(FormMapper $formMapper)
-{
-    if ($subject instanceof ChannelNew) {
-        $formMapper->add('...', 'text', array('label' => '...'));
-    }
-}
-```
-
-Next add the sub class for the channelAdmin in Resources/config/admin.yml for 
-
-    sonata.admin.channel
-        calls:
-            - [setConfiguredSubclasses, [ { "Name": Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelNew } ] ]
+This bundle comes without a web frontend interface, to make use of an admin package you can pick the one to your liking;
+* Sonata Admin: https://github.com/Martin1982/live-broadcast-sonata-admin-bundle
+* Easyadmin: https://github.com/Martin1982/live-broadcast-easyadmin-bundle
