@@ -169,7 +169,7 @@ class YouTubeClient
     public function endLiveStream($externalId): void
     {
         try {
-            $this->youTubeClient->liveBroadcasts->transition('complete', $externalId, 'status');
+            $this->youTubeClient->liveBroadcasts->transition($externalId, 'complete', 'status');
         } catch (\Google_Service_Exception $exception) {
             throw new LiveBroadcastOutputException($exception->getMessage());
         }
