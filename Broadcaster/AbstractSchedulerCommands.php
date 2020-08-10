@@ -95,6 +95,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      */
     public function getProcessId($processString): ?int
     {
+        $pid = [];
         preg_match('/^\s*([\d]+)/', $processString, $pid);
         if (count($pid) && is_numeric($pid[0])) {
             return (int) $pid[0];
@@ -206,6 +207,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      */
     protected function readMetadata($processString): array
     {
+        $metadata = [];
         $processMetadata = [];
         $metadataRegex = '/-metadata ([a-z_]+)=([[:alnum:]]+)/';
         preg_match_all($metadataRegex, $processString, $metadata);

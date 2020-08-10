@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit bootstrap="vendor/autoload.php">
-    <php>
-        <ini name="xdebug.max_nesting_level" value="200" />
-    </php>
-    <testsuites>
-        <testsuite name="LiveBroadcastBundle">
-            <directory suffix="Test.php">./Tests</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory>./</directory>
-            <exclude>
-                <directory>./Resources</directory>
-                <directory>./Tests</directory>
-                <directory>./vendor</directory>
-                <directory>./Admin</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="vendor/autoload.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory>./</directory>
+    </include>
+    <exclude>
+      <directory>./Resources</directory>
+      <directory>./Tests</directory>
+      <directory>./vendor</directory>
+      <directory>./Admin</directory>
+    </exclude>
+  </coverage>
+  <php>
+    <ini name="xdebug.max_nesting_level" value="200"/>
+  </php>
+  <testsuites>
+    <testsuite name="LiveBroadcastBundle">
+      <directory suffix="Test.php">./Tests</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>
