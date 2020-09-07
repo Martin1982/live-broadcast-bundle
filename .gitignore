@@ -1,6 +1,7 @@
-composer.lock
-/vendor/
-testvideo.mp4
-.idea
-composer.phar
 *.cache
+.idea
+composer.lock
+composer.phar
+docker-compose.yml
+testvideo.mp4
+/vendor/
