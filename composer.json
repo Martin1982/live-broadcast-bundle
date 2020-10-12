@@ -15,7 +15,7 @@
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/orm": "^2.7",
         "facebook/graph-sdk": "^5.7",
-        "google/apiclient": "^2.4",
+        "google/apiclient": "^2.7",
         "psr/log": "^1.1",
         "react/event-loop": "^1.1",
         "symfony/console": "^4.4|^5.0",
