@@ -7,10 +7,10 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\EventListener;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\Persistence\ObjectManager;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener;
 use Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService;
