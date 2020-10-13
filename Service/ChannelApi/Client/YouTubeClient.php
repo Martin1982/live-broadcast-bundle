@@ -233,7 +233,8 @@ class YouTubeClient
         $streamSnippet->setTitle($title);
 
         $cdn = new \Google_Service_YouTube_CdnSettings();
-        $cdn->setFormat('720p');
+        $cdn->setResolution('variable');
+        $cdn->setFrameRate('variable');
         $cdn->setIngestionType('rtmp');
 
         $streamInsert = new \Google_Service_YouTube_LiveStream();
