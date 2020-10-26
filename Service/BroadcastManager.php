@@ -15,7 +15,9 @@ use Doctrine\ORM\ORMInvalidArgumentException;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiInterface;
@@ -49,21 +51,9 @@ class BroadcastManager
     }
 
     /**
-     * Keep a remote connection alive
-     */
-    public function keepConnectionAlive(): void
-    {
-        $connection = $this->entityManager->getConnection();
-        if (!$connection->ping()) {
-            $connection->close();
-            $connection->connect();
-        }
-    }
-
-    /**
      * Get a broadcast by it's id
      *
-     * @param string $broadcastId
+     * @param string|int $broadcastId
      *
      * @return LiveBroadcast|null|Object
      */
@@ -139,7 +129,11 @@ class BroadcastManager
      */
     public function preDelete(LiveBroadcast $broadcast): void
     {
-        $this->removeLiveEvents($broadcast, $broadcast->getOutputChannels());
+        $outputChannels = $broadcast->getOutputChannels();
+
+        if ($outputChannels->count() > 0) {
+            $this->removeLiveEvents($broadcast, $outputChannels->toArray());
+        }
     }
 
     /**
@@ -192,17 +186,17 @@ class BroadcastManager
     }
 
     /**
-     * @return \Doctrine\Common\Persistence\ObjectRepository|\Doctrine\ORM\EntityRepository|\Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository
+     * @return LiveBroadcastRepository
      */
-    public function getBroadcastsRepository()
+    public function getBroadcastsRepository(): LiveBroadcastRepository
     {
         return $this->entityManager->getRepository(LiveBroadcast::class);
     }
 
     /**
-     * @return \Doctrine\Common\Persistence\ObjectRepository|\Doctrine\ORM\EntityRepository|\Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository
+     * @return StreamEventRepository
      */
-    public function getEventsRepository()
+    public function getEventsRepository(): StreamEventRepository
     {
         return $this->entityManager->getRepository(StreamEvent::class);
     }
@@ -271,7 +265,7 @@ class BroadcastManager
     private function createLiveEvents(LiveBroadcast $broadcast, array $channels): void
     {
         foreach ($channels as $channel) {
-            if ($channel instanceof PlannedChannelInterface) {
+            if ($channel instanceof PlannedChannelInterface && $channel instanceof AbstractChannel) {
                 $api = $this->apiStack->getApiForChannel($channel);
 
                 if ($api) {
@@ -288,7 +282,7 @@ class BroadcastManager
     private function updateLiveEvents(LiveBroadcast $broadcast, array $channels): void
     {
         foreach ($channels as $channel) {
-            if ($channel instanceof PlannedChannelInterface) {
+            if ($channel instanceof PlannedChannelInterface && $channel instanceof AbstractChannel) {
                 $api = $this->apiStack->getApiForChannel($channel);
 
                 if ($api) {
@@ -305,7 +299,7 @@ class BroadcastManager
     private function removeLiveEvents(LiveBroadcast $broadcast, array $channels): void
     {
         foreach ($channels as $channel) {
-            if ($channel instanceof PlannedChannelInterface) {
+            if ($channel instanceof PlannedChannelInterface && $channel instanceof AbstractChannel) {
                 $api = $this->apiStack->getApiForChannel($channel);
                 $this->attemptDeleteOnApi($broadcast, $channel, $api);
             }
@@ -313,9 +307,9 @@ class BroadcastManager
     }
 
     /**
-     * @param LiveBroadcast       $broadcast
-     * @param AbstractChannel     $channel
-     * @param ChannelApiInterface $api
+     * @param LiveBroadcast            $broadcast
+     * @param AbstractChannel          $channel
+     * @param ChannelApiInterface|null $api
      */
     private function attemptDeleteOnApi(LiveBroadcast $broadcast, AbstractChannel $channel, ChannelApiInterface $api = null): void
     {

@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -19,6 +18,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
+use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiInterface;
@@ -41,32 +41,6 @@ class BroadcastManagerTest extends TestCase
      * @var ChannelApiStack|MockObject
      */
     protected $stack;
-
-    /**
-     * Test connection keepalive method
-     */
-    public function testKeepConnectionAlive(): void
-    {
-        $connection = $this->createMock(Connection::class);
-        $connection->expects(self::atLeastOnce())
-            ->method('ping')
-            ->willReturn(false);
-        $connection->expects(self::atLeastOnce())
-            ->method('close')
-            ->willReturn(true);
-        $connection->expects(self::atLeastOnce())
-            ->method('connect')
-            ->willReturn(true);
-
-        /** @var MockObject|EntityManager $entityManager */
-        $entityManager = $this->createMock(EntityManager::class);
-        $entityManager->expects(self::atLeastOnce())
-            ->method('getConnection')
-            ->willReturn($connection);
-
-        $manager = new BroadcastManager($entityManager, $this->stack);
-        $manager->keepConnectionAlive();
-    }
 
     /**
      * Test getting a broadcast entity by id
@@ -135,7 +109,7 @@ class BroadcastManagerTest extends TestCase
 
         $broadcastNewState = $this->createMock(LiveBroadcast::class);
         $broadcastOldState = $this->createMock(LiveBroadcast::class);
-        $broadcastRepository = $this->createMock(EntityRepository::class);
+        $broadcastRepository = $this->createMock(LiveBroadcastRepository::class);
         $api = $this->createMock(FacebookApiService::class);
 
         $oldChannelList = new ArrayCollection();
@@ -188,7 +162,7 @@ class BroadcastManagerTest extends TestCase
     {
         $broadcast = $this->createMock(LiveBroadcast::class);
 
-        $broadcastRepository = $this->createMock(EntityRepository::class);
+        $broadcastRepository = $this->createMock(LiveBroadcastRepository::class);
         $broadcastRepository->expects(self::atLeastOnce())
             ->method('findOneBy')
             ->willReturn(null);
@@ -210,7 +184,7 @@ class BroadcastManagerTest extends TestCase
      */
     public function testPreDelete(): void
     {
-        $channels = [ $this->createMock(ChannelFacebook::class) ];
+        $channels = new ArrayCollection([ $this->createMock(ChannelFacebook::class) ]);
 
         $api = $this->createMock(ChannelApiInterface::class);
         $api->expects(self::once())
@@ -272,7 +246,7 @@ class BroadcastManagerTest extends TestCase
         $this->entityManager->expects(self::atLeastOnce())
             ->method('getRepository')
             ->with(StreamEvent::class)
-            ->willReturn($this->createMock(EntityRepository::class));
+            ->willReturn($this->createMock(StreamEventRepository::class));
 
         $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
         self::assertInstanceOf(EntityRepository::class, $broadcastManager->getEventsRepository());
