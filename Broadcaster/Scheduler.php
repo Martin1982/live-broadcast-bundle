@@ -73,7 +73,6 @@ class Scheduler
      */
     public function applySchedule(): void
     {
-        $this->broadcastManager->keepConnectionAlive();
         $this->validator->validate();
         $this->stopExpiredBroadcasts();
         $this->startPlannedBroadcasts();
