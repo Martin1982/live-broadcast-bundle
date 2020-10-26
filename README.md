@@ -19,9 +19,9 @@
 ## About
 
 The Live Broadcast Bundle will make it possible to plan live video streams to
-various channels like Twitch, YouTube Live, Facebook Live (referred to as Output or Channels).
+various websites/apps like Twitch, YouTube Live, Facebook Live.
 
-As "Input" we support files, URL's or existing RTMP streams.
+You are able to stream from various inputs. This package supports files, URL's or existing RTMP streams.
 
 For more info you can view the latest recorded presentation below, check the demo project at https://github.com/Martin1982/live-broadcast-demo or read on;
 
@@ -29,8 +29,10 @@ For more info you can view the latest recorded presentation below, check the dem
 
 ## Prerequisites
 
-The Broadcaster needs a few commands;
+To test these prerequisites the Symfony command `livebroadcaster:test:shell` can be used after the installation described below.
+If you like to check this manually the Broadcaster needs a few commands on an operating system;
 
+All OS's:
 * `ffmpeg 3.x or higher`
 
 On Linux:
@@ -46,8 +48,6 @@ On Windows:
 * `tasklist`
 * `taskkill`
 
-To test these prerequisites the Symfony command `livebroadcaster:test:shell` can be used after the installation described below.
-
 ## Basic installation
 
 This bundle is available on Packagist. You can then install it using Composer:
@@ -56,31 +56,19 @@ This bundle is available on Packagist. You can then install it using Composer:
 $ composer require martin1982/live-broadcast-bundle
 ```
 
-Next, for Symfony \< 4 enable the bundle in the kernel:
-
-``` php
-<?php
-// app/AppKernel.php
-
-public function registerBundles()
-{
-    $bundles = array(
-        // ...
-        new Martin1982\LiveBroadcastBundle\LiveBroadcastBundle(),
-    );
-}
-```
-
 Use Doctrine to update your database schema with the broadcasting entities, when upgrading it is recommended to use migrations.
 
 To start the broadcast scheduler you can run the following command:
 
 ```bash
-$ php app/console livebroadcaster:broadcast
+$ php bin/console livebroadcaster:broadcast
 ```
 
+To run the scheduler as a long-running process it's recommended to use the messenger middleware to keep the database
+connection alive as described at https://symfony.com/doc/current/messenger.html
+
 ### FFMpeg log directory
-To view the output of FFMpeg you need to configure a log directory in your `app/config/config.yml`.
+To view the output of FFMpeg you need to configure a log directory in your `config/packages/live_broadcast.yaml`.
  
      live_broadcast:
         ffmpeg:
@@ -98,7 +86,7 @@ Setup the following config for thumbnails:
     
     live_broadcast:
         thumbnail:
-            upload_directory: '%kernel.root_dir%/../web/uploads/thumbnails'
+            upload_directory: '%kernel.project_dir%/public/uploads/thumbnails'
             web_path: '/uploads/thumbnails'
 
 ## Enabling Facebook Live
@@ -111,7 +99,7 @@ Create a Facebook app on https://developers.facebook.com with the following perm
 - publish_actions
 - Live-Video API
 
-Edit your `app/config/config.yml` with the following configuration:
+Edit your `config/packages/live_broadcast.yaml` with the following configuration:
 
     live_broadcast:
         facebook:
@@ -141,7 +129,7 @@ Create a new Channel Entity in Entity/Channel that extends the AbstractChannel (
 
 Create a new StreamOutput service in Service/StreamOutput that implements the OutputInterface (e.g. OutputNew)
 
-Configure the service with the output tag in Resources/config/services.yml
+Configure the service with the output tag in config/services.yml
 
     live.broadcast.output.new:
         class: Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputNew
