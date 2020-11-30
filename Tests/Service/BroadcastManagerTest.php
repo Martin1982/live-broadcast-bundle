@@ -45,7 +45,7 @@ class BroadcastManagerTest extends TestCase
     /**
      * Test getting a broadcast entity by id
      */
-    public function testGetBroadcastByid(): void
+    public function testGetBroadcastById(): void
     {
         $broadcastEntity = $this->createMock(LiveBroadcast::class);
 
@@ -66,7 +66,7 @@ class BroadcastManagerTest extends TestCase
     }
 
     /**
-     * Test that preinserts get executed
+     * Test that pre-inserts get executed
      */
     public function testPreInsert(): void
     {
@@ -91,7 +91,7 @@ class BroadcastManagerTest extends TestCase
     }
 
     /**
-     * Test preupdate events
+     * Test pre-update events
      */
     public function testPreUpdate(): void
     {

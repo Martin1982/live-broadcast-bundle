@@ -23,7 +23,7 @@ class GoogleRedirectServiceTest extends TestCase
     /**
      * Test getting the redirect url
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testGetOAuthRedirectUrl(): void
     {

@@ -6,6 +6,7 @@
 namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,7 +22,7 @@ class ChannelValidatorService
     public const CHECK_INTERVAL = 15;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectRepository
+     * @var ObjectRepository
      */
     protected $channelRepository;
 

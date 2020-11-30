@@ -75,6 +75,7 @@ class OutputYouTubeTest extends TestCase
 
     /**
      * @throws LiveBroadcastOutputException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testGenerateOutputCmd(): void
     {

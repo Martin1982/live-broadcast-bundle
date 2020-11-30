@@ -217,6 +217,7 @@ class YouTubeApiServiceTest extends TestCase
      * Test getting a stream url
      *
      * @throws LiveBroadcastOutputException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testGetStreamUrl(): void
     {

@@ -328,8 +328,6 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test adding a thumbnail to a broadcast with an invalid thumbnail
-     *
-     * @throws LiveBroadcastOutputException
      */
     public function testAddThumbnailToBroadcastInvalidThumbnail(): void
     {
@@ -354,8 +352,6 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test adding a thumbnail to a broadcast
-     *
-     * @throws LiveBroadcastOutputException
      */
     public function testAddThumbnailToBroadcast(): void
     {
@@ -526,6 +522,8 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test getting a broadcast
+     *
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testGetYouTubeBroadcast(): void
     {

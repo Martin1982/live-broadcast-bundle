@@ -139,6 +139,7 @@ class YouTubeApiService implements ChannelApiInterface
      * @return string|null
      *
      * @throws LiveBroadcastOutputException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function getStreamUrl(LiveBroadcast $broadcast, AbstractChannel $channel): ?string
     {

@@ -23,7 +23,7 @@ class ChannelApiStackTest extends TestCase
     /**
      * Test that an API for a channel can be retrieved
      */
-    public function testgetApiForChannel(): void
+    public function testGetApiForChannel(): void
     {
         $youTubeChannel = new ChannelYouTube();
         $facebookChannel = new ChannelFacebook();

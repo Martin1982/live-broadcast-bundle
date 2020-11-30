@@ -55,6 +55,7 @@ class OutputYouTube extends AbstractOutput implements DynamicStreamUrlInterface
      * @return string
      *
      * @throws LiveBroadcastOutputException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function generateOutputCmd(): string
     {
@@ -84,6 +85,7 @@ class OutputYouTube extends AbstractOutput implements DynamicStreamUrlInterface
      * @return string
      *
      * @throws LiveBroadcastOutputException
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function getStreamUrl(): string
     {

@@ -115,8 +115,6 @@ class YouTubeClient
      * @param LiveBroadcast                         $plannedBroadcast
      *
      * @return bool
-     *
-     * @throws LiveBroadcastOutputException
      */
     public function addThumbnailToBroadcast(\Google_Service_YouTube_LiveBroadcast $youtubeBroadcast, LiveBroadcast $plannedBroadcast): bool
     {

@@ -33,8 +33,8 @@ class MediaRtmpTest extends TestCase
         $input = new MediaRtmp();
         self::assertEquals('', $input->getRtmpAddress());
 
-        $input->setRtmpAddress('rtmp://127.0.0.1/live/mystream');
-        self::assertEquals('127.0.0.1/live/mystream', $input->getRtmpAddress());
+        $input->setRtmpAddress('rtmp://127.0.0.1/live/my-stream');
+        self::assertEquals('127.0.0.1/live/my-stream', $input->getRtmpAddress());
 
         $input->setRtmpAddress('10.0.0.1/live/second');
         self::assertEquals('10.0.0.1/live/second', $input->getRtmpAddress());

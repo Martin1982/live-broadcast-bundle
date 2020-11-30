@@ -21,7 +21,7 @@ class StreamInputServiceTest extends TestCase
     /**
      * Test getting the input interface class
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
+     * @throws LiveBroadcastInputException
      */
     public function testGetInputInterface(): void
     {
