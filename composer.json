@@ -14,7 +14,7 @@
         "ext-fileinfo": "*",
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/orm": "^2.7",
-        "martin1982/facebook-graph-sdk": "^7.0",
+        "martin1982/facebook-graph-sdk": "^7.0.1",
         "google/apiclient-services": "~0.157",
         "google/apiclient": "^2.7",
         "psr/log": "^1.1",
