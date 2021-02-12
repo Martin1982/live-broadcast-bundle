@@ -11,10 +11,10 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Facebook\Authentication\AccessToken;
 use Facebook\Authentication\OAuth2Client;
-use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Exception\SDKException;
 use Facebook\Facebook as FacebookSDK;
-use Facebook\FacebookResponse;
-use Facebook\GraphNodes\GraphNode;
+use Facebook\Response;
+use Facebook\GraphNode\GraphNode;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -49,7 +49,7 @@ class FacebookApiServiceTest extends TestCase
         $liveBroadcast = $this->getLiveBroadcast();
         $channelFacebook = $this->getFacebookChannel();
 
-        $response = $this->createMock(FacebookResponse::class);
+        $response = $this->createMock(Response::class);
         $response->expects(self::atLeastOnce())
             ->method('getDecodedBody')
             ->willReturn([
@@ -120,7 +120,7 @@ class FacebookApiServiceTest extends TestCase
             ->willReturn(true);
         $sdk->expects(self::atLeastOnce())
             ->method('post')
-            ->willThrowException(new FacebookSDKException('error'));
+            ->willThrowException(new SDKException('error'));
 
         $facebook = $this->getFacebookApiService();
         $facebook->setFacebookSdk($sdk);
@@ -160,7 +160,7 @@ class FacebookApiServiceTest extends TestCase
         $sdk = $this->createMock(FacebookSDK::class);
         $sdk->expects(self::atLeastOnce())
             ->method('setDefaultAccessToken')
-            ->willThrowException(new FacebookSDKException('wrong token'));
+            ->willThrowException(new SDKException('wrong token'));
 
         $liveBroadcast = $this->createMock(LiveBroadcast::class);
         $liveBroadcast->expects(self::atLeastOnce())
@@ -197,7 +197,7 @@ class FacebookApiServiceTest extends TestCase
      */
     public function testUpdateStream(): void
     {
-        $response = $this->createMock(FacebookResponse::class);
+        $response = $this->createMock(Response::class);
 
         $channelFacebook = $this->createMock(ChannelFacebook::class);
         $channelFacebook->expects(self::atLeastOnce())
@@ -305,7 +305,7 @@ class FacebookApiServiceTest extends TestCase
         $sdk = $this->createMock(FacebookSDK::class);
         $sdk->expects(self::atLeastOnce())
             ->method('setDefaultAccessToken')
-            ->willThrowException(new FacebookSDKException('invalid token'));
+            ->willThrowException(new SDKException('invalid token'));
 
         $liveBroadcast = $this->createMock(LiveBroadcast::class);
 
@@ -405,7 +405,7 @@ class FacebookApiServiceTest extends TestCase
         $sdk = $this->createMock(FacebookSDK::class);
         $sdk->expects(self::atLeastOnce())
             ->method('getOAuth2Client')
-            ->willThrowException(new FacebookSDKException('no such client'));
+            ->willThrowException(new SDKException('no such client'));
 
         $facebook = $this->getFacebookApiService();
         $facebook->setFacebookSdk($sdk);
@@ -489,7 +489,7 @@ class FacebookApiServiceTest extends TestCase
         $sdk = $this->createMock(FacebookSDK::class);
         $sdk->expects(self::atLeastOnce())
             ->method('setDefaultAccessToken')
-            ->willThrowException(new FacebookSDKException('no token'));
+            ->willThrowException(new SDKException('no token'));
 
         $broadcast = $this->createMock(LiveBroadcast::class);
 
@@ -529,7 +529,7 @@ class FacebookApiServiceTest extends TestCase
             ->method('getField')
             ->willReturn('rtmp://some.url');
 
-        $response = $this->createMock(FacebookResponse::class);
+        $response = $this->createMock(Response::class);
         $response->expects(self::atLeastOnce())
             ->method('getGraphNode')
             ->willReturn($node);
@@ -597,7 +597,7 @@ class FacebookApiServiceTest extends TestCase
         $sdk = $this->createMock(FacebookSDK::class);
         $sdk->expects(self::atLeastOnce())
             ->method('post')
-            ->willThrowException(new FacebookSDKException('no such event'));
+            ->willThrowException(new SDKException('no such event'));
 
         $facebook = $this->getFacebookApiService();
         $facebook->setFacebookSdk($sdk);

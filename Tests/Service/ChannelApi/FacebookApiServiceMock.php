@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi;
 
-use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Exception\SDKException;
 use Facebook\Facebook as FacebookSDK;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 
@@ -19,12 +19,12 @@ class FacebookApiServiceMock extends FacebookApiService
     /**
      * @param FacebookSDK $sdk
      *
-     * @throws FacebookSDKException
+     * @throws SDKException
      */
     public function setFacebookSdk(FacebookSDK $sdk): void
     {
         if ($sdk) {
-            throw new FacebookSDKException('Something went wrong...');
+            throw new SDKException('Something went wrong...');
         }
     }
 }
