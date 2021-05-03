@@ -82,7 +82,7 @@ You can use this configuration to set the event loop timer:
             timer: 5
 
 ### Thumbnailer setup
-Setup the following config for thumbnails:
+Set up the following config for thumbnails:
     
     live_broadcast:
         thumbnail:
