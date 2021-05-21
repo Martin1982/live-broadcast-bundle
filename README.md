@@ -141,3 +141,7 @@ Configure the service with the output tag in config/services.yml
 This bundle comes without a web frontend interface, to make use of an admin package you can pick the one to your liking;
 * Sonata Admin: https://github.com/Martin1982/live-broadcast-sonata-admin-bundle
 * Easyadmin: https://github.com/Martin1982/live-broadcast-easyadmin-bundle
+
+# Sponsors
+
+* [Jetbrains](https://jb.gg/OpenSource)
