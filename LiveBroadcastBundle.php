@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class LiveBroadcastBundle
+ * Class LiveBroadcastBundle.
  */
 class LiveBroadcastBundle extends Bundle
 {
