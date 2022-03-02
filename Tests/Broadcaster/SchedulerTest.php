@@ -155,8 +155,7 @@ class SchedulerTest extends TestCase
             ->willReturn($eventsRepository);
 
         $this->logger->expects(self::atLeastOnce())
-            ->method('error')
-            ->willReturn(null);
+            ->method('error');
 
         $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
@@ -364,8 +363,7 @@ class SchedulerTest extends TestCase
             ->willThrowException(new \Exception('Something went wrong'));
 
         $this->logger->expects(self::atLeastOnce())
-            ->method('error')
-            ->willReturn(null);
+            ->method('error');
 
         $scheduler = $this->getScheduler();
         $scheduler->applySchedule();
