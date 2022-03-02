@@ -11,11 +11,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: zip
+
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Install dependencies
+      - name: Update dependencies
         run: composer update --prefer-dist --no-progress --no-suggest
 
       - name: Find and report outdated dependencies
-        run: composer outdated --direct --strict
+        run: composer outdated --strict --direct
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          file_pattern: composer.lock
