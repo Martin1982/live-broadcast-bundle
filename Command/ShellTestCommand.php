@@ -21,17 +21,17 @@ class ShellTestCommand extends Command
     /**
      * @var bool
      */
-    private $isWindows = false;
+    private bool $isWindows = false;
 
     /**
      * @var bool
      */
-    private $isMac = false;
+    private bool $isMac = false;
 
     /**
      * @var bool
      */
-    private $isLinux = false;
+    private bool $isLinux = false;
 
     /**
      * @var string
@@ -51,7 +51,7 @@ class ShellTestCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         switch (strtoupper(substr(PHP_OS, 0, 3))) {
             case 'WIN':
@@ -89,6 +89,8 @@ class ShellTestCommand extends Command
             $output->write('Checking \'grep\' command availability... ');
             $this->testGrep($output);
         }
+
+        return 0;
     }
 
     /**
@@ -164,7 +166,7 @@ class ShellTestCommand extends Command
      * @param string          $testable
      * @param OutputInterface $output
      */
-    protected function analyseResult($cmdResult, $testable, OutputInterface $output): void
+    protected function analyseResult(array $cmdResult, string $testable, OutputInterface $output): void
     {
         if (count($cmdResult) && 0 !== preg_match('/'.$testable.'/', implode($cmdResult))) {
             $output->writeln('<info>[OK]</info>');

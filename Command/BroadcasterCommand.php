@@ -9,7 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Command;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler;
 use Psr\Log\LoggerInterface;
-use React\EventLoop\Factory;
+use React\EventLoop\Loop;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,17 +24,17 @@ class BroadcasterCommand extends Command
     /**
      * @var Scheduler
      */
-    private $scheduler;
+    private Scheduler $scheduler;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var int
      */
-    private $eventLoopTimer;
+    private int $eventLoopTimer;
 
     /**
      * @var string
@@ -47,7 +47,7 @@ class BroadcasterCommand extends Command
      * @param int             $eventLoopTimer
      *
      */
-    public function __construct(Scheduler $scheduler, LoggerInterface $logger, $eventLoopTimer = 10)
+    public function __construct(Scheduler $scheduler, LoggerInterface $logger, int $eventLoopTimer = 10)
     {
         $this->scheduler = $scheduler;
         $this->logger = $logger;
@@ -69,11 +69,11 @@ class BroadcasterCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $scheduler = $this->scheduler;
 
-        $eventLoop = Factory::create();
+        $eventLoop = Loop::get();
         $eventLoop->addPeriodicTimer(
             $this->eventLoopTimer,
             function () use ($scheduler) {
@@ -86,5 +86,7 @@ class BroadcasterCommand extends Command
         );
 
         $eventLoop->run();
+
+        return 0;
     }
 }
