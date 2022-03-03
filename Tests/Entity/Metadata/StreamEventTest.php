@@ -20,12 +20,10 @@ class StreamEventTest extends TestCase
     /**
      * @var StreamEvent
      */
-    private $streamEvent;
+    private StreamEvent $streamEvent;
 
     /**
      * Setup default test object
-     *
-     * @throws \ReflectionException
      */
     public function setUp(): void
     {

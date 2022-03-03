@@ -55,6 +55,6 @@ class ChannelTwitchTest extends TestCase
         $channel = new ChannelTwitch();
         $configuration = [];
 
-        self::assertTrue($channel::isEntityConfigured($configuration));
+        self::assertFalse($channel::isEntityConfigured($configuration));
     }
 }

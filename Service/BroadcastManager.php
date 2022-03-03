@@ -9,9 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
+use Doctrine\ORM\Exception\ORMException;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -31,12 +29,12 @@ class BroadcastManager
     /**
      * @var EntityManager
      */
-    protected $entityManager;
+    protected EntityManager $entityManager;
 
     /**
      * @var ChannelApiStack
      */
-    protected $apiStack;
+    protected ChannelApiStack $apiStack;
 
     /**
      * BroadcastManager constructor
@@ -51,7 +49,7 @@ class BroadcastManager
     }
 
     /**
-     * Get a broadcast by it's id
+     * Get a broadcast by its id
      *
      * @param string|int $broadcastId
      *
@@ -59,13 +57,12 @@ class BroadcastManager
      */
     public function getBroadcastById($broadcastId)
     {
-        $broadcastRepository = $this->getBroadcastsRepository();
-
-        return $broadcastRepository->findOneBy([ 'broadcastId' => (int) $broadcastId ]);
+        return $this->getBroadcastsRepository()
+            ->findOneBy([ 'broadcastId' => (int) $broadcastId ]);
     }
 
     /**
-     * Retrieve a channel by it's id
+     * Retrieve a channel by its id
      *
      * @param int $id
      *
@@ -73,9 +70,9 @@ class BroadcastManager
      */
     public function getChannelById(int $id): ?AbstractChannel
     {
-        $repository = $this->entityManager->getRepository(AbstractChannel::class);
-
-        return $repository->find($id);
+        return $this->entityManager
+            ->getRepository(AbstractChannel::class)
+            ->find($id);
     }
 
     /**
@@ -137,17 +134,17 @@ class BroadcastManager
     }
 
     /**
-     * Send a end signal for a broadcast's stream
+     * Send an end signal for a broadcast's stream
      *
      * @param StreamEvent $event
      *
-     * @throws LiveBroadcastException
+     * @throws LiveBroadcastException|\Doctrine\ORM\ORMException
      */
     public function sendEndSignal(StreamEvent $event): void
     {
         $channel = $event->getChannel();
 
-        if ($channel && $channel instanceof PlannedChannelInterface) {
+        if ($channel instanceof PlannedChannelInterface) {
             $api = $this->apiStack->getApiForChannel($channel);
 
             if ($api) {
@@ -158,10 +155,6 @@ class BroadcastManager
                     $this->entityManager->flush();
 
                     $api->sendEndSignal($channel, $event->getExternalStreamId());
-                } catch (OptimisticLockException $exception) {
-                    throw new LiveBroadcastException(sprintf('Couldn\'t save broadcast end: %s', $exception->getMessage()));
-                } catch (ORMInvalidArgumentException $exception) {
-                    throw new LiveBroadcastException(sprintf('Couldn\'t save broadcast end: %s', $exception->getMessage()));
                 } catch (ORMException $exception) {
                     throw new LiveBroadcastException(sprintf('Couldn\'t save broadcast end: %s', $exception->getMessage()));
                 }

@@ -20,7 +20,7 @@ class InputUrlTest extends TestCase
     /**
      * @var InputUrl
      */
-    private $inputUrl;
+    private InputUrl $inputUrl;
 
     /**
      *

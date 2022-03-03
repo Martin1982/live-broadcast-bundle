@@ -19,22 +19,22 @@ class GoogleClient
     /**
      * @var array
      */
-    public $scope = [\Google_Service_YouTube::YOUTUBE];
+    public array $scope = [\Google_Service_YouTube::YOUTUBE];
 
     /**
      * @var GoogleConfig
      */
-    protected $config;
+    protected GoogleConfig $config;
 
     /**
      * @var GoogleRedirectService
      */
-    protected $redirect;
+    protected GoogleRedirectService $redirect;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * GoogleClient constructor.

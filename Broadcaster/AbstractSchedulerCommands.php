@@ -25,24 +25,24 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      *
      * @var string|null
      */
-    protected $kernelEnvironment;
+    protected ?string $kernelEnvironment;
 
     /**
      * Directory to store FFMpeg logs
      *
      * @var string
      */
-    protected $logDirectoryFFMpeg = '';
+    protected string $logDirectoryFFMpeg = '';
 
     /**
      * @var bool Can the input be looped
      */
-    protected $looping = false;
+    protected bool $looping = false;
 
     /**
      * @var string
      */
-    protected $rootDir;
+    protected string $rootDir;
 
     /**
      * SchedulerCommands constructor.
@@ -60,7 +60,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      *
      * @throws \Exception
      */
-    public function startProcess($input, $output, $metadata): string
+    public function startProcess(string $input, string $output, array $metadata): string
     {
         $meta = '';
         $metadata['env'] = $this->getKernelEnvironment();
@@ -76,7 +76,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      * {@inheritdoc}
      * @throws LiveBroadcastException
      */
-    public function stopProcess($pid): string
+    public function stopProcess(int $pid): string
     {
         throw new LiveBroadcastException('stopProcess Cannot be called on the abstract class');
     }
@@ -93,7 +93,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function getProcessId($processString): ?int
+    public function getProcessId(string $processString): ?int
     {
         $pid = [];
         preg_match('/^\s*([\d]+)/', $processString, $pid);
@@ -107,7 +107,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function getBroadcastId($processString): ?int
+    public function getBroadcastId(string $processString): ?int
     {
         $value = $this->getMetadataValue($processString, self::METADATA_BROADCAST);
 
@@ -117,7 +117,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function getChannelId($processString): ?int
+    public function getChannelId(string $processString): ?int
     {
         $value = $this->getMetadataValue($processString, self::METADATA_CHANNEL);
 
@@ -127,7 +127,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * {@inheritdoc}
      */
-    public function getEnvironment($processString): ?string
+    public function getEnvironment(string $processString): ?string
     {
         return $this->getMetadataValue($processString, self::METADATA_ENVIRONMENT);
     }
@@ -143,9 +143,9 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * @param string $directory
      */
-    public function setFFMpegLogDirectory($directory): void
+    public function setFFMpegLogDirectory(string $directory): void
     {
-        if (null === $directory || !is_writable($directory)) {
+        if (!is_writable($directory)) {
             return;
         }
 
@@ -155,9 +155,9 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     /**
      * @param bool $looping
      */
-    public function setLooping($looping): void
+    public function setLooping(bool $looping): void
     {
-        $this->looping = (bool) $looping;
+        $this->looping = $looping;
     }
 
     /**
@@ -179,7 +179,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      *
      * @throws \Exception
      */
-    protected function execStreamCommand($input, $output, $meta): string
+    protected function execStreamCommand(string $input, string $output, string $meta): string
     {
         $logFile = '/dev/null';
         $loop = '';
@@ -205,7 +205,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      *
      * @return array
      */
-    protected function readMetadata($processString): array
+    protected function readMetadata(string $processString): array
     {
         $metadata = [];
         $processMetadata = [];
@@ -227,7 +227,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      *
      * @return mixed
      */
-    private function getMetadataValue($processString, $metadataKey)
+    private function getMetadataValue(string $processString, string $metadataKey)
     {
         $metadata = $this->readMetadata($processString);
 

@@ -26,7 +26,7 @@ abstract class AbstractMedia
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $inputId;
+    protected ?int $inputId = null;
 
     /**
      * @return int|null

@@ -18,7 +18,7 @@ class YouTubeConfigTest extends TestCase
     /**
      * @var YouTubeConfig
      */
-    protected $config;
+    protected YouTubeConfig $config;
 
     /**
      * Test getting the host

@@ -23,12 +23,12 @@ class StreamAnnouncementListener
     /**
      * @var BroadcastManager
      */
-    protected $broadcastManager;
+    protected BroadcastManager $broadcastManager;
 
     /**
      * @var MessageBusInterface
      */
-    protected $bus;
+    protected MessageBusInterface $bus;
 
     /**
      * StreamAnnouncementListener constructor.
@@ -90,7 +90,7 @@ class StreamAnnouncementListener
     /**
      * Get the live broadcast when available
      *
-     * @param \stdClass $object
+     * @param mixed $object
      *
      * @return LiveBroadcast|null
      */

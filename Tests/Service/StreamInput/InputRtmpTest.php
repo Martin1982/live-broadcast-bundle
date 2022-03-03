@@ -23,7 +23,7 @@ class InputRtmpTest extends TestCase
     /**
      * @var InputRtmp
      */
-    private $serverAddress;
+    private InputRtmp $serverAddress;
 
     /**
      * Setup a basic RTMP object

@@ -25,7 +25,7 @@ class ChannelFacebook extends AbstractChannel implements PlannedChannelInterface
      *
      * @Assert\NotBlank
      */
-    protected $accessToken;
+    protected ?string $accessToken = null;
 
     /**
      * @var string|null
@@ -34,7 +34,7 @@ class ChannelFacebook extends AbstractChannel implements PlannedChannelInterface
      *
      * @Assert\NotBlank
      */
-    protected $fbEntityId;
+    protected ?string $fbEntityId = null;
 
     /**
      * @return string|null
@@ -45,11 +45,11 @@ class ChannelFacebook extends AbstractChannel implements PlannedChannelInterface
     }
 
     /**
-     * @param string $accessToken
+     * @param string|null $accessToken
      *
      * @return ChannelFacebook
      */
-    public function setAccessToken($accessToken): ChannelFacebook
+    public function setAccessToken(?string $accessToken): ChannelFacebook
     {
         $this->accessToken = $accessToken;
 
@@ -65,11 +65,11 @@ class ChannelFacebook extends AbstractChannel implements PlannedChannelInterface
     }
 
     /**
-     * @param string $fbEntityId
+     * @param string|null $fbEntityId
      *
      * @return ChannelFacebook
      */
-    public function setFbEntityId($fbEntityId): ChannelFacebook
+    public function setFbEntityId(?string $fbEntityId): ChannelFacebook
     {
         $this->fbEntityId = $fbEntityId;
 

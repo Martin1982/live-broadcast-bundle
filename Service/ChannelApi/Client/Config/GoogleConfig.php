@@ -13,14 +13,14 @@ namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config;
 class GoogleConfig
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $clientId;
+    protected ?string $clientId = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $clientSecret;
+    protected ?string $clientSecret = null;
 
     /**
      * GoogleConfig constructor

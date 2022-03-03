@@ -17,7 +17,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
     /**
      * {@inheritdoc}
      */
-    public function stopProcess($pid): string
+    public function stopProcess(int $pid): string
     {
         return exec(sprintf('START /B TASKKILL /PID %d /T', $pid));
     }
@@ -41,7 +41,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
      *
      * @return string
      */
-    protected function execStreamCommand($input, $output, $meta): string
+    protected function execStreamCommand(string $input, string $output, string $meta): string
     {
         $loop = '';
 

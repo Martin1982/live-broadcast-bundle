@@ -19,13 +19,13 @@ class StreamOutputService
     /**
      * @var OutputInterface[]
      */
-    private $streamOutputs = [];
+    private array $streamOutputs = [];
 
     /**
      * @param OutputInterface $streamOutput
      * @param string          $platform
      */
-    public function addStreamOutput(OutputInterface $streamOutput, $platform): void
+    public function addStreamOutput(OutputInterface $streamOutput, string $platform): void
     {
         $this->streamOutputs[$platform] = $streamOutput;
     }

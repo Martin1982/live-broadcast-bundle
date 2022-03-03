@@ -26,7 +26,7 @@ class StreamEvent
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $eventId;
+    private ?int $eventId = null;
 
     /**
      * @var LiveBroadcast|null
@@ -34,7 +34,7 @@ class StreamEvent
      * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast")
      * @ORM\JoinColumn(name="broadcast_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
      */
-    protected $broadcast;
+    protected ?LiveBroadcast $broadcast;
 
     /**
      * @var AbstractChannel|null
@@ -42,21 +42,21 @@ class StreamEvent
      * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel")
      * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
      */
-    protected $channel;
+    protected ?AbstractChannel $channel;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="external_stream_id", type="string", length=128, nullable=false)
      */
-    protected $externalStreamId;
+    protected ?string $externalStreamId = null;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="end_signal_sent", type="boolean", nullable=true)
      */
-    protected $endSignalSent = false;
+    protected bool $endSignalSent = false;
 
     /**
      * @return int|null
@@ -115,11 +115,11 @@ class StreamEvent
     }
 
     /**
-     * @param string $externalStreamId
+     * @param string|null $externalStreamId
      *
      * @return StreamEvent
      */
-    public function setExternalStreamId($externalStreamId): StreamEvent
+    public function setExternalStreamId(?string $externalStreamId): StreamEvent
     {
         $this->externalStreamId = $externalStreamId;
 

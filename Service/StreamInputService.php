@@ -19,13 +19,13 @@ class StreamInputService
     /**
      * @var InputInterface[]
      */
-    private $streamInputs = [];
+    private array $streamInputs = [];
 
     /**
      * @param InputInterface $streamInput
      * @param string         $media
      */
-    public function addStreamInput(InputInterface $streamInput, $media): void
+    public function addStreamInput(InputInterface $streamInput, string $media): void
     {
         $this->streamInputs[$media] = $streamInput;
     }

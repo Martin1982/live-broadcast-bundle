@@ -25,7 +25,7 @@ class MediaFile extends AbstractMedia
      *
      * @Assert\File()
      */
-    protected $fileLocation;
+    protected ?string $fileLocation = null;
 
     /**
      * @return string|null
@@ -36,11 +36,11 @@ class MediaFile extends AbstractMedia
     }
 
     /**
-     * @param string $fileLocation
+     * @param string|null $fileLocation
      *
      * @return MediaFile
      */
-    public function setFileLocation($fileLocation): MediaFile
+    public function setFileLocation(?string $fileLocation): MediaFile
     {
         $this->fileLocation = $fileLocation;
 

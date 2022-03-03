@@ -18,7 +18,7 @@ class StreamServiceAnnouncementHandler implements MessageHandlerInterface
     /**
      * @var BroadcastManager
      */
-    private $manager;
+    private BroadcastManager $manager;
 
     /**
      * StreamServiceAnnouncementHandler constructor.

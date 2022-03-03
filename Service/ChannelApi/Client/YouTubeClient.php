@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client;
 
+use DateTimeInterface;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
@@ -23,17 +24,17 @@ class YouTubeClient
     /**
      * @var YouTubeConfig
      */
-    protected $config;
+    protected YouTubeConfig $config;
 
     /**
      * @var GoogleClient
      */
-    protected $googleClient;
+    protected GoogleClient $googleClient;
 
     /**
      * @var \Google_Service_YouTube|null
      */
-    protected $youTubeClient;
+    protected ?\Google_Service_YouTube $youTubeClient = null;
 
     /**
      * YouTubeClient constructor
@@ -124,7 +125,7 @@ class YouTubeClient
             return false;
         }
 
-        $chunkSizeBytes = (1 * 1024 * 1024);
+        $chunkSizeBytes = (1024 * 1024);
         $client = $this->youTubeClient->getClient();
 
         if (!$client) {
@@ -294,7 +295,7 @@ class YouTubeClient
      *
      * @return string|null
      */
-    public function getStreamUrl($streamId): ?string
+    public function getStreamUrl(string $streamId): ?string
     {
         /** @var \Google_Service_YouTube_LiveStream $stream */
         $stream = $this->youTubeClient
@@ -313,9 +314,9 @@ class YouTubeClient
     /**
      * Get a list of live streams
      *
-     * @return mixed
+     * @return array
      */
-    public function getStreamsList()
+    public function getStreamsList(): array
     {
         $response = $this->youTubeClient
             ->liveBroadcasts
@@ -344,8 +345,8 @@ class YouTubeClient
         $broadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet();
         $broadcastSnippet->setTitle($plannedBroadcast->getName());
         $broadcastSnippet->setDescription($plannedBroadcast->getDescription());
-        $broadcastSnippet->setScheduledStartTime($start->format(\DateTime::ATOM));
-        $broadcastSnippet->setScheduledEndTime($plannedBroadcast->getEndTimestamp()->format(\DateTime::ATOM));
+        $broadcastSnippet->setScheduledStartTime($start->format(DateTimeInterface::ATOM));
+        $broadcastSnippet->setScheduledEndTime($plannedBroadcast->getEndTimestamp()->format(DateTimeInterface::ATOM));
 
         return $broadcastSnippet;
     }

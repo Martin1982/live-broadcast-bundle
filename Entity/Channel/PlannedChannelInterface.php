@@ -12,5 +12,4 @@ namespace Martin1982\LiveBroadcastBundle\Entity\Channel;
  */
 interface PlannedChannelInterface
 {
-
 }

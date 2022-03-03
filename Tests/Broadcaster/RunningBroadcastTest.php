@@ -34,19 +34,19 @@ class RunningBroadcastTest extends TestCase
      */
     public function testIsValid(): void
     {
-        $running = new RunningBroadcast(null, null, null, null);
+        $running = new RunningBroadcast(0, 0, 0, 'test');
         self::assertFalse($running->isValid(''));
 
-        $running = new RunningBroadcast(1, null, null, null);
+        $running = new RunningBroadcast(1, 0, 0, 'test');
         self::assertFalse($running->isValid(''));
 
-        $running = new RunningBroadcast(null, 2, null, null);
+        $running = new RunningBroadcast(0, 2, 0, 'test');
         self::assertFalse($running->isValid(''));
 
-        $running = new RunningBroadcast(null, 2, 3, null);
+        $running = new RunningBroadcast(0, 2, 3, 'test');
         self::assertFalse($running->isValid(''));
 
-        $running = new RunningBroadcast(1, 2, null, null);
+        $running = new RunningBroadcast(1, 2, 0, 'test');
         self::assertFalse($running->isValid(''));
 
         $running = new RunningBroadcast(1, 2, 3, 'unit');
@@ -58,13 +58,11 @@ class RunningBroadcastTest extends TestCase
 
     /**
      * Test the isBroadcasting method
-     *
-     * @throws \ReflectionException
      */
     public function testIsBroadcasting(): void
     {
         /* Create a running broadcast with string values as id's */
-        $running = new RunningBroadcast('5', '2', '6', 'test');
+        $running = new RunningBroadcast(5, 2, 6, 'test');
 
         $liveBroadcast = $this->getLiveBroadcast(5);
         $channel = $this->getChannelTwitch(6);
@@ -86,10 +84,8 @@ class RunningBroadcastTest extends TestCase
      * @param int $channelId
      *
      * @return ChannelTwitch
-     *
-     * @throws \ReflectionException
      */
-    private function getChannelTwitch($channelId): ChannelTwitch
+    private function getChannelTwitch(int $channelId): ChannelTwitch
     {
         $channel = new ChannelTwitch();
         $reflection = new \ReflectionClass($channel);
@@ -104,10 +100,8 @@ class RunningBroadcastTest extends TestCase
      * @param int $broadcastId
      *
      * @return LiveBroadcast
-     *
-     * @throws \ReflectionException
      */
-    private function getLiveBroadcast($broadcastId): LiveBroadcast
+    private function getLiveBroadcast(int $broadcastId): LiveBroadcast
     {
         $liveBroadcast = new LiveBroadcast();
         $reflection = new \ReflectionClass($liveBroadcast);

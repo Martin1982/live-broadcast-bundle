@@ -20,17 +20,17 @@ class BroadcastStarter
     /**
      * @var StreamInputService
      */
-    protected $inputService;
+    protected StreamInputService $inputService;
 
     /**
      * @var StreamOutputService
      */
-    protected $outputService;
+    protected StreamOutputService $outputService;
 
     /**
      * @var SchedulerCommandsInterface
      */
-    protected $commands;
+    protected SchedulerCommandsInterface $commands;
 
     /**
      * BroadcastStarter constructor

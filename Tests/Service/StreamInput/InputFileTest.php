@@ -20,7 +20,7 @@ class InputFileTest extends TestCase
     /**
      * @var InputFile
      */
-    private $file;
+    private InputFile $file;
 
     /**
      *

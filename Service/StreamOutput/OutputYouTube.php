@@ -6,6 +6,7 @@
  */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
@@ -17,19 +18,19 @@ use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 class OutputYouTube extends AbstractOutput implements DynamicStreamUrlInterface
 {
     /**
-     * @var ChannelYouTube
+     * @var ChannelYouTube|AbstractChannel|null
      */
-    protected $channel;
+    protected ?AbstractChannel $channel = null;
 
     /**
      * @var YouTubeApiService
      */
-    protected $api;
+    protected YouTubeApiService $api;
 
     /**
      * @var LiveBroadcast|null
      */
-    protected $broadcast;
+    protected ?LiveBroadcast $broadcast = null;
 
     /**
      * OutputYouTube constructor

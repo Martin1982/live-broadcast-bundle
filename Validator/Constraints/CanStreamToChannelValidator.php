@@ -21,7 +21,7 @@ class CanStreamToChannelValidator extends ConstraintValidator
     /**
      * @var StreamOutputService
      */
-    public $outputService;
+    public StreamOutputService $outputService;
 
     /**
      * CanStreamToChannelValidator constructor.
@@ -36,28 +36,28 @@ class CanStreamToChannelValidator extends ConstraintValidator
     /**
      * Validate streaming to a channel
      *
-     * @param AbstractChannel $channel
+     * @param AbstractChannel $value
      * @param Constraint      $constraint
      */
-    public function validate($channel, Constraint $constraint): void
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof CanStreamToChannel) {
             throw new UnexpectedTypeException($constraint, CanStreamToChannel::class);
         }
 
-        if (null === $channel || '' === $channel) {
+        if (null === $value || '' === $value) {
             return;
         }
 
-        if (!$channel instanceof AbstractChannel) {
-            throw new UnexpectedValueException($channel, AbstractChannel::class);
+        if (!$value instanceof AbstractChannel) {
+            throw new UnexpectedValueException($value, AbstractChannel::class);
         }
 
         // validate abstract channel
         try {
-            $hasOutput = $this->outputService->testOutput($channel);
+            $hasOutput = $this->outputService->testOutput($value);
             if (false === $hasOutput) {
-                throw new LiveBroadcastOutputException(sprintf('Channel \'%s\' is no longer valid...', $channel->getChannelName()));
+                throw new LiveBroadcastOutputException(sprintf('Channel \'%s\' is no longer valid...', $value->getChannelName()));
             }
         } catch (\Exception $exception) {
             $this->context->buildViolation($constraint->message)
@@ -68,6 +68,6 @@ class CanStreamToChannelValidator extends ConstraintValidator
             return;
         }
 
-        $channel->setIsHealthy(true);
+        $value->setIsHealthy(true);
     }
 }

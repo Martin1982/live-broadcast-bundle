@@ -32,7 +32,7 @@ class ThumbnailUploadListenerTest extends TestCase
     /**
      * @var ThumbnailUploadListener
      */
-    private $eventListener;
+    private ThumbnailUploadListener $eventListener;
 
     /**
      *

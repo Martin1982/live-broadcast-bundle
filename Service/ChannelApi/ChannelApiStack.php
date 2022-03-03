@@ -19,7 +19,7 @@ class ChannelApiStack
     /**
      * @var ChannelApiInterface[]
      */
-    private $apis = [];
+    private array $apis = [];
 
     /**
      * @param ChannelApiInterface $api
@@ -59,7 +59,7 @@ class ChannelApiStack
      *
      * @return ChannelApiInterface|null
      */
-    protected function findServiceObject($className): ?ChannelApiInterface
+    protected function findServiceObject(string $className): ?ChannelApiInterface
     {
         $serviceApi = null;
 

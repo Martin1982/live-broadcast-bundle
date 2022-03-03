@@ -24,27 +24,27 @@ class Scheduler
     /**
      * @var ChannelValidatorService
      */
-    protected $validator;
+    protected ChannelValidatorService $validator;
 
     /**
      * @var BroadcastStarter
      */
-    protected $starter;
+    protected BroadcastStarter $starter;
 
     /**
      * @var BroadcastManager
      */
-    protected $broadcastManager;
+    protected BroadcastManager $broadcastManager;
 
     /**
      * @var SchedulerCommandsInterface
      */
-    protected $schedulerCommands;
+    protected SchedulerCommandsInterface $schedulerCommands;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * Scheduler constructor
@@ -211,7 +211,7 @@ class Scheduler
     }
 
     /**
-     * Send end signals to channels where broadcasts ended
+     * Send end signals to the channels where broadcasts ended
      *
      * @throws LiveBroadcastException
      * @throws \Exception

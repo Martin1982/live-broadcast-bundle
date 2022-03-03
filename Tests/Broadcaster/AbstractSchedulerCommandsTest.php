@@ -24,7 +24,7 @@ class AbstractSchedulerCommandsTest extends TestCase
     private $schedulerCommands;
 
     /**
-     * Setup a basic test object
+     * Set up a basic test object
      */
     public function setUp(): void
     {
@@ -57,8 +57,6 @@ class AbstractSchedulerCommandsTest extends TestCase
 
     /**
      * Test the FFMPEG log directory setter
-     *
-     * @throws \ReflectionException
      */
     public function testFFMpegLogDirectory(): void
     {
@@ -74,7 +72,7 @@ class AbstractSchedulerCommandsTest extends TestCase
     }
 
     /**
-     * Test if a stream can looped
+     * Test if a stream can loop
      */
     public function testLooping(): void
     {

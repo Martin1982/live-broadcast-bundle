@@ -22,7 +22,7 @@ class ThumbnailUploadListener
     /**
      * @var ThumbnailUploadService
      */
-    private $uploadService;
+    private ThumbnailUploadService $uploadService;
 
     /**
      * ThumbnailUploadListener constructor.
@@ -68,7 +68,7 @@ class ThumbnailUploadListener
 
         $thumbnail = (string) $entity->getThumbnail();
 
-        if (null !== $thumbnail) {
+        if ('' !== $thumbnail) {
             $entity->setThumbnail(
                 new File($thumbnail, false)
             );

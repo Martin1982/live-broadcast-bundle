@@ -21,7 +21,7 @@ class AddStreamOutputPassTest extends TestCase
     /**
      * @var AddStreamOutputPass
      */
-    private $compilerPass;
+    private AddStreamOutputPass $compilerPass;
 
     /**
      *

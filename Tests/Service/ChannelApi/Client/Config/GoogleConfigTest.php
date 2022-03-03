@@ -18,7 +18,7 @@ class GoogleConfigTest extends TestCase
     /**
      * @var GoogleConfig
      */
-    protected $defaultConfig;
+    protected GoogleConfig $defaultConfig;
 
     /**
      * Test getting the client id

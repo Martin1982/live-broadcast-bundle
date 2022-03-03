@@ -34,7 +34,7 @@ class LiveBroadcast
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $broadcastId;
+    private ?int $broadcastId = null;
 
     /**
      * @var string|null
@@ -43,14 +43,14 @@ class LiveBroadcast
      *
      * @Assert\NotBlank
      */
-    private $name;
+    private ?string $name = null;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="description", type="text", length=65535, nullable=true)
      */
-    private $description;
+    private ?string $description = null;
 
     /**
      * @var UploadedFile|File|null
@@ -67,7 +67,7 @@ class LiveBroadcast
      * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia")
      * @ORM\JoinColumn(name="input_id", referencedColumnName="id")
      */
-    private $input;
+    private ?AbstractMedia $input;
 
     /**
      * @var \DateTime
@@ -76,7 +76,7 @@ class LiveBroadcast
      *
      * @Assert\GreaterThan("+30 seconds")
      */
-    private $startTimestamp;
+    private \DateTime $startTimestamp;
 
     /**
      * @var \DateTime
@@ -85,21 +85,21 @@ class LiveBroadcast
      *
      * @Assert\GreaterThan("+1 minute")
      */
-    private $endTimestamp;
+    private \DateTime $endTimestamp;
 
     /**
      * @var int
      *
      * @ORM\Column(name="privacy_status", type="integer", options={"default": 0})
      */
-    private $privacyStatus = self::PRIVACY_STATUS_PUBLIC;
+    private int $privacyStatus = self::PRIVACY_STATUS_PUBLIC;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="stop_on_end_timestamp", type="boolean", nullable=false)
      */
-    private $stopOnEndTimestamp = true;
+    private bool $stopOnEndTimestamp = true;
 
     /**
      * @var AbstractChannel[]
@@ -149,11 +149,11 @@ class LiveBroadcast
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      *
      * @return LiveBroadcast
      */
-    public function setName($name): LiveBroadcast
+    public function setName(?string $name): LiveBroadcast
     {
         $this->name = $name;
 
@@ -169,11 +169,11 @@ class LiveBroadcast
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      *
      * @return LiveBroadcast
      */
-    public function setDescription($description): LiveBroadcast
+    public function setDescription(?string $description): LiveBroadcast
     {
         $this->description = $description;
 
@@ -213,7 +213,7 @@ class LiveBroadcast
      *
      * @return LiveBroadcast
      */
-    public function setStartTimestamp($startTimestamp): LiveBroadcast
+    public function setStartTimestamp(\DateTime $startTimestamp): LiveBroadcast
     {
         $this->startTimestamp = $startTimestamp;
 
@@ -233,7 +233,7 @@ class LiveBroadcast
      *
      * @return LiveBroadcast
      */
-    public function setEndTimestamp($endTimestamp): LiveBroadcast
+    public function setEndTimestamp(\DateTime $endTimestamp): LiveBroadcast
     {
         $this->endTimestamp = $endTimestamp;
 
@@ -245,7 +245,7 @@ class LiveBroadcast
      *
      * @return LiveBroadcast
      */
-    public function setOutputChannels($channels): self
+    public function setOutputChannels(array $channels = []): self
     {
         if (count($channels) > 0) {
             foreach ($channels as $channel) {
@@ -321,7 +321,7 @@ class LiveBroadcast
      *
      * @return LiveBroadcast
      */
-    public function setStopOnEndTimestamp($stopOnEndTimestamp): LiveBroadcast
+    public function setStopOnEndTimestamp(bool $stopOnEndTimestamp): LiveBroadcast
     {
         $this->stopOnEndTimestamp = $stopOnEndTimestamp;
 

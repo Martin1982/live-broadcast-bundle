@@ -393,7 +393,7 @@ class FacebookApiServiceTest extends TestCase
 
         $facebook = $this->getFacebookApiService();
         $facebook->setFacebookSdk($sdk);
-        $facebook->getLongLivedAccessToken(false);
+        $facebook->getLongLivedAccessToken('');
     }
 
     /**
@@ -409,7 +409,7 @@ class FacebookApiServiceTest extends TestCase
 
         $facebook = $this->getFacebookApiService();
         $facebook->setFacebookSdk($sdk);
-        $facebook->getLongLivedAccessToken('abcdef');
+        $facebook->getLongLivedAccessToken('a_token');
     }
 
     /**
@@ -431,11 +431,11 @@ class FacebookApiServiceTest extends TestCase
 
         $facebook = $this->getFacebookApiService();
         $facebook->setFacebookSdk($sdk);
-        $facebook->getLongLivedAccessToken('ddadsa');
+        $facebook->getLongLivedAccessToken('token');
     }
 
     /**
-     * Test that this method doesn't do anything with a incompatible channel
+     * Test that this method doesn't do anything with an incompatible channel
      *
      * @throws LiveBroadcastOutputException
      */
@@ -496,7 +496,7 @@ class FacebookApiServiceTest extends TestCase
         $channel = $this->createMock(ChannelFacebook::class);
         $channel->expects(self::atLeastOnce())
             ->method('getAccessToken')
-            ->willReturn('dksakmdsa');
+            ->willReturn('access_granted');
 
         $streamEvent = $this->createMock(StreamEvent::class);
         $streamEvent->expects(self::atLeastOnce())
@@ -547,7 +547,7 @@ class FacebookApiServiceTest extends TestCase
         $channel = $this->createMock(ChannelFacebook::class);
         $channel->expects(self::atLeastOnce())
             ->method('getAccessToken')
-            ->willReturn('dksakmdsa');
+            ->willReturn('access_granted');
 
         $streamEvent = $this->createMock(StreamEvent::class);
         $streamEvent->expects(self::atLeastOnce())
@@ -571,7 +571,7 @@ class FacebookApiServiceTest extends TestCase
     }
 
     /**
-     * Test sending a end signal to a non Facebook channel
+     * Test sending an end signal to a non Facebook channel
      *
      * @throws LiveBroadcastOutputException
      */

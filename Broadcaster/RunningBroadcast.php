@@ -18,22 +18,22 @@ class RunningBroadcast
     /**
      * @var int
      */
-    private $broadcastId;
+    private int $broadcastId;
 
     /**
      * @var int
      */
-    private $processId;
+    private int $processId;
 
     /**
      * @var int
      */
-    private $channelId;
+    private int $channelId;
 
     /**
      * @var string
      */
-    private $environment;
+    private string $environment;
 
     /**
      * RunningBroadcast constructor.
@@ -43,12 +43,12 @@ class RunningBroadcast
      * @param int    $channelId
      * @param string $environment
      */
-    public function __construct($broadcastId, $processId, $channelId, $environment)
+    public function __construct(int $broadcastId, int $processId, int $channelId, string $environment)
     {
-        $this->broadcastId = (int) $broadcastId;
-        $this->processId = (int) $processId;
-        $this->channelId = (int) $channelId;
-        $this->environment = (string) $environment;
+        $this->broadcastId = $broadcastId;
+        $this->processId = $processId;
+        $this->channelId = $channelId;
+        $this->environment = $environment;
     }
 
     /**
@@ -99,7 +99,7 @@ class RunningBroadcast
      *
      * @return bool
      */
-    public function isValid($kernelEnvironment): bool
+    public function isValid(string $kernelEnvironment): bool
     {
         return ($kernelEnvironment === $this->getEnvironment()) &&
             ($this->getProcessId() !== 0) &&

@@ -17,7 +17,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
     /**
      * {@inheritdoc}
      */
-    public function stopProcess($pid): string
+    public function stopProcess(int $pid): string
     {
         return exec(sprintf('kill %d', $pid));
     }

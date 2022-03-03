@@ -25,7 +25,7 @@ class SchedulerCommandsDetector
      *
      * @return SchedulerCommandsInterface
      */
-    public static function createSchedulerCommands(Kernel $kernel, $ffmpegLogDirectory = null): SchedulerCommandsInterface
+    public static function createSchedulerCommands(Kernel $kernel, ?string $ffmpegLogDirectory = null): SchedulerCommandsInterface
     {
         $osCode = strtoupper(substr(PHP_OS, 0, 3));
 

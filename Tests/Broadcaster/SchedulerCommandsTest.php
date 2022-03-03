@@ -163,7 +163,7 @@ class SchedulerCommandsTest extends TestCase
     {
         $command = $this->getSchedulerCommands();
         self::assertNull($command->getChannelId(''));
-        self::assertNull($command->getChannelId('channelid=12'));
+        self::assertNull($command->getChannelId('channel_id=12'));
 
         // @codingStandardsIgnoreLine
         $channelId = $command->getChannelId('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unit_test -metadata broadcast_id=1337 -metadata channel_id=5');

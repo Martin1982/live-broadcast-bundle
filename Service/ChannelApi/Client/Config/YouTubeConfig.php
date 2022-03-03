@@ -15,12 +15,12 @@ class YouTubeConfig
     /**
      * @var string
      */
-    protected $host;
+    protected string $host;
 
     /**
      * @var string
      */
-    protected $thumbnailDirectory;
+    protected string $thumbnailDirectory;
 
     /**
      * YouTubeConfig constructor.

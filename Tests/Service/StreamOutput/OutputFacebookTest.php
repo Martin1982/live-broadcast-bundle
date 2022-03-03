@@ -25,7 +25,7 @@ class OutputFacebookTest extends TestCase
     /**
      * @var ChannelFacebook
      */
-    private $facebookChannel;
+    private ChannelFacebook $facebookChannel;
 
     /**
      * @var FacebookApiService|MockObject
@@ -33,7 +33,7 @@ class OutputFacebookTest extends TestCase
     private $api;
 
     /**
-     * Setup a testable Facebook channel
+     * Set up a testable Facebook channel
      */
     public function setUp(): void
     {
@@ -54,7 +54,7 @@ class OutputFacebookTest extends TestCase
     }
 
     /**
-     * Test the generate output command without a channel
+     * Test the output generation command without a channel
      */
     public function testGenerateOutputCmdWithoutChannel(): void
     {
@@ -64,7 +64,7 @@ class OutputFacebookTest extends TestCase
     }
 
     /**
-     * Test the generate output command with an invalid channel
+     * Test the output generation command with an invalid channel
      */
     public function testGenerateOutputCmdWithInvalidChannel(): void
     {
@@ -77,7 +77,7 @@ class OutputFacebookTest extends TestCase
     }
 
     /**
-     * Test the generate output command without a stream url set
+     * Test the output generation command without a stream url set
      */
     public function testGenerateOutputCmdWithoutStreamUrl(): void
     {

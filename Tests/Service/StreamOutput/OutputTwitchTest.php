@@ -21,10 +21,10 @@ class OutputTwitchTest extends TestCase
     /**
      * @var ChannelTwitch
      */
-    private $twitchChannel;
+    private ChannelTwitch $twitchChannel;
 
     /**
-     * Setup a testable Twitch channel.
+     * Set up a testable Twitch channel.
      */
     public function setUp(): void
     {
@@ -43,7 +43,7 @@ class OutputTwitchTest extends TestCase
     }
 
     /**
-     * Test the generate output command without a channel
+     * Test the output generation command without a channel
      */
     public function testGenerateOutputCmdWithoutChannel(): void
     {
@@ -53,7 +53,7 @@ class OutputTwitchTest extends TestCase
     }
 
     /**
-     * Test the generate output command with an invalid channel
+     * Test the output generation command with an invalid channel
      */
     public function testGenerateOutputCmdWithInvalidChannel(): void
     {

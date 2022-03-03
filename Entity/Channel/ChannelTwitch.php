@@ -25,7 +25,7 @@ class ChannelTwitch extends AbstractChannel
      *
      * @Assert\NotBlank
      */
-    protected $streamKey;
+    protected ?string $streamKey = null;
 
     /**
      * @var string|null
@@ -34,7 +34,7 @@ class ChannelTwitch extends AbstractChannel
      *
      * @Assert\NotBlank
      */
-    protected $streamServer = 'live.twitch.tv';
+    protected ?string $streamServer = 'live.twitch.tv';
 
     /**
      * @return string|null
@@ -45,11 +45,11 @@ class ChannelTwitch extends AbstractChannel
     }
 
     /**
-     * @param string $streamKey
+     * @param string|null $streamKey
      *
      * @return ChannelTwitch
      */
-    public function setStreamKey($streamKey): ChannelTwitch
+    public function setStreamKey(?string $streamKey): ChannelTwitch
     {
         $this->streamKey = $streamKey;
 
@@ -65,11 +65,11 @@ class ChannelTwitch extends AbstractChannel
     }
 
     /**
-     * @param string $streamServer
+     * @param string|null $streamServer
      *
      * @return ChannelTwitch
      */
-    public function setStreamServer($streamServer): ChannelTwitch
+    public function setStreamServer(?string $streamServer): ChannelTwitch
     {
         $this->streamServer = $streamServer;
 

@@ -22,10 +22,10 @@ class OutputYouTubeTest extends TestCase
     /**
      * @var OutputYouTube
      */
-    private $youTube;
+    private OutputYouTube $youTube;
 
     /**
-     * Setup a testable Facebook channel
+     * Set up a testable Facebook channel
      */
     public function setUp(): void
     {
@@ -52,6 +52,7 @@ class OutputYouTubeTest extends TestCase
 
     /**
      * Test generating an output throws an exception
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testGenerateOutputCmdException(): void
     {
@@ -61,6 +62,7 @@ class OutputYouTubeTest extends TestCase
 
     /**
      * Test that no stream url throws an exception
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testNoStreamUrlException(): void
     {

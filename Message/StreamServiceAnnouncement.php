@@ -17,17 +17,17 @@ class StreamServiceAnnouncement
     /**
      * @var int
      */
-    private $actionType = 0;
+    private int $actionType = 0;
 
     /**
      * @var int
      */
-    private $broadcastId = 0;
+    private int $broadcastId = 0;
 
     /**
      * @var int[]
      */
-    private $previousChannels = [];
+    private array $previousChannels = [];
 
     /**
      * StreamServiceAnnouncement constructor.
@@ -96,7 +96,7 @@ class StreamServiceAnnouncement
      *
      * @return StreamServiceAnnouncement
      */
-    public function setPreviousChannels($previousChannels): StreamServiceAnnouncement
+    public function setPreviousChannels(array $previousChannels = []): StreamServiceAnnouncement
     {
         $this->previousChannels = $previousChannels;
 

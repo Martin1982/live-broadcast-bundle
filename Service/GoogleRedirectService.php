@@ -8,8 +8,6 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Service;
 
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
-use Symfony\Component\Routing\Exception\InvalidParameterException;
-use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -21,12 +19,12 @@ class GoogleRedirectService
     /**
      * @var RouterInterface
      */
-    protected $router;
+    protected RouterInterface $router;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $redirectRoute;
+    protected ?string $redirectRoute;
 
     /**
      * GoogleRedirectService constructor
@@ -34,7 +32,7 @@ class GoogleRedirectService
      * @param RouterInterface $router
      * @param string|null     $redirectRoute
      */
-    public function __construct(RouterInterface $router, $redirectRoute = null)
+    public function __construct(RouterInterface $router, ?string $redirectRoute = null)
     {
         $this->router = $router;
         $this->redirectRoute = $redirectRoute;
@@ -56,10 +54,6 @@ class GoogleRedirectService
                 $router::ABSOLUTE_URL
             );
         } catch (RouteNotFoundException $exception) {
-            throw new LiveBroadcastOutputException($exception->getMessage());
-        } catch (MissingMandatoryParametersException $exception) {
-            throw new LiveBroadcastOutputException($exception->getMessage());
-        } catch (InvalidParameterException $exception) {
             throw new LiveBroadcastOutputException($exception->getMessage());
         }
     }

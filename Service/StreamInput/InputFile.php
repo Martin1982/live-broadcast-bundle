@@ -17,7 +17,7 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 class InputFile implements InputInterface
 {
     /**
-     * @var MediaFile
+     * @var MediaFile|AbstractMedia
      */
     private $media;
 

@@ -10,9 +10,8 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -20,6 +19,7 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiInterface;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
@@ -208,6 +208,7 @@ class BroadcastManagerTest extends TestCase
      * Test sending an end signal
      *
      * @throws LiveBroadcastException
+     * @throws ORMException|\Doctrine\ORM\ORMException
      */
     public function testSendEndSignal(): void
     {
@@ -254,6 +255,7 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test sending an end signal
+     * @throws ORMException|\Doctrine\ORM\ORMException
      */
     public function testSendEndSignalLockException(): void
     {
@@ -288,6 +290,9 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test sending an end signal
+     *
+     * @throws ORMException
+     * @throws \Doctrine\ORM\ORMException
      */
     public function testSendEndSignalArgumentException(): void
     {
@@ -303,7 +308,7 @@ class BroadcastManagerTest extends TestCase
         $api = $this->createMock(ChannelApiInterface::class);
         $api->expects(self::atLeastOnce())
             ->method('sendEndSignal')
-            ->willThrowException(new ORMInvalidArgumentException('some error'));
+            ->willThrowException(new LiveBroadcastOutputException('some error'));
 
         $this->stack->expects(self::atLeastOnce())
             ->method('getApiForChannel')
@@ -322,6 +327,9 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test sending an end signal
+     *
+     * @throws ORMException
+     * @throws \Doctrine\ORM\ORMException
      */
     public function testSendEndSignalORMException(): void
     {

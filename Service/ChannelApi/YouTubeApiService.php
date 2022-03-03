@@ -24,24 +24,24 @@ use Psr\Log\LoggerInterface;
 class YouTubeApiService implements ChannelApiInterface
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $host;
+    protected ?string $host = null;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * @var EntityManager
      */
-    protected $entityManager;
+    protected EntityManager $entityManager;
 
     /**
      * @var YouTubeClient
      */
-    protected $client;
+    protected YouTubeClient $client;
 
     /**
      * YouTubeApiService constructor

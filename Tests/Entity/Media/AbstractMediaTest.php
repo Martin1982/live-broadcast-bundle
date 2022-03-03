@@ -17,8 +17,6 @@ class AbstractMediaTest extends TestCase
 {
     /**
      * Test converting the object to a string
-     *
-     * @throws \ReflectionException
      */
     public function testToString(): void
     {

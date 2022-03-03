@@ -23,8 +23,6 @@ class FacebookApiServiceMock extends FacebookApiService
      */
     public function setFacebookSdk(FacebookSDK $sdk): void
     {
-        if ($sdk) {
-            throw new SDKException('Something went wrong...');
-        }
+        throw new SDKException('Something went wrong...');
     }
 }

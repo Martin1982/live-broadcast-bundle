@@ -30,7 +30,7 @@ abstract class AbstractChannel
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $channelId;
+    protected ?int $channelId = null;
 
     /**
      * @var string|null
@@ -39,14 +39,14 @@ abstract class AbstractChannel
      *
      * @Assert\NotBlank
      */
-    protected $channelName;
+    protected ?string $channelName = null;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="is_healthy", type="boolean", options={"default": 0})
      */
-    protected $isHealthy = false;
+    protected bool $isHealthy = false;
 
     /**
      * @return int|null
@@ -65,11 +65,11 @@ abstract class AbstractChannel
     }
 
     /**
-     * @param string $channelName
+     * @param string|null $channelName
      *
      * @return $this
      */
-    public function setChannelName($channelName): self
+    public function setChannelName(?string $channelName): self
     {
         $this->channelName = $channelName;
 
@@ -107,7 +107,7 @@ abstract class AbstractChannel
             return true;
         }
 
-        return true;
+        return false;
     }
 
     /**

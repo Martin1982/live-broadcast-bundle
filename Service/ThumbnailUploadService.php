@@ -18,14 +18,14 @@ class ThumbnailUploadService
     /**
      * @var string
      */
-    private $targetDirectory;
+    private string $targetDirectory;
 
     /**
      * ThumbnailUploader constructor
      *
      * @param string $targetDirectory
      */
-    public function __construct($targetDirectory)
+    public function __construct(string $targetDirectory)
     {
         $this->targetDirectory = $targetDirectory;
     }

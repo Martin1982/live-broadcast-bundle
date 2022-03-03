@@ -15,12 +15,12 @@ abstract class AbstractOutput implements OutputInterface
     /**
      * @var string|null
      */
-    protected $lastError;
+    protected ?string $lastError = null;
 
     /**
      * @var AbstractChannel|null
      */
-    protected $channel;
+    protected ?AbstractChannel $channel = null;
 
     /**
      * @param AbstractChannel $channel

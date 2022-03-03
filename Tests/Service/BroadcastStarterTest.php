@@ -52,7 +52,7 @@ class BroadcastStarterTest extends TestCase
         $inputInterface = $this->createMock(InputInterface::class);
         $inputInterface->expects(self::atLeastOnce())
             ->method('generateInputCmd')
-            ->willReturn('inputcmd');
+            ->willReturn('input_cmd');
 
         $outputInterface = $this->createMock(DynamicStreamUrlInterface::class);
         $outputInterface->expects(self::atLeastOnce())

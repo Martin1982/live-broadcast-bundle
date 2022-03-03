@@ -6,6 +6,7 @@
  */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
@@ -17,19 +18,19 @@ use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 class OutputFacebook extends AbstractOutput implements DynamicStreamUrlInterface
 {
     /**
-     * @var ChannelFacebook
+     * @var AbstractChannel|ChannelFacebook|null
      */
-    protected $channel;
+    protected ?AbstractChannel $channel = null;
 
     /**
      * @var FacebookApiService
      */
-    protected $api;
+    protected FacebookApiService $api;
 
     /**
      * @var LiveBroadcast|null
      */
-    protected $broadcast;
+    protected ?LiveBroadcast $broadcast = null;
 
     /**
      * OutputFacebook constructor

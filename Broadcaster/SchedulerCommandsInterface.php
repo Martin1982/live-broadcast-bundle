@@ -19,14 +19,14 @@ interface SchedulerCommandsInterface
      *
      * @return string
      */
-    public function startProcess($input, $output, $metadata): string;
+    public function startProcess(string $input, string $output, array $metadata): string;
 
     /**
      * @param int $pid
      *
      * @return string
      */
-    public function stopProcess($pid): string;
+    public function stopProcess(int $pid): string;
 
     /**
      * @return array
@@ -38,28 +38,28 @@ interface SchedulerCommandsInterface
      *
      * @return int|null
      */
-    public function getProcessId($processString): ?int;
+    public function getProcessId(string $processString): ?int;
 
     /**
      * @param string $processString
      *
      * @return int|null
      */
-    public function getBroadcastId($processString): ?int;
+    public function getBroadcastId(string $processString): ?int;
 
     /**
      * @param string $processString
      *
      * @return int|null
      */
-    public function getChannelId($processString): ?int;
+    public function getChannelId(string $processString): ?int;
 
     /**
      * @param string $processString
      *
      * @return string|null
      */
-    public function getEnvironment($processString): ?string;
+    public function getEnvironment(string $processString): ?string;
 
     /**
      * @return string|null
@@ -69,10 +69,10 @@ interface SchedulerCommandsInterface
     /**
      * @param string $directory
      */
-    public function setFFMpegLogDirectory($directory);
+    public function setFFMpegLogDirectory(string $directory);
 
     /**
      * @param bool $looping
      */
-    public function setLooping($looping);
+    public function setLooping(bool $looping);
 }

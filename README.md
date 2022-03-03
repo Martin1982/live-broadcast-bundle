@@ -21,7 +21,7 @@
 The Live Broadcast Bundle will make it possible to plan live video streams to
 various websites/apps like Twitch, YouTube Live, Facebook Live.
 
-You are able to stream from various inputs. This package supports files, URL's or existing RTMP streams.
+You are able to stream from various inputs. This package supports files, URLs or existing RTMP streams.
 
 For more info you can view the latest recorded presentation below, check the demo project at https://github.com/Martin1982/live-broadcast-demo or read on;
 

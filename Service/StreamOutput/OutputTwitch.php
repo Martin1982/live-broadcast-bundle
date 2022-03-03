@@ -6,6 +6,7 @@
  */
 namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 
+use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 
@@ -15,9 +16,9 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 class OutputTwitch extends AbstractOutput
 {
     /**
-     * @var ChannelTwitch
+     * @var ChannelTwitch|AbstractChannel|null
      */
-    protected $channel;
+    protected ?AbstractChannel $channel = null;
 
     /**
      * Get the output parameters for streaming.

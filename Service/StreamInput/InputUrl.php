@@ -17,7 +17,7 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 class InputUrl implements InputInterface
 {
     /**
-     * @var MediaUrl
+     * @var MediaUrl|AbstractMedia
      */
     private $media;
 

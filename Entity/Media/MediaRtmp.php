@@ -25,7 +25,7 @@ class MediaRtmp extends AbstractMedia
      *
      * @Assert\Url()
      */
-    protected $rtmpAddress;
+    protected ?string $rtmpAddress = null;
 
     /**
      * @return string|null
@@ -36,11 +36,11 @@ class MediaRtmp extends AbstractMedia
     }
 
     /**
-     * @param string $rtmpAddress
+     * @param string|null $rtmpAddress
      *
      * @return MediaRtmp
      */
-    public function setRtmpAddress($rtmpAddress): MediaRtmp
+    public function setRtmpAddress(?string $rtmpAddress): MediaRtmp
     {
         $this->rtmpAddress = str_replace('rtmp://', '', $rtmpAddress);
 

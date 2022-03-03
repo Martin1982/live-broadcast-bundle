@@ -26,7 +26,7 @@ class MediaUrl extends AbstractMedia
      *
      * @ORM\Column(name="url", type="string", nullable=false)
      */
-    protected $url;
+    protected ?string $url = null;
 
     /**
      * @return string|null
@@ -37,11 +37,11 @@ class MediaUrl extends AbstractMedia
     }
 
     /**
-     * @param string $url
+     * @param string|null $url
      *
      * @return MediaUrl
      */
-    public function setUrl($url): MediaUrl
+    public function setUrl(?string $url): MediaUrl
     {
         $this->url = $url;
 

@@ -10,8 +10,6 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Routing\Exception\InvalidParameterException;
-use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -70,7 +68,7 @@ class GoogleRedirectServiceTest extends TestCase
         $router = $this->createMock(RouterInterface::class);
         $router->expects(static::once())
             ->method('generate')
-            ->willThrowException(new MissingMandatoryParametersException());
+            ->willThrowException(new LiveBroadcastOutputException());
 
         $redirectRoute = 'test';
 
@@ -90,7 +88,7 @@ class GoogleRedirectServiceTest extends TestCase
         $router = $this->createMock(RouterInterface::class);
         $router->expects(static::once())
             ->method('generate')
-            ->willThrowException(new InvalidParameterException());
+            ->willThrowException(new LiveBroadcastOutputException());
 
         $redirectRoute = 'test';
 

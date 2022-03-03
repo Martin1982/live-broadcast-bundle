@@ -22,7 +22,7 @@ class AddChannelApiPassTest extends TestCase
     /**
      * @var AddChannelApiPass
      */
-    private $compilerPass;
+    private AddChannelApiPass $compilerPass;
 
     /**
      * Setup basic object

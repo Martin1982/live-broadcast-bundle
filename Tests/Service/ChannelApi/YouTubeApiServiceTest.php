@@ -193,6 +193,7 @@ class YouTubeApiServiceTest extends TestCase
 
     /**
      * Test that when no event is available an exception is thrown
+     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
      */
     public function testGetStreamUrlForNoEvent(): void
     {

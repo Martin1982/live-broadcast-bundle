@@ -26,22 +26,22 @@ class FacebookApiService implements ChannelApiInterface
     /**
      * @var string
      */
-    private $applicationId;
+    private string $applicationId;
 
     /**
      * @var string
      */
-    private $applicationSecret;
+    private string $applicationSecret;
 
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     /**
-     * @var FacebookSDK
+     * @var FacebookSDK|null
      */
-    private $facebookSDK;
+    private ?FacebookSDK $facebookSDK = null;
 
     /**
      * FacebookApiService constructor.
@@ -50,7 +50,7 @@ class FacebookApiService implements ChannelApiInterface
      * @param string|null   $applicationId
      * @param string|null   $applicationSecret
      */
-    public function __construct(EntityManager $entityManager, $applicationId = null, $applicationSecret = null)
+    public function __construct(EntityManager $entityManager, string $applicationId = null, string $applicationSecret = null)
     {
         $this->applicationId = (string) $applicationId;
         $this->applicationSecret = (string) $applicationSecret;
@@ -193,13 +193,13 @@ class FacebookApiService implements ChannelApiInterface
     }
 
     /**
-     * @param string $userAccessToken
+     * @param string|null $userAccessToken
      *
      * @return AccessToken|null
      *
      * @throws LiveBroadcastOutputException
      */
-    public function getLongLivedAccessToken($userAccessToken): ?AccessToken
+    public function getLongLivedAccessToken(?string $userAccessToken): ?AccessToken
     {
         $this->ensureSdkLoaded();
 

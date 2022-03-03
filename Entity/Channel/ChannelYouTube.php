@@ -25,7 +25,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
      *
      * @Assert\NotBlank
      */
-    protected $refreshToken;
+    protected ?string $refreshToken;
 
     /**
      * @var string|null
@@ -34,7 +34,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
      *
      * @Assert\NotBlank
      */
-    protected $youTubeChannelName;
+    protected ?string $youTubeChannelName;
 
     /**
      * @return string|null
@@ -45,11 +45,11 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     }
 
     /**
-     * @param string $refreshToken
+     * @param string|null $refreshToken
      *
      * @return ChannelYouTube
      */
-    public function setRefreshToken($refreshToken): ChannelYouTube
+    public function setRefreshToken(?string $refreshToken): ChannelYouTube
     {
         $this->refreshToken = $refreshToken;
 
@@ -65,11 +65,11 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     }
 
     /**
-     * @param string $youTubeChannelName
+     * @param string|null $youTubeChannelName
      *
      * @return ChannelYouTube
      */
-    public function setYouTubeChannelName($youTubeChannelName): ChannelYouTube
+    public function setYouTubeChannelName(?string $youTubeChannelName): ChannelYouTube
     {
         $this->youTubeChannelName = $youTubeChannelName;
 

@@ -38,7 +38,7 @@ class StreamAnnouncementListenerTest extends TestCase
     /**
      * @var Envelope
      */
-    protected $envelope;
+    protected Envelope $envelope;
 
     /**
      * Setup mock objects
