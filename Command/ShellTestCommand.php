@@ -65,7 +65,7 @@ class ShellTestCommand extends Command
                 break;
         }
 
-        $output->write(sprintf('Detected OS is \'%s\'', PHP_OS));
+        $output->writeln(sprintf('Detected OS is \'%s\'', PHP_OS));
         $output->write('Checking \'ffmpeg\' command availability... ');
         $this->testFfmpeg($output);
 
