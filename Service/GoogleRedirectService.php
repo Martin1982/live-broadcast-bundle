@@ -22,20 +22,38 @@ class GoogleRedirectService
     protected RouterInterface $router;
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $redirectRoute;
+    protected string $redirectRoute = 'martin1982_livebroadcast_youtubeoauth';
 
     /**
      * GoogleRedirectService constructor
      *
      * @param RouterInterface $router
-     * @param string|null     $redirectRoute
      */
-    public function __construct(RouterInterface $router, ?string $redirectRoute = null)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectRoute(): string
+    {
+        return $this->redirectRoute;
+    }
+
+    /**
+     * @param string $redirectRoute
+     *
+     * @return GoogleRedirectService
+     */
+    public function setRedirectRoute(string $redirectRoute): GoogleRedirectService
+    {
         $this->redirectRoute = $redirectRoute;
+
+        return $this;
     }
 
     /**
@@ -45,13 +63,11 @@ class GoogleRedirectService
      */
     public function getOAuthRedirectUrl(): string
     {
-        $router = $this->router;
-
         try {
             return $this->router->generate(
-                $this->redirectRoute,
+                $this->getRedirectRoute(),
                 [],
-                $router::ABSOLUTE_URL
+                $this->router::ABSOLUTE_URL
             );
         } catch (RouteNotFoundException $exception) {
             throw new LiveBroadcastOutputException($exception->getMessage());

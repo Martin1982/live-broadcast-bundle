@@ -43,7 +43,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('client_id')->defaultNull()->end()
                         ->scalarNode('client_secret')->defaultNull()->end()
-                        ->scalarNode('redirect_route')->defaultNull()->end()
+                        ->scalarNode('redirect_route')->defaultValue('martin1982_livebroadcast_youtubeoauth')->end()
                     ->end()
                 ->end()
                 ->arrayNode('ffmpeg')

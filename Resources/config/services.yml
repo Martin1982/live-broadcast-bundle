@@ -101,7 +101,6 @@ services:
       class: Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService
       arguments:
           - "@router"
-          - "%livebroadcast.yt.redirect_route%"
   live.broadcast.channel_api.client.config.google:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\GoogleConfig
       arguments:
