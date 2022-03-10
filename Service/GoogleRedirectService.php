@@ -24,7 +24,7 @@ class GoogleRedirectService
     /**
      * @var string
      */
-    protected string $redirectRoute = 'martin1982_livebroadcast_youtubeoauth';
+    protected string $redirectRoute = 'martin1982_livebroadcast_admin_youtubeoauth';
 
     /**
      * GoogleRedirectService constructor
