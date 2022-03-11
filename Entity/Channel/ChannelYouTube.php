@@ -39,7 +39,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     /**
      * @return string|null
      */
-    public function getRefreshToken(): ?string
+    public function getRefreshToken(): string
     {
         return $this->refreshToken;
     }
@@ -49,7 +49,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
      *
      * @return ChannelYouTube
      */
-    public function setRefreshToken(?string $refreshToken): ChannelYouTube
+    public function setRefreshToken(string $refreshToken): ChannelYouTube
     {
         $this->refreshToken = $refreshToken;
 
@@ -59,7 +59,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     /**
      * @return string|null
      */
-    public function getYouTubeChannelName(): ?string
+    public function getYouTubeChannelName(): string
     {
         return $this->youTubeChannelName;
     }
@@ -69,7 +69,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
      *
      * @return ChannelYouTube
      */
-    public function setYouTubeChannelName(?string $youTubeChannelName): ChannelYouTube
+    public function setYouTubeChannelName(string $youTubeChannelName): ChannelYouTube
     {
         $this->youTubeChannelName = $youTubeChannelName;
 
