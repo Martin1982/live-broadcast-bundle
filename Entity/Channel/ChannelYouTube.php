@@ -25,7 +25,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
      *
      * @Assert\NotBlank
      */
-    protected ?string $refreshToken;
+    protected string $refreshToken = '';
 
     /**
      * @var string|null
@@ -34,7 +34,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
      *
      * @Assert\NotBlank
      */
-    protected ?string $youTubeChannelName;
+    protected string $youTubeChannelName = '';
 
     /**
      * @return string|null
