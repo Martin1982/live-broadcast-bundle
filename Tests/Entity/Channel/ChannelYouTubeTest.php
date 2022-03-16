@@ -67,7 +67,7 @@ class ChannelYouTubeTest extends TestCase
         self::assertFalse($channel::isEntityConfigured($configuration));
 
         $configuration['youtube']['client_secret'] = 'secret';
-        self::assertFalse($channel::isEntityConfigured($configuration));
+        self::assertTrue($channel::isEntityConfigured($configuration));
 
         $configuration['youtube']['redirect_route'] = 'route';
         self::assertTrue($channel::isEntityConfigured($configuration));
