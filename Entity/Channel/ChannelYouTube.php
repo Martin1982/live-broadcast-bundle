@@ -95,14 +95,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
             return false;
         }
 
-        if (!array_key_exists('redirect_route', $youTubeConfig)) {
-            return false;
-        }
-
-        if (!$youTubeConfig['client_id'] ||
-            !$youTubeConfig['client_secret'] ||
-            !$youTubeConfig['redirect_route']
-        ) {
+        if (!$youTubeConfig['client_id'] || !$youTubeConfig['client_secret']) {
             return false;
         }
 
