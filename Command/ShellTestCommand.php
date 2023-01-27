@@ -14,8 +14,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class ShellTestCommand
- *
- * @codeCoverageIgnore
  */
 #[AsCommand(name: 'livebroadcaster:test:shell')]
 class ShellTestCommand extends Command

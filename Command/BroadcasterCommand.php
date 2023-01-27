@@ -24,21 +24,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class BroadcasterCommand extends Command
 {
     /**
-     * @var Scheduler
-     */
-    private Scheduler $scheduler;
-
-    /**
-     * @var LoggerInterface
-     */
-    private LoggerInterface $logger;
-
-    /**
-     * @var int
-     */
-    private int $eventLoopTimer;
-
-    /**
      * @var string
      */
     protected static $defaultName = 'livebroadcaster:broadcast';
@@ -49,12 +34,8 @@ class BroadcasterCommand extends Command
      * @param int             $eventLoopTimer
      *
      */
-    public function __construct(Scheduler $scheduler, LoggerInterface $logger, int $eventLoopTimer = 10)
+    public function __construct(private Scheduler $scheduler, private LoggerInterface $logger, private int $eventLoopTimer = 10)
     {
-        $this->scheduler = $scheduler;
-        $this->logger = $logger;
-        $this->eventLoopTimer = $eventLoopTimer;
-
         parent::__construct();
     }
 
