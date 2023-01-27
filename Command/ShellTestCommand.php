@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Class ShellTestCommand
  */
-#[AsCommand(name: 'livebroadcaster:test:shell')]
+#[AsCommand(name: 'livebroadcaster:test:shell', description: 'Test if the environment supports the right commands')]
 class ShellTestCommand extends Command
 {
     /**
@@ -37,16 +37,6 @@ class ShellTestCommand extends Command
      * @var string
      */
     protected static $defaultName = 'livebroadcaster:test:shell';
-
-    /**
-     * {@inheritdoc}
-     *
-     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
-     */
-    protected function configure(): void
-    {
-        $this->setDescription('Test if the environment supports the right commands');
-    }
 
     /**
      * {@inheritdoc}

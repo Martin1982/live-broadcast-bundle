@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @codeCoverageIgnore
  */
-#[AsCommand(name: 'livebroadcaster:broadcast')]
+#[AsCommand(name: 'livebroadcaster:broadcast', description: 'Run any broadcasts that haven\'t started yet and which are planned')]
 class BroadcasterCommand extends Command
 {
     /**
@@ -37,16 +37,6 @@ class BroadcasterCommand extends Command
     public function __construct(private Scheduler $scheduler, private LoggerInterface $logger, private int $eventLoopTimer = 10)
     {
         parent::__construct();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
-     */
-    protected function configure(): void
-    {
-        $this->setDescription('Run any broadcasts that haven\'t started yet and which are planned');
     }
 
     /**
