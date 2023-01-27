@@ -10,6 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Command;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler;
 use Psr\Log\LoggerInterface;
 use React\EventLoop\Loop;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,6 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @codeCoverageIgnore
  */
+#[AsCommand(name: 'livebroadcaster:broadcast')]
 class BroadcasterCommand extends Command
 {
     /**
