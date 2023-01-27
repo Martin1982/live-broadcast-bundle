@@ -20,17 +20,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class ThumbnailUploadListener
 {
     /**
-     * @var ThumbnailUploadService
-     */
-    private ThumbnailUploadService $uploadService;
-
-    /**
      * ThumbnailUploadListener constructor.
      * @param ThumbnailUploadService $uploadService
      */
-    public function __construct(ThumbnailUploadService $uploadService)
+    public function __construct(private ThumbnailUploadService $uploadService)
     {
-        $this->uploadService = $uploadService;
     }
 
     /**

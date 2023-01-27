@@ -27,25 +27,13 @@ use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
 class BroadcastManager
 {
     /**
-     * @var EntityManager
-     */
-    protected EntityManager $entityManager;
-
-    /**
-     * @var ChannelApiStack
-     */
-    protected ChannelApiStack $apiStack;
-
-    /**
      * BroadcastManager constructor
      *
      * @param EntityManager   $entityManager
      * @param ChannelApiStack $apiStack
      */
-    public function __construct(EntityManager $entityManager, ChannelApiStack $apiStack)
+    public function __construct(protected EntityManager $entityManager, protected ChannelApiStack $apiStack)
     {
-        $this->entityManager = $entityManager;
-        $this->apiStack      = $apiStack;
     }
 
     /**

@@ -16,18 +16,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class ThumbnailUploadService
 {
     /**
-     * @var string
-     */
-    private string $targetDirectory;
-
-    /**
      * ThumbnailUploader constructor
      *
      * @param string $targetDirectory
      */
-    public function __construct(string $targetDirectory)
+    public function __construct(private string $targetDirectory)
     {
-        $this->targetDirectory = $targetDirectory;
     }
 
     /**

@@ -21,25 +21,13 @@ use Symfony\Component\Messenger\Stamp\DelayStamp;
 class StreamAnnouncementListener
 {
     /**
-     * @var BroadcastManager
-     */
-    protected BroadcastManager $broadcastManager;
-
-    /**
-     * @var MessageBusInterface
-     */
-    protected MessageBusInterface $bus;
-
-    /**
      * StreamAnnouncementListener constructor.
      *
      * @param MessageBusInterface $bus
      * @param BroadcastManager    $broadcastManager
      */
-    public function __construct(MessageBusInterface $bus, BroadcastManager $broadcastManager)
+    public function __construct(protected MessageBusInterface $bus, protected BroadcastManager $broadcastManager)
     {
-        $this->bus = $bus;
-        $this->broadcastManager = $broadcastManager;
     }
 
     /**

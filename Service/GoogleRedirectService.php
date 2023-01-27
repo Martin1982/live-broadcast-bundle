@@ -17,11 +17,6 @@ use Symfony\Component\Routing\RouterInterface;
 class GoogleRedirectService
 {
     /**
-     * @var RouterInterface
-     */
-    protected RouterInterface $router;
-
-    /**
      * @var string
      */
     protected string $redirectRoute = 'martin1982_livebroadcast_admin_youtubeoauth';
@@ -31,9 +26,8 @@ class GoogleRedirectService
      *
      * @param RouterInterface $router
      */
-    public function __construct(RouterInterface $router)
+    public function __construct(protected RouterInterface $router)
     {
-        $this->router = $router;
     }
 
     /**

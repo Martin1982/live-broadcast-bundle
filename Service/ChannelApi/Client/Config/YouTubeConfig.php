@@ -13,25 +13,13 @@ namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config;
 class YouTubeConfig
 {
     /**
-     * @var string
-     */
-    protected string $host;
-
-    /**
-     * @var string
-     */
-    protected string $thumbnailDirectory;
-
-    /**
      * YouTubeConfig constructor.
      *
      * @param string $host
      * @param string $thumbnailDirectory
      */
-    public function __construct(string $host, string $thumbnailDirectory)
+    public function __construct(protected string $host, protected string $thumbnailDirectory)
     {
-        $this->host = $host;
-        $this->thumbnailDirectory = $thumbnailDirectory;
     }
 
     /**

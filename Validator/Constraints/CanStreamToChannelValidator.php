@@ -19,18 +19,12 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 class CanStreamToChannelValidator extends ConstraintValidator
 {
     /**
-     * @var StreamOutputService
-     */
-    public StreamOutputService $outputService;
-
-    /**
      * CanStreamToChannelValidator constructor.
      *
      * @param StreamOutputService $outputService
      */
-    public function __construct(StreamOutputService $outputService)
+    public function __construct(public StreamOutputService $outputService)
     {
-        $this->outputService = $outputService;
     }
 
     /**

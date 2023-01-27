@@ -23,11 +23,6 @@ class OutputFacebook extends AbstractOutput implements DynamicStreamUrlInterface
     protected ?AbstractChannel $channel = null;
 
     /**
-     * @var FacebookApiService
-     */
-    protected FacebookApiService $api;
-
-    /**
      * @var LiveBroadcast|null
      */
     protected ?LiveBroadcast $broadcast = null;
@@ -37,9 +32,8 @@ class OutputFacebook extends AbstractOutput implements DynamicStreamUrlInterface
      *
      * @param FacebookApiService $api
      */
-    public function __construct(FacebookApiService $api)
+    public function __construct(protected FacebookApiService $api)
     {
-        $this->api = $api;
     }
 
     /**

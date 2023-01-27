@@ -24,21 +24,6 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 class FacebookApiService implements ChannelApiInterface
 {
     /**
-     * @var string
-     */
-    private string $applicationId;
-
-    /**
-     * @var string
-     */
-    private string $applicationSecret;
-
-    /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-
-    /**
      * @var FacebookSDK|null
      */
     private ?FacebookSDK $facebookSDK = null;
@@ -47,19 +32,16 @@ class FacebookApiService implements ChannelApiInterface
      * FacebookApiService constructor.
      *
      * @param EntityManager $entityManager
-     * @param string|null   $applicationId
-     * @param string|null   $applicationSecret
+     * @param string        $applicationId
+     * @param string        $applicationSecret
      */
-    public function __construct(EntityManager $entityManager, string $applicationId = null, string $applicationSecret = null)
+    public function __construct(private EntityManager $entityManager, private string $applicationId, private string $applicationSecret)
     {
-        $this->applicationId = (string) $applicationId;
-        $this->applicationSecret = (string) $applicationSecret;
-        $this->entityManager = $entityManager;
     }
 
     /**
-     * @param LiveBroadcast                   $broadcast
-     * @param AbstractChannel|ChannelFacebook $channel
+     * @param LiveBroadcast                    $broadcast
+     * @param AbstractChannel<ChannelFacebook> $channel
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException

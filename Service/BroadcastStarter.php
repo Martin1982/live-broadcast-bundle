@@ -18,32 +18,14 @@ use Martin1982\LiveBroadcastBundle\Service\StreamOutput\DynamicStreamUrlInterfac
 class BroadcastStarter
 {
     /**
-     * @var StreamInputService
-     */
-    protected StreamInputService $inputService;
-
-    /**
-     * @var StreamOutputService
-     */
-    protected StreamOutputService $outputService;
-
-    /**
-     * @var SchedulerCommandsInterface
-     */
-    protected SchedulerCommandsInterface $commands;
-
-    /**
      * BroadcastStarter constructor
      *
-     * @param StreamInputService         $input
-     * @param StreamOutputService        $output
+     * @param StreamInputService         $inputService
+     * @param StreamOutputService        $outputService
      * @param SchedulerCommandsInterface $commands
      */
-    public function __construct(StreamInputService $input, StreamOutputService $output, SchedulerCommandsInterface $commands)
+    public function __construct(protected StreamInputService $inputService, protected StreamOutputService $outputService, protected SchedulerCommandsInterface $commands)
     {
-        $this->inputService = $input;
-        $this->outputService = $output;
-        $this->commands = $commands;
     }
 
     /**

@@ -15,32 +15,14 @@ class StreamServiceAnnouncement
     public const ACTION_PRE_REMOVE = 3;
 
     /**
-     * @var int
-     */
-    private int $actionType = 0;
-
-    /**
-     * @var int
-     */
-    private int $broadcastId = 0;
-
-    /**
-     * @var int[]
-     */
-    private array $previousChannels = [];
-
-    /**
      * StreamServiceAnnouncement constructor.
      *
      * @param int   $actionType
      * @param int   $broadcastId
      * @param array $previousChannels
      */
-    public function __construct(int $actionType, int $broadcastId, array $previousChannels)
+    public function __construct(private int $actionType, private int $broadcastId, private array $previousChannels)
     {
-        $this->setActionType($actionType);
-        $this->setBroadcastId($broadcastId);
-        $this->setPreviousChannels($previousChannels);
     }
 
     /**

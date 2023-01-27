@@ -22,16 +22,6 @@ use Symfony\Component\HttpFoundation\File\File;
 class YouTubeClient
 {
     /**
-     * @var YouTubeConfig
-     */
-    protected YouTubeConfig $config;
-
-    /**
-     * @var GoogleClient
-     */
-    protected GoogleClient $googleClient;
-
-    /**
      * @var \Google_Service_YouTube|null
      */
     protected ?\Google_Service_YouTube $youTubeClient = null;
@@ -42,10 +32,8 @@ class YouTubeClient
      * @param YouTubeConfig $config
      * @param GoogleClient  $googleClient
      */
-    public function __construct(YouTubeConfig $config, GoogleClient $googleClient)
+    public function __construct(protected YouTubeConfig $config, protected GoogleClient $googleClient)
     {
-        $this->config = $config;
-        $this->googleClient = $googleClient;
     }
 
     /**

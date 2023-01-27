@@ -22,32 +22,14 @@ class GoogleClient
     public array $scope = [\Google_Service_YouTube::YOUTUBE];
 
     /**
-     * @var GoogleConfig
-     */
-    protected GoogleConfig $config;
-
-    /**
-     * @var GoogleRedirectService
-     */
-    protected GoogleRedirectService $redirect;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected LoggerInterface $logger;
-
-    /**
      * GoogleClient constructor.
      *
      * @param GoogleConfig          $config
      * @param GoogleRedirectService $redirect
      * @param LoggerInterface       $logger
      */
-    public function __construct(GoogleConfig $config, GoogleRedirectService $redirect, LoggerInterface $logger)
+    public function __construct(protected GoogleConfig $config, protected GoogleRedirectService $redirect, protected LoggerInterface $logger)
     {
-        $this->config = $config;
-        $this->redirect = $redirect;
-        $this->logger = $logger;
     }
 
     /**

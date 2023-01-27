@@ -22,31 +22,6 @@ use Psr\Log\LoggerInterface;
 class Scheduler
 {
     /**
-     * @var ChannelValidatorService
-     */
-    protected ChannelValidatorService $validator;
-
-    /**
-     * @var BroadcastStarter
-     */
-    protected BroadcastStarter $starter;
-
-    /**
-     * @var BroadcastManager
-     */
-    protected BroadcastManager $broadcastManager;
-
-    /**
-     * @var SchedulerCommandsInterface
-     */
-    protected SchedulerCommandsInterface $schedulerCommands;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected LoggerInterface $logger;
-
-    /**
      * Scheduler constructor
      *
      * @param ChannelValidatorService    $validator
@@ -57,13 +32,8 @@ class Scheduler
      *
      * phpcs:disable Symfony.Functions.Arguments.Invalid
      */
-    public function __construct(ChannelValidatorService $validator, BroadcastStarter $starter, BroadcastManager $broadcastManager, SchedulerCommandsInterface $schedulerCommands, LoggerInterface $logger)
+    public function __construct(protected ChannelValidatorService $validator, protected BroadcastStarter $starter, protected BroadcastManager $broadcastManager, protected SchedulerCommandsInterface $schedulerCommands, protected LoggerInterface $logger)
     {
-        $this->validator = $validator;
-        $this->starter = $starter;
-        $this->broadcastManager = $broadcastManager;
-        $this->schedulerCommands = $schedulerCommands;
-        $this->logger = $logger;
     }
 
     /**

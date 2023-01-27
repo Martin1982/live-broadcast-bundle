@@ -16,26 +16,6 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 class RunningBroadcast
 {
     /**
-     * @var int
-     */
-    private int $broadcastId;
-
-    /**
-     * @var int
-     */
-    private int $processId;
-
-    /**
-     * @var int
-     */
-    private int $channelId;
-
-    /**
-     * @var string
-     */
-    private string $environment;
-
-    /**
      * RunningBroadcast constructor.
      *
      * @param int    $broadcastId
@@ -43,12 +23,8 @@ class RunningBroadcast
      * @param int    $channelId
      * @param string $environment
      */
-    public function __construct(int $broadcastId, int $processId, int $channelId, string $environment)
+    public function __construct(private int $broadcastId, private int $processId, private int $channelId, private string $environment)
     {
-        $this->broadcastId = $broadcastId;
-        $this->processId = $processId;
-        $this->channelId = $channelId;
-        $this->environment = $environment;
     }
 
     /**

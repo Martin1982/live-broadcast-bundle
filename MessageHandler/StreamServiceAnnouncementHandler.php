@@ -16,18 +16,12 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class StreamServiceAnnouncementHandler implements MessageHandlerInterface
 {
     /**
-     * @var BroadcastManager
-     */
-    private BroadcastManager $manager;
-
-    /**
      * StreamServiceAnnouncementHandler constructor.
      *
      * @param BroadcastManager $manager
      */
-    public function __construct(BroadcastManager $manager)
+    public function __construct(private BroadcastManager $manager)
     {
-        $this->manager = $manager;
     }
 
     /**

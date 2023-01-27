@@ -29,32 +29,14 @@ class YouTubeApiService implements ChannelApiInterface
     protected ?string $host = null;
 
     /**
-     * @var LoggerInterface
-     */
-    protected LoggerInterface $logger;
-
-    /**
-     * @var EntityManager
-     */
-    protected EntityManager $entityManager;
-
-    /**
-     * @var YouTubeClient
-     */
-    protected YouTubeClient $client;
-
-    /**
      * YouTubeApiService constructor
      *
      * @param EntityManager   $entityManager
      * @param LoggerInterface $logger
-     * @param YouTubeClient   $youTubeClient
+     * @param YouTubeClient   $client
      */
-    public function __construct(EntityManager $entityManager, LoggerInterface $logger, YouTubeClient $youTubeClient)
+    public function __construct(protected EntityManager $entityManager, protected LoggerInterface $logger, protected YouTubeClient $client)
     {
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
-        $this->client = $youTubeClient;
     }
 
     /**

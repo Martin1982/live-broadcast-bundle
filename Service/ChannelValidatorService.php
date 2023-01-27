@@ -27,33 +27,15 @@ class ChannelValidatorService
     protected $channelRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
-     * @var ValidatorInterface
-     */
-    protected ValidatorInterface $validator;
-
-    /**
-     * @var KernelInterface
-     */
-    protected KernelInterface $kernel;
-
-    /**
      * ChannelValidatorService constructor.
      *
      * @param KernelInterface        $kernel
      * @param EntityManagerInterface $entityManager
      * @param ValidatorInterface     $validator
      */
-    public function __construct(KernelInterface $kernel, EntityManagerInterface $entityManager, ValidatorInterface $validator)
+    public function __construct(protected KernelInterface $kernel, protected EntityManagerInterface $entityManager, protected ValidatorInterface $validator)
     {
-        $this->entityManager = $entityManager;
         $this->channelRepository = $entityManager->getRepository(AbstractChannel::class);
-        $this->validator = $validator;
-        $this->kernel = $kernel;
     }
 
     /**

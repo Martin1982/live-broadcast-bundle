@@ -23,11 +23,6 @@ class OutputYouTube extends AbstractOutput implements DynamicStreamUrlInterface
     protected ?AbstractChannel $channel = null;
 
     /**
-     * @var YouTubeApiService
-     */
-    protected YouTubeApiService $api;
-
-    /**
      * @var LiveBroadcast|null
      */
     protected ?LiveBroadcast $broadcast = null;
@@ -37,9 +32,8 @@ class OutputYouTube extends AbstractOutput implements DynamicStreamUrlInterface
      *
      * @param YouTubeApiService $api
      */
-    public function __construct(YouTubeApiService $api)
+    public function __construct(protected YouTubeApiService $api)
     {
-        $this->api = $api;
     }
 
     /**
