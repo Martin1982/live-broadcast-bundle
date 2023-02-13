@@ -43,5 +43,10 @@
     },
     "autoload": {
         "psr-4": { "Martin1982\\LiveBroadcastBundle\\": "" }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
