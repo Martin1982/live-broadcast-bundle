@@ -22,24 +22,23 @@ class SchedulerCommandsDetector
      *
      * @param Kernel      $kernel
      * @param string|null $ffmpegLogDirectory
+     * @param string|null $os
      *
      * @return SchedulerCommandsInterface
      */
-    public static function createSchedulerCommands(Kernel $kernel, ?string $ffmpegLogDirectory = null): SchedulerCommandsInterface
+    public static function createSchedulerCommands(Kernel $kernel, ?string $ffmpegLogDirectory = null, ?string $os = null): SchedulerCommandsInterface
     {
-        $osCode = strtoupper(substr(PHP_OS, 0, 3));
-
-        switch ($osCode) {
-            case 'WIN':
-                $schedulerCommands = new WindowsCommands($kernel);
-                break;
-            case 'DAR':
-                $schedulerCommands = new MacCommands($kernel);
-                break;
-            default:
-                $schedulerCommands = new LinuxCommands($kernel);
-                break;
+        if (null === $os) {
+            $os = PHP_OS;
         }
+
+        $osCode = strtoupper(substr($os, 0, 3));
+
+        $schedulerCommands = match ($osCode) {
+            'WIN' => new WindowsCommands($kernel),
+            'DAR' => new MacCommands($kernel),
+            default => new LinuxCommands($kernel),
+        };
 
         $schedulerCommands->setFFMpegLogDirectory($ffmpegLogDirectory);
 

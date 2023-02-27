@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands;
-use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -17,8 +16,6 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class SchedulerCommandsTest extends TestCase
 {
-    use PHPMock;
-
     /**
      * Test the start process command.
      *
@@ -27,20 +24,8 @@ class SchedulerCommandsTest extends TestCase
     public function testStartProcess(): void
     {
         $command = $this->getSchedulerCommands();
-
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'exec');
-        $exec->expects(static::once())->willReturnCallback(
-            // phpcs:disable Symfony.Functions.ReturnType.Invalid
-            static function ($command) {
-                // @codingStandardsIgnoreLine
-                self::assertEquals('ffmpeg input output -metadata broadcast_id=4 -metadata unit=test -metadata env=unit_test >> /dev/null 2>&1 &', $command);
-
-                return '';
-            }
-            // phpcs:enable Symfony.Functions.ReturnType.Invalid
-        );
-
-        $command->startProcess('input', 'output', ['broadcast_id' => 4, 'unit' => 'test']);
+        $output = $command->startProcess('input', 'output', ['broadcast_id' => 4, 'unit' => 'test']);
+        self::assertEquals('ffmpeg input output -metadata broadcast_id=4 -metadata unit=test -metadata env=unit_test >> /dev/null 2>&1 &', $output);
     }
 
     /**
@@ -52,22 +37,11 @@ class SchedulerCommandsTest extends TestCase
     {
         $command = $this->getSchedulerCommands();
         $command->setFFMpegLogDirectory('/tmp');
+        $output = $command->startProcess('input', 'output', ['broadcast_id' => 12, 'test' => 'unit']);
 
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster', 'exec');
-        $exec->expects(static::once())->willReturnCallback(
-            // phpcs:disable Symfony.Functions.ReturnType.Invalid
-            static function ($command) {
-                $now = new \DateTime();
-                // @codingStandardsIgnoreLine
-                self::assertStringStartsWith('ffmpeg input output -metadata broadcast_id=12 -metadata test=unit -metadata env=unit_test >> /tmp/livebroadcaster-ffmpeg-'.$now->format('Y-m-d_Hi'), $command);
-                self::assertStringEndsWith('.log 2>&1 &', $command);
-
-                return '';
-            }
-            // phpcs:enable Symfony.Functions.ReturnType.Invalid
-        );
-
-        $command->startProcess('input', 'output', ['broadcast_id' => 12, 'test' => 'unit']);
+        $now = new \DateTime();
+        self::assertStringStartsWith('ffmpeg input output -metadata broadcast_id=12 -metadata test=unit -metadata env=unit_test >> /tmp/livebroadcaster-ffmpeg-'.$now->format('Y-m-d_Hi'), $output);
+        self::assertStringEndsWith('.log 2>&1 &', $output);
     }
 
     /**
@@ -78,19 +52,8 @@ class SchedulerCommandsTest extends TestCase
     public function testStopProcess(): void
     {
         $command = $this->getSchedulerCommands();
-
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
-        $exec->expects(static::once())->willReturnCallback(
-            // phpcs:disable Symfony.Functions.ReturnType.Invalid
-            static function ($command) {
-                self::assertEquals('kill 1337', $command);
-
-                return '';
-            }
-            // phpcs:enable Symfony.Functions.ReturnType.Invalid
-        );
-
-        $command->stopProcess(1337);
+        $output = $command->stopProcess(1337);
+        self::assertEquals('kill 1337', $output);
     }
 
     /**
@@ -101,19 +64,8 @@ class SchedulerCommandsTest extends TestCase
     public function testGetRunningProcesses(): void
     {
         $command = $this->getSchedulerCommands();
-
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Linux', 'exec');
-        $exec->expects(static::once())->willReturnCallback(
-            static function ($command, &$output) {
-                self::assertEquals('/bin/ps -ww -C ffmpeg -o pid=,args=', $command);
-                // @codingStandardsIgnoreLine
-                $output[] = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unit_test -metadata broadcast_id=1337';
-            }
-        );
-
         $running = $command->getRunningProcesses();
-        // @codingStandardsIgnoreLine
-        self::assertEquals('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unit_test -metadata broadcast_id=1337', $running[0]);
+        self::assertEquals(['/bin/ps -ww -C ffmpeg -o pid=,args='], $running);
     }
 
     /**
@@ -204,6 +156,6 @@ class SchedulerCommandsTest extends TestCase
         $kernel->expects(self::once())->method('getProjectDir')->willReturn('/some/directory');
         $kernel->expects(self::once())->method('getEnvironment')->willReturn('unit_test');
 
-        return new SchedulerCommands($kernel);
+        return new SchedulerCommands($kernel, true);
     }
 }

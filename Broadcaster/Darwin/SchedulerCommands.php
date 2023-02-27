@@ -19,7 +19,11 @@ class SchedulerCommands extends LinuxCommands
      */
     public function getRunningProcesses(): array
     {
-        exec('ps -ww -o pid=,args= | grep ffmpeg | grep -v grep', $output);
+        $output = $this->exec('ps -ww -o pid=,args= | grep ffmpeg | grep -v grep', true);
+
+        if (!is_array($output)) {
+            $output = [$output];
+        }
 
         return $output;
     }

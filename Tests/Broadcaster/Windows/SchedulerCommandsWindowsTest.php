@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Windows;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Windows\SchedulerCommands;
-use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -17,8 +16,6 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class SchedulerCommandsWindowsTest extends TestCase
 {
-    use PHPMock;
-
     /**
      * Test the stop process command.
      *
@@ -26,20 +23,10 @@ class SchedulerCommandsWindowsTest extends TestCase
      */
     public function testStopProcess(): void
     {
-        $command = new SchedulerCommands($this->getKernel());
+        $command = new SchedulerCommands($this->getKernel(), true);
+        $commandInput = $command->stopProcess(1337);
 
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Windows', 'exec');
-        $exec->expects(static::once())->willReturnCallback(
-            // phpcs:disable Symfony.Functions.ReturnType.Invalid
-            static function ($command) {
-                self::assertEquals('START /B TASKKILL /PID 1337 /T', $command);
-
-                return 'killed';
-            }
-            // phpcs:enable
-        );
-
-        $command->stopProcess(1337);
+        self::assertEquals('START /B TASKKILL /PID 1337 /T', $commandInput);
     }
 
     /**
@@ -49,20 +36,9 @@ class SchedulerCommandsWindowsTest extends TestCase
      */
     public function testGetRunningProcesses(): void
     {
-        $command = new SchedulerCommands($this->getKernel());
-
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Windows', 'exec');
-        $exec->expects(static::once())->willReturnCallback(
-            static function ($command, &$output) {
-                self::assertEquals('START /B TASKLIST /FI "IMAGENAME eq ffmpeg.exe" /FO CSV', $command);
-                // @codingStandardsIgnoreLine
-                $output[] = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unit_test -metadata broadcast_id=1337';
-            }
-        );
-
+        $command = new SchedulerCommands($this->getKernel(), true);
         $running = $command->getRunningProcesses();
-        // @codingStandardsIgnoreLine
-        self::assertEquals('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unit_test -metadata broadcast_id=1337', $running[0]);
+        self::assertEquals(['START /B TASKLIST /FI "IMAGENAME eq ffmpeg.exe" /FO CSV'], $running);
     }
 
     /**
@@ -71,15 +47,11 @@ class SchedulerCommandsWindowsTest extends TestCase
      */
     public function testExecStreamCommand(): void
     {
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Windows', 'exec');
-        $exec->expects(static::once())
-            // @codingStandardsIgnoreLine
-            ->with('START /B ffmpeg -stream_loop -1 input output -metadata x=y -metadata a=b -metadata env=unit_test >nul 2>nul &')
-            ->willReturn('Streaming...');
-
-        $command = new SchedulerCommands($this->getKernel());
+        $command = new SchedulerCommands($this->getKernel(), true);
         $command->setLooping(true);
-        $command->startProcess('input', 'output', [ 'x' => 'y', 'a' => 'b']);
+        $result = $command->startProcess('input', 'output', [ 'x' => 'y', 'a' => 'b']);
+
+        self::assertEquals('START /B ffmpeg -stream_loop -1 input output -metadata x=y -metadata a=b -metadata env=unit_test >nul 2>nul &', $result);
     }
 
     /**

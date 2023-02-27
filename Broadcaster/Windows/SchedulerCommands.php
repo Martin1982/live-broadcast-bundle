@@ -19,7 +19,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
      */
     public function stopProcess(int $pid): string
     {
-        return exec(sprintf('START /B TASKKILL /PID %d /T', $pid));
+        return $this->exec(sprintf('START /B TASKKILL /PID %d /T', $pid));
     }
 
     /**
@@ -27,7 +27,11 @@ class SchedulerCommands extends AbstractSchedulerCommands
      */
     public function getRunningProcesses(): array
     {
-        exec('START /B TASKLIST /FI "IMAGENAME eq ffmpeg.exe" /FO CSV', $output);
+        $output = $this->exec('START /B TASKLIST /FI "IMAGENAME eq ffmpeg.exe" /FO CSV', true);
+
+        if (!is_array($output)) {
+            $output = [$output];
+        }
 
         return $output;
     }
@@ -49,6 +53,6 @@ class SchedulerCommands extends AbstractSchedulerCommands
             $loop = '-stream_loop -1 ';
         }
 
-        return exec(sprintf('START /B ffmpeg %s%s %s%s >nul 2>nul &', $loop, $input, $output, $meta));
+        return $this->exec(sprintf('START /B ffmpeg %s%s %s%s >nul 2>nul &', $loop, $input, $output, $meta));
     }
 }

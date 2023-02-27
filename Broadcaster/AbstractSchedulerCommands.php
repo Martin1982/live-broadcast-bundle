@@ -45,12 +45,19 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     protected string $rootDir;
 
     /**
+     * @var bool
+     */
+    protected bool $dryRun = false;
+
+    /**
      * SchedulerCommands constructor.
      *
      * @param Kernel $kernel
+     * @param bool   $dryRun
      */
-    public function __construct(Kernel $kernel)
+    public function __construct(Kernel $kernel, bool $dryRun = false)
     {
+        $this->dryRun = $dryRun;
         $this->rootDir = $kernel->getProjectDir();
         $this->kernelEnvironment = $kernel->getEnvironment();
     }
@@ -195,7 +202,30 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
 
         $streamStart = sprintf('ffmpeg %s%s %s%s >> %s 2>&1 &', $loop, $input, $output, $meta, $logFile);
 
-        return exec($streamStart);
+        return $this->exec($streamStart);
+    }
+
+    /**
+     * Run or dry-run a command
+     *
+     * @param string $command
+     * @param bool   $returnOutput
+     *
+     * @return string|array|bool
+     */
+    protected function exec(string $command, bool $returnOutput = false): string|array|bool
+    {
+        if (true === $this->dryRun) {
+            return $command;
+        }
+
+        $execReturn = exec($command, $output);
+
+        if (true === $returnOutput) {
+            return $output;
+        }
+
+        return $execReturn;
     }
 
     /**

@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Darwin;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Darwin\SchedulerCommands;
-use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -17,8 +16,6 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class SchedulerCommandsDarwinTest extends TestCase
 {
-    use PHPMock;
-
     /**
      * Test the running processes command.
      *
@@ -30,19 +27,9 @@ class SchedulerCommandsDarwinTest extends TestCase
         $kernel->expects(self::once())->method('getProjectDir')->willReturn('/some/directory');
         $kernel->expects(self::once())->method('getEnvironment')->willReturn('unit_test');
 
-        $command = new SchedulerCommands($kernel);
-
-        $exec = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Broadcaster\Darwin', 'exec');
-        $exec->expects(static::once())->willReturnCallback(
-            static function ($command, &$output) {
-                self::assertEquals('ps -ww -o pid=,args= | grep ffmpeg | grep -v grep', $command);
-                // @codingStandardsIgnoreLine
-                $output[] = '1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unit_test -metadata broadcast_id=1337';
-            }
-        );
+        $command = new SchedulerCommands($kernel, true);
 
         $running = $command->getRunningProcesses();
-        // @codingStandardsIgnoreLine
-        self::assertEquals('1234 ffmpeg -re -i /path/to/video.mp4 -vcodec copy -acodec copy -f flv rtmp://live-ams.twitch.tv/app/ -metadata env=unit_test -metadata broadcast_id=1337', $running[0]);
+        self::assertEquals(['ps -ww -o pid=,args= | grep ffmpeg | grep -v grep'], $running);
     }
 }

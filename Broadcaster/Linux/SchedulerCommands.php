@@ -19,7 +19,7 @@ class SchedulerCommands extends AbstractSchedulerCommands
      */
     public function stopProcess(int $pid): string
     {
-        return exec(sprintf('kill %d', $pid));
+        return $this->exec(sprintf('kill %d', $pid));
     }
 
     /**
@@ -27,7 +27,11 @@ class SchedulerCommands extends AbstractSchedulerCommands
      */
     public function getRunningProcesses(): array
     {
-        exec('/bin/ps -ww -C ffmpeg -o pid=,args=', $output);
+        $output = $this->exec('/bin/ps -ww -C ffmpeg -o pid=,args=', true);
+
+        if (!is_array($output)) {
+            $output = [$output];
+        }
 
         return $output;
     }

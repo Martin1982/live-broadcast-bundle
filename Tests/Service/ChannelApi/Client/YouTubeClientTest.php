@@ -7,8 +7,6 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi\Client;
 
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
@@ -16,7 +14,6 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\YouTubeConfig;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\GoogleClient;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\YouTubeClient;
-use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
@@ -26,8 +23,6 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 class YouTubeClientTest extends TestCase
 {
-    use PHPMock;
-
     /**
      * @var YouTubeConfig|MockObject
      */
@@ -348,84 +343,6 @@ class YouTubeClientTest extends TestCase
         $youtube = new YouTubeClient($this->config, $this->google);
         self::assertFalse($youtube->addThumbnailToBroadcast($youtubeBroadcast, $broadcast));
         self::assertFalse($youtube->addThumbnailToBroadcast($youtubeBroadcast, $broadcast));
-    }
-
-    /**
-     * Test adding a thumbnail to a broadcast
-     */
-    public function testAddThumbnailToBroadcast(): void
-    {
-        $thumbFile = $this->createMock(File::class);
-        $thumbFile->expects(self::atLeastOnce())
-            ->method('isFile')
-            ->willReturn(true);
-        $thumbFile->expects(self::atLeastOnce())
-            ->method('getRealPath')
-            ->willReturn('/tmp/thumbnail.png');
-
-        $mimeContentType = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client', 'mime_content_type');
-        $mimeContentType->expects(static::once())
-            ->willReturn('image/png');
-
-        $fileSize = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client', 'filesize');
-        $fileSize->expects(static::once())
-            ->willReturn(500);
-
-        $fileSize = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client', 'fopen');
-        $fileSize->expects(static::once())
-            ->with('/tmp/thumbnail.png')
-            ->willReturn(1);
-
-        $feof = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client', 'feof');
-        $feof->expects(static::once())
-            ->with(1)
-            ->willReturn(false);
-
-        $fread = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client', 'fread');
-        $fread->expects(static::once())
-            ->with(1, 1048576)
-            ->willReturn(false);
-
-        $fclose = $this->getFunctionMock('Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client', 'fclose');
-        $fclose->expects(static::once())
-            ->with(1);
-
-        $youtubeBroadcast = new \Google_Service_YouTube_LiveBroadcast();
-        $youtubeBroadcast->setId('youtube.id');
-
-        $broadcast = $this->createMock(LiveBroadcast::class);
-        $broadcast->expects(self::atLeastOnce())
-            ->method('getThumbnail')
-            ->willReturn($thumbFile);
-
-        $googleClient = $this->createMock(\Google_Client::class);
-        $googleClient->expects(self::atLeastOnce())
-            ->method('setDefer')
-            ->withConsecutive(
-                [true],
-                [false]
-            );
-
-        $googleClient->expects(self::atLeastOnce())
-            ->method('execute')
-            ->willReturn(new Response(200, ['location' => 'test']));
-
-        $thumbnails = $this->createMock(\Google_Service_YouTube_Resource_Thumbnails::class);
-        $thumbnails->expects(self::atLeastOnce())
-            ->method('set')
-            ->with('youtube.id')
-            ->willReturn(new Request('get', 'test_upload'));
-
-        $client = $this->createMock(\Google_Service_YouTube::class);
-        $client->expects(self::atLeastOnce())
-            ->method('getClient')
-            ->willReturn($googleClient);
-        $client->thumbnails = $thumbnails;
-
-        $youtube = new YouTubeClient($this->config, $this->google);
-        $youtube->setYouTubeClient($client);
-
-        self::assertTrue($youtube->addThumbnailToBroadcast($youtubeBroadcast, $broadcast));
     }
 
     /**

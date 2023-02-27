@@ -8,9 +8,9 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostLoadEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Doctrine\Persistence\ObjectManager;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener;
 use Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService;
@@ -48,8 +48,7 @@ class ThumbnailUploadListenerTest extends TestCase
      */
     public function testPrePersist(): void
     {
-        /** @var ObjectManager $objectManager */
-        $objectManager = $this->createMock(ObjectManager::class);
+        $manager = $this->createMock(EntityManagerInterface::class);
         $liveBroadcast = new LiveBroadcast();
 
         $uploadedFile = new UploadedFile('/tmp', 'filename', null, UPLOAD_ERR_NO_FILE);
@@ -60,7 +59,7 @@ class ThumbnailUploadListenerTest extends TestCase
             ->with($uploadedFile)
             ->willReturn($this->createMock(File::class));
 
-        $args = new LifecycleEventArgs($liveBroadcast, $objectManager);
+        $args = new PrePersistEventArgs($liveBroadcast, $manager);
         $this->eventListener->prePersist($args);
 
         self::assertInstanceOf(File::class, $liveBroadcast->getThumbnail());
@@ -131,13 +130,12 @@ class ThumbnailUploadListenerTest extends TestCase
      */
     public function testPostLoad(): void
     {
-        /** @var ObjectManager $objectManager */
-        $objectManager = $this->createMock(ObjectManager::class);
+        $manager = $this->createMock(EntityManagerInterface::class);
         $liveBroadcast = new LiveBroadcast();
 
         $liveBroadcast->setThumbnail('/tmp/dir/thumbnail.jpg');
 
-        $args = new LifecycleEventArgs($liveBroadcast, $objectManager);
+        $args = new PostLoadEventArgs($liveBroadcast, $manager);
         $this->eventListener->postLoad($args);
 
         $file = $liveBroadcast->getThumbnail();
@@ -152,12 +150,11 @@ class ThumbnailUploadListenerTest extends TestCase
      */
     public function testPostLoadInvalidEntity(): void
     {
-        /** @var ObjectManager $objectManager */
-        $objectManager = $this->createMock(ObjectManager::class);
+        $manager = $this->createMock(EntityManagerInterface::class);
         $this->uploadService->expects(static::never())
             ->method('getTargetDirectory');
 
-        $args = new LifecycleEventArgs(new \stdClass(), $objectManager);
+        $args = new PostLoadEventArgs(new \stdClass(), $manager);
         $this->eventListener->postLoad($args);
     }
 }
