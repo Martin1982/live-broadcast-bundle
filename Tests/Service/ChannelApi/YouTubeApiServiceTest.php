@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi;
 
 use Doctrine\ORM\EntityManager;
+use Google\Service\YouTube\LiveBroadcastContentDetails;
+use Google\Service\YouTube\LiveStream;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
@@ -61,12 +63,12 @@ class YouTubeApiServiceTest extends TestCase
 
         $channel = $this->createMock(ChannelYouTube::class);
 
-        $youTubeBroadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
+        $youTubeBroadcast = $this->createMock(\Google\Service\YouTube\LiveBroadcast::class);
         $youTubeBroadcast->expects(self::atLeastOnce())
             ->method('getId')
             ->willReturn('broadcast-id');
 
-        $youTubeStream = $this->createMock(\Google_Service_YouTube_LiveStream::class);
+        $youTubeStream = $this->createMock(LiveStream::class);
 
         $this->client->expects(self::atLeastOnce())
             ->method('createBroadcast')
@@ -131,12 +133,12 @@ class YouTubeApiServiceTest extends TestCase
 
         $channel = $this->createMock(ChannelYouTube::class);
 
-        $youTubeBroadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
+        $youTubeBroadcast = $this->createMock(\Google\Service\YouTube\LiveBroadcast::class);
         $youTubeBroadcast->expects(self::atLeastOnce())
             ->method('getId')
             ->willReturn('broadcast-id');
 
-        $youTubeStream = $this->createMock(\Google_Service_YouTube_LiveStream::class);
+        $youTubeStream = $this->createMock(LiveStream::class);
 
         $this->client->expects(self::atLeastOnce())
             ->method('createBroadcast')
@@ -225,12 +227,12 @@ class YouTubeApiServiceTest extends TestCase
         $broadcast = $this->createMock(LiveBroadcast::class);
         $channel = $this->createMock(ChannelYouTube::class);
 
-        $contentDetails = $this->createMock(\Google_Service_YouTube_LiveBroadcastContentDetails::class);
+        $contentDetails = $this->createMock(LiveBroadcastContentDetails::class);
         $contentDetails->expects(self::atLeastOnce())
             ->method('getBoundStreamId')
             ->willReturn('bound-stream-id');
 
-        $youTubeBroadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
+        $youTubeBroadcast = $this->createMock(\Google\Service\YouTube\LiveBroadcast::class);
         $youTubeBroadcast->expects(self::atLeastOnce())
             ->method('getContentDetails')
             ->willReturn($contentDetails);

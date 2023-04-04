@@ -7,6 +7,8 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client;
 
+use Google\Client;
+use Google\Service\YouTube;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\GoogleConfig;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
 use Psr\Log\LoggerInterface;
@@ -19,7 +21,7 @@ class GoogleClient
     /**
      * @var array
      */
-    public array $scope = [\Google_Service_YouTube::YOUTUBE];
+    public array $scope = [YouTube::YOUTUBE];
 
     /**
      * GoogleClient constructor.
@@ -33,13 +35,13 @@ class GoogleClient
     }
 
     /**
-     * @return \Google_Client
+     * @return Client
      *
      * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
      */
-    public function getClient(): \Google_Client
+    public function getClient(): Client
     {
-        $client = new \Google_Client();
+        $client = new Client();
         $client->setLogger($this->logger);
         $client->setClientId($this->config->getClientId());
         $client->setClientSecret($this->config->getClientSecret());

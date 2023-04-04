@@ -7,6 +7,10 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi\Client;
 
+use Google\Client;
+use Google\Service\Exception;
+use Google\Service\YouTube;
+use Google\Service\YouTube\Resource\LiveBroadcasts;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
@@ -40,7 +44,7 @@ class YouTubeClientTest extends TestCase
      */
     public function testSetChannel(): void
     {
-        $googleClient = $this->createMock(\Google_Client::class);
+        $googleClient = $this->createMock(Client::class);
         $googleClient->expects(self::atLeastOnce())
             ->method('fetchAccessTokenWithRefreshToken')
             ->willReturn([]);
@@ -81,12 +85,12 @@ class YouTubeClientTest extends TestCase
             ->method('getPrivacyStatus')
             ->willReturn(LiveBroadcast::PRIVACY_STATUS_PRIVATE);
 
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('insert')
-            ->willThrowException(new \Google_Service_Exception('The call failed'));
+            ->willThrowException(new Exception('The call failed'));
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -118,12 +122,12 @@ class YouTubeClientTest extends TestCase
             ->method('getPrivacyStatus')
             ->willReturn(LiveBroadcast::PRIVACY_STATUS_PUBLIC);
 
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('insert')
-            ->willReturn(new \Google_Service_YouTube_LiveBroadcast());
+            ->willReturn(new YouTube\LiveBroadcast());
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -137,12 +141,12 @@ class YouTubeClientTest extends TestCase
     public function testEndLiveStreamThrowsException(): void
     {
         $this->expectException(LiveBroadcastOutputException::class);
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('transition')
-            ->willThrowException(new \Google_Service_Exception('The call failed'));
+            ->willThrowException(new Exception('The call failed'));
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -157,12 +161,12 @@ class YouTubeClientTest extends TestCase
      */
     public function testEndLiveStream(): void
     {
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('transition')
-            ->willReturn(new \Google_Service_YouTube_LiveBroadcast());
+            ->willReturn(new YouTube\LiveBroadcast());
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -181,12 +185,12 @@ class YouTubeClientTest extends TestCase
             ->method('getExternalStreamId')
             ->willReturn('10');
 
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('delete')
-            ->willThrowException(new \Google_Service_Exception('The call failed'));
+            ->willThrowException(new Exception('The call failed'));
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -206,12 +210,12 @@ class YouTubeClientTest extends TestCase
             ->method('getExternalStreamId')
             ->willReturn('10');
 
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('delete')
-            ->willReturn(new \Google_Service_YouTube_LiveBroadcast());
+            ->willReturn(new YouTube\LiveBroadcast());
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -267,12 +271,12 @@ class YouTubeClientTest extends TestCase
             ->method('getExternalStreamId')
             ->willReturn('10');
 
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('update')
-            ->willReturn(new \Google_Service_YouTube_LiveBroadcast());
+            ->willReturn(new YouTube\LiveBroadcast());
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -308,12 +312,12 @@ class YouTubeClientTest extends TestCase
             ->method('getExternalStreamId')
             ->willReturn('10');
 
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('update')
-            ->willThrowException(new \Google_Service_Exception('The call failed'));
+            ->willThrowException(new Exception('The call failed'));
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -331,7 +335,7 @@ class YouTubeClientTest extends TestCase
             ->method('isFile')
             ->willReturn(false);
 
-        $youtubeBroadcast = new \Google_Service_YouTube_LiveBroadcast();
+        $youtubeBroadcast = new YouTube\LiveBroadcast();
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::exactly(2))
             ->method('getThumbnail')
@@ -351,12 +355,12 @@ class YouTubeClientTest extends TestCase
     public function testCreateStreamThrowsException(): void
     {
         $this->expectException(LiveBroadcastOutputException::class);
-        $liveStreams = $this->createMock(\Google_Service_YouTube_Resource_LiveStreams::class);
+        $liveStreams = $this->createMock(YouTube\Resource\LiveStreams::class);
         $liveStreams->expects(self::atLeastOnce())
             ->method('insert')
-            ->willThrowException(new \Google_Service_Exception('The call failed'));
+            ->willThrowException(new Exception('The call failed'));
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveStreams = $liveStreams;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -371,12 +375,12 @@ class YouTubeClientTest extends TestCase
      */
     public function testCreateStream(): void
     {
-        $liveStreams = $this->createMock(\Google_Service_YouTube_Resource_LiveStreams::class);
+        $liveStreams = $this->createMock(YouTube\Resource\LiveStreams::class);
         $liveStreams->expects(self::atLeastOnce())
             ->method('insert')
-            ->willReturn($this->createMock(\Google_Service_YouTube_LiveStream::class));
+            ->willReturn($this->createMock(YouTube\LiveStream::class));
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveStreams = $liveStreams;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -390,19 +394,19 @@ class YouTubeClientTest extends TestCase
     public function testBindThrowsException(): void
     {
         $this->expectException(LiveBroadcastOutputException::class);
-        $broadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
+        $broadcast = $this->createMock(YouTube\LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getId')
             ->willReturn('someId');
 
-        $stream = $this->createMock(\Google_Service_YouTube_LiveStream::class);
+        $stream = $this->createMock(YouTube\LiveStream::class);
 
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('bind')
-            ->willThrowException(new \Google_Service_Exception('The call failed'));
+            ->willThrowException(new Exception('The call failed'));
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -417,19 +421,19 @@ class YouTubeClientTest extends TestCase
      */
     public function testBind(): void
     {
-        $broadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
+        $broadcast = $this->createMock(YouTube\LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getId')
             ->willReturn('someId');
 
-        $stream = $this->createMock(\Google_Service_YouTube_LiveStream::class);
+        $stream = $this->createMock(YouTube\LiveStream::class);
 
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
         $broadcastsService->expects(self::atLeastOnce())
             ->method('bind')
-            ->willReturn(new \Google_Service_YouTube_LiveBroadcast());
+            ->willReturn(new YouTube\LiveBroadcast());
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -444,9 +448,9 @@ class YouTubeClientTest extends TestCase
      */
     public function testGetYouTubeBroadcast(): void
     {
-        $broadcastsService = $this->createMock(\Google_Service_YouTube_Resource_LiveBroadcasts::class);
-        $listResponse = $this->createMock(\Google_Service_YouTube_LiveBroadcastListResponse::class);
-        $broadcast = $this->createMock(\Google_Service_YouTube_LiveBroadcast::class);
+        $broadcastsService = $this->createMock(LiveBroadcasts::class);
+        $listResponse = $this->createMock(YouTube\LiveBroadcastListResponse::class);
+        $broadcast = $this->createMock(YouTube\LiveBroadcast::class);
         $itemsResponse = [$broadcast];
 
         $listResponse->expects(self::atLeastOnce())
@@ -456,7 +460,7 @@ class YouTubeClientTest extends TestCase
             ->method('listLiveBroadcasts')
             ->willReturn($listResponse);
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveBroadcasts = $broadcastsService;
 
         $youtube = new YouTubeClient($this->config, $this->google);
@@ -469,7 +473,7 @@ class YouTubeClientTest extends TestCase
      */
     public function testGetStreamUrl(): void
     {
-        $ingestion = $this->createMock(\Google_Service_YouTube_IngestionInfo::class);
+        $ingestion = $this->createMock(YouTube\IngestionInfo::class);
         $ingestion->expects(self::atLeastOnce())
             ->method('getIngestionAddress')
             ->willReturn('rtmp://you.tu.be');
@@ -477,27 +481,27 @@ class YouTubeClientTest extends TestCase
             ->method('getStreamName')
             ->willReturn('a-stream-name');
 
-        $cdn = $this->createMock(\Google_Service_YouTube_CdnSettings::class);
+        $cdn = $this->createMock(YouTube\CdnSettings::class);
         $cdn->expects(self::atLeastOnce())
             ->method('getIngestionInfo')
             ->willReturn($ingestion);
 
-        $stream = $this->createMock(\Google_Service_YouTube_LiveStream::class);
+        $stream = $this->createMock(YouTube\LiveStream::class);
         $stream->expects(self::atLeastOnce())
             ->method('getCdn')
             ->willReturn($cdn);
 
-        $liveStreamList = $this->createMock(\Google_Service_YouTube_LiveStreamListResponse::class);
+        $liveStreamList = $this->createMock(YouTube\LiveStreamListResponse::class);
         $liveStreamList->expects(self::atLeastOnce())
             ->method('current')
             ->willReturn($stream);
 
-        $liveStreams = $this->createMock(\Google_Service_YouTube_Resource_LiveStreams::class);
+        $liveStreams = $this->createMock(YouTube\Resource\LiveStreams::class);
         $liveStreams->expects(self::atLeastOnce())
             ->method('listLiveStreams')
             ->willReturn($liveStreamList);
 
-        $client = $this->createMock(\Google_Service_YouTube::class);
+        $client = $this->createMock(YouTube::class);
         $client->liveStreams = $liveStreams;
 
         $youtube = new YouTubeClient($this->config, $this->google);
