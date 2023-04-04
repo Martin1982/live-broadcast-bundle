@@ -31,7 +31,7 @@ class StreamServiceAnnouncementHandler implements MessageHandlerInterface
      *
      * @return void
      */
-    public function __invoke(StreamServiceAnnouncement $message)
+    public function __invoke(StreamServiceAnnouncement $message): void
     {
         $actionType = $message->getActionType();
         $broadcast = $this->rebuildBroadcast($message->getBroadcastId(), $message->getPreviousChannels());
