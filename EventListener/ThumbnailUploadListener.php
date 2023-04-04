@@ -7,9 +7,9 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
