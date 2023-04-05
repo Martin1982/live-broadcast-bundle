@@ -8,12 +8,14 @@ namespace Martin1982\LiveBroadcastBundle\MessageHandler;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Message\StreamServiceAnnouncement;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 /**
  * Class StreamServiceAnnouncementHandler
  */
-class StreamServiceAnnouncementHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class StreamServiceAnnouncementHandler
 {
     /**
      * StreamServiceAnnouncementHandler constructor.
