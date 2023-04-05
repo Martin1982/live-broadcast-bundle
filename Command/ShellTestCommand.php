@@ -34,11 +34,6 @@ class ShellTestCommand extends Command
     private bool $isLinux = false;
 
     /**
-     * @var string
-     */
-    protected static $defaultName = 'livebroadcaster:test:shell';
-
-    /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output): int

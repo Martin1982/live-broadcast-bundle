@@ -24,11 +24,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class BroadcasterCommand extends Command
 {
     /**
-     * @var string
-     */
-    protected static $defaultName = 'livebroadcaster:broadcast';
-
-    /**
      * @param Scheduler       $scheduler
      * @param LoggerInterface $logger
      * @param int             $eventLoopTimer
