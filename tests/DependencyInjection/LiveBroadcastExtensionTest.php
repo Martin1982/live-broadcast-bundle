@@ -25,7 +25,6 @@ class LiveBroadcastExtensionTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-
         $config = [
             'live_broadcast' => [
                 'facebook' => [

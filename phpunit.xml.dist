@@ -2,21 +2,15 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="vendor/autoload.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
   <coverage>
     <include>
-      <directory>./</directory>
+      <directory>./src</directory>
     </include>
-    <exclude>
-      <directory>./Resources</directory>
-      <directory>./Tests</directory>
-      <directory>./vendor</directory>
-      <directory>./Admin</directory>
-    </exclude>
   </coverage>
   <php>
     <ini name="xdebug.max_nesting_level" value="200"/>
   </php>
   <testsuites>
     <testsuite name="LiveBroadcastBundle">
-      <directory>./Tests</directory>
+      <directory>./tests</directory>
     </testsuite>
   </testsuites>
 </phpunit>

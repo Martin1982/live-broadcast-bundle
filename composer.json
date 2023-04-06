@@ -41,7 +41,10 @@
         "doctrine/doctrine-migrations-bundle": "Keep track of updated entities in your database"
     },
     "autoload": {
-        "psr-4": { "Martin1982\\LiveBroadcastBundle\\": "" }
+        "psr-4": { "Martin1982\\LiveBroadcastBundle\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Martin1982\\LiveBroadcastBundle\\Tests\\": "tests/" }
     },
     "config": {
         "allow-plugins": {
