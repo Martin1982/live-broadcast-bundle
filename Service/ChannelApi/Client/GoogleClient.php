@@ -49,6 +49,7 @@ class GoogleClient
         $client->setAccessType('offline');
         $client->setRedirectUri($this->redirect->getOAuthRedirectUrl());
         $client->setApprovalPrompt('force');
+        $client->setPrompt('consent');
 
         return $client;
     }
