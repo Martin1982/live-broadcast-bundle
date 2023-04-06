@@ -35,7 +35,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run PHPCS
-        run: ./vendor/bin/phpcs --standard=./vendor/escapestudios/symfony2-coding-standard/Symfony/ Broadcaster/ Command/ DependencyInjection/ Entity/ EventListener/ Exception/ Resources/ Service/ Tests/ LiveBroadcastBundle.php
+        run: ./vendor/bin/phpcs --standard=./vendor/escapestudios/symfony2-coding-standard/Symfony/ src/
 
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit --coverage-text --colors
