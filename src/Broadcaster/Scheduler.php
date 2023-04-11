@@ -165,13 +165,17 @@ class Scheduler
         $processStrings = $this->schedulerCommands->getRunningProcesses();
 
         foreach ($processStrings as $processString) {
+            $broadcastId = $this->schedulerCommands->getBroadcastId($processString);
+            $processId = $this->schedulerCommands->getProcessId($processString);
+            $channelId = $this->schedulerCommands->getChannelId($processString);
+            $environment = $this->schedulerCommands->getEnvironment($processString);
+
             try {
-                $runningItem = new RunningBroadcast(
-                    $this->schedulerCommands->getBroadcastId($processString),
-                    $this->schedulerCommands->getProcessId($processString),
-                    $this->schedulerCommands->getChannelId($processString),
-                    $this->schedulerCommands->getEnvironment($processString)
-                );
+                if (!is_int($broadcastId) || !is_int($processId) || !is_int($channelId)) {
+                    throw new \Exception('Invalid process string');
+                }
+
+                $runningItem = new RunningBroadcast($broadcastId, $processId, $channelId, $environment);
 
                 if ($runningItem->isValid($this->schedulerCommands->getKernelEnvironment())) {
                     $runningBroadcasts[] = $runningItem;
