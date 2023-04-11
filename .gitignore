@@ -1,6 +1,5 @@
 *.cache
 .idea
-composer.lock
 composer.phar
 docker-compose.yml
 testvideo.mp4
