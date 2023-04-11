@@ -165,15 +165,22 @@ class Scheduler
         $processStrings = $this->schedulerCommands->getRunningProcesses();
 
         foreach ($processStrings as $processString) {
-            $runningItem = new RunningBroadcast(
-                $this->schedulerCommands->getBroadcastId($processString),
-                $this->schedulerCommands->getProcessId($processString),
-                $this->schedulerCommands->getChannelId($processString),
-                $this->schedulerCommands->getEnvironment($processString)
-            );
+            try {
+                $runningItem = new RunningBroadcast(
+                    $this->schedulerCommands->getBroadcastId($processString),
+                    $this->schedulerCommands->getProcessId($processString),
+                    $this->schedulerCommands->getChannelId($processString),
+                    $this->schedulerCommands->getEnvironment($processString)
+                );
 
-            if ($runningItem->isValid($this->schedulerCommands->getKernelEnvironment())) {
-                $runningBroadcasts[] = $runningItem;
+                if ($runningItem->isValid($this->schedulerCommands->getKernelEnvironment())) {
+                    $runningBroadcasts[] = $runningItem;
+                }
+            } catch (\Exception $exception) {
+                $this->logger->warning(
+                    'Could not parse process string, this might be an unrelated ffmpeg process',
+                    ['process_string' => $processString]
+                );
             }
         }
 
