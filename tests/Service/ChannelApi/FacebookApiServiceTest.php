@@ -680,7 +680,7 @@ class FacebookApiServiceTest extends TestCase
     public function testInitFacebookWithSdkError(): void
     {
         $this->expectException(LiveBroadcastApiException::class);
-        $this->expectExceptionMessage('Facebook SDK Exception: Something went wrong...');
+        $this->expectExceptionMessage('Facebook SDK init exception: Something went wrong...');
         $channel = $this->createMock(ChannelYouTube::class);
         $channel->expects(self::never())
             ->method('getRefreshToken');

@@ -77,7 +77,7 @@ class FacebookApiService implements ChannelApiInterface
             $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
             $response = $this->facebookSDK->post($channel->getFbEntityId().'/live_videos', $params);
         } catch (SDKException $exception) {
-            throw new LiveBroadcastApiException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
+            throw new LiveBroadcastApiException(sprintf('Facebook SDK live_videos post exception: %s', $exception->getMessage()));
         }
 
         $body = $response->getDecodedBody();
@@ -133,7 +133,7 @@ class FacebookApiService implements ChannelApiInterface
             $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
             $this->facebookSDK->post('/'.$eventId, $params);
         } catch (SDKException $exception) {
-            throw new LiveBroadcastApiException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
+            throw new LiveBroadcastApiException(sprintf('Facebook SDK event post exception: %s', $exception->getMessage()));
         }
     }
 
@@ -167,7 +167,7 @@ class FacebookApiService implements ChannelApiInterface
             $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
             $this->facebookSDK->delete('/'.$eventId);
         } catch (SDKException $exception) {
-            throw new LiveBroadcastApiException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
+            throw new LiveBroadcastApiException(sprintf('Facebook SDK event delete exception: %s', $exception->getMessage()));
         }
 
         $this->entityManager->remove($event);
@@ -192,7 +192,7 @@ class FacebookApiService implements ChannelApiInterface
         try {
             return $this->facebookSDK->getOAuth2Client()->getLongLivedAccessToken($userAccessToken);
         } catch (SDKException $ex) {
-            throw new LiveBroadcastApiException(sprintf('Facebook SDK exception: %s', $ex->getMessage()));
+            throw new LiveBroadcastApiException(sprintf('Facebook SDK access token exception: %s', $ex->getMessage()));
         }
     }
 
@@ -234,7 +234,7 @@ class FacebookApiService implements ChannelApiInterface
             $facebookStream = $this->facebookSDK->get('/'.$eventId);
             $streamUrl = $facebookStream->getGraphNode()->getField('stream_url');
         } catch (SDKException $exception) {
-            throw new LiveBroadcastApiException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
+            throw new LiveBroadcastApiException(sprintf('Facebook SDK stream_url get exception: %s', $exception->getMessage()));
         }
 
         return $streamUrl;
@@ -257,7 +257,7 @@ class FacebookApiService implements ChannelApiInterface
         try {
             $this->facebookSDK->post('/'.$externalId, ['end_live_video' => true]);
         } catch (SDKException $exception) {
-            throw new LiveBroadcastApiException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
+            throw new LiveBroadcastApiException(sprintf('Facebook SDK end live video exception: %s', $exception->getMessage()));
         }
     }
 
@@ -282,7 +282,7 @@ class FacebookApiService implements ChannelApiInterface
             $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
             $this->facebookSDK->get('/'.$channel->getFbEntityId().'/live_videos');
         } catch (SDKException $exception) {
-            throw new LiveBroadcastApiException(sprintf('Facebook SDK exception: %s', $exception->getMessage()));
+            throw new LiveBroadcastApiException(sprintf('Facebook SDK get live_videos exception: %s', $exception->getMessage()));
         }
 
         return true;
@@ -312,7 +312,7 @@ class FacebookApiService implements ChannelApiInterface
                 'default_graph_version' => 'v16.0',
             ]));
         } catch (SDKException $ex) {
-            throw new LiveBroadcastApiException(sprintf('Facebook SDK Exception: %s', $ex->getMessage()));
+            throw new LiveBroadcastApiException(sprintf('Facebook SDK init exception: %s', $ex->getMessage()));
         }
     }
 
