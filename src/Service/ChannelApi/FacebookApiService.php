@@ -70,7 +70,7 @@ class FacebookApiService implements ChannelApiInterface
             $params = [
                 'title' => $broadcast->getName(),
                 'description' => $broadcast->getDescription(),
-                'planned_start_time' => $startTimestamp->format('U'),
+                'event_params' => ['start_time' => $startTimestamp->format('U')],
                 'status' => 'SCHEDULED_LIVE',
             ];
 
