@@ -5,7 +5,7 @@
  */
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
@@ -94,11 +94,11 @@ class StreamAnnouncementListener
     /**
      * FunctionDescription
      *
-     * @param AbstractChannel[]|ArrayCollection $channels
+     * @param AbstractChannel[]|Collection $channels
      *
      * @return array
      */
-    protected function getChannelIds(ArrayCollection|array $channels): array
+    protected function getChannelIds(Collection|array $channels): array
     {
         $ids = [];
 
