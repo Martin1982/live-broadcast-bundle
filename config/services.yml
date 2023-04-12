@@ -32,6 +32,7 @@ services:
       arguments:
           - "@doctrine.orm.entity_manager"
           - "@live.broadcast.channel_api.stack"
+          - "@logger"
 
   live.broadcast.channel_validator:
       class: Martin1982\LiveBroadcastBundle\Service\ChannelValidatorService
@@ -80,6 +81,7 @@ services:
     class: Martin1982\LiveBroadcastBundle\MessageHandler\StreamServiceAnnouncementHandler
     arguments:
       - '@live.broadcast.broadcast_manager'
+      - '@logger'
     tags: [messenger.message_handler]
 
   live.broadcast.channel_api.stack:
