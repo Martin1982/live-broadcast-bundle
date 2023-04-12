@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
@@ -110,7 +111,7 @@ class LiveBroadcast
      *      inverseJoinColumns={@ORM\JoinColumn(name="channel_id", referencedColumnName="id")}
      * )
      */
-    private array|ArrayCollection $outputChannels;
+    private array|Collection $outputChannels;
 
     /**
      * LiveBroadcast constructor
@@ -281,9 +282,9 @@ class LiveBroadcast
     }
 
     /**
-     * @return ArrayCollection|AbstractChannel[]
+     * @return Collection|AbstractChannel[]
      */
-    public function getOutputChannels(): ArrayCollection|array
+    public function getOutputChannels(): Collection|array
     {
         return $this->outputChannels;
     }
