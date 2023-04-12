@@ -309,7 +309,7 @@ class FacebookApiService implements ChannelApiInterface
             $this->setFacebookSdk(new FacebookSDK([
                 'app_id' => $this->applicationId,
                 'app_secret' => $this->applicationSecret,
-                'default_graph_version' => 'v3.3',
+                'default_graph_version' => 'v16.0',
             ]));
         } catch (SDKException $ex) {
             throw new LiveBroadcastOutputException(sprintf('Facebook SDK Exception: %s', $ex->getMessage()));
