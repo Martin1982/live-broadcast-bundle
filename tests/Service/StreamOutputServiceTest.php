@@ -14,6 +14,7 @@ use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputTwitch;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -35,6 +36,7 @@ class StreamOutputServiceTest extends TestCase
 
     /**
      * Test that not having a configured channel throws an exception
+     * @throws Exception
      */
     public function testGetOutputInterfaceWithNotConfiguredChannel(): void
     {
@@ -54,6 +56,7 @@ class StreamOutputServiceTest extends TestCase
      * Test if the correct output instance is returned for a given channel
      *
      * @throws LiveBroadcastOutputException
+     * @throws Exception
      */
     public function testGetOutputInterface(): void
     {

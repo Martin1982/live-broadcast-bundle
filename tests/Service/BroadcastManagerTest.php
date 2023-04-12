@@ -52,6 +52,8 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test getting a broadcast entity by id
+     * @throws Exception
+     * @throws Exception
      */
     public function testGetBroadcastById(): void
     {
@@ -75,6 +77,10 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test that pre-inserts get executed
+     * @throws LiveBroadcastApiException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testPreInsert(): void
     {
@@ -100,6 +106,11 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test pre-update events
+     * @throws LiveBroadcastApiException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testPreUpdate(): void
     {
@@ -168,6 +179,9 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test that no updates are done when there is no previous state
+     * @throws LiveBroadcastApiException
+     * @throws Exception
+     * @throws Exception
      */
     public function testUpdateWithNoPreviousState():void
     {
@@ -195,6 +209,9 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test pre delete actions
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testPreDelete(): void
     {
@@ -259,6 +276,7 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test getting an events repository
+     * @throws Exception
      */
     public function testGetEventsRepository(): void
     {
@@ -396,6 +414,7 @@ class BroadcastManagerTest extends TestCase
     /**
      * Test getting planned broadcasts
      *
+     * @throws Exception
      * @throws LiveBroadcastException
      */
     public function testGetPlannedBroadcasts(): void
@@ -419,6 +438,7 @@ class BroadcastManagerTest extends TestCase
      * Test getting planned broadcasts
      *
      * @throws LiveBroadcastException
+     * @throws Exception
      */
     public function testGetNonePlannedBroadcasts(): void
     {
@@ -439,6 +459,9 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Setup mock objects
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     protected function setUp(): void
     {

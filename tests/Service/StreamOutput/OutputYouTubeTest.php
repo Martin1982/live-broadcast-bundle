@@ -9,9 +9,11 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputYouTube;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,6 +28,7 @@ class OutputYouTubeTest extends TestCase
 
     /**
      * Set up a testable Facebook channel
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -52,7 +55,7 @@ class OutputYouTubeTest extends TestCase
 
     /**
      * Test generating an output throws an exception
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
      */
     public function testGenerateOutputCmdException(): void
     {
@@ -62,7 +65,9 @@ class OutputYouTubeTest extends TestCase
 
     /**
      * Test that no stream url throws an exception
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
      */
     public function testNoStreamUrlException(): void
     {
@@ -77,7 +82,9 @@ class OutputYouTubeTest extends TestCase
 
     /**
      * @throws LiveBroadcastOutputException
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
      */
     public function testGenerateOutputCmd(): void
     {

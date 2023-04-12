@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
+use DateTime;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Scheduler;
 use Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsInterface;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
@@ -19,6 +20,7 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastStarter;
 use Martin1982\LiveBroadcastBundle\Service\ChannelValidatorService;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -57,11 +59,13 @@ class SchedulerTest extends TestCase
      * Test stopping an expired broadcast
      *
      * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
      */
     public function testStopAnExpiredBroadcast(): void
     {
         $expiredBroadcast = new LiveBroadcast();
-        $expiredBroadcast->setEndTimestamp(new \DateTime('-1 hour'));
+        $expiredBroadcast->setEndTimestamp(new DateTime('-1 hour'));
         $expiredBroadcast->setStopOnEndTimestamp(true);
 
         $broadcastRepository = $this->createMock(LiveBroadcastRepository::class);
@@ -112,6 +116,8 @@ class SchedulerTest extends TestCase
 
     /**
      * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
      */
     public function testStoppingCausesAnError(): void
     {
@@ -165,6 +171,10 @@ class SchedulerTest extends TestCase
      * Test starting a planned broadcast
      *
      * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testStartPlannedBroadcast(): void
     {
@@ -176,7 +186,7 @@ class SchedulerTest extends TestCase
             ->willReturn([$channel]);
         $plannedBroadcast->expects(self::atLeastOnce())
             ->method('getEndTimestamp')
-            ->willReturn(new \DateTime('+5 minutes'));
+            ->willReturn(new DateTime('+5 minutes'));
 
         $this->schedulerCommands->expects(self::atLeastOnce())
             ->method('getRunningProcesses')
@@ -231,6 +241,10 @@ class SchedulerTest extends TestCase
      * Test starting a planned broadcast which has already started
      *
      * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testStartPlannedBroadcastAlreadyStarted(): void
     {
@@ -248,7 +262,7 @@ class SchedulerTest extends TestCase
             ->willReturn([$channel]);
         $plannedBroadcast->expects(self::atLeastOnce())
             ->method('getEndTimestamp')
-            ->willReturn(new \DateTime('+5 minutes'));
+            ->willReturn(new DateTime('+5 minutes'));
 
         $this->schedulerCommands->expects(self::atLeastOnce())
             ->method('getRunningProcesses')
@@ -300,6 +314,10 @@ class SchedulerTest extends TestCase
      * Test starting a planned broadcast which throws an exception logs an error
      *
      * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testStartPlannedBroadcastThrowsException(): void
     {
@@ -317,7 +335,7 @@ class SchedulerTest extends TestCase
             ->willReturn([$channel]);
         $plannedBroadcast->expects(self::atLeastOnce())
             ->method('getEndTimestamp')
-            ->willReturn(new \DateTime('+5 minutes'));
+            ->willReturn(new DateTime('+5 minutes'));
 
         $this->schedulerCommands->expects(self::atLeastOnce())
             ->method('getRunningProcesses')
@@ -373,19 +391,24 @@ class SchedulerTest extends TestCase
      * Test that end signals get sent
      *
      * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testSendEndSignal(): void
     {
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getStartTimestamp')
-            ->willReturn(new \DateTime('-10 minutes'));
+            ->willReturn(new DateTime('-10 minutes'));
         $broadcast->expects(self::atLeastOnce())
             ->method('isStopOnEndTimestamp')
             ->willReturn(true);
         $broadcast->expects(self::atLeastOnce())
             ->method('getEndTimestamp')
-            ->willReturn(new \DateTime('-5 minutes'));
+            ->willReturn(new DateTime('-5 minutes'));
 
         $channel = $this->createMock(ChannelFacebook::class);
 
@@ -426,6 +449,9 @@ class SchedulerTest extends TestCase
      * Test that end signals get sent
      *
      * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testSendEndSignalWhenNoChannelIsFound(): void
     {
@@ -469,13 +495,18 @@ class SchedulerTest extends TestCase
      * Test that end signals get sent
      *
      * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testSendEndSignalWhenNotStarted(): void
     {
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getStartTimestamp')
-            ->willReturn(new \DateTime('+10 minutes'));
+            ->willReturn(new DateTime('+10 minutes'));
 
         $channel = $this->createMock(ChannelFacebook::class);
 
@@ -516,19 +547,24 @@ class SchedulerTest extends TestCase
      * Test that end signals get sent
      *
      * @throws LiveBroadcastException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testSendEndSignalWithSingleVideoRun(): void
     {
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getStartTimestamp')
-            ->willReturn(new \DateTime('-10 minutes'));
+            ->willReturn(new DateTime('-10 minutes'));
         $broadcast->expects(self::atLeastOnce())
             ->method('isStopOnEndTimestamp')
             ->willReturn(false);
         $broadcast->expects(self::atLeastOnce())
             ->method('getEndTimestamp')
-            ->willReturn(new \DateTime('-5 minutes'));
+            ->willReturn(new DateTime('-5 minutes'));
         $broadcast->expects(self::atLeastOnce())
             ->method('getBroadcastId')
             ->willReturn(20);
@@ -604,6 +640,11 @@ class SchedulerTest extends TestCase
 
     /**
      * Setup default mocks
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     protected function setUp(): void
     {

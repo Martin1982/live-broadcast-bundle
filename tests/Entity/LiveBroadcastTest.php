@@ -7,9 +7,11 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Entity;
 
+use DateTime;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -29,11 +31,14 @@ class LiveBroadcastTest extends TestCase
 
     /**
      * Test get methods
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testGetMethods(): void
     {
-        $now = new \DateTime('+15 minutes');
-        $endTime = new \DateTime('+1 hour');
+        $now = new DateTime('+15 minutes');
+        $endTime = new DateTime('+1 hour');
 
         $channelOne = $this->createMock(AbstractChannel::class);
         $channelTwo = $this->createMock(AbstractChannel::class);

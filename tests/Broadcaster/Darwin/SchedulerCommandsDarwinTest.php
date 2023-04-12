@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Darwin;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Darwin\SchedulerCommands;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -19,7 +21,8 @@ class SchedulerCommandsDarwinTest extends TestCase
     /**
      * Test the running processes command.
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
+     * @throws Exception
      */
     public function testGetRunningProcesses(): void
     {

@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi\Client;
 
+use DateTime;
 use Google\Client;
 use Google\Service\Exception;
 use Google\Service\YouTube;
@@ -66,6 +67,9 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test creating a broadcast
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testCreateBroadcastThrowsException(): void
     {
@@ -74,7 +78,7 @@ class YouTubeClientTest extends TestCase
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getStartTimestamp')
-            ->willReturn(new \DateTime('-10 minutes'));
+            ->willReturn(new DateTime('-10 minutes'));
         $broadcast->expects(self::atLeastOnce())
             ->method('getName')
             ->willReturn('Unit testing broadcast');
@@ -83,7 +87,7 @@ class YouTubeClientTest extends TestCase
             ->willReturn('Unit testing broadcast description');
         $broadcast->expects(self::atLeastOnce())
             ->method('getEndTimestamp')
-            ->willReturn(new \DateTime('+3 days'));
+            ->willReturn(new DateTime('+3 days'));
         $broadcast->expects(self::atLeastOnce())
             ->method('getPrivacyStatus')
             ->willReturn(LiveBroadcast::PRIVACY_STATUS_PRIVATE);
@@ -112,7 +116,7 @@ class YouTubeClientTest extends TestCase
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getStartTimestamp')
-            ->willReturn(new \DateTime('-10 minutes'));
+            ->willReturn(new DateTime('-10 minutes'));
         $broadcast->expects(self::atLeastOnce())
             ->method('getName')
             ->willReturn('Unit testing broadcast');
@@ -121,7 +125,7 @@ class YouTubeClientTest extends TestCase
             ->willReturn('Unit testing broadcast description');
         $broadcast->expects(self::atLeastOnce())
             ->method('getEndTimestamp')
-            ->willReturn(new \DateTime('+3 days'));
+            ->willReturn(new DateTime('+3 days'));
         $broadcast->expects(self::atLeastOnce())
             ->method('getPrivacyStatus')
             ->willReturn(LiveBroadcast::PRIVACY_STATUS_PUBLIC);
@@ -141,6 +145,8 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test ending the live-stream
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testEndLiveStreamThrowsException(): void
     {
@@ -181,6 +187,9 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test removing the live-stream
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testRemoveStreamThrowsException(): void
     {
@@ -260,7 +269,7 @@ class YouTubeClientTest extends TestCase
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getStartTimestamp')
-            ->willReturn(new \DateTime('-10 minutes'));
+            ->willReturn(new DateTime('-10 minutes'));
         $broadcast->expects(self::atLeastOnce())
             ->method('getName')
             ->willReturn('Unit testing broadcast');
@@ -269,7 +278,7 @@ class YouTubeClientTest extends TestCase
             ->willReturn('Unit testing broadcast description');
         $broadcast->expects(self::atLeastOnce())
             ->method('getEndTimestamp')
-            ->willReturn(new \DateTime('+3 days'));
+            ->willReturn(new DateTime('+3 days'));
 
         $streamEvent = $this->createMock(StreamEvent::class);
         $streamEvent->expects(self::atLeastOnce())
@@ -294,6 +303,10 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test updating a live-stream
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testUpdateLiveStreamThrowsException(): void
     {
@@ -301,7 +314,7 @@ class YouTubeClientTest extends TestCase
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
             ->method('getStartTimestamp')
-            ->willReturn(new \DateTime('-10 minutes'));
+            ->willReturn(new DateTime('-10 minutes'));
         $broadcast->expects(self::atLeastOnce())
             ->method('getName')
             ->willReturn('Unit testing broadcast');
@@ -310,7 +323,7 @@ class YouTubeClientTest extends TestCase
             ->willReturn('Unit testing broadcast description');
         $broadcast->expects(self::atLeastOnce())
             ->method('getEndTimestamp')
-            ->willReturn(new \DateTime('+3 days'));
+            ->willReturn(new DateTime('+3 days'));
 
         $streamEvent = $this->createMock(StreamEvent::class);
         $streamEvent->expects(self::atLeastOnce())
@@ -335,6 +348,8 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test adding a thumbnail to a broadcast with an invalid thumbnail
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testAddThumbnailToBroadcastInvalidThumbnail(): void
     {
@@ -359,6 +374,8 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test creating a stream
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testCreateStreamThrowsException(): void
     {
@@ -399,6 +416,10 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test binding a stream to a broadcast
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testBindThrowsException(): void
     {
@@ -481,6 +502,12 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Test getting the stream url
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testGetStreamUrl(): void
     {
@@ -524,6 +551,8 @@ class YouTubeClientTest extends TestCase
 
     /**
      * Setup basic mock objects
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     protected function setUp(): void
     {

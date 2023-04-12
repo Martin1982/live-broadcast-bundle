@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster\Windows;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\Windows\SchedulerCommands;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -19,7 +21,8 @@ class SchedulerCommandsWindowsTest extends TestCase
     /**
      * Test the stop process command.
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
+     * @throws Exception
      */
     public function testStopProcess(): void
     {
@@ -32,7 +35,8 @@ class SchedulerCommandsWindowsTest extends TestCase
     /**
      * Test the running processes command.
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
+     * @throws Exception
      */
     public function testGetRunningProcesses(): void
     {
@@ -44,6 +48,7 @@ class SchedulerCommandsWindowsTest extends TestCase
     /**
      * Test running the stream command
      * @throws \Exception
+     * @throws Exception
      */
     public function testExecStreamCommand(): void
     {
@@ -58,6 +63,7 @@ class SchedulerCommandsWindowsTest extends TestCase
      * Get a KernelInterface mock object
      *
      * @return Kernel
+     * @throws Exception
      */
     protected function getKernel(): Kernel
     {

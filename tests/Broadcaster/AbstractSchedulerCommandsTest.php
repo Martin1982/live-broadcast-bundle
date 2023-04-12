@@ -9,8 +9,10 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
@@ -25,6 +27,8 @@ class AbstractSchedulerCommandsTest extends TestCase
 
     /**
      * Set up a basic test object
+     *
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -63,7 +67,7 @@ class AbstractSchedulerCommandsTest extends TestCase
         $this->schedulerCommands->setFFMpegLogDirectory(__DIR__);
         $this->schedulerCommands->setFFMpegLogDirectory('/does/not/exist');
 
-        $reflection = new \ReflectionClass($this->schedulerCommands);
+        $reflection = new ReflectionClass($this->schedulerCommands);
         $property = $reflection->getProperty('logDirectoryFFMpeg');
         $property->setAccessible(true);
 

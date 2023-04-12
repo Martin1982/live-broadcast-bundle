@@ -7,9 +7,11 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Service\ChannelApi\Client;
 
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\GoogleConfig;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\GoogleClient;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -37,7 +39,7 @@ class GoogleClientTest extends TestCase
     /**
      * Test getting the client
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastOutputException
      */
     public function testGetClient(): void
     {
@@ -60,6 +62,9 @@ class GoogleClientTest extends TestCase
 
     /**
      * Setup mock objects
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     protected function setUp(): void
     {

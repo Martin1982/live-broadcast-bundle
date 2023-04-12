@@ -10,10 +10,12 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service\StreamOutput;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastApiException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputFacebook;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\OutputInterface;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -34,6 +36,7 @@ class OutputFacebookTest extends TestCase
 
     /**
      * Set up a testable Facebook channel
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -55,6 +58,7 @@ class OutputFacebookTest extends TestCase
 
     /**
      * Test the output generation command without a channel
+     * @throws LiveBroadcastApiException
      */
     public function testGenerateOutputCmdWithoutChannel(): void
     {
@@ -65,6 +69,7 @@ class OutputFacebookTest extends TestCase
 
     /**
      * Test the output generation command with an invalid channel
+     * @throws LiveBroadcastApiException
      */
     public function testGenerateOutputCmdWithInvalidChannel(): void
     {
@@ -78,6 +83,7 @@ class OutputFacebookTest extends TestCase
 
     /**
      * Test the output generation command without a stream url set
+     * @throws LiveBroadcastApiException
      */
     public function testGenerateOutputCmdWithoutStreamUrl(): void
     {
@@ -91,6 +97,9 @@ class OutputFacebookTest extends TestCase
      * Test if the Facebook output class generates the correct output command.
      *
      * @throws LiveBroadcastOutputException
+     * @throws LiveBroadcastApiException
+     * @throws Exception
+     * @throws Exception
      */
     public function testValidGenerateOutputCmd(): void
     {
@@ -112,6 +121,9 @@ class OutputFacebookTest extends TestCase
      * Test without a stream url
      *
      * @throws LiveBroadcastOutputException
+     * @throws LiveBroadcastApiException
+     * @throws Exception
+     * @throws Exception
      */
     public function testNoStreamUrlException(): void
     {

@@ -9,6 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\GoogleRedirectService;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
@@ -22,6 +23,7 @@ class GoogleRedirectServiceTest extends TestCase
      * Test getting the redirect url
      *
      * @throws LiveBroadcastOutputException
+     * @throws Exception
      */
     public function testGetOAuthRedirectUrl(): void
     {
@@ -32,7 +34,8 @@ class GoogleRedirectServiceTest extends TestCase
 
         $redirectRoute = 'test';
 
-        $redirect = new GoogleRedirectService($router, $redirectRoute);
+        $redirect = new GoogleRedirectService($router);
+        $redirect->setRedirectRoute($redirectRoute);
         $url = $redirect->getOAuthRedirectUrl();
 
         self::assertEquals('my_resulting_route', $url);
@@ -40,6 +43,7 @@ class GoogleRedirectServiceTest extends TestCase
 
     /**
      * Test getting the redirect url
+     * @throws Exception
      */
     public function testRouteNotFound(): void
     {
@@ -52,7 +56,8 @@ class GoogleRedirectServiceTest extends TestCase
 
         $redirectRoute = 'test';
 
-        $redirect = new GoogleRedirectService($router, $redirectRoute);
+        $redirect = new GoogleRedirectService($router);
+        $redirect->setRedirectRoute($redirectRoute);
         $url = $redirect->getOAuthRedirectUrl();
 
         self::assertEquals('my_resulting_route', $url);
@@ -60,6 +65,7 @@ class GoogleRedirectServiceTest extends TestCase
 
     /**
      * Test getting the redirect url
+     * @throws Exception
      */
     public function testMissingMandatoryParameters(): void
     {
@@ -72,7 +78,8 @@ class GoogleRedirectServiceTest extends TestCase
 
         $redirectRoute = 'test';
 
-        $redirect = new GoogleRedirectService($router, $redirectRoute);
+        $redirect = new GoogleRedirectService($router);
+        $redirect->setRedirectRoute($redirectRoute);
         $url = $redirect->getOAuthRedirectUrl();
 
         self::assertEquals('my_resulting_route', $url);
@@ -80,6 +87,7 @@ class GoogleRedirectServiceTest extends TestCase
 
     /**
      * Test getting the redirect url
+     * @throws Exception
      */
     public function testInvalidParameter(): void
     {
@@ -92,7 +100,8 @@ class GoogleRedirectServiceTest extends TestCase
 
         $redirectRoute = 'test';
 
-        $redirect = new GoogleRedirectService($router, $redirectRoute);
+        $redirect = new GoogleRedirectService($router);
+        $redirect->setRedirectRoute($redirectRoute);
         $url = $redirect->getOAuthRedirectUrl();
 
         self::assertEquals('my_resulting_route', $url);

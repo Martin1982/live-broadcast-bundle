@@ -30,7 +30,7 @@ class InputUrlTest extends TestCase
         $this->inputUrl = new InputUrl();
 
         $media = new MediaUrl();
-        $media->setUrl('http://live.broadcast.com');
+        $media->setUrl('https://live.broadcast.com');
         $this->inputUrl->setMedia($media);
     }
 
@@ -55,7 +55,7 @@ class InputUrlTest extends TestCase
      */
     public function testGenerateInputCmd(): void
     {
-        self::assertEquals('-re -i \'http://live.broadcast.com\'', $this->inputUrl->generateInputCmd());
+        self::assertEquals('-re -i \'https://live.broadcast.com\'', $this->inputUrl->generateInputCmd());
     }
 
     /**

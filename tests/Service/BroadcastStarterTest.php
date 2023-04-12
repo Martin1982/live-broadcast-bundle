@@ -11,11 +11,14 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastStarter;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutput\DynamicStreamUrlInterface;
 use Martin1982\LiveBroadcastBundle\Service\StreamOutputService;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -42,8 +45,13 @@ class BroadcastStarterTest extends TestCase
     /**
      * Test that a broadcast can get started
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException
+     * @throws LiveBroadcastInputException
+     * @throws LiveBroadcastOutputException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testStartBroadcast(): void
     {
@@ -97,6 +105,9 @@ class BroadcastStarterTest extends TestCase
 
     /**
      * Setup basic mocks
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     protected function setUp(): void
     {

@@ -7,7 +7,10 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
+use DateTime;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -20,6 +23,7 @@ class SchedulerCommandsTest extends TestCase
      * Test the start process command.
      *
      * @throws \Exception
+     * @throws Exception
      */
     public function testStartProcess(): void
     {
@@ -32,6 +36,7 @@ class SchedulerCommandsTest extends TestCase
      * Test the start process command with a log directory configured
      *
      * @throws \Exception
+     * @throws Exception
      */
     public function testStartProcessWithLogDirectory(): void
     {
@@ -39,7 +44,7 @@ class SchedulerCommandsTest extends TestCase
         $command->setFFMpegLogDirectory('/tmp');
         $output = $command->startProcess('input', 'output', ['broadcast_id' => 12, 'test' => 'unit']);
 
-        $now = new \DateTime();
+        $now = new DateTime();
         self::assertStringStartsWith('ffmpeg input output -metadata broadcast_id=12 -metadata test=unit -metadata env=unit_test >> /tmp/livebroadcaster-ffmpeg-'.$now->format('Y-m-d_Hi'), $output);
         self::assertStringEndsWith('.log 2>&1 &', $output);
     }
@@ -47,7 +52,8 @@ class SchedulerCommandsTest extends TestCase
     /**
      * Test the stop process command.
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
+     * @throws Exception
      */
     public function testStopProcess(): void
     {
@@ -59,7 +65,8 @@ class SchedulerCommandsTest extends TestCase
     /**
      * Test the running processes command.
      *
-     * @throws \Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException
+     * @throws LiveBroadcastException
+     * @throws Exception
      */
     public function testGetRunningProcesses(): void
     {
@@ -70,6 +77,7 @@ class SchedulerCommandsTest extends TestCase
 
     /**
      * Test retrieval of the broadcast id.
+     * @throws Exception
      */
     public function testGetBroadcastId(): void
     {
@@ -91,6 +99,7 @@ class SchedulerCommandsTest extends TestCase
 
     /**
      * Test retrieval of the process id.
+     * @throws Exception
      */
     public function testGetProcessId(): void
     {
@@ -110,6 +119,7 @@ class SchedulerCommandsTest extends TestCase
 
     /**
      * Test retrieval of the channel id.
+     * @throws Exception
      */
     public function testGetChannelId(): void
     {
@@ -124,6 +134,7 @@ class SchedulerCommandsTest extends TestCase
 
     /**
      * Test the getEnvironment function
+     * @throws Exception
      */
     public function testGetEnvironment(): void
     {
@@ -149,6 +160,7 @@ class SchedulerCommandsTest extends TestCase
 
     /**
      * @return SchedulerCommands
+     * @throws Exception
      */
     protected function getSchedulerCommands(): SchedulerCommands
     {

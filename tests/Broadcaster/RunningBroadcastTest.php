@@ -11,6 +11,7 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\RunningBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelTwitch;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 /**
  * Class RunningBroadcastTest
@@ -88,7 +89,7 @@ class RunningBroadcastTest extends TestCase
     private function getChannelTwitch(int $channelId): ChannelTwitch
     {
         $channel = new ChannelTwitch();
-        $reflection = new \ReflectionClass($channel);
+        $reflection = new ReflectionClass($channel);
         $property = $reflection->getProperty('channelId');
         $property->setAccessible(true);
         $property->setValue($channel, $channelId);
@@ -104,7 +105,7 @@ class RunningBroadcastTest extends TestCase
     private function getLiveBroadcast(int $broadcastId): LiveBroadcast
     {
         $liveBroadcast = new LiveBroadcast();
-        $reflection = new \ReflectionClass($liveBroadcast);
+        $reflection = new ReflectionClass($liveBroadcast);
         $property = $reflection->getProperty('broadcastId');
         $property->setAccessible(true);
         $property->setValue($liveBroadcast, $broadcastId);

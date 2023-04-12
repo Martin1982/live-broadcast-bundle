@@ -11,6 +11,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 /**
  * Class StreamEventTest
@@ -33,7 +34,7 @@ class StreamEventTest extends TestCase
         $this->streamEvent->setExternalStreamId('youtube.id');
         $this->streamEvent->setEndSignalSent(false);
 
-        $reflection = new \ReflectionClass($this->streamEvent);
+        $reflection = new ReflectionClass($this->streamEvent);
         $property = $reflection->getProperty('eventId');
         $property->setAccessible(true);
         $property->setValue($this->streamEvent, 1);

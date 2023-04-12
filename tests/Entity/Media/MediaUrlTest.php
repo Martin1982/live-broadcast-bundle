@@ -23,8 +23,8 @@ class MediaUrlTest extends TestCase
         $input = new MediaUrl();
         self::assertEquals('', $input->getUrl());
 
-        $input->setUrl('http://www.google.com');
-        self::assertEquals('http://www.google.com', $input->getUrl());
+        $input->setUrl('https://www.google.com');
+        self::assertEquals('https://www.google.com', $input->getUrl());
     }
 
     /**

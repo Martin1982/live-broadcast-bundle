@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,6 +20,8 @@ class ThumbnailUploadServiceTest extends TestCase
 {
     /**
      * Test uploading a file
+     * @throws Exception
+     * @throws Exception
      */
     public function testUpload(): void
     {

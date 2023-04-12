@@ -11,6 +11,7 @@ use Martin1982\LiveBroadcastBundle\Broadcaster\SchedulerCommandsDetector;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Windows\SchedulerCommands as WindowsCommands;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Darwin\SchedulerCommands as DarwinCommands;
 use Martin1982\LiveBroadcastBundle\Broadcaster\Linux\SchedulerCommands as LinuxCommands;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -21,6 +22,7 @@ class SchedulerCommandsDetectorTest extends TestCase
 {
     /**
      * Test scheduler command class detector
+     * @throws Exception
      */
     public function testCreateSchedulerCommands(): void
     {

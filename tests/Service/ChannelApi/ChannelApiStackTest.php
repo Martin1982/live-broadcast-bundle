@@ -13,6 +13,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,6 +23,8 @@ class ChannelApiStackTest extends TestCase
 {
     /**
      * Test that an API for a channel can be retrieved
+     * @throws Exception
+     * @throws Exception
      */
     public function testGetApiForChannel(): void
     {

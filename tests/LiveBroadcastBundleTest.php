@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests;
 
 use Martin1982\LiveBroadcastBundle\LiveBroadcastBundle;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -18,6 +19,7 @@ class LiveBroadcastBundleTest extends TestCase
 {
     /**
      * Test building the bundle
+     * @throws Exception
      */
     public function testBuild(): void
     {

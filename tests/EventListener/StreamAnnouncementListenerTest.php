@@ -5,13 +5,15 @@
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\EventListener\StreamAnnouncementListener;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -42,17 +44,21 @@ class StreamAnnouncementListenerTest extends TestCase
 
     /**
      * Setup mock objects
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function setUp(): void
     {
         $this->manager = $this->createMock(BroadcastManager::class);
         $this->lifecycle = $this->createMock(LifecycleEventArgs::class);
         $this->bus = $this->createMock(MessageBusInterface::class);
-        $this->envelope = new Envelope(new \stdClass());
+        $this->envelope = new Envelope(new stdClass());
     }
 
     /**
      * Test preUpdate
+     * @throws Exception
      */
     public function testPreUpdate(): void
     {
@@ -66,6 +72,7 @@ class StreamAnnouncementListenerTest extends TestCase
 
     /**
      * Test prePersist
+     * @throws Exception
      */
     public function testPostPersist(): void
     {
@@ -79,6 +86,7 @@ class StreamAnnouncementListenerTest extends TestCase
 
     /**
      * Test preRemove
+     * @throws Exception
      */
     public function testPreRemove(): void
     {
@@ -95,7 +103,7 @@ class StreamAnnouncementListenerTest extends TestCase
      */
     public function testWithNonBroadcastObject(): void
     {
-        $this->lifecycle->expects(self::atLeastOnce())->method('getObject')->willReturn(new \stdClass());
+        $this->lifecycle->expects(self::atLeastOnce())->method('getObject')->willReturn(new stdClass());
         $this->manager->expects(self::never())->method('preDelete');
 
         $listener = new StreamAnnouncementListener($this->bus, $this->manager);
@@ -103,11 +111,11 @@ class StreamAnnouncementListenerTest extends TestCase
     }
 
     /**
-     * FunctionDescription
-     *
      * @return LiveBroadcast|MockObject
+     *
+     * @throws Exception
      */
-    protected function getBroadcastMock()
+    protected function getBroadcastMock(): LiveBroadcast|MockObject
     {
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())->method('getOutputChannels')->willReturn([
@@ -120,11 +128,11 @@ class StreamAnnouncementListenerTest extends TestCase
     }
 
     /**
-     * FunctionDescription
-     *
      * @return AbstractChannel|MockObject
+     *
+     * @throws Exception
      */
-    protected function getChannelMock()
+    protected function getChannelMock(): MockObject|AbstractChannel
     {
         $channelMock = $this->createMock(AbstractChannel::class);
         $channelMock->expects(self::atLeastOnce())

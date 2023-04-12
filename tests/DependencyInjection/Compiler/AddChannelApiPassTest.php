@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Tests\DependencyInjection\Compiler;
 
 use Martin1982\LiveBroadcastBundle\DependencyInjection\Compiler\AddChannelApiPass;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -34,6 +35,7 @@ class AddChannelApiPassTest extends TestCase
 
     /**
      * Test that no processing takes place when the service isn't named correctly
+     * @throws Exception
      */
     public function testNoProcessing(): void
     {
@@ -52,6 +54,8 @@ class AddChannelApiPassTest extends TestCase
 
     /**
      * Test processing tagged services
+     * @throws Exception
+     * @throws Exception
      */
     public function testProcess(): void
     {

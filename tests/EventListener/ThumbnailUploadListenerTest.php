@@ -14,8 +14,10 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\EventListener\ThumbnailUploadListener;
 use Martin1982\LiveBroadcastBundle\Service\ThumbnailUploadService;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -36,6 +38,7 @@ class ThumbnailUploadListenerTest extends TestCase
 
     /**
      *
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -45,6 +48,8 @@ class ThumbnailUploadListenerTest extends TestCase
 
     /**
      * prePersist
+     * @throws Exception
+     * @throws Exception
      */
     public function testPrePersist(): void
     {
@@ -67,6 +72,8 @@ class ThumbnailUploadListenerTest extends TestCase
 
     /**
      * preUpdate
+     * @throws Exception
+     * @throws Exception
      */
     public function testPreUpdate(): void
     {
@@ -91,6 +98,7 @@ class ThumbnailUploadListenerTest extends TestCase
 
     /**
      * preUpdate
+     * @throws Exception
      */
     public function testPreUpdateInvalidEntity(): void
     {
@@ -101,12 +109,13 @@ class ThumbnailUploadListenerTest extends TestCase
             ->method('upload');
 
         $changeSet = [];
-        $args = new PreUpdateEventArgs(new \stdClass(), $entityManager, $changeSet);
+        $args = new PreUpdateEventArgs(new stdClass(), $entityManager, $changeSet);
         $this->eventListener->preUpdate($args);
     }
 
     /**
      * preUpdate
+     * @throws Exception
      */
     public function testPreUpdateNoChange(): void
     {
@@ -127,6 +136,7 @@ class ThumbnailUploadListenerTest extends TestCase
 
     /**
      * postLoad
+     * @throws Exception
      */
     public function testPostLoad(): void
     {
@@ -147,6 +157,7 @@ class ThumbnailUploadListenerTest extends TestCase
 
     /**
      * postLoad
+     * @throws Exception
      */
     public function testPostLoadInvalidEntity(): void
     {
@@ -154,7 +165,7 @@ class ThumbnailUploadListenerTest extends TestCase
         $this->uploadService->expects(static::never())
             ->method('getTargetDirectory');
 
-        $args = new PostLoadEventArgs(new \stdClass(), $manager);
+        $args = new PostLoadEventArgs(new stdClass(), $manager);
         $this->eventListener->postLoad($args);
     }
 }

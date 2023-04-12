@@ -11,6 +11,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Media\MediaFile;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastInputException;
 use Martin1982\LiveBroadcastBundle\Service\StreamInput\InputFile;
 use Martin1982\LiveBroadcastBundle\Service\StreamInputService;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,6 +23,8 @@ class StreamInputServiceTest extends TestCase
      * Test getting the input interface class
      *
      * @throws LiveBroadcastInputException
+     * @throws Exception
+     * @throws Exception
      */
     public function testGetInputInterface(): void
     {
@@ -41,6 +44,7 @@ class StreamInputServiceTest extends TestCase
 
     /**
      * Test that an exception is thrown when the interface class is unknown
+     * @throws Exception
      */
     public function testNoInputInterfaceFound(): void
     {

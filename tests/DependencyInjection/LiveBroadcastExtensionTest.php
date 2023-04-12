@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace Martin1982\LiveBroadcastBundle\Tests\DependencyInjection;
 
+use Exception;
 use Martin1982\LiveBroadcastBundle\DependencyInjection\LiveBroadcastExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -19,7 +20,7 @@ class LiveBroadcastExtensionTest extends TestCase
     /**
      * Test configuration file load
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function testConfigLoad(): void
     {
