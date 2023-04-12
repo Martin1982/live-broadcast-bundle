@@ -18,14 +18,17 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastApiException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiInterface;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class BroadcastManagerTest
@@ -41,6 +44,11 @@ class BroadcastManagerTest extends TestCase
      * @var ChannelApiStack|MockObject
      */
     protected $stack;
+
+    /**
+     * @var LoggerInterface|MockObject
+     */
+    protected $logger;
 
     /**
      * Test getting a broadcast entity by id
@@ -59,7 +67,7 @@ class BroadcastManagerTest extends TestCase
             ->method('getRepository')
             ->willReturn($broadcastRepository);
 
-        $broadcast = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcast = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $result = $broadcast->getBroadcastById('10');
 
         self::assertInstanceOf(LiveBroadcast::class, $result);
@@ -86,7 +94,7 @@ class BroadcastManagerTest extends TestCase
             ->method('getApiForChannel')
             ->willReturn($api);
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->preInsert($broadcast);
     }
 
@@ -108,6 +116,9 @@ class BroadcastManagerTest extends TestCase
         $ytSpinninDeep->setYouTubeChannelName('Spinnin\' Deep');
 
         $broadcastNewState = $this->createMock(LiveBroadcast::class);
+        $broadcastNewState->expects(self::atLeastOnce())
+            ->method('getBroadcastId')
+            ->willReturn(10);
         $broadcastOldState = $this->createMock(LiveBroadcast::class);
         $broadcastRepository = $this->createMock(LiveBroadcastRepository::class);
         $api = $this->createMock(FacebookApiService::class);
@@ -151,7 +162,7 @@ class BroadcastManagerTest extends TestCase
             ->method('getApiForChannel')
             ->willReturn($api);
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->preUpdate($broadcastNewState);
     }
 
@@ -161,6 +172,9 @@ class BroadcastManagerTest extends TestCase
     public function testUpdateWithNoPreviousState():void
     {
         $broadcast = $this->createMock(LiveBroadcast::class);
+        $broadcast->expects(self::atLeastOnce())
+            ->method('getBroadcastId')
+            ->willReturn(10);
 
         $broadcastRepository = $this->createMock(LiveBroadcastRepository::class);
         $broadcastRepository->expects(self::atLeastOnce())
@@ -175,7 +189,7 @@ class BroadcastManagerTest extends TestCase
         $this->stack->expects(self::never())
             ->method('getApiForChannel');
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->preUpdate($broadcast);
     }
 
@@ -200,15 +214,16 @@ class BroadcastManagerTest extends TestCase
             ->method('getApiForChannel')
             ->willReturn($api);
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->preDelete($broadcast);
     }
 
     /**
      * Test sending an end signal
      *
+     * @throws Exception
+     * @throws LiveBroadcastApiException
      * @throws LiveBroadcastException
-     * @throws ORMException|\Doctrine\ORM\ORMException
      */
     public function testSendEndSignal(): void
     {
@@ -223,6 +238,9 @@ class BroadcastManagerTest extends TestCase
         $streamEvent->expects(self::atLeastOnce())
             ->method('getChannel')
             ->willReturn($channel);
+        $streamEvent->expects(self::atLeastOnce())
+            ->method('getExternalStreamId')
+            ->willReturn('some id');
 
         $this->stack->expects(self::atLeastOnce())
             ->method('getApiForChannel')
@@ -235,7 +253,7 @@ class BroadcastManagerTest extends TestCase
             ->method('flush')
             ->willReturn(true);
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->sendEndSignal($streamEvent);
     }
 
@@ -249,13 +267,15 @@ class BroadcastManagerTest extends TestCase
             ->with(StreamEvent::class)
             ->willReturn($this->createMock(StreamEventRepository::class));
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         self::assertInstanceOf(EntityRepository::class, $broadcastManager->getEventsRepository());
     }
 
     /**
      * Test sending an end signal
-     * @throws ORMException|\Doctrine\ORM\ORMException
+     * @throws Exception
+     * @throws LiveBroadcastApiException
+     * @throws LiveBroadcastException
      */
     public function testSendEndSignalLockException(): void
     {
@@ -267,6 +287,9 @@ class BroadcastManagerTest extends TestCase
         $streamEvent->expects(self::atLeastOnce())
             ->method('getChannel')
             ->willReturn($channel);
+        $streamEvent->expects(self::atLeastOnce())
+            ->method('getExternalStreamId')
+            ->willReturn('some id');
 
         $api = $this->createMock(ChannelApiInterface::class);
         $api->expects(self::atLeastOnce())
@@ -284,15 +307,16 @@ class BroadcastManagerTest extends TestCase
             ->method('flush')
             ->willReturn(true);
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->sendEndSignal($streamEvent);
     }
 
     /**
      * Test sending an end signal
      *
-     * @throws ORMException
-     * @throws \Doctrine\ORM\ORMException
+     * @throws Exception
+     * @throws LiveBroadcastApiException
+     * @throws LiveBroadcastException
      */
     public function testSendEndSignalArgumentException(): void
     {
@@ -304,6 +328,9 @@ class BroadcastManagerTest extends TestCase
         $streamEvent->expects(self::atLeastOnce())
             ->method('getChannel')
             ->willReturn($channel);
+        $streamEvent->expects(self::atLeastOnce())
+            ->method('getExternalStreamId')
+            ->willReturn('some id');
 
         $api = $this->createMock(ChannelApiInterface::class);
         $api->expects(self::atLeastOnce())
@@ -321,15 +348,16 @@ class BroadcastManagerTest extends TestCase
             ->method('flush')
             ->willReturn(true);
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->sendEndSignal($streamEvent);
     }
 
     /**
      * Test sending an end signal
      *
-     * @throws ORMException
-     * @throws \Doctrine\ORM\ORMException
+     * @throws LiveBroadcastException
+     * @throws LiveBroadcastApiException
+     * @throws Exception
      */
     public function testSendEndSignalORMException(): void
     {
@@ -341,6 +369,9 @@ class BroadcastManagerTest extends TestCase
         $streamEvent->expects(self::atLeastOnce())
             ->method('getChannel')
             ->willReturn($channel);
+        $streamEvent->expects(self::atLeastOnce())
+            ->method('getExternalStreamId')
+            ->willReturn('some id');
 
         $api = $this->createMock(ChannelApiInterface::class);
         $api->expects(self::atLeastOnce())
@@ -358,7 +389,7 @@ class BroadcastManagerTest extends TestCase
             ->method('flush')
             ->willReturn(true);
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->sendEndSignal($streamEvent);
     }
 
@@ -378,7 +409,7 @@ class BroadcastManagerTest extends TestCase
             ->method('getRepository')
             ->willReturn($repository);
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcasts = $broadcastManager->getPlannedBroadcasts();
 
         self::assertCount(1, $broadcasts);
@@ -400,7 +431,7 @@ class BroadcastManagerTest extends TestCase
             ->method('getRepository')
             ->willReturn($repository);
 
-        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack);
+        $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcasts = $broadcastManager->getPlannedBroadcasts();
 
         self::assertCount(0, $broadcasts);
@@ -413,5 +444,6 @@ class BroadcastManagerTest extends TestCase
     {
         $this->entityManager = $this->createMock(EntityManager::class);
         $this->stack = $this->createMock(ChannelApiStack::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
     }
 }

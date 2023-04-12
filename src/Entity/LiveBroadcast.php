@@ -53,13 +53,13 @@ class LiveBroadcast
     private ?string $description = null;
 
     /**
-     * @var UploadedFile|File|null
+     * @var string|File|UploadedFile|null
      *
      * @ORM\Column(name="thumbnail", type="string", length=255, nullable=true)
      *
      * @Assert\Image(minRatio="1.78", maxRatio="1.78", minWidth="1280", minHeight="720", maxSize="5120k")
      */
-    private UploadedFile|File|null $thumbnail;
+    private UploadedFile|File|null|string $thumbnail = null;
 
     /**
      * @var AbstractMedia|null
@@ -181,9 +181,9 @@ class LiveBroadcast
     }
 
     /**
-     * @return UploadedFile|File|null
+     * @return File|UploadedFile|null|string
      */
-    public function getThumbnail(): File|UploadedFile|null
+    public function getThumbnail(): File|UploadedFile|null|string
     {
         return $this->thumbnail;
     }
