@@ -18,9 +18,9 @@ use Martin1982\LiveBroadcastBundle\Service\ChannelApi\YouTubeApiService;
 class OutputYouTube extends AbstractOutput implements DynamicStreamUrlInterface
 {
     /**
-     * @var ChannelYouTube|AbstractChannel|null
+     * @var AbstractChannel|ChannelYouTube|null
      */
-    protected ?AbstractChannel $channel = null;
+    protected AbstractChannel|ChannelYouTube|null $channel = null;
 
     /**
      * @var LiveBroadcast|null

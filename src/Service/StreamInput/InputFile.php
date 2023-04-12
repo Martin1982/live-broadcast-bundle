@@ -19,12 +19,12 @@ class InputFile implements InputInterface
     /**
      * @var MediaFile|AbstractMedia
      */
-    private $media;
+    private MediaFile|AbstractMedia $media;
 
     /**
      * {@inheritdoc}
      */
-    public function setMedia(AbstractMedia $media)
+    public function setMedia(AbstractMedia $media): mixed
     {
         $this->media = $media;
 

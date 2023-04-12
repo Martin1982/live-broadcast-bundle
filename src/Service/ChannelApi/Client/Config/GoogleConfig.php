@@ -35,7 +35,7 @@ class GoogleConfig
      *
      * @return GoogleConfig
      */
-    public function setClientId($clientId): GoogleConfig
+    public function setClientId(mixed $clientId): GoogleConfig
     {
         $this->clientId = (string) $clientId;
 
@@ -55,7 +55,7 @@ class GoogleConfig
      *
      * @return GoogleConfig
      */
-    public function setClientSecret($clientSecret): GoogleConfig
+    public function setClientSecret(mixed $clientSecret): GoogleConfig
     {
         $this->clientSecret = (string) $clientSecret;
 

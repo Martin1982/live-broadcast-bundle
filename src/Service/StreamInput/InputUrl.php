@@ -19,12 +19,12 @@ class InputUrl implements InputInterface
     /**
      * @var MediaUrl|AbstractMedia
      */
-    private $media;
+    private MediaUrl|AbstractMedia $media;
 
     /**
      * {@inheritdoc}
      */
-    public function setMedia(AbstractMedia $media)
+    public function setMedia(AbstractMedia $media): mixed
     {
         $this->media = $media;
 

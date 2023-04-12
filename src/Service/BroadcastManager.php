@@ -16,10 +16,11 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastApiException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiInterface;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\ChannelApiStack;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class BroadcastManager
@@ -31,19 +32,20 @@ class BroadcastManager
      *
      * @param EntityManager   $entityManager
      * @param ChannelApiStack $apiStack
+     * @param LoggerInterface $logger
      */
-    public function __construct(protected EntityManager $entityManager, protected ChannelApiStack $apiStack)
+    public function __construct(protected EntityManager $entityManager, protected ChannelApiStack $apiStack, private LoggerInterface $logger)
     {
     }
 
     /**
      * Get a broadcast by its id
      *
-     * @param string|int $broadcastId
+     * @param int|string $broadcastId
      *
-     * @return LiveBroadcast|null|Object
+     * @return null|Object<LiveBroadcast>
      */
-    public function getBroadcastById($broadcastId)
+    public function getBroadcastById(int|string $broadcastId): object|null
     {
         return $this->getBroadcastsRepository()
             ->findOneBy([ 'broadcastId' => (int) $broadcastId ]);
@@ -67,6 +69,8 @@ class BroadcastManager
      * Handles API calls for new broadcasts
      *
      * @param LiveBroadcast $broadcast
+     *
+     * @throws LiveBroadcastApiException
      */
     public function preInsert(LiveBroadcast $broadcast): void
     {
@@ -74,7 +78,7 @@ class BroadcastManager
             if ($channel instanceof PlannedChannelInterface) {
                 $api = $this->apiStack->getApiForChannel($channel);
 
-                if ($api) {
+                if ($api instanceof ChannelApiInterface) {
                     $api->createLiveEvent($broadcast, $channel);
                 }
             }
@@ -85,6 +89,8 @@ class BroadcastManager
      * Handles API calls for existing broadcasts
      *
      * @param LiveBroadcast $broadcast
+     *
+     * @throws LiveBroadcastApiException
      */
     public function preUpdate(LiveBroadcast $broadcast): void
     {
@@ -126,7 +132,8 @@ class BroadcastManager
      *
      * @param StreamEvent $event
      *
-     * @throws LiveBroadcastException|\Doctrine\ORM\ORMException
+     * @throws LiveBroadcastApiException
+     * @throws LiveBroadcastException
      */
     public function sendEndSignal(StreamEvent $event): void
     {
@@ -155,7 +162,7 @@ class BroadcastManager
      *
      * @throws LiveBroadcastException
      */
-    public function getPlannedBroadcasts()
+    public function getPlannedBroadcasts(): array|Collection
     {
         $broadcasts = $this->getBroadcastsRepository()->getPlannedBroadcasts();
 
@@ -242,6 +249,8 @@ class BroadcastManager
     /**
      * @param LiveBroadcast $broadcast
      * @param array         $channels
+     *
+     * @throws LiveBroadcastApiException
      */
     private function createLiveEvents(LiveBroadcast $broadcast, array $channels): void
     {
@@ -249,7 +258,7 @@ class BroadcastManager
             if ($channel instanceof PlannedChannelInterface && $channel instanceof AbstractChannel) {
                 $api = $this->apiStack->getApiForChannel($channel);
 
-                if ($api) {
+                if ($api instanceof ChannelApiInterface) {
                     $api->createLiveEvent($broadcast, $channel);
                 }
             }
@@ -259,6 +268,8 @@ class BroadcastManager
     /**
      * @param LiveBroadcast $broadcast
      * @param array         $channels
+     *
+     * @throws LiveBroadcastApiException
      */
     private function updateLiveEvents(LiveBroadcast $broadcast, array $channels): void
     {
@@ -266,7 +277,7 @@ class BroadcastManager
             if ($channel instanceof PlannedChannelInterface && $channel instanceof AbstractChannel) {
                 $api = $this->apiStack->getApiForChannel($channel);
 
-                if ($api) {
+                if ($api instanceof ChannelApiInterface) {
                     $api->updateLiveEvent($broadcast, $channel);
                 }
             }
@@ -291,6 +302,7 @@ class BroadcastManager
      * @param LiveBroadcast            $broadcast
      * @param AbstractChannel          $channel
      * @param ChannelApiInterface|null $api
+     *
      */
     private function attemptDeleteOnApi(LiveBroadcast $broadcast, AbstractChannel $channel, ChannelApiInterface $api = null): void
     {
@@ -300,8 +312,8 @@ class BroadcastManager
 
         try {
             $api->removeLiveEvent($broadcast, $channel);
-        } catch (LiveBroadcastOutputException $exception) {
-            // Just let it pass....
+        } catch (LiveBroadcastApiException $exception) {
+            $this->logger->error(sprintf('Couldn\'t remove broadcast from channel %s: %s', $channel->getChannelName(), $exception->getMessage()));
         }
     }
 }

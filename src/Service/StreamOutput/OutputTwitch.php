@@ -16,9 +16,9 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 class OutputTwitch extends AbstractOutput
 {
     /**
-     * @var ChannelTwitch|AbstractChannel|null
+     * @var AbstractChannel|ChannelTwitch|null
      */
-    protected ?AbstractChannel $channel = null;
+    protected AbstractChannel|ChannelTwitch|null $channel = null;
 
     /**
      * Get the output parameters for streaming.

@@ -6,10 +6,11 @@
 namespace Martin1982\LiveBroadcastBundle\MessageHandler;
 
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastApiException;
 use Martin1982\LiveBroadcastBundle\Message\StreamServiceAnnouncement;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 /**
  * Class StreamServiceAnnouncementHandler
@@ -21,8 +22,9 @@ class StreamServiceAnnouncementHandler
      * StreamServiceAnnouncementHandler constructor.
      *
      * @param BroadcastManager $manager
+     * @param LoggerInterface  $logger
      */
-    public function __construct(private BroadcastManager $manager)
+    public function __construct(private BroadcastManager $manager, private LoggerInterface $logger)
     {
     }
 
@@ -37,18 +39,22 @@ class StreamServiceAnnouncementHandler
     {
         $actionType = $message->getActionType();
         $broadcast = $this->rebuildBroadcast($message->getBroadcastId(), $message->getPreviousChannels());
-        switch ($actionType) {
-            case StreamServiceAnnouncement::ACTION_PRE_PERSIST:
-                $this->manager->preInsert($broadcast);
-                break;
-            case StreamServiceAnnouncement::ACTION_PRE_UPDATE:
-                $this->manager->preUpdate($broadcast);
-                break;
-            case StreamServiceAnnouncement::ACTION_PRE_REMOVE:
-                $this->manager->preDelete($broadcast);
-                break;
-            default:
-                break;
+        try {
+            switch ($actionType) {
+                case StreamServiceAnnouncement::ACTION_PRE_PERSIST:
+                    $this->manager->preInsert($broadcast);
+                    break;
+                case StreamServiceAnnouncement::ACTION_PRE_UPDATE:
+                    $this->manager->preUpdate($broadcast);
+                    break;
+                case StreamServiceAnnouncement::ACTION_PRE_REMOVE:
+                    $this->manager->preDelete($broadcast);
+                    break;
+                default:
+                    break;
+            }
+        } catch (LiveBroadcastApiException $exception) {
+            $this->logger->error($exception->getMessage());
         }
     }
 

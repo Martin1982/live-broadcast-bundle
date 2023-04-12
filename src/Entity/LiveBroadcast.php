@@ -59,7 +59,7 @@ class LiveBroadcast
      *
      * @Assert\Image(minRatio="1.78", maxRatio="1.78", minWidth="1280", minHeight="720", maxSize="5120k")
      */
-    private $thumbnail;
+    private UploadedFile|File|null $thumbnail;
 
     /**
      * @var AbstractMedia|null
@@ -110,7 +110,7 @@ class LiveBroadcast
      *      inverseJoinColumns={@ORM\JoinColumn(name="channel_id", referencedColumnName="id")}
      * )
      */
-    private $outputChannels;
+    private array|ArrayCollection $outputChannels;
 
     /**
      * LiveBroadcast constructor
@@ -183,17 +183,17 @@ class LiveBroadcast
     /**
      * @return UploadedFile|File|null
      */
-    public function getThumbnail()
+    public function getThumbnail(): File|UploadedFile|null
     {
         return $this->thumbnail;
     }
 
     /**
-     * @param string|UploadedFile|File $thumbnail
+     * @param string|File|UploadedFile $thumbnail
      *
      * @return LiveBroadcast
      */
-    public function setThumbnail($thumbnail): LiveBroadcast
+    public function setThumbnail(File|string|UploadedFile $thumbnail): LiveBroadcast
     {
         $this->thumbnail = $thumbnail;
 
@@ -283,7 +283,7 @@ class LiveBroadcast
     /**
      * @return ArrayCollection|AbstractChannel[]
      */
-    public function getOutputChannels()
+    public function getOutputChannels(): ArrayCollection|array
     {
         return $this->outputChannels;
     }

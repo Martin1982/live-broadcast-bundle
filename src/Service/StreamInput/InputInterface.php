@@ -24,7 +24,7 @@ interface InputInterface
      *
      * @return mixed
      */
-    public function setMedia(AbstractMedia $media);
+    public function setMedia(AbstractMedia $media): mixed;
 
     /**
      * Returns the media type

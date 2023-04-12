@@ -11,6 +11,7 @@ use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastManager;
 use Martin1982\LiveBroadcastBundle\Service\BroadcastStarter;
 use Martin1982\LiveBroadcastBundle\Service\ChannelValidatorService;
@@ -172,7 +173,7 @@ class Scheduler
 
             try {
                 if (!is_int($broadcastId) || !is_int($processId) || !is_int($channelId)) {
-                    throw new \Exception('Invalid process string');
+                    throw new LiveBroadcastOutputException('Invalid process string');
                 }
 
                 $runningItem = new RunningBroadcast($broadcastId, $processId, $channelId, $environment);
@@ -183,7 +184,7 @@ class Scheduler
             } catch (\Exception $exception) {
                 $this->logger->warning(
                     'Could not parse process string, this might be an unrelated ffmpeg process',
-                    ['process_string' => $processString]
+                    ['process_string' => $processString, 'exception' => $exception->getMessage()]
                 );
             }
         }

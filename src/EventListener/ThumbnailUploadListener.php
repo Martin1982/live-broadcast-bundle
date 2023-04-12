@@ -75,7 +75,7 @@ class ThumbnailUploadListener
      *
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    private function uploadFile($entity, array $entityChangeSet = []): void
+    private function uploadFile(mixed $entity, array $entityChangeSet = []): void
     {
         if (!$entity instanceof LiveBroadcast) {
             return;

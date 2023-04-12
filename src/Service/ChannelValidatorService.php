@@ -24,7 +24,7 @@ class ChannelValidatorService
     /**
      * @var ObjectRepository
      */
-    protected $channelRepository;
+    protected ObjectRepository $channelRepository;
 
     /**
      * ChannelValidatorService constructor.

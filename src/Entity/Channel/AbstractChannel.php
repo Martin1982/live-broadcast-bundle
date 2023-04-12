@@ -101,7 +101,7 @@ abstract class AbstractChannel
      *
      * @return bool
      */
-    public static function isEntityConfigured($configuration): bool
+    public static function isEntityConfigured(mixed $configuration): bool
     {
         if ($configuration) {
             return true;

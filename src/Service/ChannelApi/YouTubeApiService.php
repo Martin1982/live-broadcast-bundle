@@ -8,12 +8,15 @@ declare(strict_types=1);
 namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEventRepository;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastApiException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\YouTubeClient;
 use Psr\Log\LoggerInterface;
@@ -43,10 +46,10 @@ class YouTubeApiService implements ChannelApiInterface
      * @param LiveBroadcast   $broadcast
      * @param AbstractChannel $channel
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\ORMException
      * @throws LiveBroadcastOutputException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws LiveBroadcastApiException
      */
     public function createLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
@@ -70,10 +73,10 @@ class YouTubeApiService implements ChannelApiInterface
      * @param LiveBroadcast   $broadcast
      * @param AbstractChannel $channel
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\ORMException
+     * @throws LiveBroadcastApiException
      * @throws LiveBroadcastOutputException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function removeLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
@@ -93,10 +96,10 @@ class YouTubeApiService implements ChannelApiInterface
      * @param LiveBroadcast   $broadcast
      * @param AbstractChannel $channel
      *
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMException
+     * @throws LiveBroadcastApiException
      * @throws LiveBroadcastOutputException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function updateLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel): void
     {
@@ -146,11 +149,12 @@ class YouTubeApiService implements ChannelApiInterface
 
     /**
      * @param PlannedChannelInterface $channel
-     * @param string|int              $externalId
+     * @param int|string              $externalId
      *
+     * @throws LiveBroadcastApiException
      * @throws LiveBroadcastOutputException
      */
-    public function sendEndSignal(PlannedChannelInterface $channel, $externalId): void
+    public function sendEndSignal(PlannedChannelInterface $channel, int|string $externalId): void
     {
         if (!$channel instanceof AbstractChannel) {
             return;

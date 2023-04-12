@@ -22,7 +22,7 @@ class CanStreamToChannel extends Constraint
     /**
      * {@inheritDoc}
      */
-    public function getTargets()
+    public function getTargets(): array|string
     {
         return self::CLASS_CONSTRAINT;
     }

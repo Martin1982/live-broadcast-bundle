@@ -9,6 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Service\StreamOutput;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelFacebook;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastApiException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\FacebookApiService;
 
@@ -20,7 +21,7 @@ class OutputFacebook extends AbstractOutput implements DynamicStreamUrlInterface
     /**
      * @var AbstractChannel|ChannelFacebook|null
      */
-    protected ?AbstractChannel $channel = null;
+    protected AbstractChannel|ChannelFacebook|null $channel = null;
 
     /**
      * @var LiveBroadcast|null
@@ -41,6 +42,7 @@ class OutputFacebook extends AbstractOutput implements DynamicStreamUrlInterface
      *
      * @return string
      *
+     * @throws LiveBroadcastApiException
      * @throws LiveBroadcastOutputException
      */
     public function generateOutputCmd(): string
@@ -60,6 +62,7 @@ class OutputFacebook extends AbstractOutput implements DynamicStreamUrlInterface
      * @return string
      *
      * @throws LiveBroadcastOutputException
+     * @throws LiveBroadcastApiException
      */
     public function getStreamUrl(): string
     {
@@ -87,7 +90,7 @@ class OutputFacebook extends AbstractOutput implements DynamicStreamUrlInterface
      *
      * @return bool
      *
-     * @throws LiveBroadcastOutputException
+     * @throws LiveBroadcastApiException
      */
     public function validate(): bool
     {

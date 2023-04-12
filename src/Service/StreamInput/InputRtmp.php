@@ -19,7 +19,7 @@ class InputRtmp implements InputInterface
     /**
      * @var MediaRtmp|AbstractMedia
      */
-    private $media;
+    private AbstractMedia|MediaRtmp $media;
 
     /**
      * @return string

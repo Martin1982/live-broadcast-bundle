@@ -9,11 +9,12 @@ namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client;
 
 use DateTimeInterface;
 use Google\Http\MediaFileUpload;
-use Google\Service\Exception;
 use Google\Service\YouTube;
+use Google\Service\YouTube\LiveStream;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\ChannelYouTube;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 use Martin1982\LiveBroadcastBundle\Entity\Metadata\StreamEvent;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastApiException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
 use Martin1982\LiveBroadcastBundle\Service\ChannelApi\Client\Config\YouTubeConfig;
@@ -71,7 +72,7 @@ class YouTubeClient
      *
      * @return YouTube\LiveBroadcast
      *
-     * @throws LiveBroadcastOutputException
+     * @throws LiveBroadcastApiException
      * @throws \Exception
      */
     public function createBroadcast(LiveBroadcast $plannedBroadcast): YouTube\LiveBroadcast
@@ -97,8 +98,8 @@ class YouTubeClient
 
         try {
             return $this->youTubeClient->liveBroadcasts->insert('snippet,contentDetails,status', $liveBroadcast);
-        } catch (Exception $exception) {
-            throw new LiveBroadcastOutputException($exception->getMessage());
+        } catch (\Throwable $exception) {
+            throw new LiveBroadcastApiException($exception->getMessage());
         }
     }
 
@@ -152,16 +153,16 @@ class YouTubeClient
     }
 
     /**
-     * @param string|int $externalId
+     * @param int|string $externalId
      *
-     * @throws LiveBroadcastOutputException
+     * @throws LiveBroadcastApiException
      */
-    public function endLiveStream($externalId): void
+    public function endLiveStream(int|string $externalId): void
     {
         try {
             $this->youTubeClient->liveBroadcasts->transition('complete', $externalId, 'status');
-        } catch (Exception $exception) {
-            throw new LiveBroadcastOutputException($exception->getMessage());
+        } catch (\Throwable $exception) {
+            throw new LiveBroadcastApiException($exception->getMessage());
         }
     }
 
@@ -170,22 +171,21 @@ class YouTubeClient
      *
      * @param StreamEvent $event
      *
-     * @throws LiveBroadcastOutputException
+     * @throws LiveBroadcastApiException
      */
     public function removeLiveStream(StreamEvent $event): void
     {
         try {
             $this->youTubeClient->liveBroadcasts->delete($event->getExternalStreamId());
-        } catch (Exception $exception) {
-            throw new LiveBroadcastOutputException($exception->getMessage());
+        } catch (\Throwable $exception) {
+            throw new LiveBroadcastApiException($exception->getMessage());
         }
     }
 
     /**
      * @param StreamEvent $event
      *
-     * @throws LiveBroadcastOutputException
-     * @throws \Exception
+     * @throws LiveBroadcastApiException
      */
     public function updateLiveStream(StreamEvent $event): void
     {
@@ -205,17 +205,17 @@ class YouTubeClient
 
         try {
             $this->youTubeClient->liveBroadcasts->update('snippet', $liveBroadcast);
-        } catch (Exception $exception) {
-            throw new LiveBroadcastOutputException($exception->getMessage());
+        } catch (\Throwable $exception) {
+            throw new LiveBroadcastApiException($exception->getMessage());
         }
     }
 
     /**
      * @param string $title
      *
-     * @return YouTube\LiveStream
+     * @return LiveStream
      *
-     * @throws LiveBroadcastOutputException
+     * @throws LiveBroadcastApiException
      */
     public function createStream(string $title): YouTube\LiveStream
     {
@@ -234,18 +234,18 @@ class YouTubeClient
 
         try {
             return $this->youTubeClient->liveStreams->insert('snippet,cdn', $streamInsert);
-        } catch (Exception $exception) {
-            throw new LiveBroadcastOutputException($exception->getMessage());
+        } catch (\Throwable $exception) {
+            throw new LiveBroadcastApiException($exception->getMessage());
         }
     }
 
     /**
      * @param YouTube\LiveBroadcast $broadcast
-     * @param YouTube\LiveStream    $stream
+     * @param LiveStream            $stream
      *
      * @return YouTube\LiveBroadcast
      *
-     * @throws LiveBroadcastOutputException
+     * @throws LiveBroadcastApiException
      */
     public function bind(YouTube\LiveBroadcast $broadcast, YouTube\LiveStream $stream): YouTube\LiveBroadcast
     {
@@ -255,8 +255,8 @@ class YouTubeClient
 
         try {
             return $this->youTubeClient->liveBroadcasts->bind($broadcastId, $parameters, $options);
-        } catch (Exception $exception) {
-            throw new LiveBroadcastOutputException($exception->getMessage());
+        } catch (\Throwable $exception) {
+            throw new LiveBroadcastApiException($exception->getMessage());
         }
     }
 
@@ -322,8 +322,6 @@ class YouTubeClient
      * @param LiveBroadcast $plannedBroadcast
      *
      * @return YouTube\LiveBroadcastSnippet
-     *
-     * @throws \Exception
      */
     protected function createBroadcastSnippet(LiveBroadcast $plannedBroadcast): YouTube\LiveBroadcastSnippet
     {

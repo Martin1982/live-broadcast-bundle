@@ -103,7 +103,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     public function getProcessId(string $processString): ?int
     {
         $pid = [];
-        preg_match('/^\s*([\d]+)/', $processString, $pid);
+        preg_match('/^\s*(\d+)/', $processString, $pid);
         if (count($pid) && is_numeric($pid[0])) {
             return (int) $pid[0];
         }
@@ -257,7 +257,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
      *
      * @return mixed
      */
-    private function getMetadataValue(string $processString, string $metadataKey)
+    private function getMetadataValue(string $processString, string $metadataKey): mixed
     {
         $metadata = $this->readMetadata($processString);
 

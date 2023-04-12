@@ -81,7 +81,7 @@ class ChannelFacebook extends AbstractChannel implements PlannedChannelInterface
      *
      * @return bool
      */
-    public static function isEntityConfigured($configuration): bool
+    public static function isEntityConfigured(mixed $configuration): bool
     {
         if (!array_key_exists('facebook', $configuration)) {
             return false;

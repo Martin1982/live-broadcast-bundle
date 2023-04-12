@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
 {
     /**
-     * @var string|null
+     * @var string
      *
      * @ORM\Column(name="refresh_token", type="string", length=255, nullable=false)
      *
@@ -28,7 +28,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     protected string $refreshToken = '';
 
     /**
-     * @var string|null
+     * @var string
      *
      * @ORM\Column(name="youtube_channel_name", type="string", length=255, nullable=false)
      *
@@ -37,7 +37,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     protected string $youTubeChannelName = '';
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getRefreshToken(): string
     {
@@ -45,7 +45,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     }
 
     /**
-     * @param string|null $refreshToken
+     * @param string $refreshToken
      *
      * @return ChannelYouTube
      */
@@ -57,7 +57,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getYouTubeChannelName(): string
     {
@@ -65,7 +65,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     }
 
     /**
-     * @param string|null $youTubeChannelName
+     * @param string $youTubeChannelName
      *
      * @return ChannelYouTube
      */
@@ -79,7 +79,7 @@ class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
     /**
      * {@inheritdoc}
      */
-    public static function isEntityConfigured($configuration): bool
+    public static function isEntityConfigured(mixed $configuration): bool
     {
         if (!array_key_exists('youtube', $configuration)) {
             return false;

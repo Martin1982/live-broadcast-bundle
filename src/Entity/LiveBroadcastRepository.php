@@ -26,7 +26,7 @@ class LiveBroadcastRepository extends EntityRepository
      *
      * @throws LiveBroadcastException
      */
-    public function getPlannedBroadcasts()
+    public function getPlannedBroadcasts(): mixed
     {
         $expr = Criteria::expr();
 

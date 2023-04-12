@@ -10,7 +10,7 @@ namespace Martin1982\LiveBroadcastBundle\Service\ChannelApi;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel;
 use Martin1982\LiveBroadcastBundle\Entity\Channel\PlannedChannelInterface;
 use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
-use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastOutputException;
+use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastApiException;
 
 /**
  * Interface ChannelApiInterface
@@ -20,12 +20,16 @@ interface ChannelApiInterface
     /**
      * @param LiveBroadcast   $broadcast
      * @param AbstractChannel $channel
+     *
+     * @throws LiveBroadcastApiException
      */
     public function createLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel);
 
     /**
      * @param LiveBroadcast   $broadcast
      * @param AbstractChannel $channel
+     *
+     * @throws LiveBroadcastApiException
      */
     public function updateLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel);
 
@@ -33,15 +37,17 @@ interface ChannelApiInterface
      * @param LiveBroadcast   $broadcast
      * @param AbstractChannel $channel
      *
-     * @throws LiveBroadcastOutputException
+     * @throws LiveBroadcastApiException
      */
     public function removeLiveEvent(LiveBroadcast $broadcast, AbstractChannel $channel);
 
     /**
      * @param PlannedChannelInterface $channel
-     * @param string|int              $externalId
+     * @param int|string              $externalId
+     *
+     * @throws LiveBroadcastApiException
      */
-    public function sendEndSignal(PlannedChannelInterface $channel, $externalId);
+    public function sendEndSignal(PlannedChannelInterface $channel, int|string $externalId);
 
     /**
      * Test if the API allows streaming
@@ -49,6 +55,8 @@ interface ChannelApiInterface
      * @param AbstractChannel $channel
      *
      * @return bool
+     *
+     * @throws LiveBroadcastApiException
      */
     public function canStream(AbstractChannel $channel): bool;
 }

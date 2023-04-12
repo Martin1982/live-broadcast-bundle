@@ -82,7 +82,7 @@ class StreamAnnouncementListener
      *
      * @return LiveBroadcast|null
      */
-    protected function getBroadcast($object): ?LiveBroadcast
+    protected function getBroadcast(mixed $object): ?LiveBroadcast
     {
         if (!$object instanceof LiveBroadcast) {
             return null;
@@ -98,7 +98,7 @@ class StreamAnnouncementListener
      *
      * @return array
      */
-    protected function getChannelIds($channels): array
+    protected function getChannelIds(ArrayCollection|array $channels): array
     {
         $ids = [];
 

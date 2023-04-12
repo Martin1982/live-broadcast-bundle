@@ -22,9 +22,9 @@ class StreamEventRepository extends EntityRepository
      * @param LiveBroadcast   $broadcast
      * @param AbstractChannel $channel
      *
-     * @return null|Object|StreamEvent
+     * @return null|Object<StreamEvent>
      */
-    public function findBroadcastingToChannel(LiveBroadcast $broadcast, AbstractChannel $channel)
+    public function findBroadcastingToChannel(LiveBroadcast $broadcast, AbstractChannel $channel): Object|null
     {
         return $this->findOneBy(compact('broadcast', 'channel'));
     }
