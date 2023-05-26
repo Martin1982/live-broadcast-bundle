@@ -71,7 +71,6 @@ class FacebookApiService implements ChannelApiInterface
                 'title' => $broadcast->getName(),
                 'description' => $broadcast->getDescription(),
                 'event_params' => ['start_time' => $startTimestamp->format('U')],
-                'status' => 'SCHEDULED_LIVE',
             ];
 
             $this->facebookSDK->setDefaultAccessToken($channel->getAccessToken());
