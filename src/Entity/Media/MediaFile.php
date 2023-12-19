@@ -12,19 +12,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class MediaFile
- *
- * @ORM\Table(name="broadcast_input_file", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'broadcast_input_file', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Entity]
 class MediaFile extends AbstractMedia
 {
     /**
      * @var string|null
      *
-     * @ORM\Column(name="file_location", type="string", nullable=false)
      *
-     * @Assert\File()
      */
+    #[ORM\Column(name: 'file_location', type: 'string', nullable: false)]
+    #[Assert\File]
     protected ?string $fileLocation = null;
 
     /**

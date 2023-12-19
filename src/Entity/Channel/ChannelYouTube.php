@@ -12,28 +12,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class ChannelYouTube
- *
- * @ORM\Table(name="channel_youtube", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'channel_youtube', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Entity]
 class ChannelYouTube extends AbstractChannel implements PlannedChannelInterface
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="refresh_token", type="string", length=255, nullable=false)
      *
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'refresh_token', type: 'string', length: 255, nullable: false)]
+    #[Assert\NotBlank]
     protected string $refreshToken = '';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="youtube_channel_name", type="string", length=255, nullable=false)
      *
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'youtube_channel_name', type: 'string', length: 255, nullable: false)]
+    #[Assert\NotBlank]
     protected string $youTubeChannelName = '';
 
     /**

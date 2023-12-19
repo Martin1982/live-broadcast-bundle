@@ -11,21 +11,19 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class AbstractMedia
- *
- * @ORM\Entity()
- * @ORM\Table(name="broadcast_input", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="discr", type="string")
  */
+#[ORM\Table(name: 'broadcast_input', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 abstract class AbstractMedia
 {
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected ?int $inputId = null;
 
     /**

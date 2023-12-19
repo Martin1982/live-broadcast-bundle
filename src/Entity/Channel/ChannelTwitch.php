@@ -12,28 +12,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class ChannelTwitch
- *
- * @ORM\Table(name="channel_twitch", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'channel_twitch', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Entity]
 class ChannelTwitch extends AbstractChannel
 {
     /**
      * @var string|null
      *
-     * @ORM\Column(name="stream_key", type="string", length=128, nullable=false)
      *
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'stream_key', type: 'string', length: 128, nullable: false)]
+    #[Assert\NotBlank]
     protected ?string $streamKey = null;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="stream_server", type="string", length=128, nullable=false)
      *
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'stream_server', type: 'string', length: 128, nullable: false)]
+    #[Assert\NotBlank]
     protected ?string $streamServer = 'live.twitch.tv';
 
     /**

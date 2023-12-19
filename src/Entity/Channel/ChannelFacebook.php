@@ -12,28 +12,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class ChannelFacebook
- *
- * @ORM\Table(name="channel_facebook", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'channel_facebook', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Entity]
 class ChannelFacebook extends AbstractChannel implements PlannedChannelInterface
 {
     /**
      * @var string|null
      *
-     * @ORM\Column(name="access_token", type="string", length=255, nullable=false)
      *
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'access_token', type: 'string', length: 255, nullable: false)]
+    #[Assert\NotBlank]
     protected ?string $accessToken = null;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="fb_entity_id", type="string", length=128, nullable=false)
      *
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'fb_entity_id', type: 'string', length: 128, nullable: false)]
+    #[Assert\NotBlank]
     protected ?string $fbEntityId = null;
 
     /**

@@ -12,20 +12,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class MediaUrl
- *
- * @ORM\Table(name="broadcast_input_url", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'broadcast_input_url', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Entity]
 class MediaUrl extends AbstractMedia
 {
     /**
      * @var string|null
      *
-     * @Assert\NotBlank()
-     * @Assert\Url()
      *
-     * @ORM\Column(name="url", type="string", nullable=false)
      */
+    #[Assert\NotBlank]
+    #[Assert\Url]
+    #[ORM\Column(name: 'url', type: 'string', nullable: false)]
     protected ?string $url = null;
 
     /**

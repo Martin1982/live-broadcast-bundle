@@ -14,38 +14,36 @@ use Martin1982\LiveBroadcastBundle\Validator\Constraints as BroadcastAssert;
 /**
  * Class AbstractChannel
  *
- * @ORM\Entity()
- * @ORM\Table(name="channel", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="discr", type="string")
  *
  * @BroadcastAssert\CanStreamToChannel
  */
+#[ORM\Table(name: 'channel', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 abstract class AbstractChannel
 {
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected ?int $channelId = null;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="name", type="string", length=128, nullable=false)
      *
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 128, nullable: false)]
+    #[Assert\NotBlank]
     protected ?string $channelName = null;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_healthy", type="boolean", options={"default": 0})
      */
+    #[ORM\Column(name: 'is_healthy', type: 'boolean', options: ['default' => 0])]
     protected bool $isHealthy = false;
 
     /**

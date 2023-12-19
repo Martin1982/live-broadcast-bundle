@@ -12,19 +12,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class MediaRtmp
- *
- * @ORM\Table(name="broadcast_input_rtmp", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'broadcast_input_rtmp', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Entity]
 class MediaRtmp extends AbstractMedia
 {
     /**
      * @var string|null
      *
-     * @ORM\Column(name="rtmp_address", type="string", nullable=false)
      *
-     * @Assert\Url()
      */
+    #[ORM\Column(name: 'rtmp_address', type: 'string', nullable: false)]
+    #[Assert\Url]
     protected ?string $rtmpAddress = null;
 
     /**

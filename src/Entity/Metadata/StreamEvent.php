@@ -13,49 +13,43 @@ use Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast;
 
 /**
  * Class StreamEvent
- *
- * @ORM\Table(name="live_broadcast_stream_event", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity(repositoryClass="StreamEventRepository")
  */
+#[ORM\Table(name: 'live_broadcast_stream_event', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Entity(repositoryClass: 'StreamEventRepository')]
 class StreamEvent
 {
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private ?int $eventId = null;
 
     /**
      * @var LiveBroadcast|null
-     *
-     * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast")
-     * @ORM\JoinColumn(name="broadcast_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
      */
+    #[ORM\ManyToOne(targetEntity: 'Martin1982\LiveBroadcastBundle\Entity\LiveBroadcast')]
+    #[ORM\JoinColumn(name: 'broadcast_id', referencedColumnName: 'id', unique: false, onDelete: 'CASCADE')]
     protected ?LiveBroadcast $broadcast;
 
     /**
      * @var AbstractChannel|null
-     *
-     * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
      */
+    #[ORM\ManyToOne(targetEntity: 'Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel')]
+    #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', unique: false, onDelete: 'CASCADE')]
     protected ?AbstractChannel $channel;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="external_stream_id", type="string", length=128, nullable=false)
      */
+    #[ORM\Column(name: 'external_stream_id', type: 'string', length: 128, nullable: false)]
     protected ?string $externalStreamId = null;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="end_signal_sent", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'end_signal_sent', type: 'boolean', nullable: true)]
     protected bool $endSignalSent = false;
 
     /**

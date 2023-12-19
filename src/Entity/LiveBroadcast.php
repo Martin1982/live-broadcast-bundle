@@ -18,10 +18,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class LiveBroadcast
- *
- * @ORM\Table(name="live_broadcast", options={"collate"="utf8mb4_general_ci", "charset"="utf8mb4"})
- * @ORM\Entity(repositoryClass="Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository")
  */
+#[ORM\Table(name: 'live_broadcast', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Entity(repositoryClass: 'Martin1982\LiveBroadcastBundle\Entity\LiveBroadcastRepository')]
 class LiveBroadcast
 {
     public const PRIVACY_STATUS_PUBLIC = 0;
@@ -30,87 +29,80 @@ class LiveBroadcast
 
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private ?int $broadcastId = null;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="name", type="string", length=128, nullable=false)
      *
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 128, nullable: false)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="description", type="text", length=65535, nullable=true)
      */
+    #[ORM\Column(name: 'description', type: 'text', length: 65535, nullable: true)]
     private ?string $description = null;
 
     /**
      * @var string|File|UploadedFile|null
      *
-     * @ORM\Column(name="thumbnail", type="string", length=255, nullable=true)
      *
-     * @Assert\Image(minRatio="1.78", maxRatio="1.78", minWidth="1280", minHeight="720", maxSize="5120k")
      */
+    #[ORM\Column(name: 'thumbnail', type: 'string', length: 255, nullable: true)]
+    #[Assert\Image(minRatio: '1.78', maxRatio: '1.78', minWidth: '1280', minHeight: '720', maxSize: '5120k')]
     private UploadedFile|File|null|string $thumbnail = null;
 
     /**
      * @var AbstractMedia|null
-     *
-     * @ORM\ManyToOne(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia")
-     * @ORM\JoinColumn(name="input_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: 'Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia')]
+    #[ORM\JoinColumn(name: 'input_id', referencedColumnName: 'id')]
     private ?AbstractMedia $input;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="broadcast_start", type="datetime", nullable=false)
      *
-     * @Assert\GreaterThan("+30 seconds")
      */
+    #[ORM\Column(name: 'broadcast_start', type: 'datetime', nullable: false)]
+    #[Assert\GreaterThan('+30 seconds')]
     private \DateTime $startTimestamp;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="broadcast_end", type="datetime", nullable=false)
      *
-     * @Assert\GreaterThan("+1 minute")
      */
+    #[ORM\Column(name: 'broadcast_end', type: 'datetime', nullable: false)]
+    #[Assert\GreaterThan('+1 minute')]
     private \DateTime $endTimestamp;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="privacy_status", type="integer", options={"default": 0})
      */
+    #[ORM\Column(name: 'privacy_status', type: 'integer', options: ['default' => 0])]
     private int $privacyStatus = self::PRIVACY_STATUS_PUBLIC;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="stop_on_end_timestamp", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'stop_on_end_timestamp', type: 'boolean', nullable: false)]
     private bool $stopOnEndTimestamp = true;
 
     /**
      * @var AbstractChannel[]
-     *
-     * @ORM\ManyToMany(targetEntity="Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel")
-     * @ORM\JoinTable(name="broadcasts_channels",
-     *      joinColumns={@ORM\JoinColumn(name="broadcast_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="channel_id", referencedColumnName="id")}
-     * )
      */
+    #[ORM\JoinTable(name: 'broadcasts_channels')]
+    #[ORM\JoinColumn(name: 'broadcast_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'channel_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Martin1982\LiveBroadcastBundle\Entity\Channel\AbstractChannel')]
     private array|Collection $outputChannels;
 
     /**
