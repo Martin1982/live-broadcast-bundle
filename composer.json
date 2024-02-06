@@ -13,7 +13,7 @@
         "php": ">=8.1",
         "ext-fileinfo": "*",
         "doctrine/doctrine-bundle": "^2.0",
-        "doctrine/orm": "^2.7",
+        "doctrine/orm": "^3.0",
         "martin1982/facebook-graph-sdk": "^7.0.1",
         "google/apiclient-services": "*",
         "google/apiclient": "^2.7",
@@ -31,12 +31,12 @@
         "roave/security-advisories": "dev-latest",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "escapestudios/symfony2-coding-standard": "^3.1",
-        "friendsofphp/php-cs-fixer": "^3.6",
+        "friendsofphp/php-cs-fixer": "dev-master",
         "guzzlehttp/guzzle": "^7.0",
-        "phpunit/phpunit": "^9.0|^10.0",
+        "phpunit/phpunit": "^11.0",
         "squizlabs/php_codesniffer": "^3.5",
         "phpmd/phpmd": "^2.12",
-        "rector/rector": "^0.19"
+        "rector/rector": "^1.0"
     },
     "suggest": {
         "doctrine/doctrine-migrations-bundle": "Keep track of updated entities in your database"
