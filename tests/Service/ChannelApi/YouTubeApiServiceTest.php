@@ -56,15 +56,11 @@ class YouTubeApiServiceTest extends TestCase
      * @throws LiveBroadcastOutputException
      * @throws LiveBroadcastApiException
      * @throws Exception
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
      */
     public function testCreateLiveEvent(): void
     {
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('persist')
-            ->willReturn(true);
+            ->method('persist');
 
         $broadcast = $this->createMock(LiveBroadcast::class);
         $broadcast->expects(self::atLeastOnce())
@@ -102,9 +98,6 @@ class YouTubeApiServiceTest extends TestCase
      * @throws LiveBroadcastOutputException
      * @throws LiveBroadcastApiException
      * @throws Exception
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
      */
     public function testRemoveLiveEvent(): void
     {
@@ -139,10 +132,6 @@ class YouTubeApiServiceTest extends TestCase
      * @throws OptimisticLockException
      * @throws LiveBroadcastOutputException
      * @throws LiveBroadcastApiException
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
      * @throws Exception
      */
     public function testUpdateLiveEventWhenThereIsNone(): void
@@ -192,9 +181,6 @@ class YouTubeApiServiceTest extends TestCase
      * @throws LiveBroadcastOutputException
      * @throws LiveBroadcastApiException
      * @throws Exception
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
      */
     public function testUpdateLiveEvent(): void
     {
@@ -221,9 +207,8 @@ class YouTubeApiServiceTest extends TestCase
 
     /**
      * Test that when no event is available an exception is thrown
+     *
      * @throws LiveBroadcastException
-     * @throws Exception
-     * @throws Exception
      * @throws Exception
      */
     public function testGetStreamUrlForNoEvent(): void
@@ -250,11 +235,6 @@ class YouTubeApiServiceTest extends TestCase
      *
      * @throws LiveBroadcastOutputException
      * @throws LiveBroadcastException
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
      * @throws Exception
      */
     public function testGetStreamUrl(): void
@@ -342,7 +322,6 @@ class YouTubeApiServiceTest extends TestCase
      * @throws OptimisticLockException
      * @throws LiveBroadcastApiException
      * @throws Exception
-     * @throws Exception
      */
     public function testCantSetOtherChannel(): void
     {
@@ -364,8 +343,7 @@ class YouTubeApiServiceTest extends TestCase
 
     /**
      * Setup basic mocks
-     * @throws Exception
-     * @throws Exception
+     *
      * @throws Exception
      */
     protected function setUp(): void

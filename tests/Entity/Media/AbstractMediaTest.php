@@ -10,7 +10,6 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Entity\Media;
 use Martin1982\LiveBroadcastBundle\Entity\Media\AbstractMedia;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 
 /**
  * Class AbstractMediaTest
@@ -24,14 +23,14 @@ class AbstractMediaTest extends TestCase
      */
     public function testToString(): void
     {
-        $media = $this->getMockForAbstractClass(AbstractMedia::class);
+        $media = new class extends AbstractMedia {
+        };
         self::assertEmpty((string) $media);
 
-        $reflection = new ReflectionClass($media);
+        $reflection = new \ReflectionClass($media);
         $property = $reflection->getProperty('inputId');
-        $property->setAccessible(true);
-        $property->setValue($media, 5);
+        $property->setValue($media, '5');
 
-        self::assertEquals(5, (string) $media);
+        self::assertEquals('5', (string) $media);
     }
 }

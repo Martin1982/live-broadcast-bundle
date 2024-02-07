@@ -9,6 +9,7 @@ namespace Martin1982\LiveBroadcastBundle\Tests\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
@@ -248,8 +249,7 @@ class BroadcastManagerTest extends TestCase
 
         $api = $this->createMock(ChannelApiInterface::class);
         $api->expects(self::atLeastOnce())
-            ->method('sendEndSignal')
-            ->willReturn(true);
+            ->method('sendEndSignal');
 
         $streamEvent = $this->createMock(StreamEvent::class);
         $streamEvent->expects(self::atLeastOnce())
@@ -264,11 +264,9 @@ class BroadcastManagerTest extends TestCase
             ->willReturn($api);
 
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('persist')
-            ->willReturn(true);
+            ->method('persist');
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('flush')
-            ->willReturn(true);
+            ->method('flush');
 
         $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->sendEndSignal($streamEvent);
@@ -291,6 +289,7 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Test sending an end signal
+     *
      * @throws Exception
      * @throws LiveBroadcastApiException
      * @throws LiveBroadcastException
@@ -319,11 +318,9 @@ class BroadcastManagerTest extends TestCase
             ->willReturn($api);
 
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('persist')
-            ->willReturn(true);
+            ->method('persist');
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('flush')
-            ->willReturn(true);
+            ->method('flush');
 
         $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->sendEndSignal($streamEvent);
@@ -360,11 +357,9 @@ class BroadcastManagerTest extends TestCase
             ->willReturn($api);
 
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('persist')
-            ->willReturn(true);
+            ->method('persist');
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('flush')
-            ->willReturn(true);
+            ->method('flush');
 
         $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->sendEndSignal($streamEvent);
@@ -394,18 +389,16 @@ class BroadcastManagerTest extends TestCase
         $api = $this->createMock(ChannelApiInterface::class);
         $api->expects(self::atLeastOnce())
             ->method('sendEndSignal')
-            ->willThrowException(new ORMException('some error'));
+            ->willThrowException(new EntityNotFoundException('some error'));
 
         $this->stack->expects(self::atLeastOnce())
             ->method('getApiForChannel')
             ->willReturn($api);
 
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('persist')
-            ->willReturn(true);
+            ->method('persist');
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('flush')
-            ->willReturn(true);
+            ->method('flush');
 
         $broadcastManager = new BroadcastManager($this->entityManager, $this->stack, $this->logger);
         $broadcastManager->sendEndSignal($streamEvent);
@@ -459,6 +452,7 @@ class BroadcastManagerTest extends TestCase
 
     /**
      * Setup mock objects
+     *
      * @throws Exception
      * @throws Exception
      * @throws Exception

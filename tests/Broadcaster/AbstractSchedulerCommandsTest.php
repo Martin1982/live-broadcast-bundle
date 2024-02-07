@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 /**
  * This file is part of martin1982/livebroadcastbundle which is released under MIT.
  * See https://opensource.org/licenses/MIT for full license details.
  */
+
 namespace Martin1982\LiveBroadcastBundle\Tests\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Broadcaster\AbstractSchedulerCommands;
@@ -12,21 +14,20 @@ use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
- * Class AbstractSchedulerCommandsTest
+ * Class AbstractSchedulerCommandsTest.
  */
 class AbstractSchedulerCommandsTest extends TestCase
 {
     /**
      * @var AbstractSchedulerCommands|MockObject
      */
-    private $schedulerCommands;
+    private AbstractSchedulerCommands|MockObject $schedulerCommands;
 
     /**
-     * Set up a basic test object
+     * Set up a basic test object.
      *
      * @throws Exception
      */
@@ -36,11 +37,12 @@ class AbstractSchedulerCommandsTest extends TestCase
         $kernel->expects(self::once())->method('getProjectDir')->willReturn('/some/directory');
         $kernel->expects(self::once())->method('getEnvironment')->willReturn('unit_test');
 
-        $this->schedulerCommands = $this->getMockForAbstractClass(AbstractSchedulerCommands::class, [$kernel]);
+        $this->schedulerCommands = new class($kernel) extends AbstractSchedulerCommands {
+        };
     }
 
     /**
-     * Test stopping the process throws exception
+     * Test stopping the process throws exception.
      */
     public function testStopProcess(): void
     {
@@ -50,7 +52,7 @@ class AbstractSchedulerCommandsTest extends TestCase
     }
 
     /**
-     * Test getting the running process throws an exception
+     * Test getting the running process throws an exception.
      */
     public function testGetRunningProcesses(): void
     {
@@ -60,23 +62,22 @@ class AbstractSchedulerCommandsTest extends TestCase
     }
 
     /**
-     * Test the FFMPEG log directory setter
+     * Test the FFMPEG log directory setter.
      */
     public function testFFMpegLogDirectory(): void
     {
         $this->schedulerCommands->setFFMpegLogDirectory(__DIR__);
         $this->schedulerCommands->setFFMpegLogDirectory('/does/not/exist');
 
-        $reflection = new ReflectionClass($this->schedulerCommands);
+        $reflection = new \ReflectionClass($this->schedulerCommands);
         $property = $reflection->getProperty('logDirectoryFFMpeg');
-        $property->setAccessible(true);
 
         // Second setFFMpegLogDirectory() should be ignored
         self::assertEquals(__DIR__, $property->getValue($this->schedulerCommands));
     }
 
     /**
-     * Test if a stream can loop
+     * Test if a stream can loop.
      */
     public function testLooping(): void
     {

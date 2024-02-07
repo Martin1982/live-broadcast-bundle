@@ -45,7 +45,6 @@ class FacebookApiServiceTest extends TestCase
      * @throws LiveBroadcastApiException
      * @throws OptimisticLockException
      * @throws ORMException
-     * @throws \Doctrine\ORM\ORMException
      */
     public function testCreateLiveEvent(): void
     {
@@ -69,11 +68,9 @@ class FacebookApiServiceTest extends TestCase
             ->willReturn($response);
 
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('persist')
-            ->willReturn(true);
+            ->method('persist');
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('flush')
-            ->willReturn(true);
+            ->method('flush');
 
         $facebook = $this->getFacebookApiService();
         $facebook->setFacebookSdk($sdk);
@@ -87,7 +84,6 @@ class FacebookApiServiceTest extends TestCase
      * @throws LiveBroadcastApiException
      * @throws OptimisticLockException
      * @throws ORMException
-     * @throws \Doctrine\ORM\ORMException
      */
     public function testCreateStreamOnNoChannel(): void
     {
@@ -109,8 +105,6 @@ class FacebookApiServiceTest extends TestCase
      * @throws Exception
      * @throws LiveBroadcastApiException
      * @throws OptimisticLockException
-     * @throws ORMException
-     * @throws \Doctrine\ORM\ORMException
      */
     public function testExceptionWhenStreamCannotBeCreated(): void
     {
@@ -154,6 +148,7 @@ class FacebookApiServiceTest extends TestCase
 
     /**
      * Test updating a stream on a non-facebook channel
+     *
      * @throws Exception
      * @throws Exception
      * @throws Exception
@@ -261,7 +256,6 @@ class FacebookApiServiceTest extends TestCase
      * @throws LiveBroadcastApiException
      * @throws OptimisticLockException
      * @throws ORMException
-     * @throws \Doctrine\ORM\ORMException
      */
     public function testRemoveLiveEventOnNonFacebookChannel(): void
     {
@@ -284,7 +278,6 @@ class FacebookApiServiceTest extends TestCase
      * @throws LiveBroadcastApiException
      * @throws OptimisticLockException
      * @throws ORMException
-     * @throws \Doctrine\ORM\ORMException
      */
     public function testRemoveLiveEventOnNonEvent(): void
     {
@@ -316,7 +309,6 @@ class FacebookApiServiceTest extends TestCase
      * @throws LiveBroadcastApiException
      * @throws OptimisticLockException
      * @throws ORMException
-     * @throws \Doctrine\ORM\ORMException
      */
     public function testRemoveLiveEventFacebookError(): void
     {
@@ -359,7 +351,6 @@ class FacebookApiServiceTest extends TestCase
      * @throws LiveBroadcastApiException
      * @throws OptimisticLockException
      * @throws ORMException
-     * @throws \Doctrine\ORM\ORMException
      */
     public function testRemoveLiveEvent(): void
     {
@@ -392,11 +383,9 @@ class FacebookApiServiceTest extends TestCase
             ->method('getRepository')
             ->willReturn($repository);
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('remove')
-            ->willReturn(true);
+            ->method('remove');
         $this->entityManager->expects(self::atLeastOnce())
-            ->method('flush')
-            ->willReturn(true);
+            ->method('flush');
 
         $facebook = $this->getFacebookApiService();
         $facebook->setFacebookSdk($sdk);
@@ -420,6 +409,7 @@ class FacebookApiServiceTest extends TestCase
 
     /**
      * Test that an SDK exception is caught
+     *
      * @throws Exception
      */
     public function testGetLongLivedAccessTokenSdkError(): void
@@ -508,6 +498,7 @@ class FacebookApiServiceTest extends TestCase
 
     /**
      * Test that a facebook exception is caught
+     *
      * @throws Exception
      * @throws Exception
      * @throws Exception
@@ -622,6 +613,7 @@ class FacebookApiServiceTest extends TestCase
 
     /**
      * Test that an exception is caught and converted
+     *
      * @throws Exception
      * @throws Exception
      */
@@ -755,6 +747,7 @@ class FacebookApiServiceTest extends TestCase
      * Get a Facebook channel mock
      *
      * @return ChannelFacebook
+     *
      * @throws Exception
      */
     protected function getFacebookChannel(): ChannelFacebook
