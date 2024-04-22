@@ -167,16 +167,16 @@
         },
         {
             "name": "doctrine/collections",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/collections.git",
-                "reference": "420480fc085bc65f3c956af13abe8e7546f94813"
+                "reference": "d8af7f248c74f195f7347424600fd9e17b57af59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/collections/zipball/420480fc085bc65f3c956af13abe8e7546f94813",
-                "reference": "420480fc085bc65f3c956af13abe8e7546f94813",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/d8af7f248c74f195f7347424600fd9e17b57af59",
+                "reference": "d8af7f248c74f195f7347424600fd9e17b57af59",
                 "shasum": ""
             },
             "require": {
@@ -233,7 +233,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/collections/issues",
-                "source": "https://github.com/doctrine/collections/tree/2.2.1"
+                "source": "https://github.com/doctrine/collections/tree/2.2.2"
             },
             "funding": [
                 {
@@ -249,7 +249,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-05T22:28:45+00:00"
+            "time": "2024-04-18T06:56:21+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -857,16 +857,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "3.1.1",
+            "version": "3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "9c560713925ac5859342e6ff370c4c997acf2fd4"
+                "reference": "f79d166a4e844beb9389f23bdb44abdbf58cec38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/9c560713925ac5859342e6ff370c4c997acf2fd4",
-                "reference": "9c560713925ac5859342e6ff370c4c997acf2fd4",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/f79d166a4e844beb9389f23bdb44abdbf58cec38",
+                "reference": "f79d166a4e844beb9389f23bdb44abdbf58cec38",
                 "shasum": ""
             },
             "require": {
@@ -939,9 +939,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/3.1.1"
+                "source": "https://github.com/doctrine/orm/tree/3.1.2"
             },
-            "time": "2024-03-21T11:37:52+00:00"
+            "time": "2024-04-15T14:20:40+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -1227,16 +1227,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.344.0",
+            "version": "v0.345.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "d5813b1a64a8a73daf7ab307dc640e2efb046131"
+                "reference": "a975dae4c06d304b020eda3f53e7c3402b32132d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/d5813b1a64a8a73daf7ab307dc640e2efb046131",
-                "reference": "d5813b1a64a8a73daf7ab307dc640e2efb046131",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/a975dae4c06d304b020eda3f53e7c3402b32132d",
+                "reference": "a975dae4c06d304b020eda3f53e7c3402b32132d",
                 "shasum": ""
             },
             "require": {
@@ -1265,9 +1265,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.344.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.345.0"
             },
-            "time": "2024-04-12T01:04:09+00:00"
+            "time": "2024-04-21T01:02:15+00:00"
         },
         {
             "name": "google/auth",
@@ -6096,12 +6096,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "54f8878c6f91b4fdd84f48a9cc0f8391ebe544d8"
+                "reference": "5c6b9a4c0512c3911057cff0ed0393855e5faf6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/54f8878c6f91b4fdd84f48a9cc0f8391ebe544d8",
-                "reference": "54f8878c6f91b4fdd84f48a9cc0f8391ebe544d8",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/5c6b9a4c0512c3911057cff0ed0393855e5faf6d",
+                "reference": "5c6b9a4c0512c3911057cff0ed0393855e5faf6d",
                 "shasum": ""
             },
             "require": {
@@ -6182,7 +6182,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-15T04:58:21+00:00"
+            "time": "2024-04-20T23:19:16+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -6567,16 +6567,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.66",
+            "version": "1.10.67",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "94779c987e4ebd620025d9e5fdd23323903950bd"
+                "reference": "16ddbe776f10da6a95ebd25de7c1dbed397dc493"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/94779c987e4ebd620025d9e5fdd23323903950bd",
-                "reference": "94779c987e4ebd620025d9e5fdd23323903950bd",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/16ddbe776f10da6a95ebd25de7c1dbed397dc493",
+                "reference": "16ddbe776f10da6a95ebd25de7c1dbed397dc493",
                 "shasum": ""
             },
             "require": {
@@ -6619,13 +6619,9 @@
                 {
                     "url": "https://github.com/phpstan",
                     "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
-                    "type": "tidelift"
                 }
             ],
-            "time": "2024-03-28T16:17:31+00:00"
+            "time": "2024-04-16T07:22:02+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -7115,12 +7111,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "1b43da6199cab7867f06b52454a256efa743f170"
+                "reference": "a6fb2a760c95f45ccb6a412599770061c330c624"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/1b43da6199cab7867f06b52454a256efa743f170",
-                "reference": "1b43da6199cab7867f06b52454a256efa743f170",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a6fb2a760c95f45ccb6a412599770061c330c624",
+                "reference": "a6fb2a760c95f45ccb6a412599770061c330c624",
                 "shasum": ""
             },
             "conflict": {
@@ -7274,7 +7270,7 @@
                 "ezsystems/ezplatform-solr-search-engine": ">=1.7,<1.7.12|>=2,<2.0.2|>=3.3,<3.3.15",
                 "ezsystems/ezplatform-user": ">=1,<1.0.1",
                 "ezsystems/ezpublish-kernel": "<6.13.8.2-dev|>=7,<7.5.31",
-                "ezsystems/ezpublish-legacy": "<=2017.12.7.3|>=2018.6,<=2019.03.5.1",
+                "ezsystems/ezpublish-legacy": "<=2017.12.7.3|>=2018.06,<=2019.03.5.1",
                 "ezsystems/platform-ui-assets-bundle": ">=4.2,<4.2.3",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1-dev|>=2.5,<2.5.15",
                 "ezyang/htmlpurifier": "<4.1.1",
@@ -7305,7 +7301,8 @@
                 "friendsofsymfony/oauth2-php": "<1.3",
                 "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
-                "friendsofsymfony1/symfony1": ">=1.1,<1.5.19",
+                "friendsofsymfony1/swiftmailer": ">=4,<5.4.13|>=6,<6.2.5",
+                "friendsofsymfony1/symfony1": ">=1.1,<1.15.19",
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
                 "friendsoftypo3/openid": ">=4.5,<4.5.31|>=4.7,<4.7.16|>=6,<6.0.11|>=6.1,<6.1.6",
                 "froala/wysiwyg-editor": "<3.2.7|>=4.0.1,<=4.1.3",
@@ -7641,7 +7638,7 @@
                 "sumocoders/framework-user-bundle": "<1.4",
                 "superbig/craft-audit": "<3.0.2",
                 "swag/paypal": "<5.4.4",
-                "swiftmailer/swiftmailer": ">=4,<5.4.5",
+                "swiftmailer/swiftmailer": ">=4,<6.2.5",
                 "swiftyedit/swiftyedit": "<1.2",
                 "sylius/admin-bundle": ">=1,<1.0.17|>=1.1,<1.1.9|>=1.2,<1.2.2",
                 "sylius/grid": ">=1,<1.1.19|>=1.2,<1.2.18|>=1.3,<1.3.13|>=1.4,<1.4.5|>=1.5,<1.5.1",
@@ -7691,7 +7688,7 @@
                 "t3s/content-consent": "<1.0.3|>=2,<2.0.2",
                 "tastyigniter/tastyigniter": "<3.3",
                 "tcg/voyager": "<=1.4",
-                "tecnickcom/tcpdf": "<6.2.22",
+                "tecnickcom/tcpdf": "<=6.7.4",
                 "terminal42/contao-tablelookupwizard": "<3.3.5",
                 "thelia/backoffice-default-template": ">=2.1,<2.1.2",
                 "thelia/thelia": ">=2.1,<2.1.3",
@@ -7699,7 +7696,7 @@
                 "thinkcmf/thinkcmf": "<=5.1.7",
                 "thorsten/phpmyfaq": "<3.2.2",
                 "tikiwiki/tiki-manager": "<=17.1",
-                "timber/timber": "<=2",
+                "timber/timber": ">=0.16.6,<1.23.1|>=1.24,<1.24.1|>=2,<2.1",
                 "tinymce/tinymce": "<7",
                 "tinymighty/wiki-seo": "<1.2.2",
                 "titon/framework": "<9.9.99",
@@ -7855,7 +7852,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-12T22:04:12+00:00"
+            "time": "2024-04-19T20:04:33+00:00"
         },
         {
             "name": "sebastian/cli-parser",
