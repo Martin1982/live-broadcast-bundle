@@ -6201,12 +6201,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "fb625af404ec452eeee8bab3ea1205056127a1e7"
+                "reference": "d57a32d0a02402cd6ffb3c8f3586bd725c186520"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/fb625af404ec452eeee8bab3ea1205056127a1e7",
-                "reference": "fb625af404ec452eeee8bab3ea1205056127a1e7",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/d57a32d0a02402cd6ffb3c8f3586bd725c186520",
+                "reference": "d57a32d0a02402cd6ffb3c8f3586bd725c186520",
                 "shasum": ""
             },
             "require": {
@@ -6299,7 +6299,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-04-20T21:59:33+00:00"
+            "time": "2025-04-26T09:02:27+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -6685,16 +6685,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.12",
+            "version": "2.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "96dde49e967c0c22812bcfa7bda4ff82c09f3b0c"
+                "reference": "e55e03e6d4ac49cd1240907e5b08e5cd378572a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/96dde49e967c0c22812bcfa7bda4ff82c09f3b0c",
-                "reference": "96dde49e967c0c22812bcfa7bda4ff82c09f3b0c",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e55e03e6d4ac49cd1240907e5b08e5cd378572a9",
+                "reference": "e55e03e6d4ac49cd1240907e5b08e5cd378572a9",
                 "shasum": ""
             },
             "require": {
@@ -6739,7 +6739,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-04-16T13:19:18+00:00"
+            "time": "2025-04-27T12:28:25+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -7065,16 +7065,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.1.2",
+            "version": "12.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "6f2775cc4b7b19ba5a411c188e855eb0cc78a711"
+                "reference": "72ca50e817dd7d65356c16772c30f06c01a6fae2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6f2775cc4b7b19ba5a411c188e855eb0cc78a711",
-                "reference": "6f2775cc4b7b19ba5a411c188e855eb0cc78a711",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/72ca50e817dd7d65356c16772c30f06c01a6fae2",
+                "reference": "72ca50e817dd7d65356c16772c30f06c01a6fae2",
                 "shasum": ""
             },
             "require": {
@@ -7142,7 +7142,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.1.2"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.1.3"
             },
             "funding": [
                 {
@@ -7154,11 +7154,19 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://liberapay.com/sebastianbergmann",
+                    "type": "liberapay"
+                },
+                {
+                    "url": "https://thanks.dev/u/gh/sebastianbergmann",
+                    "type": "thanks_dev"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/phpunit/phpunit",
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-08T08:05:27+00:00"
+            "time": "2025-04-22T06:11:09+00:00"
         },
         {
             "name": "react/cache",
@@ -7616,21 +7624,21 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.0.11",
+            "version": "2.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "059b827cc648929711606e9824337e41e2f9ed92"
+                "reference": "63923bc9383c1212476c41d8cebf58a425e6f98d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/059b827cc648929711606e9824337e41e2f9ed92",
-                "reference": "059b827cc648929711606e9824337e41e2f9ed92",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/63923bc9383c1212476c41d8cebf58a425e6f98d",
+                "reference": "63923bc9383c1212476c41d8cebf58a425e6f98d",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "phpstan/phpstan": "^2.1.9"
+                "phpstan/phpstan": "^2.1.12"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -7663,7 +7671,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.0.11"
+                "source": "https://github.com/rectorphp/rector/tree/2.0.14"
             },
             "funding": [
                 {
@@ -7671,7 +7679,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-28T10:25:17+00:00"
+            "time": "2025-04-28T00:03:14+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -7679,12 +7687,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "6c54d20ae795b83ecf3f826311d7f488cd1ef005"
+                "reference": "c96e48da0eb4ba3f14ca6ab39a6fd5025a5d0838"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/6c54d20ae795b83ecf3f826311d7f488cd1ef005",
-                "reference": "6c54d20ae795b83ecf3f826311d7f488cd1ef005",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c96e48da0eb4ba3f14ca6ab39a6fd5025a5d0838",
+                "reference": "c96e48da0eb4ba3f14ca6ab39a6fd5025a5d0838",
                 "shasum": ""
             },
             "conflict": {
@@ -7712,6 +7720,7 @@
                 "anchorcms/anchor-cms": "<=0.12.7",
                 "andreapollastri/cipi": "<=3.1.15",
                 "andrewhaine/silverstripe-form-capture": ">=0.2,<=0.2.3|>=1,<1.0.2|>=2,<2.2.5",
+                "aoe/restler": "<1.7.1",
                 "apache-solr-for-typo3/solr": "<2.8.3",
                 "apereo/phpcas": "<1.6",
                 "api-platform/core": "<3.4.17|>=4.0.0.0-alpha1,<4.0.22",
@@ -7798,14 +7807,14 @@
                 "concrete5/core": "<8.5.8|>=9,<9.1",
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
                 "contao/comments-bundle": ">=2,<4.13.40|>=5.0.0.0-RC1-dev,<5.3.4",
-                "contao/contao": "<=5.4.1",
+                "contao/contao": ">=3,<3.5.37|>=4,<4.4.56|>=4.5,<4.9.40|>=4.10,<4.11.7|>=4.13,<4.13.21|>=5.1,<5.1.4",
                 "contao/core": "<3.5.39",
                 "contao/core-bundle": "<4.13.54|>=5,<5.3.30|>=5.4,<5.5.6",
                 "contao/listing-bundle": ">=3,<=3.5.30|>=4,<4.4.8",
                 "contao/managed-edition": "<=1.5",
                 "corveda/phpsandbox": "<1.3.5",
                 "cosenary/instagram": "<=2.3",
-                "craftcms/cms": "<4.13.8|>=5,<5.5.5",
+                "craftcms/cms": "<=4.14.14|>=5,<=5.6.16",
                 "croogo/croogo": "<4",
                 "cuyz/valinor": "<0.12",
                 "czim/file-handling": "<1.5|>=2,<2.3",
@@ -7911,7 +7920,7 @@
                 "firebase/php-jwt": "<6",
                 "fisharebest/webtrees": "<=2.1.18",
                 "fixpunkt/fp-masterquiz": "<2.2.1|>=3,<3.5.2",
-                "fixpunkt/fp-newsletter": "<1.1.1|>=2,<2.1.2|>=2.2,<3.2.6",
+                "fixpunkt/fp-newsletter": "<1.1.1|>=1.2,<2.1.2|>=2.2,<3.2.6",
                 "flarum/core": "<1.8.10",
                 "flarum/flarum": "<0.1.0.0-beta8",
                 "flarum/framework": "<1.8.10",
@@ -8071,6 +8080,7 @@
                 "livewire/volt": "<1.7",
                 "lms/routes": "<2.1.1",
                 "localizationteam/l10nmgr": "<7.4|>=8,<8.7|>=9,<9.2",
+                "luracast/restler": "<3.1",
                 "luyadev/yii-helpers": "<1.2.1",
                 "macropay-solutions/laravel-crud-wizard-free": "<3.4.17",
                 "maestroerror/php-heic-to-jpg": "<1.0.5",
@@ -8115,7 +8125,7 @@
                 "mojo42/jirafeau": "<4.4",
                 "mongodb/mongodb": ">=1,<1.9.2",
                 "monolog/monolog": ">=1.8,<1.12",
-                "moodle/moodle": "<4.3.10|>=4.4,<4.4.6|>=4.5.0.0-beta,<4.5.2",
+                "moodle/moodle": "<4.3.12|>=4.4,<4.4.8|>=4.5.0.0-beta,<4.5.4",
                 "mos/cimage": "<0.7.19",
                 "movim/moxl": ">=0.8,<=0.10",
                 "movingbytes/social-network": "<=1.2.1",
@@ -8129,6 +8139,7 @@
                 "mustache/mustache": ">=2,<2.14.1",
                 "mwdelaney/wp-enable-svg": "<=0.2",
                 "namshi/jose": "<2.2",
+                "nasirkhan/laravel-starter": "<11.11",
                 "nategood/httpful": "<1",
                 "neoan3-apps/template": "<1.1.1",
                 "neorazorx/facturascripts": "<2022.04",
@@ -8598,7 +8609,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-17T15:05:22+00:00"
+            "time": "2025-04-25T17:04:56+00:00"
         },
         {
             "name": "sebastian/cli-parser",
