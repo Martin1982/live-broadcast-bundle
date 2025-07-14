@@ -160,21 +160,21 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "4.2.4",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "b37d160498ea91a2382a2ebe825c4ea6254fc0ec"
+                "reference": "5fe09532be619202d59c70956c6fb20e97933ee3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/b37d160498ea91a2382a2ebe825c4ea6254fc0ec",
-                "reference": "b37d160498ea91a2382a2ebe825c4ea6254fc0ec",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/5fe09532be619202d59c70956c6fb20e97933ee3",
+                "reference": "5fe09532be619202d59c70956c6fb20e97933ee3",
                 "shasum": ""
             },
             "require": {
-                "doctrine/deprecations": "^0.5.3|^1",
-                "php": "^8.1",
+                "doctrine/deprecations": "^1.1.5",
+                "php": "^8.2",
                 "psr/cache": "^1|^2|^3",
                 "psr/log": "^1|^2|^3"
             },
@@ -185,7 +185,7 @@
                 "phpstan/phpstan": "2.1.17",
                 "phpstan/phpstan-phpunit": "2.0.6",
                 "phpstan/phpstan-strict-rules": "^2",
-                "phpunit/phpunit": "10.5.46",
+                "phpunit/phpunit": "11.5.23",
                 "slevomat/coding-standard": "8.16.2",
                 "squizlabs/php_codesniffer": "3.13.1",
                 "symfony/cache": "^6.3.8|^7.0",
@@ -246,7 +246,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/4.2.4"
+                "source": "https://github.com/doctrine/dbal/tree/4.3.0"
             },
             "funding": [
                 {
@@ -262,7 +262,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-06-15T23:15:01+00:00"
+            "time": "2025-06-16T19:31:04+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -1137,7 +1137,7 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.402.0",
+            "version": "v0.403.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
@@ -1175,22 +1175,22 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.402.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.403.0"
             },
             "time": "2025-06-04T17:28:44+00:00"
         },
         {
             "name": "google/auth",
-            "version": "v1.47.0",
+            "version": "v1.47.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-auth-library-php.git",
-                "reference": "d6389aae7c009daceaa8da9b7942d8df6969f6d9"
+                "reference": "d7a0a215ec42ca0c8cb40e9ae0c5960aa9a024b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/d6389aae7c009daceaa8da9b7942d8df6969f6d9",
-                "reference": "d6389aae7c009daceaa8da9b7942d8df6969f6d9",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/d7a0a215ec42ca0c8cb40e9ae0c5960aa9a024b7",
+                "reference": "d7a0a215ec42ca0c8cb40e9ae0c5960aa9a024b7",
                 "shasum": ""
             },
             "require": {
@@ -1236,9 +1236,9 @@
             "support": {
                 "docs": "https://cloud.google.com/php/docs/reference/auth/latest",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
-                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.47.0"
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.47.1"
             },
-            "time": "2025-04-15T21:47:20+00:00"
+            "time": "2025-07-09T15:26:02+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -6044,16 +6044,16 @@
         },
         {
             "name": "escapestudios/symfony2-coding-standard",
-            "version": "3.15.0",
+            "version": "3.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/djoos/Symfony-coding-standard.git",
-                "reference": "6ab870a3aa5b93dd2201b82f058be4bd54d9b2da"
+                "reference": "5a8962f81ac04c8e5d67acf619823c1cb883a627"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/djoos/Symfony-coding-standard/zipball/6ab870a3aa5b93dd2201b82f058be4bd54d9b2da",
-                "reference": "6ab870a3aa5b93dd2201b82f058be4bd54d9b2da",
+                "url": "https://api.github.com/repos/djoos/Symfony-coding-standard/zipball/5a8962f81ac04c8e5d67acf619823c1cb883a627",
+                "reference": "5a8962f81ac04c8e5d67acf619823c1cb883a627",
                 "shasum": ""
             },
             "require": {
@@ -6098,7 +6098,7 @@
                 "issues": "https://github.com/djoos/Symfony-coding-standard/issues",
                 "source": "https://github.com/djoos/Symfony-coding-standard"
             },
-            "time": "2024-09-30T10:58:19+00:00"
+            "time": "2025-07-09T10:52:53+00:00"
         },
         {
             "name": "evenement/evenement",
@@ -6214,12 +6214,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "b6070dbdc527ec57774ab953c4a3794a0d1cebdf"
+                "reference": "f247a10627f3494a1e246f5855f724bcafe4d9a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/b6070dbdc527ec57774ab953c4a3794a0d1cebdf",
-                "reference": "b6070dbdc527ec57774ab953c4a3794a0d1cebdf",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/f247a10627f3494a1e246f5855f724bcafe4d9a3",
+                "reference": "f247a10627f3494a1e246f5855f724bcafe4d9a3",
                 "shasum": ""
             },
             "require": {
@@ -6312,7 +6312,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-06T21:01:06+00:00"
+            "time": "2025-07-13T22:01:03+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -7090,16 +7090,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.2.6",
+            "version": "12.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "638644c62a58f04974da115f98981c9b48564021"
+                "reference": "8b1348b254e5959acaf1539c6bd790515fb49414"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/638644c62a58f04974da115f98981c9b48564021",
-                "reference": "638644c62a58f04974da115f98981c9b48564021",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8b1348b254e5959acaf1539c6bd790515fb49414",
+                "reference": "8b1348b254e5959acaf1539c6bd790515fb49414",
                 "shasum": ""
             },
             "require": {
@@ -7109,7 +7109,7 @@
                 "ext-mbstring": "*",
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
-                "myclabs/deep-copy": "^1.13.1",
+                "myclabs/deep-copy": "^1.13.3",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.3",
@@ -7167,7 +7167,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.2.6"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.2.7"
             },
             "funding": [
                 {
@@ -7191,7 +7191,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-04T06:00:16+00:00"
+            "time": "2025-07-11T04:11:13+00:00"
         },
         {
             "name": "react/cache",
@@ -7649,16 +7649,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "d513dea45a94394b660e15c155d1fa27826f8e30"
+                "reference": "d0917c069bb0d9bb06ed111cf052510f609015a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/d513dea45a94394b660e15c155d1fa27826f8e30",
-                "reference": "d513dea45a94394b660e15c155d1fa27826f8e30",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/d0917c069bb0d9bb06ed111cf052510f609015a4",
+                "reference": "d0917c069bb0d9bb06ed111cf052510f609015a4",
                 "shasum": ""
             },
             "require": {
@@ -7697,7 +7697,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.1.0"
+                "source": "https://github.com/rectorphp/rector/tree/2.1.1"
             },
             "funding": [
                 {
@@ -7705,7 +7705,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-06-24T20:26:57+00:00"
+            "time": "2025-07-10T11:31:31+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -7713,12 +7713,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "a76f62e135c8b583602bd99df737b5c20f4d7200"
+                "reference": "56a0a5fbffe6faa8e85eb4d027a3eaf704adc288"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a76f62e135c8b583602bd99df737b5c20f4d7200",
-                "reference": "a76f62e135c8b583602bd99df737b5c20f4d7200",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/56a0a5fbffe6faa8e85eb4d027a3eaf704adc288",
+                "reference": "56a0a5fbffe6faa8e85eb4d027a3eaf704adc288",
                 "shasum": ""
             },
             "conflict": {
@@ -8056,7 +8056,7 @@
                 "jackalope/jackalope-doctrine-dbal": "<1.7.4",
                 "jambagecom/div2007": "<0.10.2",
                 "james-heinrich/getid3": "<1.9.21",
-                "james-heinrich/phpthumb": "<1.7.12",
+                "james-heinrich/phpthumb": "<=1.7.23",
                 "jasig/phpcas": "<1.3.3",
                 "jbartels/wec-map": "<3.0.3",
                 "jcbrand/converse.js": "<3.3.3",
@@ -8158,7 +8158,7 @@
                 "microsoft/microsoft-graph": ">=1.16,<1.109.1|>=2,<2.0.1",
                 "microsoft/microsoft-graph-beta": "<2.0.1",
                 "microsoft/microsoft-graph-core": "<2.0.2",
-                "microweber/microweber": "<=2.0.16",
+                "microweber/microweber": "<=2.0.19",
                 "mikehaertl/php-shellcommand": "<1.6.1",
                 "miniorange/miniorange-saml": "<1.4.3",
                 "mittwald/typo3_forum": "<1.2.1",
@@ -8519,6 +8519,7 @@
                 "ua-parser/uap-php": "<3.8",
                 "uasoft-indonesia/badaso": "<=2.9.7",
                 "unisharp/laravel-filemanager": "<2.9.1",
+                "universal-omega/dynamic-page-list3": "<3.6.4",
                 "unopim/unopim": "<0.1.5",
                 "userfrosting/userfrosting": ">=0.3.1,<4.6.3",
                 "usmanhalalit/pixie": "<1.0.3|>=2,<2.0.2",
@@ -8660,7 +8661,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-04T13:13:44+00:00"
+            "time": "2025-07-11T23:05:27+00:00"
         },
         {
             "name": "sebastian/cli-parser",
