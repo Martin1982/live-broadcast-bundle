@@ -1,8 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * live-broadcast-bundle - All rights reserved
  */
+
 namespace Martin1982\LiveBroadcastBundle\EventListener;
 
 use Doctrine\Common\Collections\Collection;

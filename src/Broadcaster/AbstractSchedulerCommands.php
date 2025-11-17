@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 /**
  * This file is part of martin1982/livebroadcastbundle which is released under MIT.
  * See https://opensource.org/licenses/MIT for full license details.
  */
+
 namespace Martin1982\LiveBroadcastBundle\Broadcaster;
 
 use Martin1982\LiveBroadcastBundle\Exception\LiveBroadcastException;
@@ -118,7 +120,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     {
         $value = $this->getMetadataValue($processString, self::METADATA_BROADCAST);
 
-        return $value ? (int) $value: null;
+        return $value ? (int) $value : null;
     }
 
     /**
@@ -128,7 +130,7 @@ abstract class AbstractSchedulerCommands implements SchedulerCommandsInterface
     {
         $value = $this->getMetadataValue($processString, self::METADATA_CHANNEL);
 
-        return $value ? (int) $value: null;
+        return $value ? (int) $value : null;
     }
 
     /**

@@ -40,8 +40,8 @@ jobs:
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: Run PHPCS
-        run: ./vendor/bin/phpcs --standard=./vendor/escapestudios/symfony2-coding-standard/Symfony/ src/
+      - name: Run PHP CS Fixer
+        run: vendor/bin/php-cs-fixer fix src --dry-run --diff
 
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit --coverage-text --colors
