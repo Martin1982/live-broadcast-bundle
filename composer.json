@@ -33,7 +33,6 @@
         "friendsofphp/php-cs-fixer": "^3.89",
         "guzzlehttp/guzzle": "^7.0",
         "phpunit/phpunit": "^13.0",
-        "phpmd/phpmd": "^2.12",
         "rector/rector": "^2.0"
     },
     "suggest": {
