@@ -31,7 +31,7 @@
         "roave/security-advisories": "dev-latest",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "friendsofphp/php-cs-fixer": "^3.89",
-        "guzzlehttp/guzzle": "^7.0",
+        "guzzlehttp/guzzle": "^7.0|^8.0",
         "phpunit/phpunit": "^13.0",
         "rector/rector": "^2.0"
     },
